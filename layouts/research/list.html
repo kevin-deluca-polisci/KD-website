@@ -121,63 +121,42 @@
         <h2>Publications</h2>
         
         {{ $pubs := getCSV "," "data/publications.csv" }}
-        {{ $pubList := slice }}
-        {{ range $pubs }}
-            {{ if gt (len .) 0 }}
-            {{ $title := index . 0 }}
-            {{ if ne $title "Title" }}
-            {{ $pubList = $pubList | append . }}
+        {{ range $i, $pub := $pubs }}
+            {{ if eq (index $pub 0) "Title" }}
+            {{ else }}
+            {{ $total := sub (len $pubs) 1 }}
+            {{ $num := sub $total $i }}
+            <div class="publication">
+                <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
+                <span class="pub-title">{{ index $pub 0 }}</span>
+                {{ if ne (index $pub 9) "" }}<span class="pub-authors"> {{ index $pub 9 }}</span>{{ end }}
+                <span class="pub-journal"> <em>{{ index $pub 2 }}</em>{{ if ne (index $pub 3) "" }} {{ index $pub 3 }}{{ if ne (index $pub 4) "" }}({{ index $pub 4 }}){{ end }}{{ if ne (index $pub 5) "" }}: {{ index $pub 5 }}{{ end }}{{ end }} ({{ index $pub 1 }})</span>
+                {{ if ne (index $pub 6) "" }}<span class="pub-description"> {{ index $pub 6 }}</span>{{ end }}
+                <span class="pub-links">
+                    {{ if ne (index $pub 7) "" }}[<a href="{{ index $pub 7 }}" target="_blank">pub</a>]{{ end }}
+                    {{ if ne (index $pub 8) "" }}[<a href="{{ index $pub 8 }}" target="_blank">pdf</a>]{{ end }}
+                </span>
+            </div>
             {{ end }}
-            {{ end }}
-        {{ end }}
-        
-        {{ $pubCount := len $pubList }}
-        {{ range $i, $pub := $pubList }}
-        {{ $num := sub $pubCount $i }}
-        <div class="publication">
-            <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
-            <span class="pub-title">{{ index $pub 0 }}</span>
-            {{ $authors := index $pub 9 }}
-            {{ if ne $authors "" }}<span class="pub-authors"> {{ $authors }}</span>{{ end }}
-            <span class="pub-journal"> <em>{{ index $pub 2 }}</em>{{ if ne (index $pub 3) "" }} {{ index $pub 3 }}{{ if ne (index $pub 4) "" }}({{ index $pub 4 }}){{ end }}{{ if ne (index $pub 5) "" }}: {{ index $pub 5 }}{{ end }}{{ end }} ({{ index $pub 1 }})</span>
-            {{ $description := index $pub 6 }}
-            {{ if ne $description "" }}<span class="pub-description"> {{ $description }}</span>{{ end }}
-            <span class="pub-links">
-                {{ $doi := index $pub 7 }}
-                {{ $pdf := index $pub 8 }}
-                {{ if ne $doi "" }}[<a href="{{ $doi }}" target="_blank">pub</a>]{{ end }}
-                {{ if ne $pdf "" }}[<a href="{{ $pdf }}" target="_blank">pdf</a>]{{ end }}
-            </span>
-        </div>
         {{ end }}
         
         <h2>Works in Progress</h2>
         
         {{ $wip := getCSV "," "data/working-papers.csv" }}
-        {{ $wipList := slice }}
-        {{ range $wip }}
-            {{ if gt (len .) 0 }}
-            {{ $title := index . 0 }}
-            {{ if ne $title "Title" }}
-            {{ $wipList = $wipList | append . }}
+        {{ range $i, $paper := $wip }}
+            {{ if eq (index $paper 0) "Title" }}
+            {{ else }}
+            {{ $total := sub (len $wip) 1 }}
+            {{ $num := sub $total $i }}
+            <div class="publication">
+                <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
+                <span class="pub-title">{{ index $paper 0 }}</span>
+                {{ if ne (index $paper 2) "" }}<span class="pub-authors"> {{ index $paper 2 }}</span>{{ end }}
+                <span class="pub-status"> ({{ index $paper 1 }})</span>
+                {{ if ne (index $paper 3) "" }}<span class="pub-description"> {{ index $paper 3 }}</span>{{ end }}
+                {{ if ne (index $paper 4) "" }}<span class="pub-links">[<a href="{{ index $paper 4 }}" target="_blank">draft</a>]</span>{{ end }}
+            </div>
             {{ end }}
-            {{ end }}
-        {{ end }}
-        
-        {{ $wipCount := len $wipList }}
-        {{ range $i, $paper := $wipList }}
-        {{ $num := sub $wipCount $i }}
-        <div class="publication">
-            <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
-            <span class="pub-title">{{ index $paper 0 }}</span>
-            {{ $authors := index $paper 2 }}
-            {{ if ne $authors "" }}<span class="pub-authors"> {{ $authors }}</span>{{ end }}
-            <span class="pub-status"> ({{ index $paper 1 }})</span>
-            {{ $description := index $paper 3 }}
-            {{ if ne $description "" }}<span class="pub-description"> {{ $description }}</span>{{ end }}
-            {{ $draft := index $paper 4 }}
-            {{ if ne $draft "" }}<span class="pub-links">[<a href="{{ $draft }}" target="_blank">draft</a>]</span>{{ end }}
-        </div>
         {{ end }}
     </main>
 </body>
