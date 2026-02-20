@@ -72,10 +72,14 @@
     </header>
     
     <main>
-        <div style="text-align: center; margin-bottom: 40px;">
-            <img src="/KD-website/images/profile.jpg" alt="Kevin DeLuca" style="max-width: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div style="display: flex; gap: 30px; align-items: flex-start;">
+            <div style="flex: 1;">
+                {{ .Content }}
+            </div>
+            <div style="flex-shrink: 0; width: 250px;">
+                <img src="/KD-website/images/profile.jpg" alt="Kevin DeLuca" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            </div>
         </div>
-        {{ .Content }}
     </main>
 </body>
 </html>
