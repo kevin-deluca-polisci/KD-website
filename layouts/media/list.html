@@ -102,29 +102,20 @@
         {{ .Content }}
         
         {{ $media := getCSV "," "data/media.csv" }}
-        {{ $mediaList := slice }}
-        {{ range $media }}
-            {{ if gt (len .) 0 }}
-            {{ $title := index . 0 }}
-            {{ if ne $title "Title" }}
-            {{ $mediaList = $mediaList | append . }}
+        {{ range $i, $item := $media }}
+            {{ if eq (index $item 0) "Title" }}
+            {{ else }}
+            {{ $num := sub (len $media) $i }}
+            <div class="media-item">
+                <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
+                {{ $url := index $item 3 }}
+                <span class="media-title">
+                    {{ if ne $url "" }}<a href="{{ $url }}" target="_blank">{{ index $item 0 }}</a>{{ else }}{{ index $item 0 }}{{ end }}
+                </span>
+                <span class="media-meta"> <em>{{ index $item 1 }}</em> ({{ index $item 2 }})</span>
+                {{ if ne (index $item 5) "" }}<span class="media-description"> {{ index $item 5 }}</span>{{ end }}
+            </div>
             {{ end }}
-            {{ end }}
-        {{ end }}
-        
-        {{ $mediaCount := len $mediaList }}
-        {{ range $i, $item := $mediaList }}
-        {{ $num := sub $mediaCount $i }}
-        <div class="media-item">
-            <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
-            {{ $url := index $item 3 }}
-            <span class="media-title">
-                {{ if ne $url "" }}<a href="{{ $url }}" target="_blank">{{ index $item 0 }}</a>{{ else }}{{ index $item 0 }}{{ end }}
-            </span>
-            <span class="media-meta"> <em>{{ index $item 1 }}</em> ({{ index $item 2 }})</span>
-            {{ $description := index $item 5 }}
-            {{ if ne $description "" }}<span class="media-description"> {{ $description }}</span>{{ end }}
-        </div>
         {{ end }}
     </main>
 </body>
