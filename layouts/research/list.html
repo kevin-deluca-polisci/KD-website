@@ -162,6 +162,12 @@
                 <p>{{ $desc }}</p>
                 {{ end }}
                 {{ $draft := index . 4 }}
+                {{ $note := index . 5 }}
+                {{ if ne $note "" }}
+                <div style="background-color: #f9f3cd; padding: 10px; margin-top: 10px; border-left: 3px solid #ffc107; font-size: 0.95em;">
+                    <strong>Note:</strong> {{ $note }}
+                </div>
+                {{ end }}
                 {{ if ne $draft "" }}
                 <div class="pub-links">
                     <a href="{{ $draft }}" target="_blank">Draft</a>
