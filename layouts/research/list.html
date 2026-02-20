@@ -136,7 +136,7 @@
                     {{ $doi := index . 6 }}
                     {{ $pdf := index . 7 }}
                     {{ if ne $doi "" }}<a href="{{ $doi }}" target="_blank">Publisher</a>{{ end }}
-                    {{ if ne $pdf "" }}<a href="{{ $pdf }}" target="_blank">PDF</a>{{ end }}
+                    {{ if ne $pdf "" }}<a href="/KD-website{{ $pdf }}" target="_blank">PDF</a>{{ end }}
                 </div>
             </div>
             {{ end }}
