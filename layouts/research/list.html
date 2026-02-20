@@ -139,7 +139,7 @@
                     {{ $doi := index . 7 }}
                     {{ $pdf := index . 8 }}
                     {{ if ne $doi "" }}[<a href="{{ $doi }}" target="_blank">pub</a>]{{ end }}
-                    {{ if ne $pdf "" }}[<a href="{{ $pdf }}" target="_blank">pdf</a>]{{ end }}
+                    {{ if ne $pdf "" }}[<a href="KD-website/{{ $pdf }}" target="_blank">pdf</a>]{{ end }}
                 </span>
             </div>
             {{ end }}
@@ -164,7 +164,7 @@
                 {{ $description := index . 3 }}
                 {{ if ne $description "" }}<span class="pub-description"> {{ $description }}</span>{{ end }}
                 {{ $draft := index . 4 }}
-                {{ if ne $draft "" }}<span class="pub-links"> [<a href="{{ $draft }}" target="_blank">draft</a>]</span>{{ end }}
+                {{ if ne $draft "" }}<span class="pub-links"> [<a href="KD-website/{{ $draft }}" target="_blank">draft</a>]</span>{{ end }}
             </div>
             {{ end }}
             {{ end }}
