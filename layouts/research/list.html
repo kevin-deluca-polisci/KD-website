@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+        nav {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav a {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: 500;
+        }
+        nav a:hover {
+            color: #0052a3;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin: 30px 0 15px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 5px;
+        }
+        .publication {
+            margin: 25px 0;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .publication:last-child {
+            border-bottom: none;
+        }
+        .pub-title {
+            font-weight: 600;
+            font-size: 1.05em;
+            margin-bottom: 5px;
+        }
+        .pub-authors {
+            font-style: italic;
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+        .pub-journal {
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .pub-links a {
+            color: #0066cc;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+        .pub-links a:hover {
+            text-decoration: underline;
+        }
+        a {
+            color: #0066cc;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}">{{ .Name }}</a>
+            {{ end }}
+        </nav>
+    </header>
+    
+    <main>
+        <h1>{{ .Title }}</h1>
+        {{ .Content }}
+        
+        {{ $pubs := getCSV "," "data/publications.csv" }}
+        {{ range $pubs }}
+            {{ if not (eq .Title "") }}
+            <div class="publication">
+                <div class="pub-title">{{ .Title }}</div>
+                {{ if .Author1 }}
+                <div class="pub-authors">
+                    {{ .Author1 }}{{ if .Author2 }}, {{ .Author2 }}{{ if .Author3 }}, {{ .Author3 }}{{ end }}{{ end }}
+                </div>
+                {{ end }}
+                <div class="pub-journal">
+                    <em>{{ .Journal }}</em>{{ if .Volume }} {{ .Volume }}{{ if .Issue }}({{ .Issue }}){{ end }}{{ if .Pages }}: {{ .Pages }}{{ end }}{{ end }} ({{ .Year }})
+                </div>
+                <div class="pub-links">
+                    {{ if .DOI }}<a href="{{ .DOI }}" target="_blank">Publisher Link</a>{{ end }}
+                    {{ if .PDF }}<a href="{{ .PDF }}" target="_blank">PDF</a>{{ end }}
+                </div>
+            </div>
+            {{ end }}
+        {{ end }}
+    </main>
+</body>
+</html>
