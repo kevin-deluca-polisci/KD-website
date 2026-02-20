@@ -47,13 +47,13 @@
         }
         h2 {
             font-size: 1.5em;
-            margin: 40px 0 20px;
+            margin: 30px 0 15px;
             border-bottom: 2px solid #0066cc;
             padding-bottom: 5px;
         }
         .publication {
-            margin: 25px 0;
-            padding-bottom: 20px;
+            margin: 15px 0;
+            padding-bottom: 12px;
             border-bottom: 1px solid #eee;
         }
         .publication:last-child {
@@ -61,42 +61,44 @@
         }
         .pub-title {
             font-weight: 600;
-            font-size: 1.05em;
-            margin-bottom: 5px;
+            font-size: 1.02em;
+            margin-bottom: 3px;
+            line-height: 1.4;
         }
         .pub-authors {
             font-style: italic;
-            margin-bottom: 5px;
-            font-size: 0.95em;
+            margin-bottom: 2px;
+            font-size: 0.9em;
             color: #555;
         }
         .pub-journal {
             color: #666;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+        }
+        .pub-description {
+            color: #555;
+            font-size: 0.9em;
+            margin-bottom: 6px;
+            line-height: 1.4;
         }
         .pub-links a {
             color: #0066cc;
             margin-right: 15px;
             text-decoration: none;
+            font-size: 0.95em;
         }
         .pub-links a:hover {
             text-decoration: underline;
         }
-        .pub-note {
-            background-color: #f9f3cd;
-            padding: 10px;
-            margin-top: 10px;
-            border-left: 3px solid #ffc107;
-            font-size: 0.95em;
-        }
         .pub-status {
             display: inline-block;
             background-color: #f0f0f0;
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 3px;
-            font-size: 0.85em;
+            font-size: 0.8em;
             color: #666;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         a {
             color: #0066cc;
@@ -137,8 +139,8 @@
                 </div>
                 {{ $description := index . 6 }}
                 {{ if ne $description "" }}
-                <div class="pub-note">
-                    <strong>Note:</strong> {{ $description }}
+                <div class="pub-description">
+                    {{ $description }}
                 </div>
                 {{ end }}
                 <div class="pub-links">
@@ -168,7 +170,7 @@
                 <div class="pub-status">{{ index . 1 }}</div>
                 {{ $description := index . 3 }}
                 {{ if ne $description "" }}
-                <div class="pub-note">
+                <div class="pub-description">
                     {{ $description }}
                 </div>
                 {{ end }}
