@@ -1,19 +1,11 @@
-baseURL = "https://www.kevinmdeluca.com/"
+baseURL = "https://kevin-deluca-polisci.github.io/KD-website/"
 languageCode = "en-us"
 title = "Kevin DeLuca"
-theme = "researcher"
-
-[outputs]
-  home = ["HTML", "JSON"]
 
 [params]
   author = "Kevin DeLuca"
   description = "Assistant Professor of Political Science at Yale University"
-  
-  # Social media links (optional)
-  # twitter = "your-twitter"
-  # github = "your-github"
-  
+
 [menu]
   [[menu.main]]
     identifier = "home"
