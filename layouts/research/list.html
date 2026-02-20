@@ -124,8 +124,7 @@
         {{ range $i, $pub := $pubs }}
             {{ if eq (index $pub 0) "Title" }}
             {{ else }}
-            {{ $total := sub (len $pubs) 1 }}
-            {{ $num := sub $total $i }}
+            {{ $num := sub (len $pubs) $i }}   
             <div class="publication">
                 <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
                 <span class="pub-title">{{ index $pub 0 }}</span>
@@ -146,8 +145,7 @@
         {{ range $i, $paper := $wip }}
             {{ if eq (index $paper 0) "Title" }}
             {{ else }}
-            {{ $total := sub (len $wip) 1 }}
-            {{ $num := sub $total $i }}
+            {{ $num := sub (len $wip) $i }}
             <div class="publication">
                 <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
                 <span class="pub-title">{{ index $paper 0 }}</span>
