@@ -43,11 +43,11 @@
         }
         h1 {
             font-size: 2em;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         h2 {
             font-size: 1.5em;
-            margin: 30px 0 15px;
+            margin: 40px 0 20px;
             border-bottom: 2px solid #0066cc;
             padding-bottom: 5px;
         }
@@ -68,6 +68,7 @@
             font-style: italic;
             margin-bottom: 5px;
             font-size: 0.95em;
+            color: #555;
         }
         .pub-journal {
             color: #666;
@@ -80,6 +81,15 @@
         }
         .pub-links a:hover {
             text-decoration: underline;
+        }
+        .pub-status {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 8px;
         }
         a {
             color: #0066cc;
@@ -100,26 +110,65 @@
     
     <main>
         <h1>{{ .Title }}</h1>
-        {{ .Content }}
+        
+        <h2>Publications</h2>
+        <p>Below are my peer-reviewed publications.</p>
         
         {{ $pubs := getCSV "," "data/publications.csv" }}
         {{ range $pubs }}
-            {{ if not (eq .Title "") }}
+            {{ if gt (len .) 0 }}
+            {{ $title := index . 0 }}
+            {{ if ne $title "Title" }}
             <div class="publication">
-                <div class="pub-title">{{ .Title }}</div>
-                {{ if .Author1 }}
+                <div class="pub-title">{{ $title }}</div>
+                {{ $author1 := index . 7 }}
+                {{ $author2 := index . 8 }}
+                {{ $author3 := index . 9 }}
+                {{ if ne $author1 "" }}
                 <div class="pub-authors">
-                    {{ .Author1 }}{{ if .Author2 }}, {{ .Author2 }}{{ if .Author3 }}, {{ .Author3 }}{{ end }}{{ end }}
+                    {{ $author1 }}{{ if ne $author2 "" }}, {{ $author2 }}{{ if ne $author3 "" }}, {{ $author3 }}{{ end }}{{ end }}
                 </div>
                 {{ end }}
                 <div class="pub-journal">
-                    <em>{{ .Journal }}</em>{{ if .Volume }} {{ .Volume }}{{ if .Issue }}({{ .Issue }}){{ end }}{{ if .Pages }}: {{ .Pages }}{{ end }}{{ end }} ({{ .Year }})
+                    <em>{{ index . 2 }}</em>{{ if ne (index . 3) "" }} {{ index . 3 }}{{ if ne (index . 4) "" }}({{ index . 4 }}){{ end }}{{ if ne (index . 5) "" }}: {{ index . 5 }}{{ end }}{{ end }} ({{ index . 1 }})
                 </div>
                 <div class="pub-links">
-                    {{ if .DOI }}<a href="{{ .DOI }}" target="_blank">Publisher Link</a>{{ end }}
-                    {{ if .PDF }}<a href="{{ .PDF }}" target="_blank">PDF</a>{{ end }}
+                    {{ $doi := index . 6 }}
+                    {{ $pdf := index . 7 }}
+                    {{ if ne $doi "" }}<a href="{{ $doi }}" target="_blank">Publisher</a>{{ end }}
+                    {{ if ne $pdf "" }}<a href="{{ $pdf }}" target="_blank">PDF</a>{{ end }}
                 </div>
             </div>
+            {{ end }}
+            {{ end }}
+        {{ end }}
+        
+        <h2>Works in Progress</h2>
+        
+        {{ $wip := getCSV "," "data/working-papers.csv" }}
+        {{ range $wip }}
+            {{ if gt (len .) 0 }}
+            {{ $title := index . 0 }}
+            {{ if ne $title "Title" }}
+            <div class="publication">
+                <div class="pub-title">{{ $title }}</div>
+                {{ $authors := index . 2 }}
+                {{ if ne $authors "" }}
+                <div class="pub-authors">{{ $authors }}</div>
+                {{ end }}
+                <div class="pub-status">{{ index . 1 }}</div>
+                {{ $desc := index . 3 }}
+                {{ if ne $desc "" }}
+                <p>{{ $desc }}</p>
+                {{ end }}
+                {{ $draft := index . 4 }}
+                {{ if ne $draft "" }}
+                <div class="pub-links">
+                    <a href="{{ $draft }}" target="_blank">Draft</a>
+                </div>
+                {{ end }}
+            </div>
+            {{ end }}
             {{ end }}
         {{ end }}
     </main>
