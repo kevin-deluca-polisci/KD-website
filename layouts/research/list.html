@@ -12,7 +12,7 @@
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.5;
+            line-height: 1.4;
             color: #333;
             background-color: #fafafa;
         }
@@ -43,49 +43,47 @@
         }
         h1 {
             font-size: 1.8em;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         h2 {
-            font-size: 1.3em;
-            margin: 20px 0 10px;
-            border-bottom: 2px solid #0066cc;
-            padding-bottom: 3px;
+            font-size: 1.2em;
+            margin: 15px 0 8px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2px;
+        }
+        p {
+            margin-bottom: 10px;
         }
         .publication {
-            margin: 10px 0;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #eee;
-        }
-        .publication:last-child {
-            border-bottom: none;
+            margin: 6px 0;
+            line-height: 1.5;
         }
         .pub-title {
             font-weight: 600;
             font-size: 0.98em;
-            margin-bottom: 1px;
-            line-height: 1.35;
+            display: inline;
         }
         .pub-authors {
             font-style: italic;
-            margin-bottom: 1px;
-            font-size: 0.85em;
-            color: #555;
+            font-size: 0.9em;
+            display: inline;
         }
         .pub-journal {
             color: #666;
-            margin-bottom: 4px;
             font-size: 0.9em;
-            line-height: 1.3;
+            display: inline;
         }
         .pub-description {
             color: #555;
             font-size: 0.85em;
-            margin-bottom: 4px;
-            line-height: 1.3;
+            display: inline;
+        }
+        .pub-links {
+            display: inline;
         }
         .pub-links a {
             color: #0066cc;
-            margin-right: 12px;
+            margin-left: 8px;
             text-decoration: none;
             font-size: 0.9em;
         }
@@ -93,13 +91,12 @@
             text-decoration: underline;
         }
         .pub-status {
-            display: inline-block;
-            background-color: #f0f0f0;
-            padding: 1px 4px;
-            border-radius: 2px;
-            font-size: 0.75em;
+            display: inline;
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.9em;
             color: #666;
-            margin-bottom: 4px;
         }
         a {
             color: #0066cc;
@@ -122,7 +119,6 @@
         <h1>{{ .Title }}</h1>
         
         <h2>Publications</h2>
-        <p>Below are my peer-reviewed publications.</p>
         
         {{ $pubs := getCSV "," "data/publications.csv" }}
         {{ range $pubs }}
@@ -130,26 +126,18 @@
             {{ $title := index . 0 }}
             {{ if ne $title "Title" }}
             <div class="publication">
-                <div class="pub-title">{{ $title }}</div>
+                <span class="pub-title">{{ $title }}</span>
                 {{ $authors := index . 9 }}
-                {{ if ne $authors "" }}
-                <div class="pub-authors">{{ $authors }}</div>
-                {{ end }}
-                <div class="pub-journal">
-                    <em>{{ index . 2 }}</em>{{ if ne (index . 3) "" }} {{ index . 3 }}{{ if ne (index . 4) "" }}({{ index . 4 }}){{ end }}{{ if ne (index . 5) "" }}: {{ index . 5 }}{{ end }}{{ end }} ({{ index . 1 }})
-                </div>
+                {{ if ne $authors "" }}<span class="pub-authors"> {{ $authors }}</span>{{ end }}
+                <span class="pub-journal"> <em>{{ index . 2 }}</em>{{ if ne (index . 3) "" }} {{ index . 3 }}{{ if ne (index . 4) "" }}({{ index . 4 }}){{ end }}{{ if ne (index . 5) "" }}: {{ index . 5 }}{{ end }}{{ end }} ({{ index . 1 }})</span>
                 {{ $description := index . 6 }}
-                {{ if ne $description "" }}
-                <div class="pub-description">
-                    {{ $description }}
-                </div>
-                {{ end }}
-                <div class="pub-links">
+                {{ if ne $description "" }}<span class="pub-description"> {{ $description }}</span>{{ end }}
+                <span class="pub-links">
                     {{ $doi := index . 7 }}
                     {{ $pdf := index . 8 }}
-                    {{ if ne $doi "" }}<a href="{{ $doi }}" target="_blank">Publisher</a>{{ end }}
-                    {{ if ne $pdf "" }}<a href="/KD-website{{ $pdf }}" target="_blank">PDF</a>{{ end }}
-                </div>
+                    {{ if ne $doi "" }} [<a href="{{ $doi }}" target="_blank">pub</a>]{{ end }}
+                    {{ if ne $pdf "" }} [<a href="/KD-website{{ $pdf }}" target="_blank">pdf</a>]{{ end }}
+                </span>
             </div>
             {{ end }}
             {{ end }}
@@ -163,24 +151,14 @@
             {{ $title := index . 0 }}
             {{ if ne $title "Title" }}
             <div class="publication">
-                <div class="pub-title">{{ $title }}</div>
+                <span class="pub-title">{{ $title }}</span>
                 {{ $authors := index . 2 }}
-                {{ if ne $authors "" }}
-                <div class="pub-authors">{{ $authors }}</div>
-                {{ end }}
-                <div class="pub-status">{{ index . 1 }}</div>
+                {{ if ne $authors "" }}<span class="pub-authors"> {{ $authors }}</span>{{ end }}
+                <span class="pub-status"> ({{ index . 1 }})</span>
                 {{ $description := index . 3 }}
-                {{ if ne $description "" }}
-                <div class="pub-description">
-                    {{ $description }}
-                </div>
-                {{ end }}
+                {{ if ne $description "" }}<span class="pub-description"> {{ $description }}</span>{{ end }}
                 {{ $draft := index . 4 }}
-                {{ if ne $draft "" }}
-                <div class="pub-links">
-                    <a href="/KD-website{{ $draft }}" target="_blank">Draft</a>
-                </div>
-                {{ end }}
+                {{ if ne $draft "" }}<span class="pub-links"> [<a href="/KD-website{{ $draft }}" target="_blank">draft</a>]</span>{{ end }}
             </div>
             {{ end }}
             {{ end }}
