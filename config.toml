@@ -2,6 +2,9 @@ baseURL = "https://kevin-deluca-polisci.github.io/KD-website/"
 languageCode = "en-us"
 title = "Kevin DeLuca"
 
+[outputs]
+  home = ["HTML"]
+
 [params]
   author = "Kevin DeLuca"
   description = "Assistant Professor of Political Science at Yale University"
