@@ -124,7 +124,7 @@
         {{ range $i, $pub := $pubs }}
             {{ if eq (index $pub 0) "Title" }}
             {{ else }}
-            {{ $num := sub (len $pubs) $i }}   
+            {{ $num := sub (len $pubs) $i }}
             <div class="publication">
                 <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
                 <span class="pub-title">{{ index $pub 0 }}</span>
@@ -132,8 +132,8 @@
                 <span class="pub-journal"> <em>{{ index $pub 2 }}</em>{{ if ne (index $pub 3) "" }} {{ index $pub 3 }}{{ if ne (index $pub 4) "" }}({{ index $pub 4 }}){{ end }}{{ if ne (index $pub 5) "" }}: {{ index $pub 5 }}{{ end }}{{ end }} ({{ index $pub 1 }})</span>
                 {{ if ne (index $pub 6) "" }}<span class="pub-description"> {{ index $pub 6 }}</span>{{ end }}
                 <span class="pub-links">
-                    {{ if ne (index $pub 7) "" }}<a href="{{ index $pub 7 }}" target="_blank">pub</a>{{ end }}
-                    {{ if ne (index $pub 8) "" }}<a href="{{ index $pub 8 }}" target="_blank">pdf</a>{{ end }}
+                    {{ if ne (index $pub 7) "" }}[<a href="{{ index $pub 7 }}" target="_blank">pub</a>]{{ end }}
+                    {{ if ne (index $pub 8) "" }}[<a href="{{ index $pub 8 }}" target="_blank">pdf</a>]{{ end }}
                 </span>
             </div>
             {{ end }}
@@ -152,7 +152,7 @@
                 {{ if ne (index $paper 2) "" }}<span class="pub-authors"> {{ index $paper 2 }}</span>{{ end }}
                 <span class="pub-status"> ({{ index $paper 1 }})</span>
                 {{ if ne (index $paper 3) "" }}<span class="pub-description"> {{ index $paper 3 }}</span>{{ end }}
-                {{ if ne (index $paper 4) "" }}<span class="pub-links"><a href="{{ index $paper 4 }}" target="_blank">draft</a></span>{{ end }}
+                {{ if ne (index $paper 4) "" }}<span class="pub-links">[<a href="{{ index $paper 4 }}" target="_blank">draft</a>]</span>{{ end }}
             </div>
             {{ end }}
         {{ end }}
