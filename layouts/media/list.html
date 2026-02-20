@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+        nav {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav a {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: 500;
+        }
+        nav a:hover {
+            color: #0052a3;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin: 40px 0 20px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 5px;
+        }
+        .media-item {
+            margin: 25px 0;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .media-item:last-child {
+            border-bottom: none;
+        }
+        .media-title {
+            font-weight: 600;
+            font-size: 1.05em;
+            margin-bottom: 5px;
+        }
+        .media-title a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .media-title a:hover {
+            text-decoration: underline;
+        }
+        .media-meta {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+        .media-description {
+            color: #555;
+            margin-bottom: 8px;
+        }
+        a {
+            color: #0066cc;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}">{{ .Name }}</a>
+            {{ end }}
+        </nav>
+    </header>
+    
+    <main>
+        <h1>{{ .Title }}</h1>
+        {{ .Content }}
+        
+        {{ $media := getCSV "," "data/media.csv" }}
+        {{ range $media }}
+            {{ if gt (len .) 0 }}
+            {{ $title := index . 0 }}
+            {{ if ne $title "Title" }}
+            <div class="media-item">
+                {{ $url := index . 3 }}
+                <div class="media-title">
+                    {{ if ne $url "" }}<a href="{{ $url }}" target="_blank">{{ $title }}</a>{{ else }}{{ $title }}{{ end }}
+                </div>
+                {{ $outlet := index . 1 }}
+                {{ $type := index . 2 }}
+                {{ $date := index . 4 }}
+                <div class="media-meta">
+                    <em>{{ $outlet }}</em> — {{ $type }}{{ if ne $date "" }} ({{ $date }}){{ end }}
+                </div>
+                {{ $description := index . 5 }}
+                {{ if ne $description "" }}
+                <div class="media-description">{{ $description }}</div>
+                {{ end }}
+            </div>
+            {{ end }}
+            {{ end }}
+        {{ end }}
+    </main>
+</body>
+</html>
