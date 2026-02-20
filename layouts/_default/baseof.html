@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+        nav {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav a {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: #0052a3;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #000;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin: 30px 0 15px;
+            color: #000;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 5px;
+        }
+        p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 30px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}">{{ .Name }}</a>
+            {{ end }}
+        </nav>
+    </header>
+    
+    <main>
+        {{ .Content }}
+    </main>
+    
+    <footer>
+        <p>&copy; {{ now.Year }} {{ .Site.Params.author }}. All rights reserved.</p>
+    </footer>
+</body>
+</html>
