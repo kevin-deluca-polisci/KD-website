@@ -121,11 +121,14 @@
         <h2>Publications</h2>
         
         {{ $pubs := getCSV "," "data/publications.csv" }}
+        {{ $pubCount := 0 }}
         {{ range $pubs }}
             {{ if gt (len .) 0 }}
             {{ $title := index . 0 }}
             {{ if ne $title "Title" }}
+            {{ $pubCount = add $pubCount 1 }}
             <div class="publication">
+                <span style="font-weight: bold; margin-right: 8px;">{{ $pubCount }}.</span>
                 <span class="pub-title">{{ $title }}</span>
                 {{ $authors := index . 9 }}
                 {{ if ne $authors "" }}<span class="pub-authors"> {{ $authors }}</span>{{ end }}
@@ -135,8 +138,8 @@
                 <span class="pub-links">
                     {{ $doi := index . 7 }}
                     {{ $pdf := index . 8 }}
-                    {{ if ne $doi "" }} [<a href="{{ $doi }}" target="_blank">pub</a>]{{ end }}
-                    {{ if ne $pdf "" }} [<a href="/KD-website{{ $pdf }}" target="_blank">pdf</a>]{{ end }}
+                    {{ if ne $doi "" }}[<a href="{{ $doi }}" target="_blank">pub</a>]{{ end }}
+                    {{ if ne $pdf "" }}[<a href="/KD-website{{ $pdf }}" target="_blank">pdf</a>]{{ end }}
                 </span>
             </div>
             {{ end }}
@@ -146,11 +149,14 @@
         <h2>Works in Progress</h2>
         
         {{ $wip := getCSV "," "data/working-papers.csv" }}
+        {{ $wipCount := 0 }}
         {{ range $wip }}
             {{ if gt (len .) 0 }}
             {{ $title := index . 0 }}
             {{ if ne $title "Title" }}
+            {{ $wipCount = add $wipCount 1 }}
             <div class="publication">
+                <span style="font-weight: bold; margin-right: 8px;">{{ $wipCount }}.</span>
                 <span class="pub-title">{{ $title }}</span>
                 {{ $authors := index . 2 }}
                 {{ if ne $authors "" }}<span class="pub-authors"> {{ $authors }}</span>{{ end }}
