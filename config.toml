@@ -4,6 +4,8 @@ title = "Kevin DeLuca"
 
 [outputs]
   home = ["HTML"]
+  section = ["HTML"]
+  page = ["HTML"]
 
 [params]
   author = "Kevin DeLuca"
