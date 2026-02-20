@@ -82,6 +82,13 @@
         .pub-links a:hover {
             text-decoration: underline;
         }
+        .pub-note {
+            background-color: #f9f3cd;
+            padding: 10px;
+            margin-top: 10px;
+            border-left: 3px solid #ffc107;
+            font-size: 0.95em;
+        }
         .pub-status {
             display: inline-block;
             background-color: #f0f0f0;
@@ -121,20 +128,22 @@
             {{ if ne $title "Title" }}
             <div class="publication">
                 <div class="pub-title">{{ $title }}</div>
-                {{ $author1 := index . 7 }}
-                {{ $author2 := index . 8 }}
-                {{ $author3 := index . 9 }}
-                {{ if ne $author1 "" }}
-                <div class="pub-authors">
-                    {{ $author1 }}{{ if ne $author2 "" }}, {{ $author2 }}{{ if ne $author3 "" }}, {{ $author3 }}{{ end }}{{ end }}
-                </div>
+                {{ $authors := index . 9 }}
+                {{ if ne $authors "" }}
+                <div class="pub-authors">{{ $authors }}</div>
                 {{ end }}
                 <div class="pub-journal">
                     <em>{{ index . 2 }}</em>{{ if ne (index . 3) "" }} {{ index . 3 }}{{ if ne (index . 4) "" }}({{ index . 4 }}){{ end }}{{ if ne (index . 5) "" }}: {{ index . 5 }}{{ end }}{{ end }} ({{ index . 1 }})
                 </div>
+                {{ $description := index . 6 }}
+                {{ if ne $description "" }}
+                <div class="pub-note">
+                    <strong>Note:</strong> {{ $description }}
+                </div>
+                {{ end }}
                 <div class="pub-links">
-                    {{ $doi := index . 6 }}
-                    {{ $pdf := index . 7 }}
+                    {{ $doi := index . 7 }}
+                    {{ $pdf := index . 8 }}
                     {{ if ne $doi "" }}<a href="{{ $doi }}" target="_blank">Publisher</a>{{ end }}
                     {{ if ne $pdf "" }}<a href="/KD-website{{ $pdf }}" target="_blank">PDF</a>{{ end }}
                 </div>
@@ -157,20 +166,16 @@
                 <div class="pub-authors">{{ $authors }}</div>
                 {{ end }}
                 <div class="pub-status">{{ index . 1 }}</div>
-                {{ $desc := index . 3 }}
-                {{ if ne $desc "" }}
-                <p>{{ $desc }}</p>
-                {{ end }}
-                {{ $draft := index . 4 }}
-                {{ $note := index . 5 }}
-                {{ if ne $note "" }}
-                <div style="background-color: #f9f3cd; padding: 10px; margin-top: 10px; border-left: 3px solid #ffc107; font-size: 0.95em;">
-                    <strong>Note:</strong> {{ $note }}
+                {{ $description := index . 3 }}
+                {{ if ne $description "" }}
+                <div class="pub-note">
+                    {{ $description }}
                 </div>
                 {{ end }}
+                {{ $draft := index . 4 }}
                 {{ if ne $draft "" }}
                 <div class="pub-links">
-                    <a href="{{ $draft }}" target="_blank">Draft</a>
+                    <a href="/KD-website{{ $draft }}" target="_blank">Draft</a>
                 </div>
                 {{ end }}
             </div>
