@@ -25,25 +25,31 @@ title = "Kevin DeLuca"
     weight = 2
     
   [[menu.main]]
-    identifier = "teaching"
-    name = "Teaching"
-    url = "/teaching/"
+    identifier = "cv"
+    name = "CV"
+    url = "/s/kdl_CV_short.pdf"
     weight = 3
-    
-  [[menu.main]]
-    identifier = "data"
-    name = "Data"
-    url = "/data/"
-    weight = 4
     
   [[menu.main]]
     identifier = "media"
     name = "Media"
     url = "/media/"
+    weight = 4
+    
+  [[menu.main]]
+    identifier = "data"
+    name = "Data"
+    url = "/data/"
     weight = 5
     
   [[menu.main]]
-    identifier = "cv"
-    name = "CV"
-    url = "/s/kdl_CV_short.pdf"
+    identifier = "teaching"
+    name = "Teaching"
+    url = "/teaching/"
     weight = 6
+    
+  [[menu.main]]
+    identifier = "blog"
+    name = "Blog"
+    url = "https://locomotivewithoutrails.substack.com/"
+    weight = 7
