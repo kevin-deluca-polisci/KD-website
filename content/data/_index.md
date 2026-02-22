@@ -4,7 +4,9 @@ title: "Data"
 
 ## Candidate Quality Estimates
 
-I develop measures of candidate quality using local newspaper endorsements as a signal of candidate quality. These estimates are derived from newspaper endorsements across U.S. elections and provide a quantitative measure of relative candidate quality. The underlying idea is that newspaper endorsements reflect the quality of political candidates, after taking into account the partisan bias/slant of the newspaepr. 
+I develop a relative measure of candidate quality derived from newspaper endorsements across U.S. elections. The underlying idea is that newspaper endorsements reflect the quality of political candidates, after taking into account the partisan bias/slant of the newspaper. 
+
+**Candidate Quality Data:**
 
 **How to cite:** If you use these candidate quality estimates in your research, please cite:
 
@@ -12,7 +14,9 @@ I develop measures of candidate quality using local newspaper endorsements as a 
 
 ## Newspaper Partisan Bias/Slant Estimates
 
-These estimates measure the partisan "bias" or "slant" of local newspapers based on their endorsement patterns. The estimates quantify the degree to which newspapers systematically favor Democratic or Republican candidates, providing a measure of the outlet's editorial bias/slant. These are estimated simultaneously with candidate quality, so in that sense the bias/slant estimates take into account candidate quality. 
+These estimates measure the partisan "bias" or "slant" of local newspapers based on their endorsement patterns. The estimates quantify the degree to which newspapers systematically favor Democratic or Republican candidates, providing a measure of the outlet's editorial bias/slant.
+
+**Newspaper Partisan Bias Estimates:**
 
 **How to cite:** If you use these newspaper partisan bias/slant estimates in your research, please cite:
 
@@ -38,9 +42,9 @@ If you use the newspaper endorsements data in your research, please cite:
 
 ### Endorsement Clippings
 
-We are currently in the process of organizing an archive of the database, with primary source clippings and other useful datasets. You can download the most up-to-date version of the data in our archive on GitHub: [newspaper_endorsements repository](https://github.com/kevin-deluca-polisci/newspaper_endorsements/tree/main)
+We are currently in the process of organizing an archive of the database, with primary source clippings and other useful datasets. You can download the most up-to-date version of the data in our archive on GitHub: [newspaper_endorsements repository](https://github.com/kevin-deluca-polisci/newspaper_endorsements/tree/main) This also includes the code to estimate candidate quality and partisan bias, and provides the most up to date versions of each dataset.
 
-### Research
+### Research using this Data
 
 > DeLuca, Kevin. "Editor's Choice: Measuring Candidate Quality using Local Newspaper Endorsements." *Journal of Politics*, 2025. https://doi.org/10.1086/736463
 
