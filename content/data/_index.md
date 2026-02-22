@@ -2,23 +2,13 @@
 title: "Data"
 ---
 
-## Candidate Quality Estimates
-
-I develop a relative measure of candidate quality derived from newspaper endorsements across U.S. elections. The underlying idea is that newspaper endorsements reflect the quality of political candidates, after taking into account the partisan bias/slant of the newspaper. 
+## Candidate Quality and Newspaper Bias Estimates
 
 **Candidate Quality Data:**
 
-**How to cite:** If you use these candidate quality estimates in your research, please cite:
-
-> DeLuca, Kevin. "Editor's Choice: Measuring Candidate Quality using Local Newspaper Endorsements." *Journal of Politics*, 2025. https://doi.org/10.1086/736463
-
-## Newspaper Partisan Bias/Slant Estimates
-
-These estimates measure the partisan "bias" or "slant" of local newspapers based on their endorsement patterns. The estimates quantify the degree to which newspapers systematically favor Democratic or Republican candidates, providing a measure of the outlet's editorial bias/slant.
-
 **Newspaper Partisan Bias Estimates:**
 
-**How to cite:** If you use these newspaper partisan bias/slant estimates in your research, please cite:
+**How to cite:** If you use the candidate quality estimates or newspaper partisan bias/slant estimates in your research, please cite:
 
 > DeLuca, Kevin. "Editor's Choice: Measuring Candidate Quality using Local Newspaper Endorsements." *Journal of Politics*, 2025. https://doi.org/10.1086/736463
 
