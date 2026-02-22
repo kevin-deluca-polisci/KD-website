@@ -12,7 +12,7 @@
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.4;
+            line-height: 1.6;
             color: #333;
             background-color: #fafafa;
         }
@@ -43,52 +43,40 @@
         }
         h1 {
             font-size: 1.8em;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         h2 {
-            font-size: 1.2em;
-            margin: 15px 0 8px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 2px;
+            font-size: 1.4em;
+            margin: 30px 0 15px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 5px;
         }
-        .dataset {
-            margin: 8px 0;
-            line-height: 1.5;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #eee;
+        h3 {
+            font-size: 1.1em;
+            margin: 20px 0 10px;
         }
-        .dataset:last-child {
-            border-bottom: none;
+        p {
+            margin-bottom: 12px;
+            line-height: 1.6;
         }
-        .dataset-title {
-            font-weight: 600;
-            font-size: 0.98em;
-            display: inline;
-        }
-        .dataset-title a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        .dataset-title a:hover {
-            text-decoration: underline;
-        }
-        .dataset-version {
-            color: #666;
-            font-size: 0.9em;
-            display: inline;
-        }
-        .dataset-description {
+        blockquote {
+            border-left: 3px solid #0066cc;
+            padding-left: 15px;
+            margin: 15px 0;
             color: #555;
-            font-size: 0.85em;
-            display: block;
-            margin-top: 2px;
-            line-height: 1.4;
+            font-style: italic;
         }
         a {
             color: #0066cc;
+            text-decoration: none;
         }
         a:hover {
             text-decoration: underline;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 30px 0;
         }
     </style>
     <!-- Google Analytics -->
@@ -112,23 +100,6 @@
     <main>
         <h1>{{ .Title }}</h1>
         {{ .Content }}
-        
-        {{ $datasets := getCSV "," "data/datasets.csv" }}
-        {{ range $i, $dataset := $datasets }}
-            {{ if eq (index $dataset 0) "Title" }}
-            {{ else }}
-            {{ $num := sub (len $datasets) $i }}
-            <div class="dataset">
-                <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
-                {{ $link := index $dataset 3 }}
-                <span class="dataset-title">
-                    {{ if ne $link "" }}<a href="{{ $link }}" target="_blank">{{ index $dataset 0 }}</a>{{ else }}{{ index $dataset 0 }}{{ end }}
-                </span>
-                <span class="dataset-version"> (v{{ index $dataset 1 }})</span>
-                <div class="dataset-description">{{ index $dataset 2 }}</div>
-            </div>
-            {{ end }}
-        {{ end }}
     </main>
 </body>
 </html>
