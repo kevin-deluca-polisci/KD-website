@@ -11,7 +11,6 @@ Here's something you might not expect: almost every major-party presidential can
 
 In a new paper with my coauthor Zoe Kava, we measured what newspaper headlines actually imply about specific candidates' performance, using a technique called stance detection applied to nearly 850,000 headlines. The interactive chart below shows the results for every presidential election from Truman-Dewey in 1948 through Harris-Trump in 2024.
 
-{{< raw >}}
 <div style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
     <div id="chartContainer" style="margin: 20px 0;"></div>
     <p style="font-size: 12px; color: #9C9488; margin: 16px 0 4px; line-height: 1.5;" id="annotation">Nearly every candidate receives net-negative coverage.</p>
@@ -108,7 +107,6 @@ function drawChart() {
 
 drawChart();
 </script>
-{{< /raw >}}
 
 ## How to read it
 
