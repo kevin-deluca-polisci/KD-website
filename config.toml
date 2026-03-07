@@ -51,5 +51,5 @@ title = "Kevin DeLuca"
   [[menu.main]]
     identifier = "blog"
     name = "Blog"
-    url = "https://locomotivewithoutrails.substack.com/"
+    url = "/blog/"
     weight = 7
