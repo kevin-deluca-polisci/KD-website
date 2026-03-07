@@ -172,18 +172,9 @@
                     <article class="blog-post">
                         <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
                         <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
-                        {{ if .Params.image }}
-                            <img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image">
-                        {{ else }}
-                            {{ $content := .Content }}
-                            {{ if strings.Contains $content "<img" }}
-                                {{ $imgStart := strings.Index $content "<img" }}
-                                {{ $imgEnd := strings.Index (substr $content $imgStart) ">" }}
-                                {{ if gt $imgEnd 0 }}
-                                    {{ substr $content $imgStart (add $imgStart $imgEnd 1) | safeHTML }}
-                                {{ end }}
-                            {{ end }}
-                        {{ end }}
+                    {{ if .Params.image }}
+                        <img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image">
+                    {{ end }}
                     </article>
                     {{ end }}
                 {{ end }}
@@ -194,15 +185,6 @@
                     <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
                     {{ if .Params.image }}
                         <img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image">
-                    {{ else }}
-                        {{ $content := .Content }}
-                        {{ if strings.Contains $content "<img" }}
-                            {{ $imgStart := strings.Index $content "<img" }}
-                            {{ $imgEnd := strings.Index (substr $content $imgStart) ">" }}
-                            {{ if gt $imgEnd 0 }}
-                                {{ substr $content $imgStart (add $imgStart $imgEnd 1) | safeHTML }}
-                            {{ end }}
-                        {{ end }}
                     {{ end }}
                 </article>
                 {{ end }}
