@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Coverage Banner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'IM Fell English', serif;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .newspaper {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 1200 / 630;
+            background: linear-gradient(135deg, #d4c5a9 0%, #e8dcc8 50%, #f5f0e8 100%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+        }
+        
+        .newspaper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
+            pointer-events: none;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .masthead {
+            border-top: 3px solid #1a1a1a;
+            border-bottom: 3px solid #1a1a1a;
+            padding: 12px 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: normal;
+            letter-spacing: 3px;
+            color: #1a1a1a;
+        }
+        
+        .headline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 8vw, 72px);
+            font-weight: 900;
+            line-height: 1.1;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+        
+        .subheadline {
+            font-size: clamp(14px, 3vw, 24px);
+            color: #3a3a3a;
+            margin-bottom: 30px;
+            font-style: italic;
+            font-weight: normal;
+            max-width: 90%;
+        }
+        
+        .byline {
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: #4a4a4a;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        
+        .date-line {
+            font-size: 11px;
+            color: #5a5a5a;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #8a8a8a;
+            padding-bottom: 10px;
+        }
+        
+        .decoration {
+            width: 60px;
+            height: 2px;
+            background: #1a1a1a;
+            margin: 15px auto;
+        }
+        
+        .accent-text {
+            color: #b2182b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper">
+        <div class="content">
+            <div class="masthead">THE POLITICAL PRESS</div>
+            <div class="decoration"></div>
+            
+            <h1 class="headline">
+                Nearly Every Candidate Gets <span class="accent-text">Bad Press</span>
+            </h1>
+            
+            <p class="subheadline">
+                75 Years of Newspaper Coverage Analyzed
+            </p>
+            
+            <div class="decoration"></div>
+            
+            <p class="byline">By Kevin DeLuca & Zoe Kava</p>
+            <p class="date-line">March 2025</p>
+        </div>
+    </div>
+</body>
+</html>
