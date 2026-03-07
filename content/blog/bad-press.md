@@ -11,10 +11,7 @@ Here's something you might not expect: almost every major-party presidential can
 
 In a new paper with my coauthor Zoe Kava, we measured what newspaper headlines actually imply about specific candidates' performance, using a technique called stance detection applied to nearly 850,000 headlines. The interactive chart below shows the results for every presidential election from Truman-Dewey in 1948 through Harris-Trump in 2024.
 
-<div id="test"></div>
-<script>
-document.getElementById('test').innerHTML = '<p style="color: red; font-size: 20px;">If you see this in red text, JavaScript is working!</p>';
-</script>
+{{< candidate-viz >}}
 
 ## How to read it
 
