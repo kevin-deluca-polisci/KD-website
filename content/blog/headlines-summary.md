@@ -28,7 +28,7 @@ Three findings stand out.
 
 First, newspapers cover candidates from different parties differently, and those differences line up with their editorial endorsements. Papers that endorse more Democrats also cover Democratic presidential candidates more favorably. The *New York Times* and *Washington Post* sit in the upper-right corner of the graph: Democratic-leaning endorsements and more favorable coverage of Democratic candidates. The *Chicago Tribune* falls near the center, reflecting its historically mixed record. None of this is shocking, but it's reassuring. The measure recovers patterns that make intuitive sense.
 
-[FIGURE: Scatterplot of endorsement-based vs. coverage-based newspaper bias, with labeled outlets like the NYT, Washington Post, and Chicago Tribune. Source: Figure 2 from the paper]
+![](/blog-images/bias_validation_decade.png)
 
 Second, and this is where it gets interesting, month-to-month shifts in how newspapers portray the president predict changes in presidential approval. When coverage of the president improves, approval goes up. A one-standard-deviation improvement in coverage corresponds to about a 0.11 standard deviation increase in approval in the short run, and roughly half a standard deviation over the long run. These effects hold even after controlling for consumer sentiment about the economy. The standard sentiment measure? Statistically insignificant. When both measures are included simultaneously, the standard measure actually flips sign. It becomes *negatively* associated with approval, suggesting it's picking up noise rather than signal.
 
