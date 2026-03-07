@@ -174,8 +174,10 @@
                 {{ range $posts }}
                     {{ if in .Params.tags $currentTag }}
                     <article class="blog-post">
-                        <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
-                        <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
+                    <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
+                    {{ if .Params.author }}<div class="post-author">by {{ .Params.author }}</div>{{ end }}
+                    <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
+                    {{ if .Params.description }}<p class="post-description">{{ .Params.description }}</p>{{ end }}
                     {{ if .Params.image }}
                         <a href="{{ .Permalink }}"><img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image"></a>                    
                         {{ end }}
@@ -186,7 +188,9 @@
                 {{ range $posts }}
                 <article class="blog-post">
                     <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
+                    {{ if .Params.author }}<div class="post-author">by {{ .Params.author }}</div>{{ end }}
                     <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
+                    {{ if .Params.description }}<p class="post-description">{{ .Params.description }}</p>{{ end }}
                     {{ if .Params.image }}
                         <a href="{{ .Permalink }}"><img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image"></a>
                         {{ end }}
