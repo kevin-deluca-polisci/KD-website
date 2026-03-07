@@ -2,7 +2,7 @@
 title: "What Headlines Actually Say About Presidents"
 date: 2025-03-07
 tags: ["Media", "Headlines"]
-image: "/blog-images/headlines-summary.jpg"
+image: "/blog-images/bias_validation_decade.png"
 
 ---
 
