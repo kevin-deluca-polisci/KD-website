@@ -3,12 +3,9 @@ title: "What Headlines Actually Say About Presidents"
 date: 2025-03-07
 tags: ["Media", "Headlines"]
 image: "/KD-website/blog-images/bias_validation_decade.png"
-
+author: "Kevin DeLuca"
+description: "The standard way political scientists measure media tone has a blind spot. We built a better method, and it changes what we know about how coverage shapes elections."
 ---
-
-# What Headlines Actually Say About Presidents
-
-*The standard way political scientists measure media tone has a blind spot. We built a better method, and it changes what we know about how coverage shapes elections.*
 
 Consider two headlines: "Biden struggles to contain inflation" and "Inflation eases under Biden." One is bad news for the president. The other is good news. But most tools used to measure media tone would code both of them as negative, because both contain the word "inflation."
 
