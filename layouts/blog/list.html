@@ -41,7 +41,7 @@
             margin: 0 auto;
             padding: 0 20px 40px;
             display: grid;
-            grid-template-columns: 1fr 250px;
+            grid-template-columns: 250px 1fr;
             gap: 30px;
         }
         h1 {
@@ -56,8 +56,8 @@
             padding-bottom: 5px;
         }
         .blog-post {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid #eee;
         }
         .blog-post:last-of-type {
@@ -65,8 +65,8 @@
         }
         .post-title {
             font-weight: 600;
-            font-size: 1.2em;
-            margin-bottom: 5px;
+            font-size: 1.1em;
+            margin-bottom: 8px;
         }
         .post-title a {
             color: #0066cc;
@@ -77,29 +77,14 @@
         }
         .post-meta {
             color: #666;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-        .post-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-        .tag {
-            display: inline-block;
-            background-color: #f0f0f0;
-            padding: 3px 8px;
-            border-radius: 12px;
             font-size: 0.85em;
-            color: #666;
+            margin-bottom: 8px;
         }
-        .tag a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        .tag a:hover {
-            text-decoration: underline;
+        .post-image {
+            margin: 10px 0;
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
         }
         .sidebar {
             position: sticky;
@@ -158,46 +143,6 @@
     <div class="container">
         <h1>{{ .Title }}</h1>
         
-        <main>
-            {{ $currentTag := .Params.tag }}
-            {{ $posts := where .Site.RegularPages "Section" "blog" }}
-            {{ $posts = sort $posts "Date" "desc" }}
-            
-            {{ if $currentTag }}
-                {{ range $posts }}
-                    {{ if in .Params.tags $currentTag }}
-                    <article class="blog-post">
-                        <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
-                        <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
-                        {{ if .Params.tags }}
-                        <div class="post-tags">
-                            {{ range .Params.tags }}
-                            <span class="tag"><a href="/KD-website/blog/?tag={{ . | urlize }}">{{ . }}</a></span>
-                            {{ end }}
-                        </div>
-                        {{ end }}
-                        <p>{{ .Summary }}</p>
-                    </article>
-                    {{ end }}
-                {{ end }}
-            {{ else }}
-                {{ range $posts }}
-                <article class="blog-post">
-                    <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
-                    <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
-                    {{ if .Params.tags }}
-                    <div class="post-tags">
-                        {{ range .Params.tags }}
-                        <span class="tag"><a href="/KD-website/blog/?tag={{ . | urlize }}">{{ . }}</a></span>
-                        {{ end }}
-                    </div>
-                    {{ end }}
-                    <p>{{ .Summary }}</p>
-                </article>
-                {{ end }}
-            {{ end }}
-        </main>
-        
         <aside class="sidebar">
             <h3>Topics</h3>
             <ul>
@@ -215,6 +160,46 @@
                 {{ end }}
             </ul>
         </aside>
+        
+        <main>
+            {{ $currentTag := .Params.tag }}
+            {{ $posts := where .Site.RegularPages "Section" "blog" }}
+            {{ $posts = sort $posts "Date" "desc" }}
+            
+            {{ if $currentTag }}
+                {{ range $posts }}
+                    {{ if in .Params.tags $currentTag }}
+                    <article class="blog-post">
+                        <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
+                        <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
+                        {{ $content := .Content }}
+                        {{ if strings.Contains $content "<img" }}
+                            {{ $imgStart := strings.Index $content "<img" }}
+                            {{ $imgEnd := strings.Index (substr $content $imgStart) ">" }}
+                            {{ if gt $imgEnd 0 }}
+                                {{ substr $content $imgStart (add $imgStart $imgEnd 1) | safeHTML }}
+                            {{ end }}
+                        {{ end }}
+                    </article>
+                    {{ end }}
+                {{ end }}
+            {{ else }}
+                {{ range $posts }}
+                <article class="blog-post">
+                    <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
+                    <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
+                    {{ $content := .Content }}
+                    {{ if strings.Contains $content "<img" }}
+                        {{ $imgStart := strings.Index $content "<img" }}
+                        {{ $imgEnd := strings.Index (substr $content $imgStart) ">" }}
+                        {{ if gt $imgEnd 0 }}
+                            {{ substr $content $imgStart (add $imgStart $imgEnd 1) | safeHTML }}
+                        {{ end }}
+                    {{ end }}
+                </article>
+                {{ end }}
+            {{ end }}
+        </main>
     </div>
 </body>
 </html>
