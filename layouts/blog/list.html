@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        nav {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav a {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: 500;
+        }
+        nav a:hover {
+            color: #0052a3;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            display: grid;
+            grid-template-columns: 1fr 250px;
+            gap: 30px;
+        }
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            grid-column: 1 / -1;
+        }
+        h2 {
+            font-size: 1.2em;
+            margin: 20px 0 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .blog-post {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .blog-post:last-of-type {
+            border-bottom: none;
+        }
+        .post-title {
+            font-weight: 600;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        .post-title a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .post-title a:hover {
+            text-decoration: underline;
+        }
+        .post-meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .post-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            color: #666;
+        }
+        .tag a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .tag a:hover {
+            text-decoration: underline;
+        }
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        .sidebar h3 {
+            font-size: 1em;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 5px;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+        .sidebar a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 0.95em;
+        }
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+        .sidebar a.active {
+            font-weight: 600;
+            color: #0052a3;
+        }
+        a {
+            color: #0066cc;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}">{{ .Name }}</a>
+            {{ end }}
+        </nav>
+    </header>
+    
+    <div class="container">
+        <h1>{{ .Title }}</h1>
+        
+        <main>
+            {{ $currentTag := .Params.tag }}
+            {{ $posts := where .Site.RegularPages "Section" "blog" }}
+            {{ $posts = sort $posts "Date" "desc" }}
+            
+            {{ if $currentTag }}
+                {{ range $posts }}
+                    {{ if in .Params.tags $currentTag }}
+                    <article class="blog-post">
+                        <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
+                        <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
+                        {{ if .Params.tags }}
+                        <div class="post-tags">
+                            {{ range .Params.tags }}
+                            <span class="tag"><a href="/KD-website/blog/?tag={{ . | urlize }}">{{ . }}</a></span>
+                            {{ end }}
+                        </div>
+                        {{ end }}
+                        <p>{{ .Summary }}</p>
+                    </article>
+                    {{ end }}
+                {{ end }}
+            {{ else }}
+                {{ range $posts }}
+                <article class="blog-post">
+                    <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
+                    <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
+                    {{ if .Params.tags }}
+                    <div class="post-tags">
+                        {{ range .Params.tags }}
+                        <span class="tag"><a href="/KD-website/blog/?tag={{ . | urlize }}">{{ . }}</a></span>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                    <p>{{ .Summary }}</p>
+                </article>
+                {{ end }}
+            {{ end }}
+        </main>
+        
+        <aside class="sidebar">
+            <h3>Topics</h3>
+            <ul>
+                {{ $allTags := slice }}
+                {{ range where .Site.RegularPages "Section" "blog" }}
+                    {{ range .Params.tags }}
+                        {{ if not (in $allTags .) }}
+                            {{ $allTags = $allTags | append . }}
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+                
+                {{ range sort $allTags }}
+                <li><a href="/KD-website/blog/?tag={{ . | urlize }}">{{ . }}</a></li>
+                {{ end }}
+            </ul>
+        </aside>
+    </div>
+</body>
+</html>
