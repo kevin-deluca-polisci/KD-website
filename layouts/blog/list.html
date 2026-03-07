@@ -85,6 +85,10 @@
             max-width: 100%;
             height: auto;
             border-radius: 4px;
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
         }
         .sidebar {
             position: sticky;
@@ -173,8 +177,8 @@
                         <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
                         <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
                     {{ if .Params.image }}
-                        <img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image">
-                    {{ end }}
+                        <a href="{{ .Permalink }}"><img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image"></a>                    
+                        {{ end }}
                     </article>
                     {{ end }}
                 {{ end }}
@@ -184,8 +188,8 @@
                     <div class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></div>
                     <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
                     {{ if .Params.image }}
-                        <img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image">
-                    {{ end }}
+                        <a href="{{ .Permalink }}"><img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image"></a>
+                        {{ end }}
                 </article>
                 {{ end }}
             {{ end }}
