@@ -1,10 +1,12 @@
 ---
-title: "Headlines Summary"
+title: "What Headlines Actually Say About Presidents"
 date: 2025-03-07
 tags: ["Media", "Headlines"]
+image: "/blog-images/headlines-summary.jpg"
+
 ---
 
-# What Headlines Actually Say About Presidents, and Why Standard Tools Miss It
+# What Headlines Actually Say About Presidents
 
 *The standard way political scientists measure media tone has a blind spot. We built a better method, and it changes what we know about how coverage shapes elections.*
 
