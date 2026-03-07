@@ -2,7 +2,7 @@
 title: "Nearly Every Presidential Candidate Gets Bad Press. The Question Is How Much Worse."
 date: 2025-03-07
 tags: ["Media", "Headlines", "Elections"]
-image: "/blog-images/bad-press.png"
+image: "/KD-website/blog-images/bad-press.png"
 author: "Kevin DeLuca"
 description: "An interactive look at 75 years of newspaper coverage shows that nearly every major-party presidential candidate has received net-negative coverage—but the gaps between candidates tell us something real about elections."
 ---
