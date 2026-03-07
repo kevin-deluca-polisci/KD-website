@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidate Coverage Visualization</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background: #FAFAF5;
+            box-sizing: border-box;
+        }
+        body {
             font-family: 'Source Sans 3', sans-serif;
+            background: #FAFAF5;
             color: #1A1A1A;
         }
         .container {
@@ -50,17 +52,20 @@
             color: #9C9488;
             font-weight: 400;
             margin-bottom: -1px;
-            transition: all 0.15s ease;
         }
         button.active {
             color: #1A1A1A;
             font-weight: 600;
             border-bottom-color: #1A1A1A;
         }
-        .chart-container {
-            position: relative;
-            height: 420px;
-            margin: 20px 0;
+        .chart-wrapper {
+            margin: 40px 0;
+            overflow-x: auto;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+            min-height: 420px;
         }
         .annotation {
             font-size: 12px;
@@ -88,180 +93,117 @@
             <button onclick="switchView('difference')">Coverage gap (Dem − Rep)</button>
         </div>
         
-        <div class="chart-container">
-            <canvas id="myChart"></canvas>
-        </div>
+        <div class="chart-wrapper" id="chartContainer"></div>
         
         <p class="annotation" id="annotation">Nearly every candidate receives net-negative coverage. But the gap between candidates varies dramatically by election. Note the two 2024 entries: Biden's coverage was far more negative than Harris's after she replaced him.</p>
         
-        <p class="source">Source: DeLuca and Kava, "Candidate-specific media coverage predicts presidential approval ratings and election results" (2026). Data from Table S5. Net coverage scores computed using the DEBATE stance detection model across five major U.S. newspapers (NYT, Washington Post, WSJ, LA Times, Chicago Tribune).</p>
+        <p class="source">Source: DeLuca and Kava, "Candidate-specific media coverage predicts presidential approval ratings and election results" (2026). Data from Table S5. Net coverage scores computed using the DEBATE stance detection model.</p>
     </div>
 
     <script>
         const DATA = [
-            { year: "1948", dem: "Truman", rep: "Dewey", demCov: -0.029, repCov: 0.105, diff: -0.134, voteMargin: 4.5 },
-            { year: "1952", dem: "Stevenson", rep: "Eisenhower", demCov: 0.046, repCov: 0.105, diff: -0.060, voteMargin: -10.9 },
-            { year: "1956", dem: "Stevenson", rep: "Eisenhower", demCov: 0.098, repCov: 0.138, diff: -0.040, voteMargin: -15.4 },
-            { year: "1960", dem: "Kennedy", rep: "Nixon", demCov: 0.071, repCov: 0.081, diff: -0.010, voteMargin: 0.2 },
-            { year: "1964", dem: "Johnson", rep: "Goldwater", demCov: 0.091, repCov: -0.002, diff: 0.093, voteMargin: 22.6 },
-            { year: "1968", dem: "Humphrey", rep: "Nixon", demCov: 0.096, repCov: 0.058, diff: 0.038, voteMargin: -0.7 },
-            { year: "1972", dem: "McGovern", rep: "Nixon", demCov: 0.004, repCov: -0.011, diff: 0.015, voteMargin: -23.2 },
-            { year: "1976", dem: "Carter", rep: "Ford", demCov: -0.013, repCov: -0.043, diff: 0.030, voteMargin: 2.1 },
-            { year: "1980", dem: "Carter", rep: "Reagan", demCov: -0.091, repCov: -0.021, diff: -0.070, voteMargin: -9.7 },
-            { year: "1984", dem: "Mondale", rep: "Reagan", demCov: 0.024, repCov: -0.068, diff: 0.092, voteMargin: -18.2 },
-            { year: "1988", dem: "Dukakis", rep: "Bush Sr.", demCov: -0.010, repCov: -0.065, diff: 0.055, voteMargin: -7.8 },
-            { year: "1992", dem: "Clinton", rep: "Bush Sr.", demCov: -0.034, repCov: -0.211, diff: 0.177, voteMargin: 5.6 },
-            { year: "1996", dem: "Clinton", rep: "Dole", demCov: -0.079, repCov: -0.131, diff: 0.052, voteMargin: 8.5 },
-            { year: "2000", dem: "Gore", rep: "Bush Jr.", demCov: -0.062, repCov: -0.068, diff: 0.006, voteMargin: 0.5 },
-            { year: "2004", dem: "Kerry", rep: "Bush Jr.", demCov: -0.047, repCov: -0.157, diff: 0.110, voteMargin: -2.4 },
-            { year: "2008", dem: "Obama", rep: "McCain", demCov: 0.010, repCov: -0.065, diff: 0.075, voteMargin: 7.2 },
-            { year: "2012", dem: "Obama", rep: "Romney", demCov: -0.104, repCov: -0.086, diff: -0.019, voteMargin: 3.9 },
-            { year: "2016", dem: "Clinton", rep: "Trump", demCov: -0.120, repCov: -0.279, diff: 0.160, voteMargin: 2.1 },
-            { year: "2020", dem: "Biden", rep: "Trump", demCov: -0.032, repCov: -0.354, diff: 0.322, voteMargin: 4.5 },
-            { year: "'24 (Biden)", dem: "Biden", rep: "Trump", demCov: -0.292, repCov: -0.305, diff: 0.013, voteMargin: -1.5 },
-            { year: "'24 (Harris)", dem: "Harris", rep: "Trump", demCov: -0.015, repCov: -0.305, diff: 0.289, voteMargin: -1.5 },
+            { year: "1948", dem: "Truman", rep: "Dewey", demCov: -0.029, repCov: 0.105, diff: -0.134 },
+            { year: "1952", dem: "Stevenson", rep: "Eisenhower", demCov: 0.046, repCov: 0.105, diff: -0.060 },
+            { year: "1956", dem: "Stevenson", rep: "Eisenhower", demCov: 0.098, repCov: 0.138, diff: -0.040 },
+            { year: "1960", dem: "Kennedy", rep: "Nixon", demCov: 0.071, repCov: 0.081, diff: -0.010 },
+            { year: "1964", dem: "Johnson", rep: "Goldwater", demCov: 0.091, repCov: -0.002, diff: 0.093 },
+            { year: "1968", dem: "Humphrey", rep: "Nixon", demCov: 0.096, repCov: 0.058, diff: 0.038 },
+            { year: "1972", dem: "McGovern", rep: "Nixon", demCov: 0.004, repCov: -0.011, diff: 0.015 },
+            { year: "1976", dem: "Carter", rep: "Ford", demCov: -0.013, repCov: -0.043, diff: 0.030 },
+            { year: "1980", dem: "Carter", rep: "Reagan", demCov: -0.091, repCov: -0.021, diff: -0.070 },
+            { year: "1984", dem: "Mondale", rep: "Reagan", demCov: 0.024, repCov: -0.068, diff: 0.092 },
+            { year: "1988", dem: "Dukakis", rep: "Bush Sr.", demCov: -0.010, repCov: -0.065, diff: 0.055 },
+            { year: "1992", dem: "Clinton", rep: "Bush Sr.", demCov: -0.034, repCov: -0.211, diff: 0.177 },
+            { year: "1996", dem: "Clinton", rep: "Dole", demCov: -0.079, repCov: -0.131, diff: 0.052 },
+            { year: "2000", dem: "Gore", rep: "Bush Jr.", demCov: -0.062, repCov: -0.068, diff: 0.006 },
+            { year: "2004", dem: "Kerry", rep: "Bush Jr.", demCov: -0.047, repCov: -0.157, diff: 0.110 },
+            { year: "2008", dem: "Obama", rep: "McCain", demCov: 0.010, repCov: -0.065, diff: 0.075 },
+            { year: "2012", dem: "Obama", rep: "Romney", demCov: -0.104, repCov: -0.086, diff: -0.019 },
+            { year: "2016", dem: "Clinton", rep: "Trump", demCov: -0.120, repCov: -0.279, diff: 0.160 },
+            { year: "2020", dem: "Biden", rep: "Trump", demCov: -0.032, repCov: -0.354, diff: 0.322 },
+            { year: "'24 (Biden)", dem: "Biden", rep: "Trump", demCov: -0.292, repCov: -0.305, diff: 0.013 },
+            { year: "'24 (Harris)", dem: "Harris", rep: "Trump", demCov: -0.015, repCov: -0.305, diff: 0.289 },
         ];
 
-        let chart = null;
         let currentView = 'sideBySide';
 
         function switchView(view) {
             currentView = view;
-            
-            // Update button states
             document.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Update annotation
             const annotation = document.getElementById('annotation');
             if (view === 'sideBySide') {
                 annotation.textContent = "Nearly every candidate receives net-negative coverage. But the gap between candidates varies dramatically by election. Note the two 2024 entries: Biden's coverage was far more negative than Harris's after she replaced him.";
             } else {
-                annotation.textContent = "Positive values indicate the Democratic candidate received relatively more favorable coverage. The 2020 election and 2024 (Harris) show the largest coverage gaps, driven by unusually negative Trump coverage. When Biden was still the 2024 nominee, the coverage gap was near zero.";
+                annotation.textContent = "Positive values indicate the Democratic candidate received relatively more favorable coverage. The 2020 election and 2024 (Harris) show the largest coverage gaps.";
             }
             
             drawChart();
         }
 
         function drawChart() {
-            const ctx = document.getElementById('myChart').getContext('2d');
+            const width = 880;
+            const height = 420;
+            const padding = { top: 20, right: 20, bottom: 60, left: 50 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
             
-            if (chart) {
-                chart.destroy();
-            }
-
-            let datasets, options;
-
-            if (currentView === 'sideBySide') {
-                datasets = [
-                    {
-                        label: 'Democrat',
-                        data: DATA.map(d => d.demCov),
-                        backgroundColor: '#2166AC',
-                        borderRadius: 2,
-                    },
-                    {
-                        label: 'Republican',
-                        data: DATA.map(d => d.repCov),
-                        backgroundColor: '#B2182B',
-                        borderRadius: 2,
-                    }
-                ];
-                options = {
-                    scales: {
-                        y: {
-                            min: -0.4,
-                            max: 0.2,
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toFixed(1);
-                                }
-                            }
-                        }
-                    }
-                };
-            } else {
-                datasets = [
-                    {
-                        label: 'Coverage gap',
-                        data: DATA.map(d => d.diff),
-                        backgroundColor: DATA.map(d => d.diff >= 0 ? '#2166AC' : '#B2182B'),
-                        borderRadius: 2,
-                    }
-                ];
-                options = {
-                    scales: {
-                        y: {
-                            min: -0.2,
-                            max: 0.35,
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toFixed(1);
-                                }
-                            }
-                        }
-                    }
-                };
-            }
-
-            chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: DATA.map(d => d.year),
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: currentView === 'sideBySide',
-                            labels: {
-                                font: {
-                                    family: "'Source Sans 3', sans-serif",
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                afterLabel: function(context) {
-                                    const d = DATA[context.dataIndex];
-                                    return `Actual margin: Dem ${d.voteMargin > 0 ? '+' : ''}${d.voteMargin} pts`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: {
-                                font: {
-                                    family: "'Source Sans 3', sans-serif",
-                                    size: 11
-                                },
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        },
-                        y: {
-                            ...options.scales.y,
-                            ticks: {
-                                font: {
-                                    family: "'Source Sans 3', sans-serif",
-                                    size: 11
-                                },
-                                ...options.scales.y.ticks
-                            },
-                            grid: {
-                                color: '#E0DDD5'
-                            }
-                        }
-                    }
+            const yMin = currentView === 'sideBySide' ? -0.4 : -0.2;
+            const yMax = currentView === 'sideBySide' ? 0.2 : 0.35;
+            const yRange = yMax - yMin;
+            
+            const barWidth = chartWidth / DATA.length * 0.8;
+            const barGap = chartWidth / DATA.length * 0.2;
+            
+            let svg = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
+            
+            // Grid lines
+            for (let i = -0.4; i <= 0.4; i += 0.1) {
+                if (i >= yMin && i <= yMax) {
+                    const y = padding.top + chartHeight * (1 - (i - yMin) / yRange);
+                    svg += `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="#E0DDD5" stroke-width="1"/>`;
+                    svg += `<text x="${padding.left - 10}" y="${y + 4}" font-size="11" text-anchor="end" fill="#9C9488">${i.toFixed(1)}</text>`;
                 }
+            }
+            
+            // Zero line
+            const zeroY = padding.top + chartHeight * (1 - (0 - yMin) / yRange);
+            svg += `<line x1="${padding.left}" y1="${zeroY}" x2="${width - padding.right}" y2="${zeroY}" stroke="#1A1A1A" stroke-width="2"/>`;
+            
+            // Axes
+            svg += `<line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}" stroke="#1A1A1A" stroke-width="2"/>`;
+            svg += `<line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}" stroke="#1A1A1A" stroke-width="2"/>`;
+            
+            // Data
+            DATA.forEach((d, i) => {
+                const x = padding.left + i * chartWidth / DATA.length + barGap / 2;
+                
+                if (currentView === 'sideBySide') {
+                    const demHeight = (d.demCov - yMin) / yRange * chartHeight;
+                    const repHeight = (d.repCov - yMin) / yRange * chartHeight;
+                    
+                    const demY = padding.top + chartHeight - demHeight;
+                    const repY = padding.top + chartHeight - repHeight;
+                    
+                    svg += `<rect x="${x}" y="${demY}" width="${barWidth / 2 - 1}" height="${demHeight}" fill="#2166AC"/>`;
+                    svg += `<rect x="${x + barWidth / 2 + 1}" y="${repY}" width="${barWidth / 2 - 1}" height="${repHeight}" fill="#B2182B"/>`;
+                } else {
+                    const diffHeight = (d.diff - yMin) / yRange * chartHeight;
+                    const diffY = padding.top + chartHeight - diffHeight;
+                    const color = d.diff >= 0 ? '#2166AC' : '#B2182B';
+                    
+                    svg += `<rect x="${x}" y="${diffY}" width="${barWidth}" height="${diffHeight}" fill="${color}"/>`;
+                }
+                
+                svg += `<text x="${x + barWidth / 2}" y="${height - padding.bottom + 20}" font-size="11" text-anchor="middle" fill="#6B6559">${d.year}</text>`;
             });
+            
+            svg += `</svg>`;
+            
+            document.getElementById('chartContainer').innerHTML = svg;
         }
 
-        // Draw initial chart
         drawChart();
     </script>
 </body>
