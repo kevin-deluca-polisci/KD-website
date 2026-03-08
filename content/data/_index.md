@@ -30,7 +30,7 @@ If you use the newspaper endorsements data in your research, please cite:
 
 We are currently in the process of organizing an archive of the database, with primary source clippings and other useful datasets. You can download the most up-to-date version of the data in our archive on GitHub: [newspaper_endorsements repository](https://github.com/kevin-deluca-polisci/newspaper_endorsements/tree/main)
 
-### Research using this Data
+### My research using this data
 
 > DeLuca, Kevin. "Editor's Choice: Measuring Candidate Quality using Local Newspaper Endorsements." *Journal of Politics*, 2025. [https://doi.org/10.1086/736463](https://doi.org/10.1086/736463)
 
