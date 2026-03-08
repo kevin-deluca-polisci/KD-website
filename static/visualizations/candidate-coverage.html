@@ -308,129 +308,141 @@
         }
 
         function drawChart() {
-            const svg = document.getElementById('chart');
-            svg.innerHTML = '';
-            
-            const width = svg.clientWidth;
-            const height = svg.clientHeight;
-            const padding = { top: 20, right: 20, bottom: 40, left: 50 };
-            const chartWidth = width - padding.left - padding.right;
-            const chartHeight = height - padding.top - padding.bottom;
-            
-            const yMin = currentView === 'sideBySide' ? -0.4 : -0.2;
-            const yMax = currentView === 'sideBySide' ? 0.2 : 0.35;
-            const yRange = yMax - yMin;
-            
-            const barWidth = (chartWidth / DATA.length) * 0.7;
-            const barSpacing = chartWidth / DATA.length;
-            
-            // Grid lines
-            for (let i = -0.4; i <= 0.4; i += 0.1) {
-                if (i >= yMin && i <= yMax) {
-                    const y = padding.top + chartHeight * (1 - (i - yMin) / yRange);
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', padding.left);
-                    line.setAttribute('y1', y);
-                    line.setAttribute('x2', width - padding.right);
-                    line.setAttribute('y2', y);
-                    line.setAttribute('stroke', '#E0DDD5');
-                    line.setAttribute('stroke-width', '1');
-                    svg.appendChild(line);
-                }
-            }
-            
-            // Zero line
-            const zeroY = padding.top + chartHeight * (1 - (0 - yMin) / yRange);
-            const zeroLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            zeroLine.setAttribute('x1', padding.left);
-            zeroLine.setAttribute('y1', zeroY);
-            zeroLine.setAttribute('x2', width - padding.right);
-            zeroLine.setAttribute('y2', zeroY);
-            zeroLine.setAttribute('stroke', '#1A1A1A');
-            zeroLine.setAttribute('stroke-width', '2');
-            svg.appendChild(zeroLine);
-            
-            // Axes
-            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            yAxis.setAttribute('x1', padding.left);
-            yAxis.setAttribute('y1', padding.top);
-            yAxis.setAttribute('x2', padding.left);
-            yAxis.setAttribute('y2', height - padding.bottom);
-            yAxis.setAttribute('stroke', '#1A1A1A');
-            yAxis.setAttribute('stroke-width', '2');
-            svg.appendChild(yAxis);
-            
-            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            xAxis.setAttribute('x1', padding.left);
-            xAxis.setAttribute('y1', height - padding.bottom);
-            xAxis.setAttribute('x2', width - padding.right);
-            xAxis.setAttribute('y2', height - padding.bottom);
-            xAxis.setAttribute('stroke', '#1A1A1A');
-            xAxis.setAttribute('stroke-width', '2');
-            svg.appendChild(xAxis);
-            
-            // Data bars
-            DATA.forEach((d, i) => {
-                const xPos = padding.left + i * barSpacing + (barSpacing - barWidth) / 2;
-                
-                if (currentView === 'sideBySide') {
-                    const demHeight = (d.demCov - yMin) / yRange * chartHeight;
-                    const demY = padding.top + chartHeight - demHeight;
-                    
-                    const demRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                    demRect.setAttribute('x', xPos);
-                    demRect.setAttribute('y', demY);
-                    demRect.setAttribute('width', barWidth / 2 - 1);
-                    demRect.setAttribute('height', Math.max(0, demHeight));
-                    demRect.setAttribute('fill', '#2166AC');
-                    demRect.setAttribute('rx', '2');
-                    demRect.style.cursor = 'pointer';
-                    demRect.addEventListener('mouseenter', (e) => showTooltip(i, e));
-                    demRect.addEventListener('mouseleave', hideTooltip);
-                    svg.appendChild(demRect);
-                    
-                    const repHeight = (d.repCov - yMin) / yRange * chartHeight;
-                    const repY = padding.top + chartHeight - repHeight;
-                    
-                    const repRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                    repRect.setAttribute('x', xPos + barWidth / 2 + 1);
-                    repRect.setAttribute('y', repY);
-                    repRect.setAttribute('width', barWidth / 2 - 1);
-                    repRect.setAttribute('height', Math.max(0, repHeight));
-                    repRect.setAttribute('fill', '#B2182B');
-                    repRect.setAttribute('rx', '2');
-                    repRect.style.cursor = 'pointer';
-                    repRect.addEventListener('mouseenter', (e) => showTooltip(i, e));
-                    repRect.addEventListener('mouseleave', hideTooltip);
-                    svg.appendChild(repRect);
-                } else {
-                    const diffHeight = (d.diff - yMin) / yRange * chartHeight;
-                    const diffY = padding.top + chartHeight - diffHeight;
-                    const color = d.diff >= 0 ? '#2166AC' : '#B2182B';
-                    
-                    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                    rect.setAttribute('x', xPos);
-                    rect.setAttribute('y', diffY);
-                    rect.setAttribute('width', barWidth);
-                    rect.setAttribute('height', Math.max(0, diffHeight));
-                    rect.setAttribute('fill', color);
-                    rect.setAttribute('rx', '2');
-                    rect.style.cursor = 'pointer';
-                    rect.addEventListener('mouseenter', (e) => showTooltip(i, e));
-                    rect.addEventListener('mouseleave', hideTooltip);
-                    svg.appendChild(rect);
-                }
-                
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', xPos + barWidth / 2);
-                text.setAttribute('y', height - padding.bottom + 15);
-                text.setAttribute('text-anchor', 'middle');
-                text.setAttribute('font-size', '11');
-                text.setAttribute('fill', '#6B6559');
-                text.textContent = d.year;
-                svg.appendChild(text);
-            });
+    const svg = document.getElementById('chart');
+    svg.innerHTML = '';
+    
+    const width = svg.clientWidth;
+    const height = svg.clientHeight;
+    const padding = { top: 20, right: 20, bottom: 40, left: 50 };
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+    
+    const yMin = currentView === 'sideBySide' ? -0.4 : -0.2;
+    const yMax = currentView === 'sideBySide' ? 0.2 : 0.35;
+    const yRange = yMax - yMin;
+    
+    const barWidth = (chartWidth / DATA.length) * 0.7;
+    const barSpacing = chartWidth / DATA.length;
+    
+    // Grid lines
+    for (let i = -0.4; i <= 0.4; i += 0.1) {
+        if (i >= yMin && i <= yMax) {
+            const y = padding.top + chartHeight * (1 - (i - yMin) / yRange);
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', padding.left);
+            line.setAttribute('y1', y);
+            line.setAttribute('x2', width - padding.right);
+            line.setAttribute('y2', y);
+            line.setAttribute('stroke', '#E0DDD5');
+            line.setAttribute('stroke-width', '1');
+            svg.appendChild(line);
         }
+    }
+    
+    // Zero line
+    const zeroY = padding.top + chartHeight * (1 - (0 - yMin) / yRange);
+    const zeroLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    zeroLine.setAttribute('x1', padding.left);
+    zeroLine.setAttribute('y1', zeroY);
+    zeroLine.setAttribute('x2', width - padding.right);
+    zeroLine.setAttribute('y2', zeroY);
+    zeroLine.setAttribute('stroke', '#1A1A1A');
+    zeroLine.setAttribute('stroke-width', '2');
+    svg.appendChild(zeroLine);
+    
+    // Axes
+    const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    yAxis.setAttribute('x1', padding.left);
+    yAxis.setAttribute('y1', padding.top);
+    yAxis.setAttribute('x2', padding.left);
+    yAxis.setAttribute('y2', height - padding.bottom);
+    yAxis.setAttribute('stroke', '#1A1A1A');
+    yAxis.setAttribute('stroke-width', '2');
+    svg.appendChild(yAxis);
+    
+    const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    xAxis.setAttribute('x1', padding.left);
+    xAxis.setAttribute('y1', height - padding.bottom);
+    xAxis.setAttribute('x2', width - padding.right);
+    xAxis.setAttribute('y2', height - padding.bottom);
+    xAxis.setAttribute('stroke', '#1A1A1A');
+    xAxis.setAttribute('stroke-width', '2');
+    svg.appendChild(xAxis);
+    
+    // Data bars
+    DATA.forEach((d, i) => {
+        const xPos = padding.left + i * barSpacing + (barSpacing - barWidth) / 2;
+        
+        if (currentView === 'sideBySide') {
+            // Democrat bar
+            const demValue = d.demCov;
+            const demBarHeight = Math.abs(demValue) / yRange * chartHeight;
+            const demBarY = demValue >= 0 
+                ? zeroY - demBarHeight 
+                : zeroY;
+            
+            const demRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            demRect.setAttribute('x', xPos);
+            demRect.setAttribute('y', demBarY);
+            demRect.setAttribute('width', barWidth / 2 - 1);
+            demRect.setAttribute('height', demBarHeight);
+            demRect.setAttribute('fill', '#2166AC');
+            demRect.setAttribute('rx', '2');
+            demRect.style.cursor = 'pointer';
+            demRect.addEventListener('mouseenter', (e) => showTooltip(i, e));
+            demRect.addEventListener('mouseleave', hideTooltip);
+            svg.appendChild(demRect);
+            
+            // Republican bar
+            const repValue = d.repCov;
+            const repBarHeight = Math.abs(repValue) / yRange * chartHeight;
+            const repBarY = repValue >= 0 
+                ? zeroY - repBarHeight 
+                : zeroY;
+            
+            const repRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            repRect.setAttribute('x', xPos + barWidth / 2 + 1);
+            repRect.setAttribute('y', repBarY);
+            repRect.setAttribute('width', barWidth / 2 - 1);
+            repRect.setAttribute('height', repBarHeight);
+            repRect.setAttribute('fill', '#B2182B');
+            repRect.setAttribute('rx', '2');
+            repRect.style.cursor = 'pointer';
+            repRect.addEventListener('mouseenter', (e) => showTooltip(i, e));
+            repRect.addEventListener('mouseleave', hideTooltip);
+            svg.appendChild(repRect);
+        } else {
+            // Difference bar
+            const diffValue = d.diff;
+            const diffBarHeight = Math.abs(diffValue) / yRange * chartHeight;
+            const diffBarY = diffValue >= 0 
+                ? zeroY - diffBarHeight 
+                : zeroY;
+            const color = diffValue >= 0 ? '#2166AC' : '#B2182B';
+            
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', xPos);
+            rect.setAttribute('y', diffBarY);
+            rect.setAttribute('width', barWidth);
+            rect.setAttribute('height', diffBarHeight);
+            rect.setAttribute('fill', color);
+            rect.setAttribute('rx', '2');
+            rect.style.cursor = 'pointer';
+            rect.addEventListener('mouseenter', (e) => showTooltip(i, e));
+            rect.addEventListener('mouseleave', hideTooltip);
+            svg.appendChild(rect);
+        }
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', xPos + barWidth / 2);
+        text.setAttribute('y', height - padding.bottom + 15);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '11');
+        text.setAttribute('fill', '#6B6559');
+        text.textContent = d.year;
+        svg.appendChild(text);
+    });
+}
 
         window.addEventListener('load', drawChart);
         window.addEventListener('resize', drawChart);
