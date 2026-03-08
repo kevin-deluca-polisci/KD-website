@@ -20,7 +20,7 @@ If you use these estimates in your research, please cite:
 
 The newspaper endorsements dataset contains historical newspaper endorsements for political candidates and propositions (including amendments, ballot questions, referenda, etc.) from local newspapers in the United States.
 
-**Local Newspaper Endorsement Database**
+**Local Newspaper Endorsements Database**
 
 Coming Soon!
 <!-- If you use the newspaper endorsements data in your research, please cite:
