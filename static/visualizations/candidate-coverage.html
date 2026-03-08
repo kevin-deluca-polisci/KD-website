@@ -317,7 +317,7 @@
     
     const width = svg.clientWidth;
     const height = svg.clientHeight;
-    const padding = { top: 20, right: 20, bottom: 40, left: 50 };
+    const padding = { top: 20, right: 20, bottom: 80, left: 50 };  // increased bottom from 40 to 80
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
     
@@ -328,7 +328,7 @@
     const barWidth = (chartWidth / DATA.length) * 0.7;
     const barSpacing = chartWidth / DATA.length;
     
-    // Grid lines
+    // Grid lines and Y-axis labels
     for (let i = -0.4; i <= 0.4; i += 0.1) {
         if (i >= yMin && i <= yMax) {
             const y = padding.top + chartHeight * (1 - (i - yMin) / yRange);
@@ -340,6 +340,16 @@
             line.setAttribute('stroke', '#E0DDD5');
             line.setAttribute('stroke-width', '1');
             svg.appendChild(line);
+            
+            // Y-axis labels
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', padding.left - 10);
+            label.setAttribute('y', y + 4);
+            label.setAttribute('text-anchor', 'end');
+            label.setAttribute('font-size', '11');
+            label.setAttribute('fill', '#9C9488');
+            label.textContent = i.toFixed(1);
+            svg.appendChild(label);
         }
     }
     
