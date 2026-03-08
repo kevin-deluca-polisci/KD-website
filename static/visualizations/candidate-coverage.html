@@ -79,6 +79,10 @@
             margin-bottom: 24px;
             line-height: 1.4;
         }
+        .x-label {
+            transform: rotate(-45deg);
+            transform-origin: center;
+        }
         .controls {
             display: flex;
             gap: 0;
@@ -436,9 +440,10 @@
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', xPos + barWidth / 2);
         text.setAttribute('y', height - padding.bottom + 15);
-        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('text-anchor', 'end');
         text.setAttribute('font-size', '11');
         text.setAttribute('fill', '#6B6559');
+        text.setAttribute('transform', `rotate(-45 ${xPos + barWidth / 2} ${height - padding.bottom + 15})`);
         text.textContent = d.year;
         svg.appendChild(text);
     });
