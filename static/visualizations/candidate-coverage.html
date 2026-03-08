@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nearly Every Presidential Candidate Gets Bad Press</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/recharts@2.10.3/dist/Recharts.js"></script>
     <style>
         * {
             margin: 0;
@@ -62,8 +59,118 @@
         .content em {
             font-style: italic;
         }
-        #viz-root {
+        .viz-section {
+            background: #FAFAF5;
+            padding: 32px;
+            border-radius: 4px;
             margin: 40px 0;
+        }
+        .viz-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            line-height: 1.15;
+        }
+        .viz-deck {
+            font-size: 15px;
+            font-weight: 300;
+            color: #6B6559;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+        .controls {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #E0DDD5;
+        }
+        button {
+            flex: 1;
+            padding: 8px 16px;
+            font-size: 13px;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            color: #9C9488;
+            font-weight: 400;
+            font-family: 'Source Sans 3', sans-serif;
+            transition: all 0.15s ease;
+            margin-bottom: -1px;
+        }
+        button.active {
+            color: #1A1A1A;
+            font-weight: 600;
+            border-bottom-color: #1A1A1A;
+        }
+        button:hover:not(.active) {
+            color: #6B6559;
+        }
+        .chart-wrapper {
+            width: 100%;
+            height: 420px;
+            background: white;
+            border: 1px solid #E0DDD5;
+            border-radius: 4px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        .annotation {
+            font-size: 12px;
+            color: #9C9488;
+            margin: 16px 0 4px;
+            line-height: 1.5;
+        }
+        .source {
+            font-size: 11px;
+            color: #9C9488;
+            margin: 16px 0 0;
+            line-height: 1.5;
+            border-top: 1px solid #E0DDD5;
+            padding-top: 12px;
+        }
+        .tooltip {
+            position: absolute;
+            background: #FAFAF5;
+            border: 1px solid #E0DDD5;
+            padding: 12px 16px;
+            font-size: 12px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+            max-width: 260px;
+            line-height: 1.5;
+        }
+        .tooltip.visible {
+            display: block;
+        }
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .tooltip-dem {
+            color: #2166AC;
+        }
+        .tooltip-rep {
+            color: #B2182B;
+        }
+        .tooltip-divider {
+            border-top: 1px solid #E0DDD5;
+            padding-top: 4px;
+            margin-top: 4px;
+            color: #9C9488;
+            font-size: 11px;
         }
         .footer {
             margin-top: 40px;
@@ -86,7 +193,24 @@
             
             <p>In a new paper with my coauthor Zoe Kava, we measured what newspaper headlines actually imply about specific candidates' performance, using a technique called stance detection applied to nearly 850,000 headlines. The interactive chart below shows the results for every presidential election from Truman-Dewey in 1948 through Harris-Trump in 2024.</p>
             
-            <div id="viz-root"></div>
+            <div class="viz-section">
+                <div class="viz-title">How Newspapers Covered Every Presidential Candidate Since 1948</div>
+                <p class="viz-deck">Implied candidate performance scores from nearly 850,000 newspaper headlines, measured using stance detection. Scores range from −1 (entirely negative coverage) to +1 (entirely positive).</p>
+                
+                <div class="controls">
+                    <button class="active" id="btn-sidebyside" onclick="switchView('sideBySide')">Each candidate</button>
+                    <button id="btn-diff" onclick="switchView('difference')">Coverage gap (Dem − Rep)</button>
+                </div>
+                
+                <div class="chart-wrapper">
+                    <svg id="chart"></svg>
+                    <div class="tooltip" id="tooltip"></div>
+                </div>
+                
+                <p class="annotation" id="annotation">Nearly every candidate receives net-negative coverage. But the gap between candidates varies dramatically by election. Note the two 2024 entries: Biden's coverage was far more negative than Harris's after she replaced him.</p>
+                
+                <p class="source">Source: DeLuca and Kava, "Candidate-specific media coverage predicts presidential approval ratings and election results" (2026). Data from Table S5. Hover over bars for candidate names and actual vote margins.</p>
+            </div>
             
             <h2>How to read it</h2>
             
@@ -109,17 +233,6 @@
     </div>
 
     <script>
-        const TOKENS = {
-            bg: "#FAFAF5",
-            textPrimary: "#1A1A1A",
-            textSecondary: "#6B6559",
-            textMuted: "#9C9488",
-            accentDem: "#2166AC",
-            accentRep: "#B2182B",
-            gridLine: "#E0DDD5",
-            ruleLine: "#1A1A1A",
-        };
-
         const DATA = [
             { year: "1948", dem: "Truman", rep: "Dewey", demCov: -0.029, repCov: 0.105, diff: -0.134, voteMargin: 4.5 },
             { year: "1952", dem: "Stevenson", rep: "Eisenhower", demCov: 0.046, repCov: 0.105, diff: -0.060, voteMargin: -10.9 },
@@ -144,126 +257,183 @@
             { year: "'24 (Harris)", dem: "Harris", rep: "Trump", demCov: -0.015, repCov: -0.305, diff: 0.289, voteMargin: -1.5 },
         ];
 
-        const CustomTooltip = ({ active, payload, label, view }) => {
-            if (!active || !payload || !payload.length) return null;
-            const d = DATA.find(r => r.year === label);
-            if (!d) return null;
+        let currentView = 'sideBySide';
+        let hoveredIndex = null;
 
-            const tooltipContent = React.createElement('div', {
-                style: {
-                    background: TOKENS.bg,
-                    border: `1px solid ${TOKENS.gridLine}`,
-                    padding: "12px 16px",
-                    fontFamily: "'Source Sans 3', sans-serif",
-                    fontSize: 13,
-                    lineHeight: 1.5,
-                    maxWidth: 260,
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                }
-            }, [
-                React.createElement('div', { key: 'title', style: { fontSize: 15, marginBottom: 6, color: TOKENS.textPrimary, fontWeight: 600 } }, `${d.year}: ${d.dem} vs. ${d.rep}`),
-                view === "sideBySide" ? [
-                    React.createElement('div', { key: 'd', style: { color: TOKENS.accentDem } }, `${d.dem}: ${d.demCov > 0 ? "+" : ""}${d.demCov.toFixed(3)}`),
-                    React.createElement('div', { key: 'r', style: { color: TOKENS.accentRep } }, `${d.rep}: ${d.repCov > 0 ? "+" : ""}${d.repCov.toFixed(3)}`),
-                    React.createElement('div', { key: 'margin', style: { color: TOKENS.textMuted, marginTop: 4, fontSize: 12, borderTop: `1px solid ${TOKENS.gridLine}`, paddingTop: 4 } }, `Vote margin: Dem ${d.voteMargin > 0 ? "+" : ""}${d.voteMargin}`)
-                ] : [
-                    React.createElement('div', { key: 'gap', style: { color: d.diff > 0 ? TOKENS.accentDem : TOKENS.accentRep } }, `Coverage gap: ${d.diff > 0 ? "Dem" : "Rep"} +${Math.abs(d.diff).toFixed(3)}`),
-                    React.createElement('div', { key: 'margin', style: { color: TOKENS.textMuted, marginTop: 4, fontSize: 12, borderTop: `1px solid ${TOKENS.gridLine}`, paddingTop: 4 } }, `Vote margin: Dem ${d.voteMargin > 0 ? "+" : ""}${d.voteMargin}`)
-                ]
-            ]);
-
-            return tooltipContent;
-        };
-
-        function CandidateCoverageViz() {
-            const [view, setView] = React.useState("sideBySide");
-
-            const sideBySideData = DATA.map(d => ({
-                year: d.year,
-                democrat: d.demCov,
-                republican: d.repCov,
-            }));
-
-            const diffData = DATA.map(d => ({
-                year: d.year,
-                diff: d.diff,
-                positive: d.diff >= 0,
-            }));
-
-            const handleSwitchView = (newView) => {
-                setView(newView);
-            };
-
-            return React.createElement('div', {
-                style: {
-                    background: TOKENS.bg,
-                    fontFamily: "'Source Sans 3', sans-serif",
-                    color: TOKENS.textPrimary,
-                    padding: "20px",
-                    borderRadius: "4px",
-                }
-            }, [
-                React.createElement('div', { key: 'title', style: { fontSize: 28, fontWeight: 900, marginBottom: 12, fontFamily: "'Playfair Display', serif" } }, "How Newspapers Covered Every Presidential Candidate Since 1948"),
-                React.createElement('p', { key: 'deck', style: { fontSize: 15, fontWeight: 300, color: TOKENS.textSecondary, marginBottom: 24 } }, "Implied candidate performance scores from nearly 850,000 newspaper headlines, measured using stance detection. Scores range from −1 (entirely negative coverage) to +1 (entirely positive)."),
-                React.createElement('div', { key: 'controls', style: { display: "flex", gap: 0, marginBottom: 20, borderBottom: `1px solid ${TOKENS.gridLine}` } }, [
-                    { key: "sideBySide", label: "Each candidate" },
-                    { key: "difference", label: "Coverage gap (Dem − Rep)" },
-                ].map(({ key, label }) =>
-                    React.createElement('button', {
-                        key,
-                        onClick: () => handleSwitchView(key),
-                        style: {
-                            flex: 1,
-                            fontSize: 13,
-                            fontWeight: view === key ? 600 : 400,
-                            color: view === key ? TOKENS.textPrimary : TOKENS.textMuted,
-                            background: "none",
-                            border: "none",
-                            borderBottom: view === key ? `2px solid ${TOKENS.textPrimary}` : "2px solid transparent",
-                            padding: "8px 16px",
-                            cursor: "pointer",
-                            marginBottom: -1,
-                        }
-                    }, label)
-                )),
-                React.createElement('div', { key: 'chart', style: { width: "100%", height: 420 } },
-                    React.createElement(Recharts.ResponsiveContainer, {},
-                        view === "sideBySide" ?
-                            React.createElement(Recharts.BarChart, { data: sideBySideData, barGap: 1, barCategoryGap: "20%", margin: { top: 5, right: 10, bottom: 5, left: 10 } },
-                                React.createElement(Recharts.CartesianGrid, { vertical: false, stroke: TOKENS.gridLine }),
-                                React.createElement(Recharts.XAxis, { dataKey: "year", tick: { fontSize: 11, fill: TOKENS.textSecondary }, axisLine: { stroke: TOKENS.ruleLine }, tickLine: false }),
-                                React.createElement(Recharts.YAxis, { tick: { fontSize: 11, fill: TOKENS.textSecondary }, axisLine: false, tickLine: false, domain: [-0.4, 0.2], tickFormatter: v => v.toFixed(1) }),
-                                React.createElement(Recharts.ReferenceLine, { y: 0, stroke: TOKENS.ruleLine, strokeWidth: 1 }),
-                                React.createElement(Recharts.Tooltip, { content: React.createElement(CustomTooltip, { view: "sideBySide" }) }),
-                                React.createElement(Recharts.Bar, { dataKey: "democrat", fill: TOKENS.accentDem, radius: [2, 2, 0, 0], name: "Democrat" }),
-                                React.createElement(Recharts.Bar, { dataKey: "republican", fill: TOKENS.accentRep, radius: [2, 2, 0, 0], name: "Republican" }),
-                                React.createElement(Recharts.Legend, { wrapperStyle: { fontSize: 12, paddingTop: 8 } })
-                            ) :
-                            React.createElement(Recharts.BarChart, { data: diffData, margin: { top: 5, right: 10, bottom: 5, left: 10 } },
-                                React.createElement(Recharts.CartesianGrid, { vertical: false, stroke: TOKENS.gridLine }),
-                                React.createElement(Recharts.XAxis, { dataKey: "year", tick: { fontSize: 11, fill: TOKENS.textSecondary }, axisLine: { stroke: TOKENS.ruleLine }, tickLine: false }),
-                                React.createElement(Recharts.YAxis, { tick: { fontSize: 11, fill: TOKENS.textSecondary }, axisLine: false, tickLine: false, domain: [-0.2, 0.35], tickFormatter: v => v.toFixed(1) }),
-                                React.createElement(Recharts.ReferenceLine, { y: 0, stroke: TOKENS.ruleLine, strokeWidth: 1 }),
-                                React.createElement(Recharts.Tooltip, { content: React.createElement(CustomTooltip, { view: "difference" }) }),
-                                React.createElement(Recharts.Bar, { dataKey: "diff", radius: [2, 2, 0, 0], name: "Coverage gap" },
-                                    diffData.map((entry, i) => React.createElement(Recharts.Cell, { key: i, fill: entry.positive ? TOKENS.accentDem : TOKENS.accentRep }))
-                                )
-                            )
-                    )
-                ),
-                React.createElement('p', { key: 'annotation', style: { fontSize: 12, color: TOKENS.textMuted, margin: "16px 0 4px" } }, 
-                    view === "sideBySide"
-                        ? "Nearly every candidate receives net-negative coverage. But the gap between candidates varies dramatically by election. Note the two 2024 entries: Biden's coverage was far more negative than Harris's after she replaced him."
-                        : "Positive values indicate the Democratic candidate received relatively more favorable coverage. The 2020 election and 2024 (Harris) show the largest coverage gaps, driven by unusually negative Trump coverage."
-                ),
-                React.createElement('p', { key: 'source', style: { fontSize: 11, color: TOKENS.textMuted, margin: "16px 0 0", borderTop: `1px solid ${TOKENS.gridLine}`, paddingTop: 12 } }, 
-                    "Source: DeLuca and Kava, \"Candidate-specific media coverage predicts presidential approval ratings and election results\" (2026). Data from Table S5. Hover over bars for candidate names and actual vote margins."
-                )
-            ]);
+        function switchView(view) {
+            currentView = view;
+            document.getElementById('btn-sidebyside').classList.toggle('active', view === 'sideBySide');
+            document.getElementById('btn-diff').classList.toggle('active', view === 'difference');
+            
+            const annotation = document.getElementById('annotation');
+            if (view === 'sideBySide') {
+                annotation.textContent = "Nearly every candidate receives net-negative coverage. But the gap between candidates varies dramatically by election. Note the two 2024 entries: Biden's coverage was far more negative than Harris's after she replaced him.";
+            } else {
+                annotation.textContent = "Positive values indicate the Democratic candidate received relatively more favorable coverage. The 2020 election and 2024 (Harris) show the largest coverage gaps, driven by unusually negative Trump coverage.";
+            }
+            
+            drawChart();
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('viz-root'));
-        root.render(React.createElement(CandidateCoverageViz));
+        function showTooltip(index, event) {
+            hoveredIndex = index;
+            const d = DATA[index];
+            const tooltip = document.getElementById('tooltip');
+            
+            let html = `<div class="tooltip-title">${d.year}: ${d.dem} vs. ${d.rep}</div>`;
+            
+            if (currentView === 'sideBySide') {
+                html += `<div class="tooltip-dem">${d.dem}: ${d.demCov > 0 ? "+" : ""}${d.demCov.toFixed(3)}</div>`;
+                html += `<div class="tooltip-rep">${d.rep}: ${d.repCov > 0 ? "+" : ""}${d.repCov.toFixed(3)}</div>`;
+                html += `<div class="tooltip-divider">Vote margin: Dem ${d.voteMargin > 0 ? "+" : ""}${d.voteMargin}</div>`;
+            } else {
+                html += `<div style="color: ${d.diff > 0 ? '#2166AC' : '#B2182B'}">Gap: ${d.diff > 0 ? "Dem" : "Rep"} +${Math.abs(d.diff).toFixed(3)}</div>`;
+                html += `<div class="tooltip-divider">Vote margin: Dem ${d.voteMargin > 0 ? "+" : ""}${d.voteMargin}</div>`;
+            }
+            
+            tooltip.innerHTML = html;
+            tooltip.classList.add('visible');
+            
+            const rect = event.target.getBoundingClientRect();
+            const wrapper = document.querySelector('.chart-wrapper');
+            const wrapperRect = wrapper.getBoundingClientRect();
+            
+            tooltip.style.left = (rect.left - wrapperRect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+            tooltip.style.top = (rect.top - wrapperRect.top - tooltip.offsetHeight - 10) + 'px';
+        }
+
+        function hideTooltip() {
+            hoveredIndex = null;
+            document.getElementById('tooltip').classList.remove('visible');
+        }
+
+        function drawChart() {
+            const svg = document.getElementById('chart');
+            svg.innerHTML = '';
+            
+            const width = svg.clientWidth;
+            const height = svg.clientHeight;
+            const padding = { top: 20, right: 20, bottom: 40, left: 50 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+            
+            const yMin = currentView === 'sideBySide' ? -0.4 : -0.2;
+            const yMax = currentView === 'sideBySide' ? 0.2 : 0.35;
+            const yRange = yMax - yMin;
+            
+            const barWidth = (chartWidth / DATA.length) * 0.7;
+            const barSpacing = chartWidth / DATA.length;
+            
+            // Grid lines
+            for (let i = -0.4; i <= 0.4; i += 0.1) {
+                if (i >= yMin && i <= yMax) {
+                    const y = padding.top + chartHeight * (1 - (i - yMin) / yRange);
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', padding.left);
+                    line.setAttribute('y1', y);
+                    line.setAttribute('x2', width - padding.right);
+                    line.setAttribute('y2', y);
+                    line.setAttribute('stroke', '#E0DDD5');
+                    line.setAttribute('stroke-width', '1');
+                    svg.appendChild(line);
+                }
+            }
+            
+            // Zero line
+            const zeroY = padding.top + chartHeight * (1 - (0 - yMin) / yRange);
+            const zeroLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            zeroLine.setAttribute('x1', padding.left);
+            zeroLine.setAttribute('y1', zeroY);
+            zeroLine.setAttribute('x2', width - padding.right);
+            zeroLine.setAttribute('y2', zeroY);
+            zeroLine.setAttribute('stroke', '#1A1A1A');
+            zeroLine.setAttribute('stroke-width', '2');
+            svg.appendChild(zeroLine);
+            
+            // Axes
+            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxis.setAttribute('x1', padding.left);
+            yAxis.setAttribute('y1', padding.top);
+            yAxis.setAttribute('x2', padding.left);
+            yAxis.setAttribute('y2', height - padding.bottom);
+            yAxis.setAttribute('stroke', '#1A1A1A');
+            yAxis.setAttribute('stroke-width', '2');
+            svg.appendChild(yAxis);
+            
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', padding.left);
+            xAxis.setAttribute('y1', height - padding.bottom);
+            xAxis.setAttribute('x2', width - padding.right);
+            xAxis.setAttribute('y2', height - padding.bottom);
+            xAxis.setAttribute('stroke', '#1A1A1A');
+            xAxis.setAttribute('stroke-width', '2');
+            svg.appendChild(xAxis);
+            
+            // Data bars
+            DATA.forEach((d, i) => {
+                const xPos = padding.left + i * barSpacing + (barSpacing - barWidth) / 2;
+                
+                if (currentView === 'sideBySide') {
+                    const demHeight = (d.demCov - yMin) / yRange * chartHeight;
+                    const demY = padding.top + chartHeight - demHeight;
+                    
+                    const demRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    demRect.setAttribute('x', xPos);
+                    demRect.setAttribute('y', demY);
+                    demRect.setAttribute('width', barWidth / 2 - 1);
+                    demRect.setAttribute('height', Math.max(0, demHeight));
+                    demRect.setAttribute('fill', '#2166AC');
+                    demRect.setAttribute('rx', '2');
+                    demRect.style.cursor = 'pointer';
+                    demRect.addEventListener('mouseenter', (e) => showTooltip(i, e));
+                    demRect.addEventListener('mouseleave', hideTooltip);
+                    svg.appendChild(demRect);
+                    
+                    const repHeight = (d.repCov - yMin) / yRange * chartHeight;
+                    const repY = padding.top + chartHeight - repHeight;
+                    
+                    const repRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    repRect.setAttribute('x', xPos + barWidth / 2 + 1);
+                    repRect.setAttribute('y', repY);
+                    repRect.setAttribute('width', barWidth / 2 - 1);
+                    repRect.setAttribute('height', Math.max(0, repHeight));
+                    repRect.setAttribute('fill', '#B2182B');
+                    repRect.setAttribute('rx', '2');
+                    repRect.style.cursor = 'pointer';
+                    repRect.addEventListener('mouseenter', (e) => showTooltip(i, e));
+                    repRect.addEventListener('mouseleave', hideTooltip);
+                    svg.appendChild(repRect);
+                } else {
+                    const diffHeight = (d.diff - yMin) / yRange * chartHeight;
+                    const diffY = padding.top + chartHeight - diffHeight;
+                    const color = d.diff >= 0 ? '#2166AC' : '#B2182B';
+                    
+                    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    rect.setAttribute('x', xPos);
+                    rect.setAttribute('y', diffY);
+                    rect.setAttribute('width', barWidth);
+                    rect.setAttribute('height', Math.max(0, diffHeight));
+                    rect.setAttribute('fill', color);
+                    rect.setAttribute('rx', '2');
+                    rect.style.cursor = 'pointer';
+                    rect.addEventListener('mouseenter', (e) => showTooltip(i, e));
+                    rect.addEventListener('mouseleave', hideTooltip);
+                    svg.appendChild(rect);
+                }
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', xPos + barWidth / 2);
+                text.setAttribute('y', height - padding.bottom + 15);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '11');
+                text.setAttribute('fill', '#6B6559');
+                text.textContent = d.year;
+                svg.appendChild(text);
+            });
+        }
+
+        window.addEventListener('load', drawChart);
+        window.addEventListener('resize', drawChart);
     </script>
 </body>
 </html>
