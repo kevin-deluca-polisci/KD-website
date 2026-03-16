@@ -4,9 +4,9 @@ title: "Data"
 
 ## Candidate Quality and Newspaper Bias Estimates
 
-**Candidate Quality Data** 
+**[Candidate Quality Data](/datasets/quality_estimates_v1.csv)**
 
-**Newspaper Partisan Bias Estimates** 
+**[Newspaper Partisan Bias Estimates](/datasets/bias_estimates_v1.csv)**
 
 If you use these estimates in your research, please cite:
 
