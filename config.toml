@@ -47,9 +47,3 @@ title = "Kevin DeLuca"
     name = "Teaching"
     url = "/teaching/"
     weight = 6
-    
-  [[menu.main]]
-    identifier = "blog"
-    name = "Blog"
-    url = "/blog/"
-    weight = 7
