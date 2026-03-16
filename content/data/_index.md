@@ -4,11 +4,9 @@ title: "Data"
 
 ## Candidate Quality and Newspaper Bias Estimates
 
-**Candidate Quality Data** [dropdown of different versions?]
+**Candidate Quality Data** 
 
-**Newspaper Partisan Bias Estimates** [dropdown of different versions?]
-
-I update this data periodically. You can check for the most up-to-date version (and previous versions) of the data on GitHub: [newspaper_endorsements repository](https://github.com/kevin-deluca-polisci/newspaper_endorsements/tree/main) 
+**Newspaper Partisan Bias Estimates** 
 
 If you use these estimates in your research, please cite:
 
