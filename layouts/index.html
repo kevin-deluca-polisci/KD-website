@@ -46,10 +46,10 @@
             margin-bottom: 20px;
         }
         h2 {
-            font-size: 1.5em;
-            margin: 30px 0 15px;
-            border-bottom: 2px solid #0066cc;
-            padding-bottom: 5px;
+            font-size: 1.2em;
+            margin: 30px 0 8px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2px;
         }
         p {
             margin-bottom: 15px;
@@ -60,8 +60,49 @@
         a:hover {
             text-decoration: underline;
         }
+        .publication {
+            margin: 6px 0;
+            line-height: 1.5;
+        }
+        .pub-title {
+            font-weight: 600;
+            font-size: 0.98em;
+            display: inline;
+        }
+        .pub-authors {
+            font-style: italic;
+            font-size: 0.9em;
+            display: inline;
+        }
+        .pub-journal {
+            color: #666;
+            font-size: 0.9em;
+            display: inline;
+        }
+        .pub-description {
+            color: #555;
+            font-size: 0.85em;
+            display: inline;
+        }
+        .pub-links {
+            display: inline;
+        }
+        .pub-links a {
+            color: #0066cc;
+            margin-left: 8px;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .pub-links a:hover {
+            text-decoration: underline;
+        }
+        .pub-status {
+            display: inline;
+            font-size: 0.9em;
+            color: #666;
+        }
     </style>
-<!-- Google Analytics -->
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YJY2BZ0STQ"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -78,7 +119,7 @@
             {{ end }}
         </nav>
     </header>
-    
+
     <main>
         <div style="display: flex; gap: 30px; align-items: flex-start;">
             <div style="flex-shrink: 0; width: 250px;">
@@ -88,6 +129,46 @@
                 {{ .Content }}
             </div>
         </div>
+
+        <h2>Publications</h2>
+
+        {{ $pubs := getCSV "," "data/publications.csv" }}
+        {{ range $i, $pub := $pubs }}
+            {{ if eq (index $pub 0) "Title" }}
+            {{ else }}
+            {{ $num := sub (len $pubs) $i }}
+            <div class="publication">
+                <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
+                <span class="pub-title">{{ index $pub 0 }}</span>
+                {{ if ne (index $pub 9) "" }}<span class="pub-authors"> {{ index $pub 9 }}</span>{{ end }}
+                <span class="pub-journal"> <em>{{ index $pub 2 }}</em>{{ if ne (index $pub 3) "" }} {{ index $pub 3 }}{{ if ne (index $pub 4) "" }}({{ index $pub 4 }}){{ end }}{{ if ne (index $pub 5) "" }}: {{ index $pub 5 }}{{ end }}{{ end }} ({{ index $pub 1 }})</span>
+                {{ if ne (index $pub 6) "" }}<span class="pub-description"> {{ index $pub 6 }}</span>{{ end }}
+                <span class="pub-links">
+                    {{ if ne (index $pub 7) "" }}<a href="{{ index $pub 7 }}" target="_blank">pub</a>{{ end }}
+                    {{ if ne (index $pub 8) "" }}<a href="{{ index $pub 8 }}" target="_blank">pdf</a>{{ end }}
+                </span>
+            </div>
+            {{ end }}
+        {{ end }}
+
+        <h2>Works in Progress</h2>
+
+        {{ $wip := getCSV "," "data/working-papers.csv" }}
+        {{ range $i, $paper := $wip }}
+            {{ if eq (index $paper 0) "Title" }}
+            {{ else }}
+            {{ $num := sub (len $wip) $i }}
+            <div class="publication">
+                <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
+                <span class="pub-title">{{ index $paper 0 }}</span>
+                {{ if ne (index $paper 2) "" }}<span class="pub-authors"> {{ index $paper 2 }}</span>{{ end }}
+                <span class="pub-status"> ({{ index $paper 1 }})</span>
+                {{ if ne (index $paper 3) "" }}<span class="pub-description"> {{ index $paper 3 }}</span>{{ end }}
+                {{ if ne (index $paper 4) "" }}<span class="pub-links"><a href="{{ index $paper 4 }}" target="_blank">draft</a></span>{{ end }}
+            </div>
+            {{ end }}
+        {{ end }}
+
     </main>
 </body>
 </html>
