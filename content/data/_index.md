@@ -31,7 +31,7 @@ We are currently in the process of organizing an archive of the database, with p
 -->
 ### Research using this data
 
-> DeLuca, Kevin. "Editor's Choice: Measuring Candidate Quality using Local Newspaper Endorsements." *Journal of Politics*, 2025. [https://doi.org/10.1086/736463](https://doi.org/10.1086/736463)
+> DeLuca, Kevin. 2025. "Editor's Choice: Measuring Candidate Quality using Local Newspaper Endorsements." _Journal of Politics_, [https://doi.org/10.1086/736463](https://doi.org/10.1086/736463)
 
 > DeLuca, Kevin, Daniel Moskowitz, and Benjamin Schneer. 2025. "A Drag on the Ticket? Estimating Top-of-the-Ticket Effects on Down-Ballot Races", _American Journal of Political Science_, [https://doi.org/10.1111/ajps.70025](https://doi.org/10.1111/ajps.70025)
 
