@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.4;
+            color: #333;
+            background-color: #fafafa;
+        }
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            margin-bottom: 0;
+        }
+        nav {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav a {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: 500;
+        }
+        nav a:hover { color: #0052a3; }
+        main {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 8px 30px;
+        }
+        .tracker-meta {
+            max-width: 800px;
+            margin: 14px auto 0;
+            padding: 0 16px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .tracker-meta a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .tracker-meta a:hover { text-decoration: underline; }
+        .iframe-wrap {
+            margin-top: 8px;
+        }
+        #tracker-iframe {
+            width: 100%;
+            border: none;
+            display: block;
+            min-height: 1600px;
+            background: #fff;
+            transition: height 0.15s ease-out;
+        }
+        .open-new-tab {
+            display: inline-block;
+            font-size: 12px;
+            color: #0066cc;
+            text-decoration: none;
+            margin-top: 6px;
+        }
+        .open-new-tab:hover { text-decoration: underline; }
+    </style>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YJY2BZ0STQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YJY2BZ0STQ');
+    </script>
+</head>
+<body>
+    <header>
+        <nav>
+            {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}">{{ .Name }}</a>
+            {{ end }}
+        </nav>
+    </header>
+
+    <!-- Optional intro text from _index.md -->
+    {{ if .Content }}
+    <div class="tracker-meta">{{ .Content }}</div>
+    {{ end }}
+
+    <main>
+        <div class="iframe-wrap">
+            <iframe id="tracker-iframe"
+                    src="https://kevinmdeluca.github.io/coverage-tracker/"
+                    title="Presidential Coverage Tracker"
+                    loading="lazy"
+                    allow="fullscreen"></iframe>
+            <a class="open-new-tab"
+               href="https://kevinmdeluca.github.io/coverage-tracker/"
+               target="_blank" rel="noopener">Open in new tab ↗</a>
+        </div>
+    </main>
+
+    <script>
+    // Resize the iframe in response to height messages from the embedded tracker.
+    window.addEventListener("message", function(e) {
+        if (e.data && e.data.type === "coverage-tracker-resize" &&
+            typeof e.data.height === "number") {
+            var iframe = document.getElementById("tracker-iframe");
+            if (iframe) iframe.style.height = (e.data.height + 8) + "px";
+        }
+    });
+    </script>
+</body>
+</html>

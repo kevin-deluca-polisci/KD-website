@@ -35,15 +35,21 @@ title = "Kevin DeLuca"
     name = "Media"
     url = "/media/"
     weight = 4
-    
+
+  [[menu.main]]
+    identifier = "media-tracker"
+    name = "Media Tracker"
+    url = "/media-tracker/"
+    weight = 5
+
   [[menu.main]]
     identifier = "data"
     name = "Data"
     url = "/data/"
-    weight = 5
-    
+    weight = 6
+
   [[menu.main]]
     identifier = "teaching"
     name = "Teaching"
     url = "/teaching/"
-    weight = 6
+    weight = 7
