@@ -145,6 +145,25 @@
                 position: static;
             }
         }
+        .empty-state {
+            max-width: 720px;
+            margin: 80px auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+        .empty-state h1 {
+            font-size: 2em;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        .empty-content {
+            color: #888;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+        .empty-content p {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -156,32 +175,40 @@
         </nav>
     </header>
     
+    {{ $posts := where .Site.RegularPages "Section" "blog" }}
+    {{ $posts = sort $posts "Date" "desc" }}
+    {{ $currentTag := .Params.tag }}
+
+    {{ if eq (len $posts) 0 }}
+    <div class="empty-state">
+        <h1>{{ .Title }}</h1>
+        <div class="empty-content">
+            {{ .Content }}
+        </div>
+    </div>
+    {{ else }}
     <div class="container">
         <h1>{{ .Title }}</h1>
-        
+
         <aside class="sidebar">
             <h3>Topics</h3>
             <ul>
                 {{ $allTags := slice }}
-                {{ range where .Site.RegularPages "Section" "blog" }}
+                {{ range $posts }}
                     {{ range .Params.tags }}
                         {{ if not (in $allTags .) }}
                             {{ $allTags = $allTags | append . }}
                         {{ end }}
                     {{ end }}
                 {{ end }}
-                
+
                 {{ range sort $allTags }}
                 <li><a href="/KD-website/blog/?tag={{ . | urlize }}">{{ . }}</a></li>
                 {{ end }}
             </ul>
         </aside>
-        
+
         <main>
-            {{ $currentTag := .Params.tag }}
-            {{ $posts := where .Site.RegularPages "Section" "blog" }}
-            {{ $posts = sort $posts "Date" "desc" }}
-            
             {{ if $currentTag }}
                 {{ range $posts }}
                     {{ if in .Params.tags $currentTag }}
@@ -191,7 +218,7 @@
                     <div class="post-meta">{{ .Date.Format "January 2, 2006" }}</div>
                     {{ if .Params.description }}<p class="post-description">{{ .Params.description }}</p>{{ end }}
                     {{ if .Params.image }}
-                        <a href="{{ .Permalink }}"><img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image"></a>                    
+                        <a href="{{ .Permalink }}"><img src="{{ .Params.image }}" alt="{{ .Title }}" class="post-image"></a>
                         {{ end }}
                     </article>
                     {{ end }}
@@ -211,5 +238,6 @@
             {{ end }}
         </main>
     </div>
+    {{ end }}
 </body>
 </html>
