@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-19T19:37:56.784767+00:00",
+  "generated_at": "2026-08-19T22:40:58.430807+00:00",
   "latest_snapshot": "2026-08-19",
   "snapshot_count": 1,
   "headline": [
@@ -11,6 +11,8 @@
       "low": 3.61,
       "high": 15.36,
       "tier": "open",
+      "display": "single",
+      "sole_source": "class model",
       "note": "class model"
     },
     {
@@ -19,7 +21,9 @@
       "n_sources": 1,
       "low": 5.73,
       "high": 5.73,
-      "tier": "open"
+      "tier": "open",
+      "display": "single",
+      "sole_source": "grant_williams"
     }
   ],
   "series": {
@@ -76,5 +80,6 @@
     ]
   },
   "suppressed_cells": 0,
+  "display_note": "A row with display='single' has ONE contributing source and is not a category average. Render it named, never as a consensus.",
   "disclosure_note": "Category averages only for sources whose terms do not permit per-forecaster republication during the cycle. Averages containing any such source are shown only with at least 3 contributors. Full per-forecaster data will be released as a documented archive after the election."
 }
