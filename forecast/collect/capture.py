@@ -360,7 +360,11 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
     """
     cfg = src.get("config") or {}
     base = cfg["api_base"].rstrip("/")
-    pattern = re.compile(cfg.get("series_pattern", ".*"), re.IGNORECASE)
+    # Back-compat with the old single-pattern form.
+    include = re.compile(cfg.get("series_include") or cfg.get("series_pattern", ".*"),
+                         re.IGNORECASE)
+    exclude_raw = cfg.get("series_exclude")
+    exclude = re.compile(exclude_raw, re.IGNORECASE) if exclude_raw else None
     limit = cfg.get("page_limit", 200)
     max_pages = cfg.get("max_pages", 20)
     category = cfg.get("series_category")
@@ -368,6 +372,8 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
     n = b = 0
     notes: list[str] = []
     matched: list[str] = []
+    excluded: list[str] = []
+    near_missed: list[str] = []
     cursor = None
 
     for page in range(max_pages):
@@ -392,14 +398,28 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
         series = payload.get("series") or []
         for s in series:
             ticker = s.get("ticker", "")
-            if ticker and pattern.search(ticker):
+            if not ticker:
+                continue
+            if exclude is not None and exclude.search(ticker):
+                excluded.append(ticker)
+                continue
+            if include.search(ticker):
                 matched.append(ticker)
+            else:
+                near_missed.append(ticker)
 
         cursor = payload.get("cursor")
         if not cursor or not series:
             break
 
-    notes.append(f"{len(matched)} series matched the pattern")
+    notes.append(f"{len(matched)} series matched, {len(excluded)} explicitly excluded, "
+                 f"{len(near_missed)} unmatched")
+    # Surface anything that looks election-shaped but did not match, so a series
+    # Kalshi renames shows up in the log instead of silently disappearing.
+    shaped = [t for t in near_missed
+              if re.search(r"(MIDTERM|GENERICBALLOT|GOVERNOR|CONTROL)", t, re.I)]
+    if shaped:
+        notes.append(f"NEAR MISS — election-shaped but unmatched: {shaped[:8]}")
 
     # Capture markets for each matched series.
     for ticker in sorted(set(matched)):
@@ -431,15 +451,19 @@ def handle_polymarket(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tupl
         except Exception as e:
             notes.append(f"slug {slug} failed: {e}")
 
-    for term in cfg.get("search_terms", []):
-        params = {"limit": cfg.get("page_limit", 100), "active": "true", "closed": "false"}
+    # ONE snapshot of the active-event list. The previous version issued one
+    # request per "search term" but never actually sent the term as a query, so
+    # it stored the same multi-megabyte response several times over.
+    if cfg.get("snapshot_active_events"):
+        params = {"limit": cfg.get("page_limit", 500),
+                  "active": "true", "closed": "false"}
         url = f"{base}/events?{urllib.parse.urlencode(params)}"
         try:
             body, meta = fetcher.get(url)
-            b += store.write(src["id"], f"search-{term}", body, meta)
+            b += store.write(src["id"], "active-events", body, meta)
             n += 1
         except Exception as e:
-            notes.append(f"search '{term}' failed: {e}")
+            notes.append(f"active-events snapshot failed: {e}")
 
     notes.append("per-seat market coverage was unverified in the audit; check the stored events")
     return n, b, notes

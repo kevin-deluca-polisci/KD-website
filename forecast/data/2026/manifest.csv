@@ -18,3 +18,4 @@ run_started_at,snapshot_date,source_id,category,ok,artifacts,bytes,requests,skip
 2026-08-19T19:05:22.341364+00:00,2026-08-19,sabato,expert_ordinal,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
 2026-08-19T19:05:22.341364+00:00,2026-08-19,economist,professional,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
 2026-08-19T19:05:22.341364+00:00,2026-08-19,race_to_the_wh,professional,1,2,431986,2,,,
+2026-08-19T19:17:54.194206+00:00,2026-08-19,rcp,polling,0,0,0,4,,RuntimeError: every configured URL failed: senate_map: HTTPError: HTTP Error 403: Forbidden | latest_polls_2026: HTTPError: HTTP Error 403: Forbidden | latest_polls_senate: HTTPError: HTTP Error 403: Forbidden | latest_polls_house: HTTPError: HTTP Error 403: Forbidden,

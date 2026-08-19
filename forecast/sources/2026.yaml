@@ -59,10 +59,17 @@ sources:
     robots_checked: 2026-08-19
     config:
       api_base: https://api.elections.kalshi.com/trade-api/v2
-      # Discovery: page the series list, keep tickers matching this pattern,
-      # then capture every open market under each match. Regex rather than
-      # hardcoded tickers because Kalshi renames series mid-cycle.
-      series_pattern: "(SENATE|HOUSE|MIDTERM|CONGRESS|GOVERNOR|GENERICBALLOT|CONTROL|PARTY)"
+      # Discovery: page the series list, fetch markets only for tickers matching
+      # `series_include` and not matching `series_exclude`. The full series list
+      # is stored every run regardless, so the filter can always be audited
+      # after the fact and re-run against history.
+      #
+      # Tightened 2026-08-19 after the first real run matched 137 series, of
+      # which ~128 were noise: Kalshi's Politics category is dominated by
+      # legislative-action markets (tariff votes, expulsions, Epstein files) and
+      # foreign elections. Anchoring is what does the work here.
+      series_include: "^(HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
+      series_exclude: "^(PRESPARTY|KXPRES)"
       series_category: Politics
       page_limit: 200
       max_pages: 20
@@ -71,6 +78,15 @@ sources:
       were removed in Q1 2026 — do not coerce to int in the parser.
       No Retry-After header on 429, so backoff must be self-timed.
       robots.txt explicitly allows AI agents.
+      THE REAL MIDTERM SERIES (verified 2026-08-19): HOUSE and SENATE are chamber
+      control; HOUSEMOV and SENATEMOV are margin of victory; KXHOUSE and KXSENATE
+      hold per-seat markets; KXGENERICBALLOTVOTEHUB is the generic ballot.
+      DELIBERATELY EXCLUDED: the PRESPARTY* family (57 series) is the 2028
+      presidential race by state. Real forecasts, but a different election and a
+      different archive. If you ever want them, give them their own source id and
+      cycle rather than smuggling them in under 2026.
+      Near-misses are logged each run, so a renamed series shows up in the log
+      rather than vanishing silently.
 
   - id: polymarket
     name: Polymarket
@@ -86,15 +102,20 @@ sources:
       gamma_base: https://gamma-api.polymarket.com
       slugs:
         - balance-of-power-2026-midterms
-      search_terms:
-        - "2026 midterm"
-        - "Senate 2026"
-        - "House 2026"
-      page_limit: 100
-      max_pages: 10
+      # ONE snapshot of the active-event list, not one per search term. The
+      # first real run fetched the same unfiltered 4.5 MB response three times
+      # because the "search terms" were never actually sent as a query — 13.6 MB
+      # a day for one page of data. Fixed 2026-08-19.
+      snapshot_active_events: true
+      page_limit: 500
     notes: >
-      robots.txt has no Disallow at all. Per-seat market coverage was
-      UNVERIFIED as of the audit — the discovery step will reveal it.
+      robots.txt has no Disallow at all. Per-seat market coverage was UNVERIFIED
+      in the audit; the stored event list is what settles it — grep the capture
+      for per-seat questions before writing more of the parser.
+      Size note: the active-event list is ~4.5 MB/day and mostly crypto and
+      sports. It is kept whole because filtering at capture time would violate
+      the store-raw-first rule, but if the private repo gets uncomfortable this
+      is the first place to look.
 
   # ----------------------------------------------------------------- hybrid --
 
@@ -114,8 +135,8 @@ sources:
           url: https://grantbw4.github.io/2026-midterms-forecast/forecast.json
         - name: senate_forecast
           url: https://grantbw4.github.io/2026-midterms-forecast/senate_forecast.json
-        - name: timeline
-          url: https://grantbw4.github.io/2026-midterms-forecast/timeline.json
+        # timeline.json 404s as of 2026-08-19 — he publishes only the two
+        # forecast files. Left out rather than generating a daily failure note.
     notes: >
       MIT licence, repo grantbw4/2026-midterms-forecast (default branch `master`).
       IMPORTANT: outputs/ is GITIGNORED in the repo — the JSON is built by his
@@ -192,7 +213,7 @@ sources:
     name: RealClearPolling
     category: polling
     method: http
-    enabled: true
+    enabled: false                 # 403s to any non-browser client — see notes
     cadence: daily
     publication: aggregate_only
     declared_inputs: []
@@ -209,9 +230,26 @@ sources:
         - name: latest_polls_house
           url: https://www.realclearpolling.com/latest-polls/house
     notes: >
-      Minimal robots.txt — only /latest-polls/main-latest-polls disallowed.
-      No AI-bot blocks, no Crawl-delay. Also publishes its own ordinal ratings
-      map, so it double-counts into expert_ordinal; pick one at render time.
+      DISABLED 2026-08-19. Returns 403 Forbidden to every request, from a
+      datacentre IP (GitHub Actions) AND from a residential one. So it is not IP
+      reputation — RCP filters on the request itself.
+      The awkward part: their robots.txt PERMITS this. Only
+      /latest-polls/main-latest-polls is disallowed, there are no AI-bot rules
+      and no Crawl-delay. Their published policy and their actual enforcement
+      disagree.
+      We treat the enforcement as the real signal and stay out. Getting round a
+      bot filter is not something this project can do and still describe its own
+      methods honestly on a public methodology page.
+      ROUTES BACK IN, in order of preference:
+        1. Wikipedia's poll-aggregation table already lists RCP's average
+           alongside other aggregators, under CC BY-SA. Second-hand but clean.
+        2. Hand-enter the headline number weekly (see manual_import.py). The
+           scope doc's own rule: for a source that moves a few times a month,
+           two minutes of typing never breaks and sidesteps the question.
+        3. Write and ask. An academic archive with per-source attribution is a
+           very different request from a scraper, and they may simply say yes.
+      Also note RCP publishes its own ordinal ratings map, which would
+      double-count into expert_ordinal; pick one at render time.
 
   # ----------------------------------------------------- ratings aggregator --
 
@@ -231,6 +269,11 @@ sources:
         - "2026 United States House of Representatives election ratings"
         - "2026 United States Senate elections"
         - "2026 United States gubernatorial elections"
+        # Added 2026-08-19. Carries a poll-AGGREGATION table: one row per
+        # aggregator (RCP, Silver Bulletin, ...) with dates, R, D, and margin.
+        # This is how the polling category gets populated now that RCP blocks
+        # direct collection — second-hand, but CC BY-SA and openly available.
+        - "2026 United States House of Representatives elections"
       # Backfill walks revision history to the start of the cycle. This is the
       # ONLY source in the whole registry that recovers the past — everything
       # else only exists going forward from the day capture starts.
@@ -245,6 +288,12 @@ sources:
       Tables lag the forecasters by weeks (June dates observed in August), so
       treat the "as of" dates in the table as authoritative, not the revision
       timestamp.
+      TWO DIFFERENT TABLE SHAPES now captured: the ratings articles give one
+      column per forecaster with ordinal values; the House elections article
+      gives one ROW per poll aggregator with numeric R/D/margin. The parser
+      currently reads only the first. Bytes for the second are banking from
+      today, so the parser can be written whenever — that is the whole point of
+      capturing before parsing.
 
   # ------------------------------------------------- registered but BLOCKED --
   # Kept here deliberately. A source you decided not to collect is a decision
