@@ -1,11 +1,11 @@
 snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,mean,min,max,sd,tier,display,sole_source
-2026-08-19,market,GOV_IN_2026,governor,IN,,win_prob_D,prob,1,0.3289,0.3289,0.3289,,open,single,polymarket
-2026-08-19,market,GOV_IN_2026,governor,IN,,win_prob_R,prob,1,0.3694,0.3694,0.3694,,open,single,polymarket
+2026-08-19,market,GOV_IN_2026,governor,IN,,win_prob_D,prob,1,0.3273,0.3273,0.3273,,open,single,polymarket
+2026-08-19,market,GOV_IN_2026,governor,IN,,win_prob_R,prob,1,0.3757,0.3757,0.3757,,open,single,polymarket
 2026-08-19,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0.875,0.875,0.875,,open,single,polymarket
 2026-08-19,market,NATL_HOUSE_2026,national,,,win_prob_R,prob,1,0.125,0.125,0.125,,open,single,polymarket
 2026-08-19,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0.505,0.505,0.505,,open,single,polymarket
 2026-08-19,market,NATL_SENATE_2026,national,,,win_prob_R,prob,1,0.495,0.495,0.495,,open,single,polymarket
-2026-08-19,market,SEN_OF_2026,senate,OF,,win_prob_D,prob,1,0.2515,0.2515,0.2515,,open,single,polymarket
+2026-08-19,market,SEN_OF_2026,senate,OF,,win_prob_D,prob,1,0.2514,0.2514,0.2514,,open,single,polymarket
 2026-08-19,professional,HOU_AK_01_2026,house,AK,01,margin_D,pct,1,-3.61,-3.61,-3.61,,open,single,grant_williams
 2026-08-19,professional,HOU_AK_01_2026,house,AK,01,win_prob_D,prob,1,0.2785,0.2785,0.2785,,open,single,grant_williams
 2026-08-19,professional,HOU_AL_01_2026,house,AL,01,margin_D,pct,1,-11.71,-11.71,-11.71,,open,single,grant_williams
