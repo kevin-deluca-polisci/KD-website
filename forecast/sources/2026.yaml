@@ -87,6 +87,18 @@ sources:
       cycle rather than smuggling them in under 2026.
       Near-misses are logged each run, so a renamed series shows up in the log
       rather than vanishing silently.
+      REALITY CHECK, 2026-08-19: HOUSE, SENATE, HOUSEMOV, SENATEMOV and KXHOUSE
+      all return {"cursor":"","markets":[]} — the series exist as shells but
+      Kalshi has NOT opened 2026 chamber-control markets under them. The only
+      populated election series is KXGENERICBALLOTVOTEHUB, and that is a weekly
+      ladder of "Above X%" threshold contracts with no prices in the /markets
+      response (they would need the orderbook endpoint), so it is not parsed yet.
+      CONSEQUENCE: Kalshi currently contributes ZERO rows, and the parser returns
+      an empty list rather than raising — that is the honest report, not a bug.
+      Capture continues daily because the empty response is itself worth
+      archiving: the day they open those markets, the archive shows exactly when.
+      The market category therefore rests on Polymarket alone for now, which the
+      display flag correctly reports as a single source.
 
   - id: polymarket
     name: Polymarket
@@ -233,6 +245,14 @@ sources:
           url: https://raw.githubusercontent.com/MEDSL/2024-elections-official/main/2024-president-state.csv
         - name: senate_state_2024
           url: https://raw.githubusercontent.com/MEDSL/2024-elections-official/main/2024-senate-state.csv
+        # The full 1976-2024 series, which carries 2020 as well as 2024 — both
+        # cycles are needed for a Cook-style two-election state PVI. UNVERIFIED:
+        # Dataverse was unreachable from the machine this registry was written
+        # on. Per-URL isolation means a 404 here costs nothing; if it fails,
+        # check the download path at
+        # https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/42MVDX
+        - name: president_state_1976_2024
+          url: "https://dataverse.harvard.edu/api/access/dataset/:persistentId/?persistentId=doi:10.7910/DVN/42MVDX"
     notes: >
       STATEWIDE PARTISAN BASELINES for the ~35 Senate and ~36 Governor races,
       the statewide equivalent of the district PVI we hold from Cook.
@@ -247,14 +267,52 @@ sources:
       MEDSL instead, using Cook's published method (2020 and 2024 presidential
       two-party vote vs the national average, weighting the recent election more
       heavily). Same construct, zero encumbrance, fully documentable.
-      STILL NEEDED: 2020 presidential by state, for the two-cycle blend. The
-      Dataverse file has it; add a URL once the download path is confirmed.
+      2020 presidential by state is needed for the two-cycle blend and should
+      arrive in the 1976-2024 Dataverse bundle above. Confirm on the first run.
       MODELLING CAUTION: Senate and especially Governor races are much less
       nationalised than House races, so a presidential-derived baseline needs a
       WIDER error band for Governor than Senate, and wider for Senate than House.
       Do not apply one uniform swing to all three. (Sievert & McKee 2019; Hopkins.)
 
   # ----------------------------------------------- manual entry (not scraped) --
+
+  - id: cook_state_pvi
+    name: Cook PVI — statewide
+    category: fundamentals
+    method: manual
+    enabled: true
+    cadence: sporadic
+    publication: private           # *** NEVER published, same as district PVI ***
+    declared_inputs: []
+    license: permitted             # permitted to COLLECT by hand, NOT to republish
+    robots_checked: 2026-08-19
+    config:
+      source_url: https://www.cookpolitical.com/cook-pvi/2025-partisan-voting-index/state-map-and-list
+    notes: >
+      Statewide PVI for all 50 states and DC — the baseline the Senate and
+      Governor models need, the statewide analogue of the district file.
+      NOT SCRAPED. cookpolitical.com gives ClaudeBot `Disallow: /`, the page is
+      subscriber-only, and the terms forbid use "as a stand-alone product apart
+      from your own work". Hand-entered from a page the instructor subscribes to,
+      same as the district file. Import with:
+        python3 forecast/collect/manual_import.py --source cook_state_pvi --file <paste>
+      SOURCED VIA WIKIPEDIA (decided 2026-08-19). Cook's own state page is
+      subscriber-only and hard to even find. Wikipedia's "Cook Partisan Voting
+      Index" article carries the same table, sourced to Cook's 2025 release.
+      IMPORTANT: taking it from Wikipedia does NOT relicense it. Wikipedia's
+      CC BY-SA covers Wikipedia's own text; it cannot relicense Cook's
+      compilation, and Cook's terms forbid use "as a stand-alone product apart
+      from your own work". So this stays `private` exactly as if taken from
+      Cook directly. Class use only.
+      Record the retrieval route in the import: --accessed-url should point at
+      the Wikipedia article, not at cookpolitical.com, because that is what was
+      actually read.
+      Cook's stated method: based on the 2020 AND 2024 presidential elections
+      versus the national average, with the more recent election weighted more
+      heavily (2022 methodology update).
+      CROSS-CHECK: we can compute our own state PVI from MEDSL (CC0) using that
+      same method. Holding both lets us validate ours against theirs and publish
+      OURS, which is the point — a redistributable index we can actually show.
 
   - id: cook_pvi
     name: Cook Partisan Voting Index (2026 lines)

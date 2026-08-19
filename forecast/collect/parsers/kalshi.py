@@ -75,17 +75,29 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
 
     rows: list[Row] = []
     unmatched: list[str] = []
+    empty_series: list[str] = []
+    priced = 0                     # markets that had a usable price
     for art in market_arts:
         payload = art.json()
-        for m in payload.get("markets", []) or []:
+        markets = payload.get("markets", []) or []
+        if not markets:
+            # Verified 2026-08-19: HOUSE, SENATE, HOUSEMOV, SENATEMOV and KXHOUSE
+            # all return {"cursor":"","markets":[]}. The series exist as shells;
+            # Kalshi has not opened 2026 chamber-control markets under them. That
+            # is a fact about Kalshi, not a parser bug, and the empty response is
+            # itself worth archiving — the day they open, the archive shows it.
+            empty_series.append(art.name.replace("markets-", ""))
+            continue
+        for m in markets:
             ticker = str(m.get("ticker", ""))
             title = str(m.get("title") or m.get("subtitle") or "")
+            p = _price(m)
+            if p is None:
+                continue
+            priced += 1
             hit = _classify(ticker, title)
             if hit is None:
                 unmatched.append(ticker)
-                continue
-            p = _price(m)
-            if p is None:
                 continue
             rid, chamber, state, district = hit
             # Kalshi markets resolve YES on a stated outcome; whether YES means
@@ -96,9 +108,22 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                                 district=district,
                                 quantity=f"win_prob_{side}", value=round(p, 4),
                                 unit="prob"))
+    if not rows and priced == 0:
+        # Captured fine; Kalshi simply has nothing priced and classifiable for
+        # 2026 races today. That is a fact about Kalshi, not a parser fault, and
+        # an empty list is the honest report. See the registry notes.
+        return []
+
     if not rows:
+        live = len(market_arts) - len(empty_series)
+        if live == 0:
+            # Every captured series was empty. Nothing to parse and nothing wrong.
+            raise ValueError(
+                f"all {len(empty_series)} captured Kalshi series are empty — no "
+                f"open 2026 markets under: {sorted(empty_series)[:8]}. "
+                f"Re-check series_include in the registry; the tickers may have "
+                f"been renamed, or the markets may genuinely not be open yet.")
         raise ValueError(
-            f"parsed 0 rows from {len(market_arts)} market artifacts "
-            f"({len(unmatched)} tickers matched no race pattern). "
-            f"Sample: {unmatched[:5]}")
+            f"{live} series had markets but none classified to a race "
+            f"({len(unmatched)} tickers unmatched). Sample: {unmatched[:5]}")
     return rows

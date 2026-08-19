@@ -74,8 +74,47 @@ def _norm(h: str) -> str:
 
 
 # Loose column matching. First match wins, so order matters.
+_STATES = {
+ "ALABAMA":"AL","ALASKA":"AK","ARIZONA":"AZ","ARKANSAS":"AR","CALIFORNIA":"CA","COLORADO":"CO",
+ "CONNECTICUT":"CT","DELAWARE":"DE","DISTRICT OF COLUMBIA":"DC","FLORIDA":"FL","GEORGIA":"GA",
+ "HAWAII":"HI","IDAHO":"ID","ILLINOIS":"IL","INDIANA":"IN","IOWA":"IA","KANSAS":"KS",
+ "KENTUCKY":"KY","LOUISIANA":"LA","MAINE":"ME","MARYLAND":"MD","MASSACHUSETTS":"MA",
+ "MICHIGAN":"MI","MINNESOTA":"MN","MISSISSIPPI":"MS","MISSOURI":"MO","MONTANA":"MT",
+ "NEBRASKA":"NE","NEVADA":"NV","NEW HAMPSHIRE":"NH","NEW JERSEY":"NJ","NEW MEXICO":"NM",
+ "NEW YORK":"NY","NORTH CAROLINA":"NC","NORTH DAKOTA":"ND","OHIO":"OH","OKLAHOMA":"OK",
+ "OREGON":"OR","PENNSYLVANIA":"PA","RHODE ISLAND":"RI","SOUTH CAROLINA":"SC",
+ "SOUTH DAKOTA":"SD","TENNESSEE":"TN","TEXAS":"TX","UTAH":"UT","VERMONT":"VT",
+ "VIRGINIA":"VA","WASHINGTON":"WA","WEST VIRGINIA":"WV","WISCONSIN":"WI","WYOMING":"WY"}
+_ABBRS = set(_STATES.values())
+
+
+def parse_state(text: str) -> str | None:
+    """
+    Accept 'Alabama', 'ALABAMA' or 'AL'. Returns the 2-letter code.
+
+    DC IS CHECKED FIRST, and that is not fussiness. "Washington, D.C." starts
+    with "WASHINGTON", so a plain prefix scan silently files the District under
+    WA — which is exactly what happened on the first import: DC's D+44 landed as
+    a second Washington row. A duplicate-state warning caught it, but only
+    because someone read the warning.
+    """
+    t = re.sub(r"\[[^\]]*\]", "", str(text)).strip().upper()
+    if re.search(r"\bD\.?\s*C\.?\b|DISTRICT OF COLUMBIA", t):
+        return "DC"
+    if t in _ABBRS:
+        return t
+    if t in _STATES:
+        return _STATES[t]
+    # Longest name first, so "West Virginia" cannot be swallowed by "Virginia"
+    # and "North/South Dakota" cannot be swallowed by a shorter neighbour.
+    for name in sorted(_STATES, key=len, reverse=True):
+        if t.startswith(name):
+            return _STATES[name]
+    return None
+
+
 _COLS = {
-    "district":   ["dist", "district", "cd", "seat", "code"],
+    "district":   ["dist", "district", "cd", "seat", "code", "state"],
     "pvi":        ["pvi2026", "2026pvi", "pvinew", "pvicurrent", "pvi"],
     "pvi_prior":  ["pvi2025", "2025pvi", "pviold", "pviprior", "pviprevious"],
     "incumbent":  ["incumbent", "member", "representative"],
@@ -134,14 +173,26 @@ def parse_structured(path: Path) -> tuple[list[dict], list[str]]:
             i = cols.get(field)
             return raw[i] if i is not None and i < len(raw) else None
 
-        d = _DISTRICT.search(str(cell("district") or "").upper())
+        key_cell = str(cell("district") or "")
         v = parse_pvi_value(str(cell("pvi") or ""))
-        if not d or v is None:
+        if v is None:
             skipped.append(" | ".join(str(c) for c in raw[:4] if c is not None))
             continue
-        state, num = d.group(1), d.group(2)
-        num = "1" if num == "AL" else num
-        rec = {"state": state, "district": f"{int(num):02d}", "pvi": v}
+
+        # District row ("PA-10") or statewide row ("Pennsylvania")? Cook
+        # publishes both a district list and a state list; one importer reads
+        # either, and the shape of the key cell is what distinguishes them.
+        d = _DISTRICT.search(key_cell.upper())
+        if d:
+            state, num = d.group(1), d.group(2)
+            num = "1" if num == "AL" else num
+            rec = {"state": state, "district": f"{int(num):02d}", "pvi": v}
+        else:
+            st = parse_state(key_cell)
+            if st is None:
+                skipped.append(" | ".join(str(c) for c in raw[:4] if c is not None))
+                continue
+            rec = {"state": st, "district": "", "pvi": v}
         prior = parse_pvi_value(str(cell("pvi_prior") or ""))
         if prior is not None:
             rec["pvi_prior"] = prior
@@ -156,21 +207,37 @@ def parse_structured(path: Path) -> tuple[list[dict], list[str]]:
 
 
 def parse_table(text: str) -> tuple[list[dict], list[str]]:
+    """
+    Pasted text. Handles BOTH shapes Cook publishes:
+      district   "PA-10   R+3"
+      statewide  "Pennsylvania   R+2"
+    A PVI value is required either way, which is what keeps header and footnote
+    lines out without needing to recognise them.
+    """
     rows, skipped = [], []
     for raw in text.splitlines():
         line = raw.strip()
         if not line:
             continue
-        d = _DISTRICT.search(line)
         v = parse_pvi_value(line)
-        if d and v is not None:
+        if v is None:
+            skipped.append(line)
+            continue
+
+        d = _DISTRICT.search(line.upper())
+        if d:
             state, num = d.group(1).upper(), d.group(2).upper()
             num = "1" if num == "AL" else num
             try:
-                district = f"{int(num):02d}"
+                rows.append({"state": state, "district": f"{int(num):02d}", "pvi": v})
+                continue
             except ValueError:
-                skipped.append(line); continue
-            rows.append({"state": state, "district": district, "pvi": v})
+                pass
+        # Statewide: take the text before the PVI token as the state name.
+        head = _PVI.split(line)[0].strip(" \t|,-")
+        st = parse_state(head) or parse_state(line)
+        if st:
+            rows.append({"state": st, "district": "", "pvi": v})
         else:
             skipped.append(line)
     return rows, skipped
@@ -214,7 +281,8 @@ def main(argv=None) -> int:
         for r in rows[:6]:
             sign = "R+" if r["pvi"] < 0 else ("D+" if r["pvi"] > 0 else "EVEN ")
             mag = "" if r["pvi"] == 0 else f"{abs(r['pvi']):g}"
-            print(f"    {r['state']}-{r['district']}   {sign}{mag}")
+            label = f"{r['state']}-{r['district']}" if r.get("district") else r["state"]
+            print(f"    {label:8s} {sign}{mag}")
         if len(rows) > 6:
             print(f"    ... and {len(rows)-6} more")
     if skipped:
@@ -225,7 +293,9 @@ def main(argv=None) -> int:
     # Sanity check the shape of what arrived, loudly.
     if rows:
         n_states = len({r["state"] for r in rows})
-        print(f"\n  {len(rows)} districts across {n_states} states")
+        statewide = sum(1 for r in rows if not r.get("district"))
+        kind = "statewide rows" if statewide == len(rows) else "districts"
+        print(f"\n  {len(rows)} {kind} across {n_states} states")
         n_prior = sum(1 for r in rows if "pvi_prior" in r)
         if n_prior:
             moved = sum(1 for r in rows
@@ -235,11 +305,24 @@ def main(argv=None) -> int:
         n_open = sum(1 for r in rows if r.get("open_seat"))
         if n_open:
             print(f"  {n_open} open seats flagged")
-        if len(rows) < 400:
+        if statewide == len(rows):
+            if len(rows) < 50:
+                print(f"  NOTE: expected 50 states (+DC) — this looks partial.")
+        elif len(rows) < 400:
             print(f"  NOTE: the House has 435 districts — this looks partial.")
-        dupes = len(rows) - len({(r["state"], r["district"]) for r in rows})
+        seen = {}
+        dupes = []
+        for r in rows:
+            k = (r["state"], r["district"])
+            if k in seen:
+                dupes.append((k, seen[k], r["pvi"]))
+            seen[k] = r["pvi"]
         if dupes:
-            print(f"  WARNING: {dupes} duplicate district(s) in the input")
+            print(f"  WARNING: {len(dupes)} duplicate key(s) — the input probably "
+                  f"contains a row this importer misread:")
+            for (st, d), a, b in dupes[:5]:
+                label = f"{st}-{d}" if d else st
+                print(f"      {label}: {a:+g} and {b:+g}")
     else:
         print("\n  Nothing understood. Expected lines containing a district and a PVI,")
         print("  e.g.  'AL-01   R+15'.  Paste the table as plain text and retry.")

@@ -144,6 +144,7 @@ def parse_date(cycle: int, date: str, registry: dict,
     raw_root = DATA_DIR / str(cycle) / "raw"
     rows: list[P.Row] = []
     problems: list[str] = []
+    missing: list[str] = []
 
     for src in registry.get("sources", []):
         sid = src["id"]
@@ -151,6 +152,7 @@ def parse_date(cycle: int, date: str, registry: dict,
             continue
         arts = P.load(sid, date, raw_root)
         if not arts:
+            missing.append(sid)
             continue
         mod = P.get(sid)
         if mod is None:
@@ -169,6 +171,20 @@ def parse_date(cycle: int, date: str, registry: dict,
             problems.append(f"{sid}: PARSER FAILED — {type(e).__name__}: {e}")
             continue
         rows.extend(got)
+
+    # A source that is enabled and permitted but has NO stored bytes almost
+    # always means the private archive was never synced down — parse.py does not
+    # sync, only run.sh stage 0 does. Say so, rather than silently reporting
+    # fewer rows than expected.
+    enabled = [s["id"] for s in registry.get("sources", [])
+               if s.get("enabled") and s.get("license") == "permitted"
+               and (not only or s["id"] in only)]
+    absent = [s for s in missing if s in enabled]
+    if absent:
+        problems.append(
+            "NO RAW DATA for enabled source(s): " + ", ".join(absent) +
+            "\n      These are probably sitting in the private archive. parse.py does"
+            "\n      not sync — run:  ./forecast/run.sh --from parse")
     return rows, problems
 
 
