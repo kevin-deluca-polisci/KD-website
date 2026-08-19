@@ -412,6 +412,27 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
         if not cursor or not series:
             break
 
+    # Prune market files for series we no longer collect. Idempotent overwrite
+    # replaces same-named artifacts but never removes retired ones, so tightening
+    # the filter left 265 stale files behind that the parser then re-read every
+    # day forever. Only prune when discovery actually succeeded — a failed run
+    # must never be able to empty the directory.
+    if matched and not fetcher.dry_run:
+        keep = {store._slugify(f"markets-{t}") for t in set(matched)}
+        day = store.root / src["id"] / store.snapshot_date
+        removed = 0
+        if day.is_dir():
+            for f in day.iterdir():
+                stem = f.name.split(".")[0]
+                if stem.startswith("markets-") and stem not in keep:
+                    try:
+                        f.unlink()
+                        removed += 1
+                    except OSError:
+                        pass
+        if removed:
+            notes.append(f"pruned {removed} stale artifact(s) from retired series")
+
     notes.append(f"{len(matched)} series matched, {len(excluded)} explicitly excluded, "
                  f"{len(near_missed)} unmatched")
     # Surface anything that looks election-shaped but did not match, so a series

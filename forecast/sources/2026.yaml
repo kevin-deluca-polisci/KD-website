@@ -584,8 +584,23 @@ sources:
           url: https://www.racetothewh.com/senate/26
         - name: house
           url: https://www.racetothewh.com/house
+        # The page HTML contains NO numbers — every figure is rendered by an
+        # Infogram embed. These are the embed documents themselves, which is
+        # where the data actually lives. IDs discovered from the 2026-08-19
+        # capture; if Race to the WH rebuilds a chart the ID changes, and the
+        # page capture above is what lets you notice and update these.
+        - name: infogram_senate
+          url: https://e.infogram.com/_/vs9b6iAeARko8cuwH51x?src=embed
+        - name: infogram_house
+          url: https://e.infogram.com/_/0FNbmwa4iVhZOO7zXvaT?src=embed
+        - name: infogram_house_alt
+          url: https://e.infogram.com/cf74856e-8d17-40f6-b10d-3d23a3ee3cff?src=embed
     notes: >
-      Free, robots-permitted (Squarespace default; AI agents listed but not
-      actually disallowed). Enable once someone writes the HTML parser — raw
-      capture would work today, so flip this to true if you want the bytes
-      banked now and parsed later. Recommended: yes, flip it.
+      Free, robots-permitted (Squarespace default; AI agents are listed but not
+      actually disallowed — they fall through to the permissive wildcard).
+      PARSER NOT WRITTEN. The reason is worth recording: the pages carry no
+      figures at all. Everything is an Infogram embed, so scraping the HTML
+      yields nothing no matter how good the selector. The embed URLs above are
+      the real target — Infogram pages carry a window.infographicData JSON blob.
+      Capture them, then:  parse.py --inspect race_to_the_wh
+      and write the parser against whatever the blob turns out to contain.

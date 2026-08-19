@@ -188,15 +188,36 @@ def parse_date(cycle: int, date: str, registry: dict,
     return rows, problems
 
 
-def write_parsed(cycle: int, date: str, rows: list[P.Row]) -> Path:
+def write_parsed(cycle: int, date: str, rows: list[P.Row],
+                 only: set[str] | None = None) -> Path:
+    """
+    Write one date's parsed rows.
+
+    MERGES when --only is in play. Writing the file wholesale would silently
+    delete every other source's rows for that date — `parse.py --only medsl`
+    would leave you with a day containing nothing but MEDSL, and the loss is
+    invisible until you go looking for something that used to be there.
+    Re-parsing everything restores it, but only if you notice.
+    """
     out = DATA_DIR / str(cycle) / "parsed"
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"{date}.csv"
+
+    records = [{f: getattr(r, f) for f in P.FIELDS} for r in rows]
+
+    if only and path.exists():
+        kept = []
+        with path.open(encoding="utf-8") as fh:
+            for existing in csv.DictReader(fh):
+                # Drop the sources we just re-parsed; keep everyone else.
+                if existing.get("source_id") not in only:
+                    kept.append({f: existing.get(f, "") for f in P.FIELDS})
+        records = kept + records
+
     with path.open("w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=P.FIELDS)
         w.writeheader()
-        for r in rows:
-            w.writerow({f: getattr(r, f) for f in P.FIELDS})
+        w.writerows(records)
     return path
 
 
@@ -233,7 +254,7 @@ def main(argv=None) -> int:
         rows, problems = parse_date(a.cycle, d, registry, only)
         all_problems += [f"{d}  {p}" for p in problems]
         if rows:
-            write_parsed(a.cycle, d, rows)
+            write_parsed(a.cycle, d, rows, only)
             by_src: dict[str, int] = {}
             for r in rows:
                 by_src[r.source_id] = by_src.get(r.source_id, 0) + 1
