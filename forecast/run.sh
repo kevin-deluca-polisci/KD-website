@@ -104,9 +104,18 @@ sync_raw_down() {
   # A failed pull is a warning, not a stop. Being offline, or having a conflict
   # to resolve, must not prevent parsing bytes that are already on disk — the
   # whole point of the phase split is that stages 2-5 never need the network.
-  if ! git -C "$RAW_REPO" pull --ff-only --quiet 2>/dev/null; then
-    echo "  WARNING: pull failed (offline, or the archive needs attention)."
-    echo "           Continuing with whatever is already in the local clone."
+  #
+  # GIT_TERMINAL_PROMPT=0 is the important part. Without it, git BLOCKS on
+  # "Username for 'https://github.com':" when no credential helper is set —
+  # which hangs the script here, and would hang a cron job forever.
+  if ! GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/usr/bin/true \
+       git -C "$RAW_REPO" pull --ff-only --quiet 2>/dev/null; then
+    echo "  WARNING: pull failed. Continuing with the local clone as it stands."
+    echo "           If this says nothing changed but you expect new captures,"
+    echo "           git has no stored credential for that repo. Fix once with:"
+    echo "               git config --global credential.helper osxkeychain"
+    echo "               git -C \"$RAW_REPO\" pull      # username + a PAT as the password"
+    echo "           after which it is cached and this stops happening."
   fi
   if [[ -d "$RAW_REPO/$CYCLE/raw" ]]; then
     mkdir -p "forecast/data/$CYCLE/raw"
@@ -135,7 +144,11 @@ sync_raw_up() {
   n=$(git -C "$RAW_REPO" diff --staged --name-only | wc -l | tr -d " ")
   git -C "$RAW_REPO" commit -q -m "raw: local sync $(date -u +%Y-%m-%d) (${n} files)"
   if [[ $PUSH -eq 1 ]]; then
-    git -C "$RAW_REPO" push --quiet && echo "  pushed ${n} files to the private archive"
+    if GIT_TERMINAL_PROMPT=0 git -C "$RAW_REPO" push --quiet 2>/dev/null; then
+      echo "  pushed ${n} files to the private archive"
+    else
+      echo "  push failed (no stored credential?) — committed locally, not pushed"
+    fi
   else
     echo "  committed ${n} files locally (--no-push)"
   fi
