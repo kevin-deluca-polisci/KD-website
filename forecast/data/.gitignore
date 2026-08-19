@@ -1,0 +1,30 @@
+# ============================================================================
+# forecast/data/.gitignore  — THE PRIVACY BOUNDARY
+#
+# Raw captures and per-forecaster parsed values are NOT published during the
+# cycle. Several sources permit collection but not republication of their
+# individual numbers while the election is running.
+#
+# What IS published: derived/ (category averages), raw_manifest.csv (SHA-256
+# hashes only, no content), manifest.csv (run provenance), site.json.
+#
+# The full per-forecaster archive is released after the election, as a
+# documented dataset with a Dataverse DOI. raw_manifest.csv is what lets anyone
+# verify at that point that the released bytes are exactly what was captured on
+# the dates claimed.
+#
+# aggregate.py re-derives this guarantee from its own output and refuses to
+# write if it is violated, so this file is the first line of defence, not the
+# only one.
+# ============================================================================
+
+*/raw/
+*/parsed/
+*/submissions/
+*/derived/by_source_all.csv
+
+# Explicitly published
+!*/derived/
+!*/manifest.csv
+!*/raw_manifest.csv
+!*/site.json

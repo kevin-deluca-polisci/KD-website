@@ -1,0 +1,420 @@
+# PLSC 2219 forecast archive — source registry, 2026 cycle
+#
+# This file IS the cycle. To run 2028, copy it to 2028.yaml and edit.
+# No code should need to change.
+#
+# ---------------------------------------------------------------------------
+# FIELDS
+#   id              stable slug; becomes the raw/ directory name. Never rename.
+#   name            human label shown on the site
+#   category        fundamentals | polling | professional | market | expert_ordinal
+#                   These are the DISPLAY categories: the site averages within
+#                   each and shows the spread between them. `expert_ordinal` is
+#                   collected but deliberately kept OUT of the dispersion figure,
+#                   because ordinal ratings do not average with vote shares.
+#   method          how capture.py fetches it (see collect/capture.py handlers)
+#   cadence         daily | weekly | sporadic   (informational; the runner
+#                   respects `enabled`, the Action schedule sets real cadence)
+#   publication     individual | aggregate_only | private
+#                   What may be shown publicly. Enforced at render, not capture.
+#   declared_inputs other source ids this forecaster consumes. Load-bearing:
+#                   these sources are NOT independent, and an archive that
+#                   treats them as independent understates correlated error.
+#   license         permitted | permission_pending | prohibited
+#                   *** capture.py SKIPS anything that is not `permitted`. ***
+#   robots_checked  date the robots.txt was last verified by a human
+#   notes           anything a future reader needs
+# ---------------------------------------------------------------------------
+
+cycle: 2026
+election_date: 2026-11-03
+
+contact:
+  # Sent as the User-Agent on every request. Do not remove — looking like an
+  # academic archive rather than an anonymous scraper is most of the legal
+  # posture here.
+  project: "PLSC 2219 Forecast Archive (Yale University)"
+  url: "https://kevinmdeluca.com/forecast/2026/"
+  email: "kevin.deluca@yale.edu"
+
+defaults:
+  timeout_seconds: 30
+  max_retries: 4
+  backoff_base_seconds: 2
+  min_interval_seconds: 1.0   # polite floor between requests to one host
+
+sources:
+
+  # ---------------------------------------------------------------- markets --
+
+  - id: kalshi
+    name: Kalshi
+    category: market
+    method: kalshi_discover
+    enabled: true
+    cadence: daily
+    publication: individual        # permissive terms; may be shown per-source
+    declared_inputs: []
+    license: permitted
+    robots_checked: 2026-08-19
+    config:
+      api_base: https://api.elections.kalshi.com/trade-api/v2
+      # Discovery: page the series list, keep tickers matching this pattern,
+      # then capture every open market under each match. Regex rather than
+      # hardcoded tickers because Kalshi renames series mid-cycle.
+      series_pattern: "(SENATE|HOUSE|MIDTERM|CONGRESS|GOVERNOR|GENERICBALLOT|CONTROL|PARTY)"
+      series_category: Politics
+      page_limit: 200
+      max_pages: 20
+    notes: >
+      Prices are fixed-point STRINGS ("0.4200") since the integer-cent fields
+      were removed in Q1 2026 — do not coerce to int in the parser.
+      No Retry-After header on 429, so backoff must be self-timed.
+      robots.txt explicitly allows AI agents.
+
+  - id: polymarket
+    name: Polymarket
+    category: market
+    method: polymarket_discover
+    enabled: true
+    cadence: daily
+    publication: individual
+    declared_inputs: []
+    license: permitted
+    robots_checked: 2026-08-19
+    config:
+      gamma_base: https://gamma-api.polymarket.com
+      slugs:
+        - balance-of-power-2026-midterms
+      search_terms:
+        - "2026 midterm"
+        - "Senate 2026"
+        - "House 2026"
+      page_limit: 100
+      max_pages: 10
+    notes: >
+      robots.txt has no Disallow at all. Per-seat market coverage was
+      UNVERIFIED as of the audit — the discovery step will reveal it.
+
+  # ----------------------------------------------------------------- hybrid --
+
+  - id: grant_williams
+    name: Grant Williams 2026 Midterms Forecast
+    category: professional
+    method: http
+    enabled: true
+    cadence: daily
+    publication: individual        # MIT licensed
+    declared_inputs: [silver_bulletin]   # takes polling input from Silver Bulletin
+    license: permitted
+    robots_checked: 2026-08-19
+    config:
+      urls:
+        - name: house_forecast
+          url: https://grantbw4.github.io/2026-midterms-forecast/forecast.json
+        - name: senate_forecast
+          url: https://grantbw4.github.io/2026-midterms-forecast/senate_forecast.json
+        - name: timeline
+          url: https://grantbw4.github.io/2026-midterms-forecast/timeline.json
+    notes: >
+      MIT licence, repo grantbw4/2026-midterms-forecast (default branch `master`).
+      IMPORTANT: outputs/ is GITIGNORED in the repo — the JSON is built by his
+      Action and published to GitHub Pages, which OVERWRITES each run. So his git
+      history is NOT an archive of the forecast, contrary to an earlier note here.
+      Nothing preserves his daily series except our capture. That makes daily
+      collection of this source more valuable, not less.
+      Verified 2026-08-19: forecast.json served at the Pages root, 200 OK.
+      NOT independent: polling input comes from Silver Bulletin.
+      DO NOT extract the per-district `pvi` field — it is sourced from Cook PVI
+      (see pvi_source), which is permission_pending. Ingesting it would launder
+      a gated source through a permitted one.
+
+  - id: ddhq
+    name: Decision Desk HQ
+    category: professional
+    method: http
+    enabled: false                 # <-- blocked pending robots check
+    cadence: daily
+    publication: aggregate_only
+    declared_inputs: [polymarket, kalshi]   # ingests BOTH markets by volume weight
+    license: permission_pending
+    robots_checked: null
+    config:
+      urls:
+        - name: forecast_2026
+          url: https://votes.decisiondeskhq.com/forecast/2026
+        - name: forecast_senate
+          url: https://votes.decisiondeskhq.com/forecast/2026/senate
+    notes: >
+      decisiondeskhq.com robots.txt is `Allow: /`, but the forecast lives on the
+      votes. SUBDOMAIN whose robots could not be retrieved during the audit.
+      ACTION: fetch https://votes.decisiondeskhq.com/robots.txt by hand, and if
+      clear, set enabled:true and license:permitted.
+      Ingests Polymarket and Kalshi, so it is NOT independent of the market
+      category — do not treat as a separate draw.
+
+  # ----------------------------------------------- manual entry (not scraped) --
+
+  - id: cook_pvi
+    name: Cook Partisan Voting Index (2026 lines)
+    category: fundamentals
+    method: manual                 # entered by a human; capture.py never fetches it
+    enabled: true
+    cadence: sporadic              # PVI is recomputed once per redistricting
+    publication: private           # *** NEVER published, in any form ***
+    declared_inputs: []
+    license: permitted             # permitted to COLLECT by hand, NOT to republish
+    robots_checked: 2026-08-19
+    config:
+      source_url: https://www.cookpolitical.com/cook-pvi/2026-partisan-voting-index/district-map-and-list
+    notes: >
+      NOT SCRAPED, AND MUST NOT BE. cookpolitical.com declares the ratings
+      proprietary and enforces against crawlers at the Cloudflare edge; the
+      `cook` source elsewhere in this registry stays permission_pending for
+      exactly that reason.
+      This entry is for data typed or pasted in by hand from a page the
+      instructor is entitled to view, which is a different act from automated
+      collection. Import with:
+        python3 forecast/collect/manual_import.py --source cook_pvi --file <paste.txt>
+      The verbatim paste is stored alongside the parsed rows, hashed, with the
+      date and the person who entered it, so provenance matches an automated
+      capture.
+      WHY WE HOLD IT: the class fundamentals model needs a district baseline.
+      PVI is a better baseline than a single cycle's presidential result because
+      it averages two cycles against the national vote.
+      PUBLICATION: private, and `pvi` is additionally in NEVER_PUBLISH in
+      aggregate.py. If Cook grants written permission, relax the registry field
+      FIRST and NEVER_PUBLISH second — never the other way round.
+
+  # -------------------------------------------------------- poll aggregator --
+
+  - id: rcp
+    name: RealClearPolling
+    category: polling
+    method: http
+    enabled: true
+    cadence: daily
+    publication: aggregate_only
+    declared_inputs: []
+    license: permitted
+    robots_checked: 2026-08-19
+    config:
+      urls:
+        - name: senate_map
+          url: https://www.realclearpolling.com/maps/senate/2026/toss-up
+        - name: latest_polls_2026
+          url: https://www.realclearpolling.com/latest-polls/2026
+        - name: latest_polls_senate
+          url: https://www.realclearpolling.com/latest-polls/senate
+        - name: latest_polls_house
+          url: https://www.realclearpolling.com/latest-polls/house
+    notes: >
+      Minimal robots.txt — only /latest-polls/main-latest-polls disallowed.
+      No AI-bot blocks, no Crawl-delay. Also publishes its own ordinal ratings
+      map, so it double-counts into expert_ordinal; pick one at render time.
+
+  # ----------------------------------------------------- ratings aggregator --
+
+  - id: wikipedia
+    name: Wikipedia race ratings
+    category: expert_ordinal
+    method: wikipedia
+    enabled: true
+    cadence: daily
+    publication: individual        # CC BY-SA 4.0, attribution required
+    declared_inputs: [cook, sabato, inside_elections, race_to_the_wh, economist, votehub, split_ticket]
+    license: permitted
+    robots_checked: 2026-08-19
+    config:
+      api: https://en.wikipedia.org/w/api.php
+      pages:
+        - "2026 United States House of Representatives election ratings"
+        - "2026 United States Senate elections"
+        - "2026 United States gubernatorial elections"
+      # Backfill walks revision history to the start of the cycle. This is the
+      # ONLY source in the whole registry that recovers the past — everything
+      # else only exists going forward from the day capture starts.
+      backfill:
+        enabled: true
+        since: 2026-01-01
+        max_revisions_per_page: 2000
+    notes: >
+      CC BY-SA 4.0 — reusable with attribution and share-alike. Full MediaWiki
+      API, complete revision history. There is NO standalone Senate ratings
+      article; Senate ratings live inside the main Senate elections page.
+      Tables lag the forecasters by weeks (June dates observed in August), so
+      treat the "as of" dates in the table as authoritative, not the revision
+      timestamp.
+
+  # ------------------------------------------------- registered but BLOCKED --
+  # Kept here deliberately. A source you decided not to collect is a decision
+  # that should be visible and dated, not an absence. capture.py skips all of
+  # these because license != permitted.
+
+  - id: votehub
+    name: VoteHub
+    category: professional
+    method: http
+    enabled: false
+    cadence: daily
+    publication: private
+    declared_inputs: [cook, sabato, inside_elections, polymarket, kalshi]
+    license: prohibited
+    robots_checked: 2026-08-19
+    config: {urls: []}
+    notes: >
+      DO NOT COLLECT. Explicit terms: "Any scraping, automated collection, or
+      reproduction of our data without prior written permission is strictly
+      prohibited." Also the most restrictive robots.txt found in the audit.
+      Requires written permission to change this.
+
+  - id: cook
+    name: Cook Political Report
+    category: expert_ordinal
+    method: http
+    enabled: false
+    cadence: sporadic
+    publication: private
+    declared_inputs: []
+    license: permission_pending
+    robots_checked: 2026-08-19
+    config: {urls: []}
+    notes: >
+      A real API exists (cookpolitical.com/api/race/{house,senate,governor},
+      HTTP Basic auth, docs request <=1 call/day) but it is licensed and paid.
+      /ratings/ declared proprietary; enforcement at the Cloudflare edge.
+      Free tier is category counts only. Available second-hand via Wikipedia.
+
+  - id: inside_elections
+    name: Inside Elections
+    category: expert_ordinal
+    method: http
+    enabled: false
+    cadence: daily
+    publication: private
+    declared_inputs: []
+    license: permission_pending
+    robots_checked: 2026-08-19
+    config:
+      urls:
+        - name: house_ratings
+          url: "https://insideelections.com/wp-content/themes/inside-elections/cache/ratings_latest_house_year=2026_district=all_clean.json"
+    notes: >
+      The best structured free data found in the audit — clean per-race JSON
+      with rating_numeric (0=Solid D .. 10=Solid R), shift, previous_rating,
+      flipped, incumbent[]. No auth required.
+      BUT the HTML table it feeds is subscriber-gated and robots blocks
+      ClaudeBot/GPTBot, so the open endpoint reads as an oversight rather than
+      an invitation. Ask before enabling. Available second-hand via Wikipedia.
+
+  - id: silver_bulletin
+    name: Silver Bulletin
+    category: polling
+    method: http
+    enabled: false
+    cadence: daily
+    publication: private
+    declared_inputs: []
+    license: permission_pending
+    robots_checked: 2026-08-19
+    config: {urls: []}
+    notes: >
+      2026 FLIPR forecast is paid-subscriber-only. Free tier: generic ballot
+      dashboard and Trump approval. robots blocks GPTBot and Google-Extended.
+      Referenced here because grant_williams declares it as an input.
+
+  - id: fiftyplusone
+    name: FiftyPlusOne (G. Elliott Morris)
+    category: professional
+    method: http
+    enabled: false
+    cadence: weekly
+    publication: private
+    declared_inputs: [cook, sabato, inside_elections]
+    license: permission_pending
+    robots_checked: 2026-08-19
+    config: {urls: []}
+    notes: >
+      /api/csv exists and is robots-ALLOWED but returns 401 — paid.
+      robots blocks ClaudeBot, GPTBot, CCBot, and `Scrapy` BY NAME, which is an
+      unusually direct signal against automated collection. Ask first.
+      Stacks an expert-ratings sub-model, so not independent.
+
+  - id: split_ticket
+    name: Split Ticket / The Argument
+    category: professional
+    method: http
+    enabled: false
+    cadence: sporadic
+    publication: private
+    declared_inputs: []
+    license: permission_pending
+    robots_checked: 2026-08-19
+    config: {urls: []}
+    notes: >
+      Paywalled at The Argument. Datawrapper tables expose per-race CSV via
+      "Get the Data", but upstream access is gated. Available via Wikipedia.
+
+  - id: sabato
+    name: Sabato's Crystal Ball
+    category: expert_ordinal
+    method: http
+    enabled: false
+    cadence: weekly
+    publication: aggregate_only
+    declared_inputs: []
+    license: permission_pending
+    robots_checked: null
+    config:
+      urls:
+        - name: senate
+          url: https://centerforpolitics.org/crystalball/2026-senate/
+        - name: house
+          url: https://centerforpolitics.org/crystalball/2026-house/
+        - name: rating_changes
+          url: https://centerforpolitics.org/crystalball/2026-rating-changes/
+    notes: >
+      Historically fully free, and the /2026-rating-changes/ page is a running
+      change log that would diff beautifully. BUT the entire domain returned 403
+      to every audit request including robots.txt, so the posture is UNKNOWN.
+      ACTION: check https://centerforpolitics.org/robots.txt from a browser.
+      If clear, this is a straightforward enable.
+
+  - id: economist
+    name: The Economist
+    category: professional
+    method: http
+    enabled: false
+    cadence: weekly
+    publication: aggregate_only
+    declared_inputs: []
+    license: permission_pending
+    robots_checked: null
+    config: {urls: []}
+    notes: >
+      Registration-gated but free. robots.txt could not be retrieved.
+      They published model output to public GitHub in 2020 and 2024 — CHECK
+      github.com/TheEconomist for a 2026 equivalent, which would sidestep the
+      login wall entirely and is the cheapest possible win here.
+
+  - id: race_to_the_wh
+    name: Race to the WH
+    category: professional
+    method: http
+    enabled: true                  # raw capture works today; parser comes later
+    cadence: daily
+    publication: aggregate_only
+    declared_inputs: []
+    license: permitted
+    robots_checked: 2026-08-19
+    config:
+      urls:
+        - name: senate
+          url: https://www.racetothewh.com/senate/26
+        - name: house
+          url: https://www.racetothewh.com/house
+    notes: >
+      Free, robots-permitted (Squarespace default; AI agents listed but not
+      actually disallowed). Enable once someone writes the HTML parser — raw
+      capture would work today, so flip this to true if you want the bytes
+      banked now and parsed later. Recommended: yes, flip it.

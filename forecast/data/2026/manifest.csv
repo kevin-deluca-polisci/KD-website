@@ -1,0 +1,4 @@
+run_started_at,snapshot_date,source_id,category,ok,artifacts,bytes,requests,skipped_reason,error,notes
+2026-08-19T18:15:50.084886+00:00,2026-08-19,grant_williams,professional,0,0,0,5,,RuntimeError: exhausted 4 retries for https://raw.githubusercontent.com/grantbw4/2026-midterms-forecast/master/outputs/forecast.json: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)>,
+2026-08-19T18:18:36.031749+00:00,2026-08-19,grant_williams,professional,0,0,0,3,,HTTPError: HTTP Error 404: Not Found,
+2026-08-19T18:18:57.290788+00:00,2026-08-19,grant_williams,professional,0,0,0,3,,HTTPError: HTTP Error 404: Not Found,

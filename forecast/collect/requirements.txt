@@ -1,0 +1,13 @@
+# Phase 1 (capture) depends on PyYAML and the standard library. Every HTTP call
+# goes through urllib. That is deliberate: this has to still run in late October
+# without anyone having touched it, and the surest way to guarantee that is to
+# give it almost no surface to break.
+PyYAML>=6.0
+
+# Recommended, not required. Python builds from python.org do not use the macOS
+# system trust store, so https calls fail with CERTIFICATE_VERIFY_FAILED until
+# someone runs "Install Certificates.command". If certifi is present, capture.py
+# uses its CA bundle and the problem disappears on every platform.
+certifi>=2024.2.2
+
+# Parsers in collect/parsers/ may add dependencies. Phase 1 should not.

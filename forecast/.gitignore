@@ -1,0 +1,6 @@
+# Python bytecode and editor cruft. The archive's own privacy rules live in
+# forecast/data/.gitignore — this file is only housekeeping.
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/

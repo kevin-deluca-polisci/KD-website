@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" data-palette="#2a78d6,#eb6834,#1baf7a,#eda100">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 Forecast Archive — mockup — PLSC 2219</title>
+<style>
+:root{
+  color-scheme:light;
+  --surface-1:#fcfcfb; --plane:#f9f9f7;
+  --text-primary:#0b0b0b; --text-secondary:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+  --reserved:#c3c2b7;
+  --warn:#fab219; --crit:#d03b3b;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --surface-1:#1a1a19; --plane:#0d0d0d;
+  --text-primary:#fff; --text-secondary:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  --reserved:#383835;
+}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme:dark;
+    --surface-1:#1a1a19; --plane:#0d0d0d;
+    --text-primary:#fff; --text-secondary:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    --reserved:#383835;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--plane);
+     color:var(--text-primary);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px 80px}
+
+/* ---- mockup banner ---- */
+.mockbar{background:var(--crit);color:#fff;padding:9px 20px;font-size:13px;font-weight:600;
+         letter-spacing:.02em;text-align:center}
+.mockbar span{font-weight:400;opacity:.92}
+
+/* ---- masthead ---- */
+header.top{border-bottom:1px solid var(--border);margin-bottom:26px;padding:26px 0 18px}
+h1{font-size:26px;letter-spacing:-.02em;line-height:1.15}
+.sub{color:var(--text-secondary);font-size:14.5px;margin-top:5px;max-width:62ch}
+.status{display:flex;gap:26px;flex-wrap:wrap;margin-top:16px;font-size:12.5px;color:var(--muted);
+        font-variant-numeric:tabular-nums}
+.status b{color:var(--text-primary);font-weight:600}
+.themebtn{position:absolute;top:14px;right:20px;background:var(--surface-1);color:var(--text-secondary);
+          border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:12px;cursor:pointer;
+          font-family:inherit}
+.rel{position:relative}
+
+/* ---- panels ---- */
+section{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;
+        padding:22px 24px;margin-bottom:18px}
+h2{font-size:16.5px;letter-spacing:-.01em;margin-bottom:3px}
+.note{color:var(--text-secondary);font-size:13.5px;margin-bottom:18px;max-width:74ch}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+   margin:26px 0 12px;font-weight:600}
+.ph{display:inline-block;background:var(--warn);color:#0b0b0b;font-size:10.5px;font-weight:700;
+    padding:1px 6px;border-radius:3px;letter-spacing:.04em;vertical-align:2px;margin-left:7px}
+.real{display:inline-block;background:var(--s3);color:#fff;font-size:10.5px;font-weight:700;
+      padding:1px 6px;border-radius:3px;letter-spacing:.04em;vertical-align:2px;margin-left:7px}
+
+/* ---- dispersion strip ---- */
+.strip{display:grid;grid-template-columns:206px 1fr 88px;align-items:center;gap:16px;
+       padding:7px 0;border-bottom:1px solid var(--grid)}
+.strip:last-of-type{border-bottom:none}
+.slab{font-size:13.5px;font-weight:600;display:block}
+.slab .dot{display:inline-block;margin-right:8px;vertical-align:1px}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.smeth{font-size:11px;color:var(--muted);font-weight:400;display:block;margin-left:17px;
+        line-height:1.35;margin-top:1px}
+.sval{text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.sval em{display:block;font-style:normal;font-size:11px;color:var(--muted);font-weight:400}
+
+/* ---- legend / tables ---- */
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--text-secondary);
+        margin-top:14px;padding-top:13px;border-top:1px solid var(--grid)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+   padding:7px 10px 7px 0;border-bottom:1px solid var(--axis);font-weight:600}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--grid);color:var(--text-secondary)}
+td.k{color:var(--text-primary);font-weight:600}
+td:not(.k):not(.lft){text-align:right}
+th:not(:first-child){text-align:right}
+details{margin-top:16px}
+summary{cursor:pointer;font-size:12.5px;color:var(--text-secondary);padding:6px 0}
+.eq{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:var(--plane);
+    border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin:12px 0;overflow-x:auto;
+    color:var(--text-primary)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}.strip{grid-template-columns:130px 1fr 72px}
+  .smeth{display:none}}
+
+/* ---- tooltip ---- */
+.tip{position:fixed;pointer-events:none;background:var(--surface-1);border:1px solid var(--border);
+     border-radius:7px;padding:8px 11px;font-size:12.5px;box-shadow:0 4px 16px rgba(0,0,0,.14);
+     opacity:0;transition:opacity .1s;z-index:50;font-variant-numeric:tabular-nums;max-width:230px}
+.tip b{display:block;margin-bottom:2px;color:var(--text-primary)}
+.tip span{color:var(--text-secondary)}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.gl{stroke:var(--grid);stroke-width:1}
+.ax{stroke:var(--axis);stroke-width:1}
+.tk{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.dl{font-size:11.5px;font-weight:600}
+footer{color:var(--muted);font-size:12.5px;margin-top:34px;padding-top:20px;
+       border-top:1px solid var(--border);max-width:78ch}
+footer a{color:var(--s1)}
+</style>
+</head>
+<body>
+
+<div class="mockbar">MOCKUP — NOT PUBLISHED
+  <span>· Fundamentals model output is real. Market, professional and race-level numbers are placeholder.</span></div>
+
+<div class="wrap rel">
+<button class="themebtn" id="tbtn">Dark</button>
+
+<header class="top">
+  <h1>2026 Election Forecast Archive</h1>
+  <p class="sub">A permanent record of what every forecaster said, on every day of the cycle.
+     The display is <strong>disagreement between methods</strong>, not another trend line.</p>
+  <div class="status">
+    <span>Election day <b>3 Nov 2026</b></span>
+    <span><b>76</b> days out</span>
+    <span>Snapshot <b>19 Aug 2026</b></span>
+    <span>Sources collected <b>6 of 15</b></span>
+    <span>PLSC 2219 · Yale</span>
+  </div>
+</header>
+
+<!-- ============ 1. THE HEADLINE: DISPERSION ACROSS METHODS ============ -->
+<section>
+  <h2>Where the methods disagree</h2>
+  <p class="note">National House popular vote margin. Each row is the <em>average of every forecaster
+     using that method</em>, not an individual model. The gap between rows is the point of this page:
+     four ways of forecasting the same election, and they do not agree.</p>
+
+  <div id="disp"></div>
+
+  <div class="legend">
+    <span><i style="background:var(--s1)"></i>Fundamentals</span>
+    <span><i style="background:var(--s2)"></i>Polling</span>
+    <span><i style="background:var(--s3)"></i>Markets</span>
+    <span><i style="background:var(--s4)"></i>Professional</span>
+    <span><i style="background:var(--reserved)"></i>Class model — reserved</span>
+  </div>
+
+  <details>
+    <summary>Show as a table</summary>
+    <table>
+      <thead><tr><th>Method</th><th>N models</th><th>D margin</th><th>80% interval</th><th>Status</th></tr></thead>
+      <tbody id="disptab"></tbody>
+    </table>
+  </details>
+</section>
+
+<!-- ============ 2. OUR FUNDAMENTALS MODEL ============ -->
+<section>
+  <h2>The class fundamentals model<span class="real">REAL OUTPUT</span></h2>
+  <p class="note">Built from presidential approval, real income growth, and how many seats the
+     president's party is defending. No polls, no markets, no candidate quality. Fitted on all
+     20 midterms from 1946 to 2022 and scored by leave-one-election-out error, because with
+     n = 20 an in-sample R² means nothing.</p>
+
+  <div class="eq">R two-party House vote  =  24.49
+  +  0.134 × approval&nbsp;(%)
+  +  0.312 × real income growth&nbsp;(%)
+  +  0.069 × seats held going in</div>
+
+  <div class="cols">
+    <div>
+      <h3 style="margin-top:6px">Seats follow from the national margin</h3>
+      <div id="curve"></div>
+      <p class="note" style="font-size:12.5px;margin-top:10px">
+        No simulation. The curve is deterministic given district baselines; all the
+        uncertainty lives in one number, the national margin. Shaded band is the model's
+        80% interval carried through to seats.</p>
+    </div>
+    <div>
+      <h3 style="margin-top:6px">Sensitivity to approval</h3>
+      <table>
+        <thead><tr><th>Trump approval</th><th>R vote</th><th>D margin</th><th>D seats</th></tr></thead>
+        <tbody>
+          <tr><td class="k">34%</td><td>44.7%</td><td>D+10.6</td><td>256</td></tr>
+          <tr><td class="k">36%</td><td>45.0%</td><td>D+10.0</td><td>253</td></tr>
+          <tr><td class="k">38% ←&nbsp;current</td><td>45.3%</td><td>D+9.5</td><td>251</td></tr>
+          <tr><td class="k">40%</td><td>45.5%</td><td>D+8.9</td><td>248</td></tr>
+          <tr><td class="k">42%</td><td>45.8%</td><td>D+8.4</td><td>245</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="font-size:12.5px;margin-top:12px">
+        Eight points of approval move the forecast barely one point of vote share. That is
+        not a bug, it is the finding — see below.</p>
+
+      <h3>Specification search</h3>
+      <table>
+        <thead><tr><th>Predictors</th><th>R²</th><th>LOEO error</th></tr></thead>
+        <tbody>
+          <tr><td class="k">approval + income + seats</td><td>0.66</td><td>2.29</td></tr>
+          <tr><td class="k">approval + seats</td><td>0.61</td><td>2.29</td></tr>
+          <tr><td class="k">seats held only</td><td>0.43</td><td>2.67</td></tr>
+          <tr><td class="k">approval only</td><td>0.02</td><td>3.49</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3>The teachable result</h3>
+  <p class="note">Presidential approval on its own explains <strong>almost nothing</strong> about the
+     national House vote — R² of 0.02 across twenty midterms. The referendum story only appears once you
+     condition on exposure: adding approval to a model that already knows how many seats the president's
+     party is defending improves out-of-sample error by 0.38 points. A party holding 290 seats is
+     defending marginal ground it never should have won, and that, not the president's popularity,
+     is what most of "the midterm penalty" turns out to be.</p>
+
+  <details>
+    <summary>Robustness — what moves the answer</summary>
+    <table>
+      <thead><tr><th>Sample</th><th>n</th><th>LOEO</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Full sample</td><td>20</td><td>2.29</td><td class="lft">Preferred</td></tr>
+        <tr><td class="k">Raw 2022 income</td><td>20</td><td>2.63</td><td class="lft">Stimulus base makes 2022 look like a −6% collapse</td></tr>
+        <tr><td class="k">Drop 2022</td><td>19</td><td>2.02</td><td class="lft">Best fit, but dropping a case for fitting badly is cheating</td></tr>
+        <tr><td class="k">1954 onward</td><td>18</td><td>2.61</td><td class="lft">Drops 1946, 1950 — the pre-modern cases</td></tr>
+        <tr><td class="k">Drop 1962</td><td>19</td><td>2.38</td><td class="lft">Cuban Missile Crisis ended 9 days before that election</td></tr>
+      </tbody>
+    </table>
+  </details>
+</section>
+
+<!-- ============ 3. FOCUS SLATE ============ -->
+<section>
+  <h2>Focus slate<span class="ph">PLACEHOLDER DATA</span></h2>
+  <p class="note">Fifteen races, sorted by how far apart the methods are. The races at the top are
+     where forecasting is actually hard. Slate freezes 1 September and never changes.</p>
+  <div id="slate"></div>
+  <p class="note" style="margin:16px 0 0;font-size:12.5px;padding:11px 13px;background:var(--plane);
+     border:1px solid var(--border);border-radius:7px">
+     <strong style="color:var(--text-primary)">Calibration seat · TX-11</strong> — the safe seat is kept
+     off the competitive axis rather than squeezed onto it. All four methods put the Republican between
+     22.0% and 23.1%, a spread of 1.1 points. If a student's model disagrees here, the model is broken,
+     not brave. That is what the control is for.</p>
+  <div class="legend">
+    <span><i style="background:var(--s1)"></i>Fundamentals</span>
+    <span><i style="background:var(--s2)"></i>Polling</span>
+    <span><i style="background:var(--s3)"></i>Markets</span>
+    <span><i style="background:var(--s4)"></i>Professional</span>
+    <span style="color:var(--muted)">Bar spans the range across methods</span>
+  </div>
+</section>
+
+<!-- ============ 4. EXPERT RATINGS — DELIBERATELY SEPARATE ============ -->
+<section>
+  <h2>Expert ratings<span class="ph">PLACEHOLDER DATA</span></h2>
+  <p class="note">Kept in their own panel and <strong>deliberately excluded from the dispersion
+     numbers above</strong>. Cook, Sabato and Inside Elections publish ordinal categories, not vote
+     shares. Converting "Lean R" into a number requires a judgment call you would then have to
+     defend, and it is worth more as a class discussion than as a silent assumption in a script.</p>
+  <table>
+    <thead><tr><th>Race</th><th>Cook</th><th>Sabato</th><th>Inside Elections</th><th>Moved since June</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Senate · Georgia</td><td>Toss-up</td><td>Toss-up</td><td>Tilt D</td><td>→ D</td></tr>
+      <tr><td class="k">Senate · Michigan</td><td>Lean D</td><td>Toss-up</td><td>Lean D</td><td>→ D</td></tr>
+      <tr><td class="k">Senate · N. Carolina</td><td>Toss-up</td><td>Lean R</td><td>Toss-up</td><td>—</td></tr>
+      <tr><td class="k">Senate · Maine</td><td>Lean R</td><td>Toss-up</td><td>Tilt R</td><td>→ D</td></tr>
+      <tr><td class="k">Governor · Georgia</td><td>Lean R</td><td>Lean R</td><td>Likely R</td><td>—</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <strong>Why this archive exists.</strong> ABC shut FiveThirtyEight down in March 2025. On
+  17 May 2026 Disney removed the archived site as well, and fivethirtyeight.com now redirects to
+  ABC News. Nate Silver offered to buy the remaining intellectual property in order to restore the
+  archive, and was refused. The most prominent forecaster in the field lost its own public record of
+  what it said and when. This site is a response to something that already happened.
+  <br><br>
+  Snapshots are captured daily and committed append-only. Course materials CC BY-NC; collected data
+  CC BY. Nothing student-level is published, ever.
+</footer>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const CURVE=[[-8,173],[-7.75,174],[-7.5,174],[-7.25,174],[-7,175],[-6.75,177],[-6.5,178],[-6.25,178],[-6,179],[-5.75,180],[-5.5,181],[-5.25,182],[-5,183],[-4.75,184],[-4.5,184],[-4.25,185],[-4,186],[-3.75,187],[-3.5,188],[-3.25,189],[-3,190],[-2.75,191],[-2.5,192],[-2.25,193],[-2,194],[-1.75,195],[-1.5,196],[-1.25,197],[-1,198],[-0.75,198],[-0.5,199],[-0.25,199],[0,200],[0.25,201],[0.5,202],[0.75,203],[1,203],[1.25,204],[1.5,204],[1.75,205],[2,206],[2.25,206],[2.5,207],[2.75,208],[3,208],[3.25,209],[3.5,210],[3.75,211],[4,212],[4.25,213],[4.5,214],[4.75,216],[5,218],[5.25,219],[5.5,220],[5.75,221],[6,222],[6.25,223],[6.5,224],[6.75,226],[7,228],[7.25,230],[7.5,232],[7.75,234],[8,236],[8.25,238],[8.5,240],[8.75,242],[9,244],[9.25,247],[9.5,251],[9.75,253],[10,254],[10.25,255],[10.5,256],[10.75,257],[11,258],[11.25,259],[11.5,260],[11.75,261],[12,262],[12.25,263],[12.5,265],[12.75,266],[13,268],[13.25,270],[13.5,272],[13.75,274],[14,276],[14.25,277],[14.5,278],[14.75,279],[15,281],[15.25,284],[15.5,286],[15.75,287],[16,288],[16.25,289],[16.5,290],[16.75,291],[17,292],[17.25,293],[17.5,294],[17.75,295],[18,296],[18.25,297],[18.5,298],[18.75,299],[19,300],[19.25,301],[19.5,302],[19.75,303],[20,304],[20.25,305],[20.5,306],[20.75,307],[21,308],[21.25,309],[21.5,310],[21.75,311],[22,312],[22.25,313],[22.5,314],[22.75,315],[23,316],[23.25,317],[23.5,318],[23.75,319],[24,320]];
+
+const METHODS=[
+ {k:"Fundamentals", c:"var(--s1)", n:2, lo:3.6,  hi:15.3, pt:9.5, meth:"approval, economy, exposure", real:true},
+ {k:"Polling",      c:"var(--s2)", n:4, lo:5.2,  hi:8.2,  pt:6.7, meth:"averages of public polls", real:false},
+ {k:"Markets",      c:"var(--s3)", n:2, lo:3.9,  hi:6.5,  pt:5.1, meth:"Kalshi, Polymarket", real:false},
+ {k:"Professional", c:"var(--s4)", n:5, lo:5.8,  hi:9.4,  pt:7.4, meth:"hybrid published models", real:false},
+ {k:"Class model",  c:"var(--reserved)", n:0, lo:null, hi:null, pt:null, meth:"live 30 October", real:null}
+];
+
+const tip=document.getElementById('tip');
+function showTip(e,html){tip.innerHTML=html;tip.style.opacity=1;
+  const p=12,w=tip.offsetWidth,h=tip.offsetHeight;
+  let x=e.clientX+p, y=e.clientY+p;
+  if(x+w>innerWidth-8)x=e.clientX-w-p; if(y+h>innerHeight-8)y=e.clientY-h-p;
+  tip.style.left=x+'px';tip.style.top=y+'px';}
+function hideTip(){tip.style.opacity=0}
+
+/* ---------- dispersion strips ---------- */
+const DMIN=0,DMAX=18;
+const px=v=>((v-DMIN)/(DMAX-DMIN))*100;
+const host=document.getElementById('disp');
+host.innerHTML=`<div class="strip" style="border-bottom:1px solid var(--axis);padding-bottom:6px">
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600">Method</div>
+  <div style="position:relative;height:16px">
+    ${[0,3,6,9,12,15,18].map(v=>`<span class="tk" style="position:absolute;left:${px(v)}%;transform:translateX(-50%)">D+${v}</span>`).join('')}
+  </div>
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;text-align:right">Margin</div></div>`
++ METHODS.map(m=>{
+  if(m.pt===null) return `<div class="strip">
+    <div class="slab"><span class="dot" style="background:${m.c}"></span>${m.k}
+      <span class="smeth">${m.meth}</span></div>
+    <div style="position:relative;height:26px">
+      <div style="position:absolute;inset:6px 0 6px 0;border:1px dashed var(--reserved);border-radius:5px"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+                  font-size:11.5px;color:var(--muted)">reserved — empty until 30 October</div>
+    </div>
+    <div class="sval" style="color:var(--muted)">—</div></div>`;
+  return `<div class="strip">
+    <div class="slab"><span class="dot" style="background:${m.c}"></span>${m.k}
+      <span class="smeth">${m.n} model${m.n>1?'s':''} · ${m.meth}</span></div>
+    <div style="position:relative;height:26px" class="hv"
+         data-t="<b>${m.k}</b><span>${m.n} model${m.n>1?'s':''} averaged<br>D+${m.pt.toFixed(1)} · 80% range D+${m.lo} to D+${m.hi}<br>${m.real?'Real model output':'Placeholder data'}</span>">
+      <div style="position:absolute;top:50%;transform:translateY(-50%);height:8px;border-radius:4px;
+                  left:${px(m.lo)}%;width:${px(m.hi)-px(m.lo)}%;background:${m.c};opacity:.26"></div>
+      <div style="position:absolute;top:50%;left:${px(m.pt)}%;transform:translate(-50%,-50%);
+                  width:13px;height:13px;border-radius:50%;background:${m.c};
+                  box-shadow:0 0 0 2px var(--surface-1)"></div>
+      <span class="dl" style="position:absolute;top:50%;left:calc(${px(m.pt)}% + 12px);
+                  transform:translateY(-50%);color:var(--text-secondary)">D+${m.pt.toFixed(1)}</span>
+    </div>
+    <div class="sval">D+${m.pt.toFixed(1)}<em>${m.real?'real':'placeholder'}</em></div></div>`;
+}).join('');
+
+document.getElementById('disptab').innerHTML=METHODS.map(m=>
+ `<tr><td class="k">${m.k}</td><td>${m.n||'—'}</td><td>${m.pt!==null?'D+'+m.pt.toFixed(1):'—'}</td>
+  <td>${m.lo!==null?`D+${m.lo} – D+${m.hi}`:'—'}</td>
+  <td class="lft" style="text-align:left">${m.real===null?'Reserved':m.real?'Real output':'Placeholder'}</td></tr>`).join('');
+
+/* ---------- seats-vs-margin curve ---------- */
+(function(){
+  const W=470,H=290,L=44,R=14,T=14,B=34;
+  const xs=CURVE.map(d=>d[0]), ys=CURVE.map(d=>d[1]);
+  const x0=-8,x1=20,y0=160,y1=300;
+  const X=v=>L+((v-x0)/(x1-x0))*(W-L-R);
+  const Y=v=>T+(1-(v-y0)/(y1-y0))*(H-T-B);
+  const at=m=>CURVE.reduce((a,b)=>Math.abs(b[0]-m)<Math.abs(a[0]-m)?b:a)[1];
+  const path=CURVE.filter(d=>d[0]>=x0&&d[0]<=x1).map((d,i)=>(i?'L':'M')+X(d[0])+' '+Y(d[1])).join(' ');
+  const band=CURVE.filter(d=>d[0]>=3.6&&d[0]<=15.3);
+  const bandPath='M'+X(3.6)+' '+Y(y0)+' '+band.map(d=>'L'+X(d[0])+' '+Y(d[1])).join(' ')+' L'+X(15.3)+' '+Y(y0)+' Z';
+  let g='';
+  for(let v=180;v<=300;v+=20) g+=`<line class="gl" x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}"/>
+      <text class="tk" x="${L-8}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;
+  for(let v=-8;v<=20;v+=4) g+=`<text class="tk" x="${X(v)}" y="${H-B+18}" text-anchor="middle">${v<0?'R+'+(-v):v===0?'Tie':'D+'+v}</text>`;
+  document.getElementById('curve').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img"
+    aria-label="Democratic House seats as a function of the national vote margin. At the model's point estimate of D plus 9.5, Democrats win 251 seats.">
+    ${g}
+    <path d="${bandPath}" fill="var(--s1)" opacity=".13"/>
+    <line class="ax" x1="${L}" y1="${Y(218)}" x2="${W-R}" y2="${Y(218)}" stroke-dasharray="4 3"/>
+    <text class="tk" x="${W-R}" y="${Y(218)-7}" text-anchor="end" style="font-weight:600">218 — majority</text>
+    <path d="${path}" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/>
+    <line class="ax" x1="${L}" y1="${T}" x2="${L}" y2="${H-B}"/>
+    <line class="ax" x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}"/>
+    <circle cx="${X(9.5)}" cy="${Y(251)}" r="6" fill="var(--s1)" stroke="var(--surface-1)" stroke-width="2"/>
+    <text class="dl" x="${X(9.5)+11}" y="${Y(251)-8}" fill="var(--text-primary)">251 seats</text>
+    <text class="tk" x="${X(9.5)+11}" y="${Y(251)+7}">at D+9.5</text>
+    <rect id="hit" x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent" style="cursor:crosshair"/>
+    <line id="ch" x1="0" y1="${T}" x2="0" y2="${H-B}" stroke="var(--axis)" stroke-width="1" opacity="0"/>
+  </svg>`;
+  const svg=document.querySelector('#curve svg'),hit=svg.querySelector('#hit'),ch=svg.querySelector('#ch');
+  hit.addEventListener('mousemove',e=>{
+    const r=svg.getBoundingClientRect(), sx=(e.clientX-r.left)*(W/r.width);
+    const m=x0+((sx-L)/(W-L-R))*(x1-x0); if(m<x0||m>x1)return;
+    ch.setAttribute('x1',X(m));ch.setAttribute('x2',X(m));ch.setAttribute('opacity','1');
+    const s=at(m);
+    showTip(e,`<b>${m<0?'R+'+(-m).toFixed(1):'D+'+m.toFixed(1)} nationally</b>
+      <span>Democrats win <strong>${s}</strong> seats<br>${s>=218?'D majority':'R majority'}</span>`);
+  });
+  hit.addEventListener('mouseleave',()=>{ch.setAttribute('opacity','0');hideTip()});
+})();
+
+/* ---------- focus slate ---------- */
+const RACES=[
+ {r:"Senate · Alaska",      v:{f:48.2,p:51.6,m:53.9,x:50.4}},
+ {r:"Senate · Ohio (spec.)",v:{f:47.1,p:50.2,m:52.1,x:49.3}},
+ {r:"Senate · Georgia",     v:{f:50.9,p:52.4,m:49.8,x:51.5}},
+ {r:"Senate · N. Carolina", v:{f:49.4,p:51.2,m:48.9,x:50.3}},
+ {r:"Senate · Maine",       v:{f:52.8,p:51.0,m:53.4,x:51.9}},
+ {r:"Governor · Georgia",   v:{f:47.9,p:48.6,m:46.9,x:48.1}},
+ {r:"Senate · Michigan",    v:{f:53.1,p:54.0,m:53.2,x:53.6}},
+];
+const CK={f:"var(--s1)",p:"var(--s2)",m:"var(--s3)",x:"var(--s4)"};
+const CN={f:"Fundamentals",p:"Polling",m:"Markets",x:"Professional"};
+const RMIN=44,RMAX=56, rx=v=>((v-RMIN)/(RMAX-RMIN))*100;
+document.getElementById('slate').innerHTML=
+ `<div class="strip" style="border-bottom:1px solid var(--axis);padding-bottom:6px">
+   <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600">Race</div>
+   <div style="position:relative;height:16px">
+    ${[44,46,48,50,52,54,56].map(v=>`<span class="tk" style="position:absolute;left:${rx(v)}%;transform:translateX(-50%)">${v}%</span>`).join('')}
+   </div>
+   <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;text-align:right">Spread</div></div>`
++ RACES.map(R=>{
+  const vals=Object.values(R.v), lo=Math.min(...vals), hi=Math.max(...vals);
+  return `<div class="strip">
+   <div class="slab" style="font-weight:600;font-size:13px">${R.r}</div>
+   <div style="position:relative;height:26px">
+     <div style="position:absolute;top:50%;left:${rx(50)}%;width:1px;height:22px;
+                 transform:translate(-50%,-50%);background:var(--axis)"></div>
+     <div style="position:absolute;top:50%;transform:translateY(-50%);height:6px;border-radius:3px;
+                 left:${rx(lo)}%;width:${rx(hi)-rx(lo)}%;background:var(--grid)"></div>
+     ${Object.entries(R.v).map(([k,v])=>`<div class="hv"
+        data-t="<b>${R.r}</b><span>${CN[k]}: ${v.toFixed(1)}% R two-party</span>"
+        style="position:absolute;top:50%;left:${rx(v)}%;transform:translate(-50%,-50%);
+               width:11px;height:11px;border-radius:50%;background:${CK[k]};
+               box-shadow:0 0 0 2px var(--surface-1);cursor:pointer"></div>`).join('')}
+   </div>
+   <div class="sval">${(hi-lo).toFixed(1)}<em>points</em></div></div>`;
+}).join('');
+
+/* ---------- hover wiring + theme ---------- */
+function wire(){document.querySelectorAll('.hv').forEach(el=>{
+  el.onmousemove=e=>showTip(e,el.dataset.t); el.onmouseleave=hideTip;});}
+wire();
+const btn=document.getElementById('tbtn');
+btn.onclick=()=>{
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',dark?'light':'dark');
+  btn.textContent=dark?'Dark':'Light';};
+if(matchMedia('(prefers-color-scheme:dark)').matches) btn.textContent='Light';
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+"""
+TEMPLATE for an HTML source. Copy to <source_id>.py and fill in.
+
+Write this AGAINST A REAL CAPTURE, not against a guess:
+
+    python3 forecast/collect/parse.py --inspect <source_id>
+
+which prints the stored artifacts, their sizes, and a structural sketch
+(JSON key tree, or HTML table/heading outline) so you can see the actual shape
+before writing a selector.
+"""
+from __future__ import annotations
+from . import Context, LoadedArtifact, Row, race_id
+
+
+def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
+    raise NotImplementedError(
+        "parser not written yet — run:  python3 forecast/collect/parse.py "
+        f"--inspect {ctx.source_id}   to see the stored structure, then copy "
+        "_scaffold.py.txt to this source's module and implement parse()."
+    )

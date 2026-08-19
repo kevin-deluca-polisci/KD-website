@@ -1,0 +1,108 @@
+# Daily capture — stage 1 only.
+# Install at .github/workflows/forecast-capture.yml in KD-website.
+#
+# Captures raw bytes, pushes them to the PRIVATE archive repo, and commits only
+# the public tier (hash manifest + run manifest) back to this repo. It does not
+# parse, aggregate, publish, or deploy — you do that in the weekly local run,
+# where you can look at the numbers before they go live.
+#
+# SETUP (once):
+#   1. Create a PRIVATE repo, e.g. kevin-deluca-polisci/plsc2219-raw
+#   2. Create a fine-grained PAT with Contents:write on that repo only
+#   3. Add it here as the RAW_ARCHIVE_TOKEN secret
+#   4. Set RAW_ARCHIVE_REPO below
+
+name: Forecast capture (daily)
+
+on:
+  schedule:
+    - cron: "0 11 * * *"
+  workflow_dispatch:
+    inputs:
+      only:     {description: "Comma-separated source ids (blank = all)", required: false, default: ""}
+      dry_run:  {description: "Fetch nothing, just report", type: boolean, required: false, default: false}
+      backfill: {description: "Include Wikipedia revision backfill (run once)", type: boolean, required: false, default: false}
+
+concurrency: {group: forecast-capture, cancel-in-progress: false}
+permissions: {contents: write}
+
+env:
+  RAW_ARCHIVE_REPO: kevin-deluca-polisci/plsc2219-raw
+  CYCLE: "2026"
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+
+      - run: pip install -r forecast/collect/requirements.txt
+
+      - name: Validate registry
+        # Fails fast on a malformed registry, and refuses to run at all if a
+        # source marked `prohibited` has been enabled.
+        run: python3 forecast/collect/capture.py --self-test
+
+      - name: Restore the private raw archive
+        if: inputs.dry_run != true
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${{ secrets.RAW_ARCHIVE_TOKEN }}@github.com/${RAW_ARCHIVE_REPO}.git" \
+            /tmp/rawrepo 2>/dev/null || { mkdir -p /tmp/rawrepo && git -C /tmp/rawrepo init -q; }
+          mkdir -p "forecast/data/${CYCLE}"
+          if [ -d "/tmp/rawrepo/${CYCLE}/raw" ]; then
+            cp -r "/tmp/rawrepo/${CYCLE}/raw" "forecast/data/${CYCLE}/raw"
+          fi
+
+      - name: Capture
+        id: capture
+        continue-on-error: true   # a failed source must not block committing the rest
+        run: |
+          ARGS=""
+          [ -n "${{ inputs.only }}" ]           && ARGS="$ARGS --only ${{ inputs.only }}"
+          [ "${{ inputs.dry_run }}" = "true" ]  && ARGS="$ARGS --dry-run"
+          [ "${{ inputs.backfill }}" = "true" ] && ARGS="$ARGS --backfill"
+          python3 forecast/collect/capture.py --cycle "$CYCLE" $ARGS
+
+      - name: Push raw to the private archive
+        if: inputs.dry_run != true
+        run: |
+          mkdir -p "/tmp/rawrepo/${CYCLE}"
+          rsync -a --delete "forecast/data/${CYCLE}/raw/" "/tmp/rawrepo/${CYCLE}/raw/"
+          cd /tmp/rawrepo
+          git config user.name  "forecast-archive[bot]"
+          git config user.email "forecast-archive@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet && { echo "no new raw"; exit 0; }
+          git commit -m "raw: snapshot $(date -u +%Y-%m-%d)"
+          git remote add origin \
+            "https://x-access-token:${{ secrets.RAW_ARCHIVE_TOKEN }}@github.com/${RAW_ARCHIVE_REPO}.git" 2>/dev/null || true
+          git push origin HEAD:main
+
+      - name: Commit the public tier only
+        if: inputs.dry_run != true
+        run: |
+          git config user.name  "forecast-archive[bot]"
+          git config user.email "forecast-archive@users.noreply.github.com"
+          # Hashes and run provenance only. raw/ is gitignored here; naming the
+          # paths explicitly is the second line of defence in case that slips.
+          git add "forecast/data/${CYCLE}/raw_manifest.csv" \
+                  "forecast/data/${CYCLE}/manifest.csv" 2>/dev/null || true
+          git diff --staged --quiet && { echo "nothing to commit"; exit 0; }
+          git commit -m "forecast: capture hashes $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin "${{ github.ref_name }}" && break; sleep 5
+          done
+          git push
+
+      - name: Report partial failure
+        if: steps.capture.outcome == 'failure'
+        run: |
+          echo "::warning::One or more sources failed — see forecast/data/${CYCLE}/manifest.csv"
+          echo "### Forecast capture: partial failure" >> $GITHUB_STEP_SUMMARY
+          echo "Successful sources were still captured and committed." >> $GITHUB_STEP_SUMMARY
+          exit 1
