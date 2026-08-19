@@ -42,11 +42,20 @@ def main(argv=None) -> int:
             headline.append({"category": r["category"], "margin_D": float(r["mean"]),
                              "n_sources": int(r["n_sources"]),
                              "low": float(r["min"]), "high": float(r["max"]),
-                             "tier": r["tier"]})
+                             "tier": r["tier"],
+                             # "ok" = a real category average; "thin" = n=2 by
+                             # exception; "single" = ONE contributor, and the
+                             # page must say whose rather than calling it an
+                             # average of anything.
+                             "display": r.get("display", "ok"),
+                             "sole_source": r.get("sole_source", "")})
     if model:
+        # Our own model, so n=1 is not a defect — but it is labelled as ours
+        # rather than presented as a category average of anything.
         headline.append({"category": "fundamentals", "margin_D": model["margin_D"],
                          "n_sources": 1, "low": model["margin_D_80_low"],
                          "high": model["margin_D_80_high"], "tier": "open",
+                         "display": "single", "sole_source": "class model",
                          "note": "class model"})
 
     series = defaultdict(list)
@@ -64,6 +73,9 @@ def main(argv=None) -> int:
         "expert_ratings": ratings,
         "fundamentals_model": model,
         "suppressed_cells": len(supp),
+        "display_note": (
+            "A row with display='single' has ONE contributing source and is not "
+            "a category average. Render it named, never as a consensus."),
         "disclosure_note": (
             "Category averages only for sources whose terms do not permit "
             "per-forecaster republication during the cycle. Averages containing "

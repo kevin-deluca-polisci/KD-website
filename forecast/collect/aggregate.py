@@ -46,6 +46,21 @@ DATA_DIR = REPO_ROOT / "forecast" / "data"
 MIN_N = 3           # disclosure floor for any average containing a gated source
 CYCLE_DEFAULT = 2026
 
+# Honesty floor, separate from the disclosure floor above and applying to EVERY
+# category regardless of licence. The scope doc's rule: "a category average of
+# one source is republication with extra steps, both analytically and legally."
+# A row labelled "Professional: D+5.7" reads as a consensus of professional
+# forecasters; if it is one person's model, saying so is not optional.
+#
+# The row is still WRITTEN — it belongs in the archive — but it carries a
+# `display` flag the site must respect, and `sole_source` names the single
+# contributor when licence permits naming it.
+MIN_DISPLAY_N = 3
+# Categories allowed to display at n=2, by explicit exception. Markets are
+# methodologically distinct, continuously priced, and there are only two venues;
+# merging them into anything else would destroy real information.
+THIN_OK = {"market"}
+
 # Quantities that must never be averaged. Ordinal ratings do not combine with
 # vote shares, and building a crosswalk is a judgment call better spent as a
 # class discussion than buried in a script.
@@ -54,6 +69,10 @@ NO_AVERAGE = {"rating_ordinal", "rating_numeric"}
 # Quantities that never leave the private tier regardless of which source
 # carried them. PVI is Cook's proprietary index; we hold it for class use only.
 NEVER_PUBLISH = {"pvi", "pvi_prior"}
+
+# Reference baselines, not forecasts. Averaging a 2024 RESULT into a 2026
+# forecast category would be a category error in the literal sense.
+NOT_A_FORECAST = {"margin_D_pres_2024", "margin_D_prior_senate"}
 
 
 def read_parsed(cycle: int) -> list[dict]:
@@ -75,7 +94,8 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
     """
     groups: dict[tuple, list[dict]] = defaultdict(list)
     for r in rows:
-        if r["quantity"] in NO_AVERAGE or r["quantity"] in NEVER_PUBLISH:
+        if (r["quantity"] in NO_AVERAGE or r["quantity"] in NEVER_PUBLISH
+                or r["quantity"] in NOT_A_FORECAST):
             continue
         key = (r["snapshot_date"], r["category"], r["race_id"],
                r["chamber"], r["state"], r["district"], r["quantity"], r["unit"])
@@ -105,6 +125,19 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
         n = len(vals)
         gated = any(tiers.get(s) != "individual" for s in per_source)
 
+        # How the site is allowed to render this cell.
+        if n >= MIN_DISPLAY_N:
+            display = "ok"
+        elif n == 2 and cat in THIN_OK:
+            display = "thin"
+        else:
+            display = "single" if n == 1 else "thin"
+        # Name the lone contributor only where its licence permits naming.
+        sole = ""
+        if n == 1:
+            only = next(iter(per_source))
+            sole = only if tiers.get(only) == "individual" else ""
+
         rec = {
             "snapshot_date": date, "category": cat, "race_id": rid,
             "chamber": ch, "state": st, "district": dist,
@@ -113,6 +146,8 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             "min": round(min(vals), 4), "max": round(max(vals), 4),
             "sd": round(statistics.stdev(vals), 4) if n > 1 else "",
             "tier": "gated" if gated else "open",
+            "display": display,
+            "sole_source": sole,
         }
         if gated and n < MIN_N:
             suppressed.append({**rec, "mean": "", "min": "", "max": "", "sd": "",
@@ -233,6 +268,17 @@ def main(argv=None) -> int:
     print(f"  {len(by_source):6d} per-source rows out     (PUBLIC — individual tier only)")
     print(f"  {len(ratings):6d} expert rating rows out   (PUBLIC, separate panel)")
     print(f"  {len(suppressed):6d} cells SUPPRESSED below MIN_N={MIN_N}")
+    disp = defaultdict(int)
+    for a_ in averages:
+        disp[a_["display"]] += 1
+    if disp:
+        print(f"\n  display flags: " + ", ".join(f"{k}={v}" for k, v in sorted(disp.items())))
+    singles = {(a_["category"], a_["sole_source"]) for a_ in averages
+               if a_["display"] == "single"}
+    for cat, sole in sorted(singles):
+        who = sole or "an unnameable source"
+        print(f"    NOT A CATEGORY AVERAGE: {cat!r} has one contributor ({who}). "
+              f"The site must label it, not average it.")
 
     tiers: dict[str, set] = defaultdict(set)
     for r in rows:

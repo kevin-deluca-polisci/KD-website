@@ -174,6 +174,86 @@ sources:
       Ingests Polymarket and Kalshi, so it is NOT independent of the market
       category — do not treat as a separate draw.
 
+  # ---------------------------------------------------------------- polling --
+
+  - id: silver_bulletin
+    name: Silver Bulletin generic ballot
+    category: polling
+    method: http
+    enabled: true
+    cadence: daily
+    publication: aggregate_only    # see licence note — collect yes, republish no
+    declared_inputs: []
+    license: permitted
+    robots_checked: 2026-08-19
+    config:
+      urls:
+        - name: generic_ballot_polls
+          url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRsvXNCZ0ubJr8D_yNcU5q6C0_HBa35K7oDK03KpO7Ca43UwdXaIdvVLWoXEmHHph0EREz5430Hm5yZ/pub?output=csv"
+    notes: >
+      THIS IS THE POLLING CATEGORY. Roughly 350 individual generic-ballot polls
+      from Aug 2025 onward, 25 columns, updated near-daily. Columns include both
+      raw (dem/rep/net) and house-effect + likely-voter adjusted (adjusted_*)
+      figures, each poll's weight and influence in his average, and a URL back to
+      the original pollster release.
+      ROBOTS: natesilver.net blocks GPTBot and Google-Extended but does NOT name
+      ClaudeBot, CCBot or anthropic-ai. The CSV is a published-to-web Google
+      Sheet, which Google's robots explicitly permits (Allow: /spreadsheets/d/*/pub).
+      LICENCE: none stated. He publishes the sheet deliberately for reuse, but
+      there is no CC grant, so this is `aggregate_only` — we may compute and show
+      a polling average, we may NOT republish his individual poll rows. Worth
+      writing to ask; a yes would upgrade this to `individual`.
+      ARCHIVE VALUE: the adjusted_* columns are model output that gets revised
+      retroactively. Capturing daily preserves the vintage structure, which
+      neither Silver nor anyone else keeps. That is a genuinely novel thing this
+      archive would hold.
+      His pre-2025 historical archive is paywalled; only the current cycle is free.
+      SCOPE: this entry covers the FREE generic-ballot poll list only. His 2026
+      FLIPR seat forecast is paid-subscriber-only and is NOT collected — if you
+      ever get access, it belongs in `professional`, as a separate source id, not
+      folded in here. Keeping the two apart matters: grant_williams declares
+      silver_bulletin as a polling input, so merging them would make the
+      dependency graph lie.
+
+  # --------------------------------------------- baselines (static reference) --
+
+  - id: medsl
+    name: MIT Election Data and Science Lab — official returns
+    category: fundamentals
+    method: http
+    enabled: true
+    cadence: sporadic              # certified results do not change
+    publication: individual        # CC0 — public domain dedication
+    declared_inputs: []
+    license: permitted
+    robots_checked: 2026-08-19
+    config:
+      urls:
+        - name: president_state_2024
+          url: https://raw.githubusercontent.com/MEDSL/2024-elections-official/main/2024-president-state.csv
+        - name: senate_state_2024
+          url: https://raw.githubusercontent.com/MEDSL/2024-elections-official/main/2024-senate-state.csv
+    notes: >
+      STATEWIDE PARTISAN BASELINES for the ~35 Senate and ~36 Governor races,
+      the statewide equivalent of the district PVI we hold from Cook.
+      Licence CC0 1.0 (public domain dedication) via Harvard Dataverse
+      doi:10.7910/DVN/42MVDX, "U.S. President 1976-2024", version 10.0. No
+      attribution obligation, no share-alike, fully redistributable — the only
+      genuinely unencumbered source in this registry.
+      WHY NOT COOK'S STATE PVI: it exists, but cookpolitical.com robots gives
+      ClaudeBot `Disallow: /`, the page is subscriber-only, and the terms forbid
+      use "as a stand-alone product apart from your own work" — which a
+      redistributable archive of PVI values plainly is. We compute our own from
+      MEDSL instead, using Cook's published method (2020 and 2024 presidential
+      two-party vote vs the national average, weighting the recent election more
+      heavily). Same construct, zero encumbrance, fully documentable.
+      STILL NEEDED: 2020 presidential by state, for the two-cycle blend. The
+      Dataverse file has it; add a URL once the download path is confirmed.
+      MODELLING CAUTION: Senate and especially Governor races are much less
+      nationalised than House races, so a presidential-derived baseline needs a
+      WIDER error band for Governor than Senate, and wider for Senate than House.
+      Do not apply one uniform swing to all three. (Sievert & McKee 2019; Hopkins.)
+
   # ----------------------------------------------- manual entry (not scraped) --
 
   - id: cook_pvi
@@ -355,22 +435,6 @@ sources:
       BUT the HTML table it feeds is subscriber-gated and robots blocks
       ClaudeBot/GPTBot, so the open endpoint reads as an oversight rather than
       an invitation. Ask before enabling. Available second-hand via Wikipedia.
-
-  - id: silver_bulletin
-    name: Silver Bulletin
-    category: polling
-    method: http
-    enabled: false
-    cadence: daily
-    publication: private
-    declared_inputs: []
-    license: permission_pending
-    robots_checked: 2026-08-19
-    config: {urls: []}
-    notes: >
-      2026 FLIPR forecast is paid-subscriber-only. Free tier: generic ballot
-      dashboard and Trump approval. robots blocks GPTBot and Google-Extended.
-      Referenced here because grant_williams declares it as an input.
 
   - id: fiftyplusone
     name: FiftyPlusOne (G. Elliott Morris)

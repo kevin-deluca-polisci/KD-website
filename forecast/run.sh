@@ -6,6 +6,11 @@
 #   ./forecast/run.sh --from parse     skip fetching; reprocess what is already stored
 #   ./forecast/run.sh --dry-run        show what would change, commit nothing
 #   ./forecast/run.sh --no-push        do the work, commit locally, do not push
+#   ./forecast/run.sh --no-sync        skip the private-archive pull and push
+#
+# The private archive lives outside Dropbox. Clone it once before the first run:
+#   git clone https://github.com/kevin-deluca-polisci/plsc2219-raw.git \
+#     "$HOME/Documents/Claude/nondropbox data/plsc2219-raw"
 #
 # Only stage 1 touches anyone else's server. That is why you can re-run stages
 # 2-5 as often as you like while iterating on a chart or fixing a parser
@@ -19,6 +24,14 @@ FROM=capture
 DRY=0
 PUSH=1
 BACKFILL=""
+SYNC=1
+
+# The private archive: raw captures and per-forecaster parsed values, which
+# cannot be public during the cycle. Deliberately OUTSIDE Dropbox — Dropbox
+# syncs .git file-by-file with no consistent snapshot and can corrupt an index
+# mid-write. Override with PLSC_RAW_REPO if you move it.
+RAW_REPO="${PLSC_RAW_REPO:-$HOME/Documents/Claude/nondropbox data/plsc2219-raw}"
+RAW_REMOTE="https://github.com/kevin-deluca-polisci/plsc2219-raw.git"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -27,6 +40,7 @@ while [[ $# -gt 0 ]]; do
     --dry-run)  DRY=1; shift ;;
     --no-push)  PUSH=0; shift ;;
     --backfill) BACKFILL="--backfill"; shift ;;
+    --no-sync)  SYNC=0; shift ;;
     -h|--help)  sed -n '2,16p' "$0"; exit 0 ;;
     *) echo "unknown argument: $1" >&2; exit 1 ;;
   esac
@@ -39,6 +53,99 @@ run_stage() { [[ $(stage_num "$1") -ge $FROM_N ]]; }
 
 banner() { printf '\n\033[1m━━━ %s ━━━\033[0m\n' "$1"; }
 FAILED=()
+
+# ---- private archive sync -------------------------------------------------
+# Two-way on purpose. Down: the daily GitHub Action captures into the private
+# repo, so the newest bytes are there, not here. Up: some sources are collected
+# only locally — Cook PVI is hand-entered, and any source that blocks datacentre
+# IPs has to run from this machine — and those would otherwise exist on exactly
+# one disk, which is the thing this whole arrangement is meant to avoid.
+
+# Copy a directory tree, additively. rsync ships with macOS, but falling back to
+# cp keeps this working on a bare container or a stripped-down Linux box — the
+# archive should never fail to sync because a utility is missing.
+copy_tree() {   # copy_tree SRC/ DEST/
+  local src="$1" dest="$2"
+  mkdir -p "$dest"
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a "$src" "$dest"
+  else
+    ( shopt -s dotglob nullglob; cp -R "$src"* "$dest" 2>/dev/null || true )
+  fi
+}
+
+raw_repo_ready() {
+  # GitHub Desktop appends the repository name to whatever local path you give
+  # it, so pointing it at ".../plsc2219-raw" produces ".../plsc2219-raw/plsc2219-raw".
+  # Detect that rather than making anyone move directories around.
+  if [[ ! -d "$RAW_REPO/.git" && -d "$RAW_REPO/$(basename "$RAW_REPO")/.git" ]]; then
+    RAW_REPO="$RAW_REPO/$(basename "$RAW_REPO")"
+    echo "  (found the clone nested one level deeper — using $RAW_REPO)"
+  fi
+  if [[ ! -d "$RAW_REPO/.git" ]]; then
+    echo "  private archive not found at:"
+    echo "      $RAW_REPO"
+    echo
+    echo "  Clone it once, either in GitHub Desktop (File > Clone repository >"
+    echo "  URL > kevin-deluca-polisci/plsc2219-raw, and set the local path to"
+    echo "  the folder above), or on the command line:"
+    echo
+    echo "      git clone $RAW_REMOTE \\"
+    echo "        \"$RAW_REPO\""
+    echo
+    return 1
+  fi
+  return 0
+}
+
+sync_raw_down() {
+  raw_repo_ready || return 1
+  echo "  pulling $RAW_REPO"
+  # A failed pull is a warning, not a stop. Being offline, or having a conflict
+  # to resolve, must not prevent parsing bytes that are already on disk — the
+  # whole point of the phase split is that stages 2-5 never need the network.
+  if ! git -C "$RAW_REPO" pull --ff-only --quiet 2>/dev/null; then
+    echo "  WARNING: pull failed (offline, or the archive needs attention)."
+    echo "           Continuing with whatever is already in the local clone."
+  fi
+  if [[ -d "$RAW_REPO/$CYCLE/raw" ]]; then
+    mkdir -p "forecast/data/$CYCLE/raw"
+    # NO --delete: local-only captures must survive a sync from the remote.
+    copy_tree "$RAW_REPO/$CYCLE/raw/" "forecast/data/$CYCLE/raw/"
+    echo "  raw/ now has $(find "forecast/data/$CYCLE/raw" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ') sources"
+  else
+    echo "  (private repo has no $CYCLE/raw yet — first run?)"
+  fi
+}
+
+sync_raw_up() {
+  raw_repo_ready || return 1
+  [[ -d "forecast/data/$CYCLE/raw" ]] || return 0
+  mkdir -p "$RAW_REPO/$CYCLE"
+  # NO --delete here either: never let a local gap erase the remote archive.
+  copy_tree "forecast/data/$CYCLE/raw/" "$RAW_REPO/$CYCLE/raw/"
+  [[ -d "forecast/data/$CYCLE/parsed" ]] && \
+    copy_tree "forecast/data/$CYCLE/parsed/" "$RAW_REPO/$CYCLE/parsed/"
+  git -C "$RAW_REPO" add -A
+  if git -C "$RAW_REPO" diff --staged --quiet; then
+    echo "  private archive already up to date"
+    return 0
+  fi
+  local n
+  n=$(git -C "$RAW_REPO" diff --staged --name-only | wc -l | tr -d " ")
+  git -C "$RAW_REPO" commit -q -m "raw: local sync $(date -u +%Y-%m-%d) (${n} files)"
+  if [[ $PUSH -eq 1 ]]; then
+    git -C "$RAW_REPO" push --quiet && echo "  pushed ${n} files to the private archive"
+  else
+    echo "  committed ${n} files locally (--no-push)"
+  fi
+}
+
+# ---- 0. sync down from the private archive --------------------------------
+if [[ $SYNC -eq 1 && $DRY -eq 0 ]]; then
+  banner "0/5  sync  <-  private archive   [PRIVATE]"
+  sync_raw_down || FAILED+=("sync-down")
+fi
 
 # ---- 1. capture (the only stage that touches the network) -----------------
 if run_stage capture; then
@@ -73,6 +180,12 @@ if run_stage aggregate; then
     python3 forecast/collect/aggregate.py --cycle "$CYCLE" || {
       echo "PUBLICATION AUDIT FAILED — refusing to continue." >&2; exit 1; }
   fi
+fi
+
+# ---- 4b. sync back up, so local-only captures are not on one disk ---------
+if [[ $SYNC -eq 1 && $DRY -eq 0 ]]; then
+  banner "4b   sync  ->  private archive   [PRIVATE]"
+  sync_raw_up || FAILED+=("sync-up")
 fi
 
 # ---- 5. publish -------------------------------------------------------------

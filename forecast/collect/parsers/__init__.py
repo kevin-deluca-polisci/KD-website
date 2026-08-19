@@ -49,6 +49,9 @@ QUANTITIES = {
     "turnout_pct",
     "pvi",            # Cook Partisan Voting Index, signed: negative = R-leaning
     "pvi_prior",      # same, on the PREVIOUS map — the pair shows redistricting
+    "margin_D_adjusted",      # house-effect / likely-voter adjusted polling margin
+    "margin_D_pres_2024",     # statewide 2024 presidential two-party margin
+    "margin_D_prior_senate",  # statewide 2024 Senate two-party margin
 }
 
 # Chamber-level pseudo-races. Same ID convention as real races so the class
