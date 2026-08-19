@@ -253,6 +253,14 @@ def main(argv=None) -> int:
                     help="override the source_url recorded for provenance")
     ap.add_argument("--preview", action="store_true",
                     help="show what was understood, write nothing")
+    ap.add_argument("--raw-file", action="store_true",
+                    help="store the file VERBATIM as a capture artifact for this "
+                         "source, without parsing it. For data that a human had "
+                         "to download by hand (a login wall, a robots block, an "
+                         "API this machine cannot reach) but which an existing "
+                         "parser already knows how to read.")
+    ap.add_argument("--artifact-name", default=None,
+                    help="artifact name to store under (default: the file stem)")
     a = ap.parse_args(argv)
 
     reg_path = FORECAST_DIR / "sources" / f"{a.cycle}.yaml"
@@ -261,12 +269,51 @@ def main(argv=None) -> int:
     if src is None:
         print(f"ERROR: {a.source!r} is not in {reg_path.name}", file=sys.stderr)
         return 2
-    if src.get("method") != "manual":
-        print(f"ERROR: {a.source!r} has method {src.get('method')!r}, not 'manual'.",
-              file=sys.stderr)
+    # --raw-file works for ANY source: the whole point is rescuing a source whose
+    # normal method cannot reach the data from this machine.
+    if not a.raw_file and src.get("method") != "manual":
+        print(f"ERROR: {a.source!r} has method {src.get('method')!r}, not 'manual'.\n"
+              f"       (Use --raw-file to store a hand-downloaded file for a "
+              f"non-manual source.)", file=sys.stderr)
         return 2
 
     path = Path(a.file).expanduser()
+
+    # ---- verbatim passthrough -------------------------------------------
+    # Store the bytes exactly as downloaded, with the same provenance sidecar an
+    # automated capture would get, and let the source's normal parser handle it.
+    # The point is that a hand-downloaded file becomes indistinguishable from a
+    # fetched one everywhere downstream — same raw/ layout, same hash in the
+    # public manifest, same parser. Only the provenance record differs, and it
+    # says plainly that a human fetched it.
+    if a.raw_file:
+        import hashlib as _h, shutil as _sh
+        snapshot = a.date or dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")
+        name = a.artifact_name or path.stem
+        d = DATA_DIR / str(a.cycle) / "raw" / a.source / snapshot
+        d.mkdir(parents=True, exist_ok=True)
+        blob = path.read_bytes()
+        ext = path.suffix.lstrip(".") or "txt"
+        (d / f"{name}.{ext}").write_bytes(blob)
+        (d / f"{name}.meta.json").write_text(json.dumps({
+            "url": a.accessed_url or (src.get("config") or {}).get("source_url", ""),
+            "status": 200,
+            "fetched_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+            "bytes": len(blob),
+            "sha256": _h.sha256(blob).hexdigest(),
+            "manual_entry": True,
+            "entered_by": getpass.getuser(),
+            "note": "downloaded by hand; this machine cannot fetch the source",
+        }, indent=2))
+        print("=" * 70)
+        print(f"raw import · {a.source} · {name}.{ext}")
+        print("=" * 70)
+        print(f"  {len(blob):,} bytes  sha256 {_h.sha256(blob).hexdigest()[:16]}…")
+        print(f"  wrote {(d / f'{name}.{ext}').relative_to(REPO_ROOT)}")
+        print(f"  tier: {src.get('publication')}")
+        print(f"\n  Now run:  python3 forecast/collect/parse.py --only {a.source}")
+        return 0
+
     if path.suffix.lower() in (".xlsx", ".xlsm", ".csv", ".tsv"):
         rows, skipped = parse_structured(path)
         text = f"[structured import from {path.name}]"

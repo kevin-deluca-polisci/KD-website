@@ -134,9 +134,20 @@ def load_medsl(cycle: int) -> list[dict]:
     for day in sorted(root.iterdir(), reverse=True):
         if not day.is_dir():
             continue
-        for f in sorted(day.glob("*.csv")):
-            with f.open(encoding="utf-8-sig", newline="") as fh:
-                rows.extend(csv.DictReader(fh))
+        # NOT glob("*.csv"). capture.py names files by sniffed Content-Type, and
+        # raw.githubusercontent.com serves CSV as text/plain — so these land as
+        # .txt. Match the parsers, which read every artifact and ignore the
+        # extension entirely.
+        for f in sorted(day.iterdir()):
+            if not f.is_file() or f.name.endswith(".meta.json"):
+                continue
+            try:
+                text = f.read_text(encoding="utf-8-sig")
+            except Exception:
+                continue
+            if "," not in text.split("\n", 1)[0]:
+                continue                      # not a CSV header
+            rows.extend(csv.DictReader(text.splitlines()))
         if rows:
             break
     if not rows:
