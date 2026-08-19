@@ -1,0 +1,80 @@
+{
+  "cycle": 2026,
+  "generated_at": "2026-08-19T19:37:56.784767+00:00",
+  "latest_snapshot": "2026-08-19",
+  "snapshot_count": 1,
+  "headline": [
+    {
+      "category": "fundamentals",
+      "margin_D": 9.48,
+      "n_sources": 1,
+      "low": 3.61,
+      "high": 15.36,
+      "tier": "open",
+      "note": "class model"
+    },
+    {
+      "category": "professional",
+      "margin_D": 5.73,
+      "n_sources": 1,
+      "low": 5.73,
+      "high": 5.73,
+      "tier": "open"
+    }
+  ],
+  "series": {
+    "professional": [
+      [
+        "2026-08-19",
+        5.73
+      ]
+    ]
+  },
+  "expert_ratings": [],
+  "fundamentals_model": {
+    "cycle": 2026,
+    "fitted_on": "20 midterms, 1946-2022",
+    "coefficients": {
+      "intercept": 24.4866,
+      "approval": 0.1338,
+      "income_growth": 0.3122,
+      "seats_before": 0.0692
+    },
+    "r2": 0.657,
+    "loeo_rmse": 2.291,
+    "inputs": {
+      "approval": 38.0,
+      "income_growth": 1.5,
+      "seats_before": 220,
+      "income_is_placeholder": true
+    },
+    "pres_party_two_party_vote": 45.26,
+    "margin_D": 9.48,
+    "margin_D_80_low": 3.61,
+    "margin_D_80_high": 15.36,
+    "sensitivity": [
+      {
+        "approval": 34,
+        "margin_D": 10.55
+      },
+      {
+        "approval": 36,
+        "margin_D": 10.02
+      },
+      {
+        "approval": 38,
+        "margin_D": 9.48
+      },
+      {
+        "approval": 40,
+        "margin_D": 8.95
+      },
+      {
+        "approval": 42,
+        "margin_D": 8.41
+      }
+    ]
+  },
+  "suppressed_cells": 0,
+  "disclosure_note": "Category averages only for sources whose terms do not permit per-forecaster republication during the cycle. Averages containing any such source are shown only with at least 3 contributors. Full per-forecaster data will be released as a documented archive after the election."
+}
