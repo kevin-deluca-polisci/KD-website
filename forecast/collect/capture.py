@@ -991,6 +991,9 @@ def main(argv: list[str] | None = None) -> int:
                    help="fetch nothing, write nothing, report what would happen")
     p.add_argument("--backfill", action="store_true",
                    help="also run historical backfill where a source supports it")
+    p.add_argument("--reconcile", action="store_true",
+                   help="rebuild raw_manifest.csv from the bytes on disk "
+                        "(no network) — use after a merge")
     p.add_argument("--self-test", action="store_true",
                    help="offline validation of the registry and helpers")
     p.add_argument("--list", action="store_true",
@@ -998,6 +1001,27 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     registry = load_registry(args.cycle)
+
+    if args.reconcile:
+        # Offline repair, no network. Collapses duplicate rows left behind by a
+        # union merge and re-points every hash at the bytes actually stored —
+        # for EVERY date, not just today, because a row that drifted on some
+        # past date is exactly what nobody goes looking for.
+        raw_root = DATA_DIR / str(args.cycle) / "raw"
+        dates = sorted({d.name for src in raw_root.iterdir() if src.is_dir()
+                        for d in src.iterdir()
+                        if d.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}", d.name)}) \
+                if raw_root.is_dir() else []
+        if not dates:
+            print("no stored captures to reconcile")
+            return 0
+        for d in dates:
+            append_raw_manifest(args.cycle, d, dry_run=False)
+        out = DATA_DIR / str(args.cycle) / "raw_manifest.csv"
+        n = (sum(1 for _ in out.open(encoding="utf-8")) - 1) if out.exists() else 0
+        print(f"reconciled {len(dates)} date(s) — raw_manifest.csv now has {n} "
+              f"rows, each matching the bytes on disk")
+        return 0
 
     if args.self_test:
         return self_test(registry)
