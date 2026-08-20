@@ -82,7 +82,12 @@ def two_party_by_state(rows: list[dict], year: int) -> dict[str, tuple[float, fl
 
 
 def margins(tp: dict[str, tuple[float, float]]) -> tuple[dict[str, float], float]:
-    """Per-state D-R two-party margin (pct), and the national margin."""
+    """
+    Per-state D-R two-party MARGIN (pct), and the national margin.
+
+    Margin, not share. The distinction is the whole ballgame for PVI — see
+    compute(), where the factor of two is applied.
+    """
     per = {po: (d - r) / (d + r) * 100 for po, (d, r) in tp.items()}
     nd = sum(d for d, _ in tp.values())
     nr = sum(r for _, r in tp.values())
@@ -103,9 +108,20 @@ def compute(rows: list[dict], years: tuple[int, int]) -> dict:
                 f"forecast/data/2026/raw/medsl/")
         per, n = margins(tp)
         natl[y] = n
-        # PVI is the state's lean RELATIVE to the nation, which is what makes it
-        # comparable across cycles of different national environments.
-        lean[y] = {po: m - n for po, m in per.items()}
+        # PVI is the state's lean RELATIVE to the nation — and it is expressed in
+        # points of VOTE SHARE, not points of margin.
+        #
+        # The /2 is not a fudge. A state whose D margin runs 20 points ahead of
+        # the nation's has a D share about 10 points ahead, because every vote
+        # that moves from R to D shifts the margin by two. Cook's index is the
+        # share difference, so the margin difference has to be halved.
+        #
+        # We got this wrong first time and shipped it, and the --compare check
+        # against Cook is what caught it: every state came out at almost exactly
+        # twice Cook's value (DC D+87 vs their D+44, WY R+46 vs their R+23). A
+        # uniform factor-of-two across 51 states is the signature of a units
+        # error, not a methodological disagreement.
+        lean[y] = {po: (m - n) / 2.0 for po, m in per.items()}
 
     recent, prior = years
     for po in sorted(set(lean[recent]) & set(lean[prior])):
@@ -130,7 +146,13 @@ def load_medsl(cycle: int) -> list[dict]:
     root = DATA / str(cycle) / "raw" / "medsl"
     if not root.is_dir():
         raise SystemExit("no MEDSL capture found — run ./forecast/run.sh first")
+    # Walk EVERY date, newest first, and take each artifact NAME only once.
+    # Stopping at the first date with rows was wrong: the multi-cycle bundle is
+    # hand-imported on one day, while single-cycle files are captured daily, so
+    # the newest directory holds 2024 alone and the 2020 series silently
+    # disappears the day after the import.
     rows: list[dict] = []
+    seen: set[str] = set()
     for day in sorted(root.iterdir(), reverse=True):
         if not day.is_dir():
             continue
@@ -147,9 +169,11 @@ def load_medsl(cycle: int) -> list[dict]:
                 continue
             if "," not in text.split("\n", 1)[0]:
                 continue                      # not a CSV header
+            stem = f.name.split(".")[0]
+            if stem in seen:
+                continue                      # a newer copy already won
+            seen.add(stem)
             rows.extend(csv.DictReader(text.splitlines()))
-        if rows:
-            break
     if not rows:
         raise SystemExit("MEDSL capture contains no CSV rows")
     return rows

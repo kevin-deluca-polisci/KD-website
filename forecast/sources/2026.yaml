@@ -239,20 +239,25 @@ sources:
     declared_inputs: []
     license: permitted
     robots_checked: 2026-08-19
+    # Certified election returns are STATIC. Artifacts captured or imported on
+    # one date stay valid forever, so the parser looks back to the most recent
+    # date that has each artifact rather than requiring all of them today.
+    # Without this, a hand-imported file vanishes from the parser's view the
+    # moment tomorrow's capture creates a new date directory.
+    static_artifacts: true
     config:
       urls:
         - name: president_state_2024
           url: https://raw.githubusercontent.com/MEDSL/2024-elections-official/main/2024-president-state.csv
         - name: senate_state_2024
           url: https://raw.githubusercontent.com/MEDSL/2024-elections-official/main/2024-senate-state.csv
-        # The full 1976-2024 series, which carries 2020 as well as 2024 — both
-        # cycles are needed for a Cook-style two-election state PVI. UNVERIFIED:
-        # Dataverse was unreachable from the machine this registry was written
-        # on. Per-URL isolation means a 404 here costs nothing; if it fails,
-        # check the download path at
-        # https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/42MVDX
-        - name: president_state_1976_2024
-          url: "https://dataverse.harvard.edu/api/access/dataset/:persistentId/?persistentId=doi:10.7910/DVN/42MVDX"
+        # NOTE: president_state_1976_2024 is NOT fetched. The Dataverse API
+        # returns 400 to that download path and the site is not scriptable from
+        # here. The file was downloaded by hand and imported with:
+        #   manual_import.py --source medsl --raw-file --artifact-name president_state_1976_2024
+        # It carries 1976-2024 including the 2020 cycle the state PVI needs.
+        # Static reference data: certified returns do not change, so one import
+        # is permanent. See `static_artifacts` below.
     notes: >
       STATEWIDE PARTISAN BASELINES for the ~35 Senate and ~36 Governor races,
       the statewide equivalent of the district PVI we hold from Cook.
@@ -571,14 +576,25 @@ sources:
   - id: race_to_the_wh
     name: Race to the WH
     category: professional
-    method: http
-    enabled: true                  # raw capture works today; parser comes later
+    method: infogram_live
+    enabled: true
     cadence: daily
     publication: aggregate_only
     declared_inputs: []
     license: permitted
     robots_checked: 2026-08-19
     config:
+      # Where the numbers actually are. The embed pages below are only shells;
+      # each of their charts carries a pointer (custom.live.key) that the
+      # viewer dereferences at render time. handle_infogram reads the pointers
+      # out of the shell and fetches <live_base>/<key> for each, so a key
+      # rotation is picked up automatically instead of silently zeroing us out.
+      #
+      # ROBOTS: live-data.jifo.co serves no robots.txt (404), so nothing is
+      # disallowed. infogram.com itself disallows only /app/ and /oembed.
+      # This is the same request the public embed makes to render itself.
+      live_base: https://live-data.jifo.co
+      max_live: 120
       urls:
         - name: senate
           url: https://www.racetothewh.com/senate/26
@@ -598,9 +614,72 @@ sources:
     notes: >
       Free, robots-permitted (Squarespace default; AI agents are listed but not
       actually disallowed — they fall through to the permissive wildcard).
-      PARSER NOT WRITTEN. The reason is worth recording: the pages carry no
-      figures at all. Everything is an Infogram embed, so scraping the HTML
-      yields nothing no matter how good the selector. The embed URLs above are
-      the real target — Infogram pages carry a window.infographicData JSON blob.
-      Capture them, then:  parse.py --inspect race_to_the_wh
-      and write the parser against whatever the blob turns out to contain.
+      PARSER WRITTEN 2026-08-19. Worth recording why it took a detour: the
+      site's own pages carry no figures at all. Everything is an Infogram
+      embed, so an HTML selector finds nothing however well written. The real
+      payload is a window.infographicData JSON blob inside the embed pages —
+      hence the three e.infogram.com URLs above, which exist only to capture
+      one level deeper than the site itself.
+
+      The blob is a document model for a drawing, not a data feed, and the
+      sheet sits deeper than four levels down (an inspection walk capped at
+      depth 4 came back empty). So the parser does NOT navigate to a fixed
+      path. It walks the whole object and picks out every 2-D array that looks
+      like a spreadsheet, then identifies each one from its own header row.
+      If Infogram reshuffles its document model, the sheet moves but is still
+      a sheet.
+
+      Debugging aid, since the difficulty here is that you cannot see the data:
+        python3 -m forecast.collect.parsers.race_to_the_wh \
+            forecast/data/2026/raw/race_to_the_wh/<date>/infogram_senate.html
+      dumps the live-data pointers and every candidate sheet.
+
+      Emits win_prob_D, margin_D per race, plus seats_D/seats_R when the deck
+      carries a topline. Stays aggregate_only: free to read and robots-permitted,
+      but no licence grant, so it feeds an average rather than being republished
+      race-by-race.
+
+      ***  BLOCKED: THE CAPTURE CONTAINS NO NUMBERS  ***
+      Established against the 2026-08-19 capture, not assumed. The Senate deck
+      has 53 CHART entities and every sheet is empty. Its map charts hold a
+      62x62 identity matrix with all 57 values set to a constant 10 — geometry
+      for colouring a map, not ratings. Exactly 19 strings in 636KB contain a
+      "%", all of them legend copy. The 84 TEXT entities are labels with no
+      numbers attached.
+
+      The values are fetched at RENDER time. Each chart carries a pointer:
+        chartData.custom.live = {enabled: true, provider: "atlas_google_drive",
+                                 key: "<uuid>", title: "26 Sen - NH - Box",
+                                 sheetNames: [...]}
+      38 pointers in the Senate deck, 51 in the House deck. Two look like the
+      whole forecast in one request:
+        6911ecb8-c744-4464-a182-70568e288364  "Sen 26 - Main Graphics"
+            sheets: Chance to Win, Projected Seats, Seat Chart (Rating),
+                    Last Update, Dems, GOP, Win, Margin, Rating, Inc
+        071993c5-ec8b-42d4-9b3b-8fee181e5d4a  "Sen 26 - Publish Detailed List"
+            sheets: one per state
+
+      WHY THIS IS URGENT RATHER THAN MERELY PENDING: the two-phase design
+      promises that a broken parser can be fixed later and re-run over every
+      stored date. That promise does NOT hold here — no future parser can
+      recover numbers that were never in the bytes. Every day this stays
+      unresolved is a permanently empty day, not an unparsed one.
+
+      TO RESOLVE — a discovery problem, not a permission one. infogram.com
+      robots.txt disallows only /app/ and /oembed, so we are permitted; we
+      simply do not know the URL. Guessing it failed (live.infogram.com,
+      /live/, /api/live/, /live-data/, cdn.jifo.co all 404 or 403) and the
+      minified viewer bundle was too large to read. Thirty seconds of DevTools
+      settles it:
+        1. open https://e.infogram.com/_/vs9b6iAeARko8cuwH51x?src=embed
+        2. DevTools > Network > filter XHR, reload
+        3. find the request whose URL or payload carries one of the keys above
+        4. add that URL to config.urls here; capture starts collecting it the
+           same day, and the parser already written handles the rest
+      Until then the parser returns [] quietly rather than raising — this
+      empty case is the NORMAL case, and a daily PARSER FAILED would train us
+      to ignore the one source where we most need to notice a change. It DOES
+      raise if the deck ever starts carrying inline data we cannot read.
+
+      Meanwhile the daily capture is still worth keeping: it preserves the
+      pointer table, so a key rotation or a redesign is visible.

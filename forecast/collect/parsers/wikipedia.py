@@ -29,14 +29,8 @@ from __future__ import annotations
 
 import re
 
-from . import Context, LoadedArtifact, Row, race_id
-
-# 0 = Solid D .. 10 = Solid R, matching Inside Elections' own numeric scale.
-LEVEL = {
-    "SOLID": 10.0, "SAFE": 10.0, "LIKELY": 8.5, "LEAN": 7.0, "LEANS": 7.0,
-    "TILT": 6.0, "TILTS": 6.0,
-}
-TOSSUP = {"TOSSUP", "TOSS-UP", "TOSS UP"}
+from . import (Context, LoadedArtifact, RATING_LEVEL as LEVEL, Row,
+               TOSSUP_LABELS as TOSSUP, is_state, race_id)
 
 # Header cell -> our source id. Matched against the cleaned header text.
 FORECASTERS = [
@@ -195,6 +189,12 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                     if not m:
                         continue
                     st = m.group(1).upper()
+                    # The fallback is a bare two-letter match, which catches
+                    # abbreviations that are not states. race_id now refuses
+                    # those outright, so check first rather than letting one
+                    # stray cell abort the whole 1,989-row parse.
+                    if not is_state(st):
+                        continue
                     rid, chamber, dist = race_id("senate", st), "senate", ""
 
                 # Cook PVI rides in this table too. PRIVATE — see the docstring.

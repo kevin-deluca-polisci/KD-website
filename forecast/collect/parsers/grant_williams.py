@@ -73,7 +73,12 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             rows.append(ctx.row(art, race_id=natl, quantity="margin_D",
                                 value=round(margin, 3), unit="pct"))
 
+        # The House file says `prob_dem_majority`; the Senate file says
+        # `prob_dem_control`. Same quantity, different word, and checking only
+        # the first meant the Senate chamber probability was silently absent.
         prob = _num(summary, "prob_dem_majority")
+        if prob is None:
+            prob = _num(summary, "prob_dem_control")
         if prob is not None:
             rows.append(ctx.row(art, race_id=natl, quantity="win_prob_D",
                                 value=round(prob, 4), unit="prob"))
@@ -86,7 +91,14 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                                 value=round(seats, 2), unit="seats"))
 
         # ---- per race ----------------------------------------------------
-        for d in doc.get("districts") or []:
+        # The House file keys its race list `districts`; the Senate file keys
+        # the identical structure `races`. Reading only `districts` meant the
+        # Senate forecast parsed its national summary and then silently
+        # dropped all 35 contests — the archive held zero 2026 Senate races
+        # and looked healthy, because the House rows made the source's row
+        # count look fine. Found when the polling model asked for Senate
+        # states and got none.
+        for d in doc.get("districts") or doc.get("races") or []:
             if not isinstance(d, dict):
                 continue
             state = str(d.get("state") or "").upper()

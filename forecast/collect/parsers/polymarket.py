@@ -6,7 +6,8 @@ JSON-encoded STRING array. That double encoding is the usual trip hazard.
 """
 from __future__ import annotations
 import json, re
-from . import Context, LoadedArtifact, Row, NATIONAL_HOUSE, NATIONAL_SENATE, race_id
+from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
+               is_state, race_id, state_from_text)
 
 _HOU = re.compile(r"\b([A-Z]{2})[-\s]?(\d{1,2})\b.*(house|congress)", re.I)
 _SEN = re.compile(r"senate.*\b([A-Z]{2})\b|\b([A-Z]{2})\b.*senate", re.I)
@@ -64,14 +65,19 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                     rid, chamber, state, district = NATIONAL_HOUSE, "national", "", ""
                 elif re.search(r"senate", blob, re.I) and re.search(r"control|majority|win the", blob, re.I):
                     rid, chamber, state, district = NATIONAL_SENATE, "national", "", ""
-                elif (mm := _HOU.search(blob)):
+                # is_state() guards every branch. These matchers are
+                # case-insensitive and [A-Z]{2} under IGNORECASE matches ANY
+                # two letters, so "Balance of power in the Senate" matched
+                # state "OF" and filed every Senate market under SEN_OF_2026.
+                # Row.validate() waved it through — "OF" is two capitals — and
+                # it stayed invisible until the polling model asked which
+                # states hold a Senate race and got exactly one answer.
+                elif (mm := _HOU.search(blob)) and is_state(mm.group(1)):
                     st, d = mm.group(1).upper(), mm.group(2)
                     rid, chamber, state, district = race_id("house", st, d), "house", st, f"{int(d):02d}"
-                elif (mm := _GOV.search(blob)):
-                    st = (mm.group(1) or mm.group(2)).upper()
+                elif re.search(r"governor", blob, re.I) and (st := state_from_text(blob)):
                     rid, chamber, state, district = race_id("governor", st), "governor", st, ""
-                elif (mm := _SEN.search(blob)):
-                    st = (mm.group(1) or mm.group(2)).upper()
+                elif re.search(r"senate", blob, re.I) and (st := state_from_text(blob)):
                     rid, chamber, state, district = race_id("senate", st), "senate", st, ""
                 else:
                     continue

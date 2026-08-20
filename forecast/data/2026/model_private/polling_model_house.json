@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "publication": "private",
+  "why_private": "district margins are built from cook_pvi PVI, which is NEVER_PUBLISH. Given the national tide, PVI = (margin - tide)/2 exactly, so publishing these would republish that index.",
+  "n_districts": 435,
+  "expected_D_seats": 226.85,
+  "D_seats_80pct": [
+    205,
+    251
+  ],
+  "prob_D_218_plus": 0.6854,
+  "snapshot_date": "2026-08-19",
+  "election_day_tide_D": 5.777
+}

@@ -565,11 +565,164 @@ def handle_wikipedia(src: dict, fetcher: Fetcher, store: RawStore,
     return n, b, notes
 
 
+_LIVE_ASSIGN = re.compile(r'"live"\s*:\s*\{')
+
+
+def _balanced_json(text: str, start: int) -> str | None:
+    """Slice the JSON object starting at `start`, respecting string literals."""
+    depth, i, n, in_str, esc = 0, start, len(text), False, False
+    while i < n:
+        c = text[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif c == "\\":
+                esc = True
+            elif c == '"':
+                in_str = False
+        elif c == '"':
+            in_str = True
+        elif c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start:i + 1]
+        i += 1
+    return None
+
+
+def _discover_live(html: str) -> list[dict]:
+    """
+    Pull every enabled live-data pointer out of an Infogram embed page.
+
+    This is DISCOVERY, not parsing — the same licence handle_kalshi takes when
+    it pages the series list. We read only enough to know what to fetch next;
+    what the fetched bytes MEAN is phase 2's problem.
+    """
+    out, seen = [], set()
+    for m in _LIVE_ASSIGN.finditer(html):
+        raw = _balanced_json(html, m.end() - 1)
+        if not raw:
+            continue
+        try:
+            lv = json.loads(raw)
+        except json.JSONDecodeError:
+            continue
+        key = lv.get("key")
+        if not lv.get("enabled") or not key or key in seen:
+            continue
+        seen.add(key)
+        out.append(lv)
+    return out
+
+
+def handle_infogram(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[int, int, list[str]]:
+    """
+    Two-step capture for Infogram-embedded sources.
+
+    WHY THIS HANDLER EXISTS
+        racetothewh.com publishes everything through Infogram. The embed page
+        carries no numbers at all — it is a layout shell whose charts hold
+        empty sheets and a POINTER to Infogram's live-data service:
+
+            custom.live = {enabled: true, key: "<uuid>",
+                           title: "Sen 26 - Main Graphics", sheetNames: [...]}
+
+        The numbers live at  <live_base>/<key>  and are fetched by the viewer
+        at render time. Capturing only the embed page therefore stores a
+        permanently empty artifact — and unlike a parser bug, that is NOT
+        recoverable later, because the bytes never held the data. Hence a
+        handler rather than a longer list of URLs.
+
+    WHY DISCOVERY RATHER THAN HARDCODED KEYS
+        There are 38 pointers in the Senate deck and 51 in the House deck, and
+        they are regenerated when the author rebuilds a chart. A static list
+        would rot silently — the exact failure this pipeline is built to avoid.
+        Reading the keys out of the shell each day means a rotation is picked
+        up automatically, and the shell we store is the audit trail for what
+        the discovery saw.
+    """
+    cfg = src.get("config") or {}
+    urls = cfg.get("urls") or []
+    live_base = (cfg.get("live_base") or "https://live-data.jifo.co").rstrip("/")
+    max_live = int(cfg.get("max_live", 120))
+
+    n = b = 0
+    notes: list[str] = []
+    errors: list[str] = []
+    pointers: dict[str, dict] = {}
+
+    # Step 1 — the embed shells. Same per-URL isolation as handle_http.
+    for entry in urls:
+        name = entry.get("name") or entry["url"]
+        try:
+            body, meta = fetcher.get(entry["url"])
+        except Exception as e:
+            errors.append(f"{name}: {type(e).__name__}: {e}")
+            continue
+        prev_hash, prev_date = store.previous_hash(src["id"], name)
+        if prev_hash and prev_hash == meta.get("sha256"):
+            days = _days_between(prev_date, store.snapshot_date)
+            meta["unchanged_since"] = prev_date
+            if days is not None and days >= STALE_AFTER_DAYS:
+                notes.append(f"STALE: {name} byte-identical since {prev_date} "
+                             f"({days}d) — the source may have stopped updating")
+        b += store.write(src["id"], name, body, meta)
+        n += 1
+        for lv in _discover_live(body.decode("utf-8", errors="replace")):
+            pointers.setdefault(lv["key"], lv)
+
+    if errors and n == 0:
+        raise RuntimeError("every configured embed URL failed: " + " | ".join(errors))
+
+    # Step 2 — dereference the pointers.
+    if not pointers:
+        # Not fatal: the deck may genuinely have no live charts. But say so,
+        # because the alternative reading is that discovery broke, and those
+        # two look identical from the row count alone.
+        notes.append("no live-data pointers found in the embed shells — either "
+                     "the deck stopped using live data or the discovery regex "
+                     "needs updating")
+    ordered = sorted(pointers.values(), key=lambda l: str(l.get("title") or ""))
+    if len(ordered) > max_live:
+        notes.append(f"CAPPED: {len(ordered)} live pointers discovered, fetching "
+                     f"the first {max_live}. Raise config.max_live to take them all.")
+        ordered = ordered[:max_live]
+
+    live_ok = 0
+    for lv in ordered:
+        key = lv["key"]
+        title = str(lv.get("title") or "untitled")
+        name = f"live__{RawStore._slugify(title)[:60]}__{key[:8]}"
+        try:
+            body, meta = fetcher.get(f"{live_base}/{key}")
+        except Exception as e:
+            errors.append(f"live {title} ({key[:8]}): {type(e).__name__}: {e}")
+            continue
+        # Carry the pointer's own metadata onto the artifact. The sheet names
+        # are what phase 2 uses to tell a margin sheet from a rating sheet, and
+        # they are not repeated inside every payload.
+        meta["live_key"] = key
+        meta["live_title"] = title
+        meta["live_sheet_names"] = lv.get("sheetNames")
+        meta["live_provider"] = lv.get("provider")
+        b += store.write(src["id"], name, body, meta)
+        n += 1
+        live_ok += 1
+
+    if pointers:
+        notes.append(f"live data: {live_ok}/{len(ordered)} pointers fetched")
+    notes.extend(f"FAILED {e}" for e in errors)
+    return n, b, notes
+
+
 HANDLERS: dict[str, Callable[..., tuple[int, int, list[str]]]] = {
     "http": handle_http,
     "kalshi_discover": handle_kalshi,
     "polymarket_discover": handle_polymarket,
     "wikipedia": handle_wikipedia,
+    "infogram_live": handle_infogram,
 }
 
 

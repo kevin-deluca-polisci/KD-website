@@ -150,7 +150,8 @@ def parse_date(cycle: int, date: str, registry: dict,
         sid = src["id"]
         if only and sid not in only:
             continue
-        arts = P.load(sid, date, raw_root)
+        arts = (P.load_static(sid, date, raw_root) if src.get("static_artifacts")
+                else P.load(sid, date, raw_root))
         if not arts:
             missing.append(sid)
             continue

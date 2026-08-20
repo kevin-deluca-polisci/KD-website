@@ -59,7 +59,103 @@ QUANTITIES = {
 NATIONAL_HOUSE = "NATL_HOUSE_2026"
 NATIONAL_SENATE = "NATL_SENATE_2026"
 
+# The ordinal rating scale, 0 = Solid D .. 10 = Solid R, matching Inside
+# Elections' own numeric scale. Expressed on the R side; mirror for D.
+#
+# THIS LIVES HERE RATHER THAN IN EACH PARSER ON PURPOSE. Two sources that
+# disagreed about whether "Lean" is 7.0 or 7.5 would produce a rating_numeric
+# average that is not an average of anything — and the discrepancy would be
+# invisible, because both numbers are individually plausible.
+RATING_LEVEL = {
+    "SOLID": 10.0, "SAFE": 10.0, "LIKELY": 8.5, "LEAN": 7.0, "LEANS": 7.0,
+    "TILT": 6.0, "TILTS": 6.0,
+}
+TOSSUP_LABELS = {"TOSSUP", "TOSS-UP", "TOSS UP"}
+
 _STATE = re.compile(r"^[A-Z]{2}$")
+
+# The real postal codes. Kept here rather than in any one parser because
+# race_id() validates against it, which makes "is this a state?" a single
+# question with a single answer.
+#
+# WHY THIS EXISTS: polymarket's title matcher was
+#     r"senate.*\b([A-Z]{2})\b|\b([A-Z]{2})\b.*senate"  with re.IGNORECASE
+# and [A-Z]{2} under IGNORECASE matches ANY two letters. "Balance of power in
+# the Senate" duly yielded state "OF", and every Senate market in the archive
+# landed on a race called SEN_OF_2026. Nothing caught it: "OF" is two
+# characters, so Row.validate()'s ^[A-Z]{2}$ check passed, the rows looked
+# well-formed, and the damage only surfaced when the polling model asked which
+# states hold a Senate race and got an answer of one.
+POSTAL = {
+    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID",
+    "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS",
+    "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK",
+    "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV",
+    "WI", "WY", "DC",
+}
+
+
+def is_state(code: str) -> bool:
+    return (code or "").strip().upper() in POSTAL
+
+
+STATE_NAMES = {
+    "ALABAMA": "AL", "ALASKA": "AK", "ARIZONA": "AZ", "ARKANSAS": "AR",
+    "CALIFORNIA": "CA", "COLORADO": "CO", "CONNECTICUT": "CT",
+    "DELAWARE": "DE", "FLORIDA": "FL", "GEORGIA": "GA", "HAWAII": "HI",
+    "IDAHO": "ID", "ILLINOIS": "IL", "INDIANA": "IN", "IOWA": "IA",
+    "KANSAS": "KS", "KENTUCKY": "KY", "LOUISIANA": "LA", "MAINE": "ME",
+    "MARYLAND": "MD", "MASSACHUSETTS": "MA", "MICHIGAN": "MI",
+    "MINNESOTA": "MN", "MISSISSIPPI": "MS", "MISSOURI": "MO", "MONTANA": "MT",
+    "NEBRASKA": "NE", "NEVADA": "NV", "NEW HAMPSHIRE": "NH",
+    "NEW JERSEY": "NJ", "NEW MEXICO": "NM", "NEW YORK": "NY",
+    "NORTH CAROLINA": "NC", "NORTH DAKOTA": "ND", "OHIO": "OH",
+    "OKLAHOMA": "OK", "OREGON": "OR", "PENNSYLVANIA": "PA",
+    "RHODE ISLAND": "RI", "SOUTH CAROLINA": "SC", "SOUTH DAKOTA": "SD",
+    "TENNESSEE": "TN", "TEXAS": "TX", "UTAH": "UT", "VERMONT": "VT",
+    "VIRGINIA": "VA", "WASHINGTON": "WA", "WEST VIRGINIA": "WV",
+    "WISCONSIN": "WI", "WYOMING": "WY", "DISTRICT OF COLUMBIA": "DC",
+}
+# Longest first, so "West Virginia" is tested before "Virginia" and "New York"
+# before "York". Same ordering bug that once filed Washington DC as Washington
+# state.
+_NAMES_ORDERED = sorted(STATE_NAMES, key=len, reverse=True)
+_NAME_RE = re.compile(r"\b(" + "|".join(re.escape(n) for n in _NAMES_ORDERED)
+                      + r")\b", re.I)
+# Case-SENSITIVE. See state_from_text().
+_ABBR_RE = re.compile(r"\b([A-Z]{2})\b")
+
+
+def state_from_text(text: str) -> str | None:
+    """
+    Find the state a market title or table cell refers to.
+
+    NAMES FIRST, AND ABBREVIATIONS ONLY IN CAPITALS. This ordering is the
+    whole point of the function.
+
+    Matching a bare two-letter token case-insensitively looks reasonable and
+    is quietly catastrophic, because a dozen postal codes are also ordinary
+    English words. "Will Republicans win the Senate in 2026?" contains "in",
+    and IN is Indiana. So is OR, ME, HI, OK, DE, LA, PA, MA, OH, ID and AL.
+
+    The first version of this guard only checked that the token was a real
+    postal code, which killed the obvious "OF" case and left the subtle ones
+    untouched — the archive then claimed Senate races in Arizona, California,
+    Connecticut, Hawaii, Indiana, Maryland, Nevada, New York, Pennsylvania,
+    Utah, Vermont, Washington and Wisconsin, none of which are on the 2026
+    map. That is worse than the "OF" bug: it is wrong in a way that looks
+    right, and it would have fed a plausible-looking Senate forecast for
+    fifteen races that do not exist.
+    """
+    if not text:
+        return None
+    m = _NAME_RE.search(text)
+    if m:
+        return STATE_NAMES[m.group(1).upper()]
+    for mm in _ABBR_RE.finditer(text):
+        if mm.group(1) in POSTAL:
+            return mm.group(1)
+    return None
 
 
 @dataclass
@@ -189,6 +285,11 @@ def race_id(chamber: str, state: str = "", district: str = "",
     ch = {"house": "HOU", "senate": "SEN", "governor": "GOV"}.get(chamber.lower())
     if ch is None:
         raise ValueError(f"unknown chamber {chamber!r}")
+    if not is_state(state):
+        # Refuse at the mint rather than validating downstream. A race_id is
+        # the join key for the whole archive: one bogus one does not error, it
+        # silently creates a race that no other source can ever match.
+        raise ValueError(f"{state!r} is not a US state — refusing to build a race_id")
     parts = [ch, state.upper()]
     if ch == "HOU":
         parts.append(f"{int(district):02d}")
@@ -219,6 +320,31 @@ def load(source_id: str, snapshot_date: str, raw_root: Path) -> dict[str, Loaded
             except Exception:
                 pass
         out[p.stem] = LoadedArtifact(name=p.stem, path=p, body=p.read_bytes(), meta=meta)
+    return out
+
+
+def load_static(source_id: str, snapshot_date: str, raw_root: Path) -> dict[str, LoadedArtifact]:
+    """
+    Like load(), but for sources whose data does not change.
+
+    Starts from `snapshot_date` and walks BACKWARDS, adding any artifact name
+    not already seen. Certified election returns are the case this exists for:
+    a file hand-imported on one date would otherwise disappear from the parser's
+    view as soon as the next day's capture created a new directory, silently
+    taking the 2020 cycle — and therefore the two-cycle state PVI — with it.
+    """
+    d = raw_root / source_id
+    if not d.is_dir():
+        return {}
+    dates = sorted((p.name for p in d.iterdir()
+                    if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}", p.name)),
+                   reverse=True)
+    out: dict[str, LoadedArtifact] = {}
+    for dt_ in dates:
+        if dt_ > snapshot_date:
+            continue
+        for name, art in load(source_id, dt_, raw_root).items():
+            out.setdefault(name, art)
     return out
 
 

@@ -10,7 +10,8 @@ removed in Q1 2026. Do not coerce to int.
 """
 from __future__ import annotations
 import re
-from . import Context, LoadedArtifact, Row, NATIONAL_HOUSE, NATIONAL_SENATE, race_id
+from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
+               is_state, race_id, state_from_text)
 
 # Kalshi ticker conventions are not documented and shift. These patterns are a
 # best effort; --inspect the first real capture and tighten them.
@@ -48,19 +49,19 @@ def _classify(ticker: str, title: str) -> tuple[str, str, str, str] | None:
         return NATIONAL_HOUSE, "national", "", ""
     if _CTRL_S.search(blob):
         return NATIONAL_SENATE, "national", "", ""
+    # Every branch below checks is_state() before minting a race_id. These
+    # matchers are case-insensitive, and [A-Z]{2} under IGNORECASE matches any
+    # two letters — that is how polymarket ended up filing every Senate market
+    # under a state called "OF" (from "balance OF power"). A two-letter match
+    # is a candidate, not a state.
     m = _HOU.search(blob)
-    if m:
+    if m and is_state(m.group(1)):
         st, d = m.group(1).upper(), m.group(2)
         return race_id("house", st, d), "house", st, f"{int(d):02d}"
-    m = _GOV.search(blob)
-    if m:
-        st = m.group(1).upper()
+    if re.search(r"GOV(ERNOR)?", blob, re.I) and (st := state_from_text(blob)):
         return race_id("governor", st), "governor", st, ""
-    m = _SEN.search(blob)
-    if m:
-        st = (m.group(1) or m.group(2) or "").upper()
-        if len(st) == 2:
-            return race_id("senate", st), "senate", st, ""
+    if re.search(r"SENATE", blob, re.I) and (st := state_from_text(blob)):
+        return race_id("senate", st), "senate", st, ""
     return None
 
 
