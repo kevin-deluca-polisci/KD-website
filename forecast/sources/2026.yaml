@@ -291,6 +291,13 @@ sources:
     declared_inputs: []
     license: permitted             # permitted to COLLECT by hand, NOT to republish
     robots_checked: 2026-08-19
+    # Hand-imported once, then must stay visible on every later date. Without
+    # this the file lives only under the date it was imported, and the parser —
+    # which reads one date at a time — stops seeing it the very next day. That
+    # is precisely what happened: the 2026-08-19 import vanished from the
+    # 2026-08-20 parse, taking the district PVI, and therefore the private
+    # House model's only input, with it. Same fix as medsl.
+    static_artifacts: true
     config:
       source_url: https://www.cookpolitical.com/cook-pvi/2025-partisan-voting-index/state-map-and-list
     notes: >
@@ -329,6 +336,13 @@ sources:
     declared_inputs: []
     license: permitted             # permitted to COLLECT by hand, NOT to republish
     robots_checked: 2026-08-19
+    # Hand-imported once, then must stay visible on every later date. Without
+    # this the file lives only under the date it was imported, and the parser —
+    # which reads one date at a time — stops seeing it the very next day. That
+    # is precisely what happened: the 2026-08-19 import vanished from the
+    # 2026-08-20 parse, taking the district PVI, and therefore the private
+    # House model's only input, with it. Same fix as medsl.
+    static_artifacts: true
     config:
       source_url: https://www.cookpolitical.com/cook-pvi/2026-partisan-voting-index/district-map-and-list
     notes: >

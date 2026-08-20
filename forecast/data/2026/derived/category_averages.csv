@@ -1053,6 +1053,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,market,NATL_SENATE_2026,national,,,win_prob_R,prob,1,0.495,0.495,0.495,,open,single,polymarket
 2026-08-20,professional,HOU_AK_01_2026,house,AK,01,margin_D,pct,1,-3.61,-3.61,-3.61,,open,single,grant_williams
 2026-08-20,professional,HOU_AL_01_2026,house,AL,01,margin_D,pct,1,-11.71,-11.71,-11.71,,open,single,grant_williams
+2026-08-20,professional,HOU_AL_02_2026,house,AL,02,margin_D,pct,1,1.47,1.47,1.47,,open,single,grant_williams
 2026-08-20,professional,HOU_AL_03_2026,house,AL,03,margin_D,pct,1,-20.94,-20.94,-20.94,,open,single,grant_williams
 2026-08-20,professional,HOU_AL_04_2026,house,AL,04,margin_D,pct,1,-30.65,-30.65,-30.65,,open,single,grant_williams
 2026-08-20,professional,HOU_AL_05_2026,house,AL,05,margin_D,pct,1,-13.27,-13.27,-13.27,,open,single,grant_williams
@@ -1083,6 +1084,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_CA_10_2026,house,CA,10,margin_D,pct,1,24.28,24.28,24.28,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_11_2026,house,CA,11,margin_D,pct,1,37.92,37.92,37.92,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_12_2026,house,CA,12,margin_D,pct,1,44.47,44.47,44.47,,open,single,grant_williams
+2026-08-20,professional,HOU_CA_13_2026,house,CA,13,margin_D,pct,1,9.06,9.06,9.06,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_14_2026,house,CA,14,margin_D,pct,1,21.74,21.74,21.74,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_15_2026,house,CA,15,margin_D,pct,1,32.08,32.08,32.08,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_16_2026,house,CA,16,margin_D,pct,1,31.04,31.04,31.04,,open,single,grant_williams
@@ -1091,6 +1093,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_CA_19_2026,house,CA,19,margin_D,pct,1,24.4,24.4,24.4,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_20_2026,house,CA,20,margin_D,pct,1,-15.39,-15.39,-15.39,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_21_2026,house,CA,21,margin_D,pct,1,11.92,11.92,11.92,,open,single,grant_williams
+2026-08-20,professional,HOU_CA_22_2026,house,CA,22,margin_D,pct,1,0.95,0.95,0.95,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_23_2026,house,CA,23,margin_D,pct,1,-8.67,-8.67,-8.67,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_24_2026,house,CA,24,margin_D,pct,1,19.64,19.64,19.64,,open,single,grant_williams
 2026-08-20,professional,HOU_CA_25_2026,house,CA,25,margin_D,pct,1,10.9,10.9,10.9,,open,single,grant_williams
@@ -1125,6 +1128,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_CO_01_2026,house,CO,01,margin_D,pct,1,36.35,36.35,36.35,,open,single,grant_williams
 2026-08-20,professional,HOU_CO_02_2026,house,CO,02,margin_D,pct,1,31.41,31.41,31.41,,open,single,grant_williams
 2026-08-20,professional,HOU_CO_03_2026,house,CO,03,margin_D,pct,1,0.19,0.19,0.19,,open,single,grant_williams
+2026-08-20,professional,HOU_CO_04_2026,house,CO,04,margin_D,pct,1,-3.61,-3.61,-3.61,,open,single,grant_williams
 2026-08-20,professional,HOU_CO_05_2026,house,CO,05,margin_D,pct,1,0.14,0.14,0.14,,open,single,grant_williams
 2026-08-20,professional,HOU_CO_06_2026,house,CO,06,margin_D,pct,1,22.6,22.6,22.6,,open,single,grant_williams
 2026-08-20,professional,HOU_CO_07_2026,house,CO,07,margin_D,pct,1,19.76,19.76,19.76,,open,single,grant_williams
@@ -1145,8 +1149,10 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_FL_08_2026,house,FL,08,margin_D,pct,1,-5.92,-5.92,-5.92,,open,single,grant_williams
 2026-08-20,professional,HOU_FL_09_2026,house,FL,09,margin_D,pct,1,1.2,1.2,1.2,,open,single,grant_williams
 2026-08-20,professional,HOU_FL_10_2026,house,FL,10,margin_D,pct,1,21.26,21.26,21.26,,open,single,grant_williams
+2026-08-20,professional,HOU_FL_11_2026,house,FL,11,margin_D,pct,1,-1.35,-1.35,-1.35,,open,single,grant_williams
 2026-08-20,professional,HOU_FL_12_2026,house,FL,12,margin_D,pct,1,-5.02,-5.02,-5.02,,open,single,grant_williams
 2026-08-20,professional,HOU_FL_13_2026,house,FL,13,margin_D,pct,1,-4.83,-4.83,-4.83,,open,single,grant_williams
+2026-08-20,professional,HOU_FL_14_2026,house,FL,14,margin_D,pct,1,5.08,5.08,5.08,,open,single,grant_williams
 2026-08-20,professional,HOU_FL_15_2026,house,FL,15,margin_D,pct,1,-6.79,-6.79,-6.79,,open,single,grant_williams
 2026-08-20,professional,HOU_FL_16_2026,house,FL,16,margin_D,pct,1,-0.5,-0.5,-0.5,,open,single,grant_williams
 2026-08-20,professional,HOU_FL_17_2026,house,FL,17,margin_D,pct,1,-7.78,-7.78,-7.78,,open,single,grant_williams
@@ -1218,6 +1224,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_KY_03_2026,house,KY,03,margin_D,pct,1,17.75,17.75,17.75,,open,single,grant_williams
 2026-08-20,professional,HOU_KY_04_2026,house,KY,04,margin_D,pct,1,-12.65,-12.65,-12.65,,open,single,grant_williams
 2026-08-20,professional,HOU_KY_05_2026,house,KY,05,margin_D,pct,1,-29.58,-29.58,-29.58,,open,single,grant_williams
+2026-08-20,professional,HOU_KY_06_2026,house,KY,06,margin_D,pct,1,-3.48,-3.48,-3.48,,open,single,grant_williams
 2026-08-20,professional,HOU_LA_01_2026,house,LA,01,margin_D,pct,1,-16.85,-16.85,-16.85,,open,single,grant_williams
 2026-08-20,professional,HOU_LA_02_2026,house,LA,02,margin_D,pct,1,33.39,33.39,33.39,,open,single,grant_williams
 2026-08-20,professional,HOU_LA_03_2026,house,LA,03,margin_D,pct,1,-14.9,-14.9,-14.9,,open,single,grant_williams
@@ -1242,6 +1249,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_MD_07_2026,house,MD,07,margin_D,pct,1,39.8,39.8,39.8,,open,single,grant_williams
 2026-08-20,professional,HOU_MD_08_2026,house,MD,08,margin_D,pct,1,38.98,38.98,38.98,,open,single,grant_williams
 2026-08-20,professional,HOU_ME_01_2026,house,ME,01,margin_D,pct,1,22.06,22.06,22.06,,open,single,grant_williams
+2026-08-20,professional,HOU_ME_02_2026,house,ME,02,margin_D,pct,1,0.22,0.22,0.22,,open,single,grant_williams
 2026-08-20,professional,HOU_MI_01_2026,house,MI,01,margin_D,pct,1,-7.6,-7.6,-7.6,,open,single,grant_williams
 2026-08-20,professional,HOU_MI_02_2026,house,MI,02,margin_D,pct,1,-11.47,-11.47,-11.47,,open,single,grant_williams
 2026-08-20,professional,HOU_MI_03_2026,house,MI,03,margin_D,pct,1,13.96,13.96,13.96,,open,single,grant_williams
@@ -1249,6 +1257,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_MI_05_2026,house,MI,05,margin_D,pct,1,-9.5,-9.5,-9.5,,open,single,grant_williams
 2026-08-20,professional,HOU_MI_06_2026,house,MI,06,margin_D,pct,1,21.61,21.61,21.61,,open,single,grant_williams
 2026-08-20,professional,HOU_MI_07_2026,house,MI,07,margin_D,pct,1,2.99,2.99,2.99,,open,single,grant_williams
+2026-08-20,professional,HOU_MI_08_2026,house,MI,08,margin_D,pct,1,9.23,9.23,9.23,,open,single,grant_williams
 2026-08-20,professional,HOU_MI_09_2026,house,MI,09,margin_D,pct,1,-12.39,-12.39,-12.39,,open,single,grant_williams
 2026-08-20,professional,HOU_MI_10_2026,house,MI,10,margin_D,pct,1,3.65,3.65,3.65,,open,single,grant_williams
 2026-08-20,professional,HOU_MI_11_2026,house,MI,11,margin_D,pct,1,15.18,15.18,15.18,,open,single,grant_williams
@@ -1281,8 +1290,10 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_NC_03_2026,house,NC,03,margin_D,pct,1,-4.02,-4.02,-4.02,,open,single,grant_williams
 2026-08-20,professional,HOU_NC_04_2026,house,NC,04,margin_D,pct,1,30.87,30.87,30.87,,open,single,grant_williams
 2026-08-20,professional,HOU_NC_05_2026,house,NC,05,margin_D,pct,1,-6.84,-6.84,-6.84,,open,single,grant_williams
+2026-08-20,professional,HOU_NC_06_2026,house,NC,06,margin_D,pct,1,-6.9,-6.9,-6.9,,open,single,grant_williams
 2026-08-20,professional,HOU_NC_07_2026,house,NC,07,margin_D,pct,1,-4.93,-4.93,-4.93,,open,single,grant_williams
 2026-08-20,professional,HOU_NC_08_2026,house,NC,08,margin_D,pct,1,-7.87,-7.87,-7.87,,open,single,grant_williams
+2026-08-20,professional,HOU_NC_09_2026,house,NC,09,margin_D,pct,1,-5.93,-5.93,-5.93,,open,single,grant_williams
 2026-08-20,professional,HOU_NC_10_2026,house,NC,10,margin_D,pct,1,-6.87,-6.87,-6.87,,open,single,grant_williams
 2026-08-20,professional,HOU_NC_11_2026,house,NC,11,margin_D,pct,1,0.48,0.48,0.48,,open,single,grant_williams
 2026-08-20,professional,HOU_NC_12_2026,house,NC,12,margin_D,pct,1,31.97,31.97,31.97,,open,single,grant_williams
@@ -1290,6 +1301,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_NC_14_2026,house,NC,14,margin_D,pct,1,-5.91,-5.91,-5.91,,open,single,grant_williams
 2026-08-20,professional,HOU_ND_01_2026,house,ND,01,margin_D,pct,1,-14.39,-14.39,-14.39,,open,single,grant_williams
 2026-08-20,professional,HOU_NE_01_2026,house,NE,01,margin_D,pct,1,-2.81,-2.81,-2.81,,open,single,grant_williams
+2026-08-20,professional,HOU_NE_02_2026,house,NE,02,margin_D,pct,1,9.29,9.29,9.29,,open,single,grant_williams
 2026-08-20,professional,HOU_NE_03_2026,house,NE,03,margin_D,pct,1,-22.98,-22.98,-22.98,,open,single,grant_williams
 2026-08-20,professional,HOU_NH_01_2026,house,NH,01,margin_D,pct,1,9.87,9.87,9.87,,open,single,grant_williams
 2026-08-20,professional,HOU_NH_02_2026,house,NH,02,margin_D,pct,1,15.44,15.44,15.44,,open,single,grant_williams
@@ -1308,10 +1320,14 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_NM_01_2026,house,NM,01,margin_D,pct,1,18.81,18.81,18.81,,open,single,grant_williams
 2026-08-20,professional,HOU_NM_02_2026,house,NM,02,margin_D,pct,1,12.08,12.08,12.08,,open,single,grant_williams
 2026-08-20,professional,HOU_NM_03_2026,house,NM,03,margin_D,pct,1,15.04,15.04,15.04,,open,single,grant_williams
+2026-08-20,professional,HOU_NV_01_2026,house,NV,01,margin_D,pct,1,14.04,14.04,14.04,,open,single,grant_williams
 2026-08-20,professional,HOU_NV_02_2026,house,NV,02,margin_D,pct,1,1.93,1.93,1.93,,open,single,grant_williams
+2026-08-20,professional,HOU_NV_03_2026,house,NV,03,margin_D,pct,1,13.08,13.08,13.08,,open,single,grant_williams
 2026-08-20,professional,HOU_NV_04_2026,house,NV,04,margin_D,pct,1,14.03,14.03,14.03,,open,single,grant_williams
 2026-08-20,professional,HOU_NY_01_2026,house,NY,01,margin_D,pct,1,-0.74,-0.74,-0.74,,open,single,grant_williams
 2026-08-20,professional,HOU_NY_02_2026,house,NY,02,margin_D,pct,1,-2.65,-2.65,-2.65,,open,single,grant_williams
+2026-08-20,professional,HOU_NY_03_2026,house,NY,03,margin_D,pct,1,10.29,10.29,10.29,,open,single,grant_williams
+2026-08-20,professional,HOU_NY_04_2026,house,NY,04,margin_D,pct,1,12.12,12.12,12.12,,open,single,grant_williams
 2026-08-20,professional,HOU_NY_05_2026,house,NY,05,margin_D,pct,1,33.35,33.35,33.35,,open,single,grant_williams
 2026-08-20,professional,HOU_NY_06_2026,house,NY,06,margin_D,pct,1,15.96,15.96,15.96,,open,single,grant_williams
 2026-08-20,professional,HOU_NY_07_2026,house,NY,07,margin_D,pct,1,30.75,30.75,30.75,,open,single,grant_williams
@@ -1334,12 +1350,15 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_NY_24_2026,house,NY,24,margin_D,pct,1,-7.4,-7.4,-7.4,,open,single,grant_williams
 2026-08-20,professional,HOU_NY_25_2026,house,NY,25,margin_D,pct,1,19.72,19.72,19.72,,open,single,grant_williams
 2026-08-20,professional,HOU_NY_26_2026,house,NY,26,margin_D,pct,1,20.8,20.8,20.8,,open,single,grant_williams
+2026-08-20,professional,HOU_OH_01_2026,house,OH,01,margin_D,pct,1,9.08,9.08,9.08,,open,single,grant_williams
 2026-08-20,professional,HOU_OH_02_2026,house,OH,02,margin_D,pct,1,-17.21,-17.21,-17.21,,open,single,grant_williams
 2026-08-20,professional,HOU_OH_03_2026,house,OH,03,margin_D,pct,1,30.23,30.23,30.23,,open,single,grant_williams
 2026-08-20,professional,HOU_OH_04_2026,house,OH,04,margin_D,pct,1,-17.12,-17.12,-17.12,,open,single,grant_williams
 2026-08-20,professional,HOU_OH_05_2026,house,OH,05,margin_D,pct,1,-8.54,-8.54,-8.54,,open,single,grant_williams
 2026-08-20,professional,HOU_OH_06_2026,house,OH,06,margin_D,pct,1,-13.27,-13.27,-13.27,,open,single,grant_williams
+2026-08-20,professional,HOU_OH_07_2026,house,OH,07,margin_D,pct,1,1.87,1.87,1.87,,open,single,grant_williams
 2026-08-20,professional,HOU_OH_08_2026,house,OH,08,margin_D,pct,1,-4.68,-4.68,-4.68,,open,single,grant_williams
+2026-08-20,professional,HOU_OH_09_2026,house,OH,09,margin_D,pct,1,5.18,5.18,5.18,,open,single,grant_williams
 2026-08-20,professional,HOU_OH_10_2026,house,OH,10,margin_D,pct,1,-0.83,-0.83,-0.83,,open,single,grant_williams
 2026-08-20,professional,HOU_OH_11_2026,house,OH,11,margin_D,pct,1,36.94,36.94,36.94,,open,single,grant_williams
 2026-08-20,professional,HOU_OH_12_2026,house,OH,12,margin_D,pct,1,-11.42,-11.42,-11.42,,open,single,grant_williams
@@ -1388,6 +1407,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_TN_02_2026,house,TN,02,margin_D,pct,1,-15.26,-15.26,-15.26,,open,single,grant_williams
 2026-08-20,professional,HOU_TN_03_2026,house,TN,03,margin_D,pct,1,-16.27,-16.27,-16.27,,open,single,grant_williams
 2026-08-20,professional,HOU_TN_04_2026,house,TN,04,margin_D,pct,1,-9.55,-9.55,-9.55,,open,single,grant_williams
+2026-08-20,professional,HOU_TN_05_2026,house,TN,05,margin_D,pct,1,-4.97,-4.97,-4.97,,open,single,grant_williams
 2026-08-20,professional,HOU_TN_06_2026,house,TN,06,margin_D,pct,1,-7.95,-7.95,-7.95,,open,single,grant_williams
 2026-08-20,professional,HOU_TN_07_2026,house,TN,07,margin_D,pct,1,-9.57,-9.57,-9.57,,open,single,grant_williams
 2026-08-20,professional,HOU_TN_08_2026,house,TN,08,margin_D,pct,1,-8.49,-8.49,-8.49,,open,single,grant_williams
@@ -1406,6 +1426,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_TX_12_2026,house,TX,12,margin_D,pct,1,-8.25,-8.25,-8.25,,open,single,grant_williams
 2026-08-20,professional,HOU_TX_13_2026,house,TX,13,margin_D,pct,1,-19.64,-19.64,-19.64,,open,single,grant_williams
 2026-08-20,professional,HOU_TX_14_2026,house,TX,14,margin_D,pct,1,-9.18,-9.18,-9.18,,open,single,grant_williams
+2026-08-20,professional,HOU_TX_15_2026,house,TX,15,margin_D,pct,1,-4.4,-4.4,-4.4,,open,single,grant_williams
 2026-08-20,professional,HOU_TX_16_2026,house,TX,16,margin_D,pct,1,20.03,20.03,20.03,,open,single,grant_williams
 2026-08-20,professional,HOU_TX_17_2026,house,TX,17,margin_D,pct,1,-7.28,-7.28,-7.28,,open,single,grant_williams
 2026-08-20,professional,HOU_TX_18_2026,house,TX,18,margin_D,pct,1,37.25,37.25,37.25,,open,single,grant_williams
@@ -1437,6 +1458,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_VA_02_2026,house,VA,02,margin_D,pct,1,1.77,1.77,1.77,,open,single,grant_williams
 2026-08-20,professional,HOU_VA_03_2026,house,VA,03,margin_D,pct,1,26.13,26.13,26.13,,open,single,grant_williams
 2026-08-20,professional,HOU_VA_04_2026,house,VA,04,margin_D,pct,1,25.13,25.13,25.13,,open,single,grant_williams
+2026-08-20,professional,HOU_VA_05_2026,house,VA,05,margin_D,pct,1,-3.98,-3.98,-3.98,,open,single,grant_williams
 2026-08-20,professional,HOU_VA_06_2026,house,VA,06,margin_D,pct,1,-9.79,-9.79,-9.79,,open,single,grant_williams
 2026-08-20,professional,HOU_VA_07_2026,house,VA,07,margin_D,pct,1,10.73,10.73,10.73,,open,single,grant_williams
 2026-08-20,professional,HOU_VA_08_2026,house,VA,08,margin_D,pct,1,33.77,33.77,33.77,,open,single,grant_williams
@@ -1454,6 +1476,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_WA_08_2026,house,WA,08,margin_D,pct,1,9.94,9.94,9.94,,open,single,grant_williams
 2026-08-20,professional,HOU_WA_09_2026,house,WA,09,margin_D,pct,1,28.17,28.17,28.17,,open,single,grant_williams
 2026-08-20,professional,HOU_WA_10_2026,house,WA,10,margin_D,pct,1,15.71,15.71,15.71,,open,single,grant_williams
+2026-08-20,professional,HOU_WI_01_2026,house,WI,01,margin_D,pct,1,1.04,1.04,1.04,,open,single,grant_williams
 2026-08-20,professional,HOU_WI_02_2026,house,WI,02,margin_D,pct,1,30.17,30.17,30.17,,open,single,grant_williams
 2026-08-20,professional,HOU_WI_03_2026,house,WI,03,margin_D,pct,1,0.25,0.25,0.25,,open,single,grant_williams
 2026-08-20,professional,HOU_WI_04_2026,house,WI,04,margin_D,pct,1,35.05,35.05,35.05,,open,single,grant_williams

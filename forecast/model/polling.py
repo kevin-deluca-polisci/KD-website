@@ -109,6 +109,29 @@ SIGMA_STATE_FLOOR = 3.0     # idiosyncratic error never falls below this
 N_SIMS = 20000
 SEED = 20261103             # fixed: the same archive date must reproduce
 
+# JUDGMENT CALL 4 — the seat baseline. Not a forecast at all: pure bookkeeping,
+# and by far the most leveraged number in this file.
+#
+#   Senate before the election      53 R - 47 D (2 independents caucus D)
+#   Up in 2026                      33 Class 2 seats (20 R, 13 D)
+#                                   + 2 specials, both R-held (OH, FL)
+#                                   = 35 up: 22 R, 13 D
+#   Therefore not up                D 47 - 13 = 34,  R 53 - 22 = 31
+#   Check                           34 + 31 + 35 = 100
+#
+# This matches grant_williams' own senate_forecast.json, which independently
+# reports dem_defending 13, rep_defending 22, dem_not_up 34, rep_not_up 31.
+#
+# WHY IT IS FLAGGED SO LOUDLY: moving this by ONE seat moves the headline
+# probability by about twenty points — 34 gives P(D reach 50+) = 0.39, and 35
+# gives 0.59. It arrives as a constant, carries no uncertainty, and would sail
+# through every check in this pipeline while silently dominating the answer.
+# 270toWin's page says 23 of the 35 are R-held, which would imply 35; that
+# appears to miscount one seat, but the disagreement is the point. main()
+# always prints the one-seat sensitivity next to the headline so the number
+# can never be read as more precise than its weakest input.
+HOLDOVER_D_DEFAULT = 34
+
 
 def _pvi_to_margin(pvi: float) -> float:
     """PVI (vote-share points) -> expected margin shift (margin points)."""
@@ -438,6 +461,12 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
         maj = sum(1 for w in wins if w + holdover_D >= 50) / N_SIMS
         out["holdover_D_assumed"] = holdover_D
         out["prob_D_50_plus"] = round(maj, 4)
+        # Always carried in the output, never optional. The seat baseline is
+        # bookkeeping rather than a forecast, so it has no error bar of its
+        # own, and without this the headline reads as if it had none either.
+        out["prob_D_50_plus_sensitivity"] = {
+            str(h): round(sum(1 for w in wins if w + h >= 50) / N_SIMS, 4)
+            for h in (holdover_D - 1, holdover_D, holdover_D + 1)}
         out["NOTE_holdover"] = (
             "prob_D_50_plus depends on holdover_D, which is an ASSUMPTION passed "
             "in, not something derived from the archive. 50+ is stated rather "
@@ -497,8 +526,9 @@ def main(argv=None) -> int:
     ap.add_argument("--cycle", type=int, default=2026)
     ap.add_argument("--calibrate", action="store_true", help="show the sigma fit and exit")
     ap.add_argument("--house", action="store_true", help="also run the private House model")
-    ap.add_argument("--holdover-d", type=int, default=None,
-                    help="D seats NOT up this cycle (needed for a majority probability)")
+    ap.add_argument("--holdover-d", type=int, default=HOLDOVER_D_DEFAULT,
+                    help=f"D seats NOT up this cycle (default {HOLDOVER_D_DEFAULT}; "
+                         f"see HOLDOVER_D_DEFAULT — one seat is worth ~20 points)")
     ap.add_argument("--sigma", type=float, default=None, help="override the calibrated sigma")
     a = ap.parse_args(argv)
 
@@ -542,8 +572,12 @@ def main(argv=None) -> int:
     if "prob_D_50_plus" in sen:
         print(f"      P(D reach 50+ | {sen['holdover_D_assumed']} holdovers): "
               f"{sen['prob_D_50_plus']:.3f}")
-    else:
-        print("      (pass --holdover-d N for a chamber-control probability)")
+        sens = sen["prob_D_50_plus_sensitivity"]
+        print("      one-seat sensitivity:  "
+              + "   ".join(f"{h} -> {p:.3f}" for h, p in sorted(sens.items())))
+        print("        (the baseline is bookkeeping, not a forecast — but it "
+              "swings the headline\n         more than any modelling choice "
+              "in this file. Label it on the site.)")
 
     comp = sorted(sen["races"].items(), key=lambda kv: abs(kv[1]["win_prob_D"] - 0.5))[:8]
     print("\n      closest races")

@@ -273,12 +273,37 @@ def main(argv=None) -> int:
         disp[a_["display"]] += 1
     if disp:
         print(f"\n  display flags: " + ", ".join(f"{k}={v}" for k, v in sorted(disp.items())))
+    # Per-category health. The old version of this block reported only the
+    # cells with a single contributor, phrased as though it described the whole
+    # category — so the run after Race to the WH started producing data still
+    # said "'professional' has one contributor", while 507 cells had in fact
+    # just gained a second. Progress toward MIN_N is the thing worth watching
+    # here, and it was the one thing the summary could not show.
+    cat_sources: dict[str, set] = defaultdict(set)
+    for r in rows:
+        cat_sources[r["category"]].add(r["source_id"])
+    cells: dict[str, dict] = defaultdict(lambda: defaultdict(int))
+    for a_ in averages + suppressed:
+        cells[a_["category"]][int(a_["n_sources"])] += 1
+
+    print()
+    for cat in sorted(cat_sources):
+        by_n = cells.get(cat, {})
+        if not by_n:
+            continue
+        spread = ", ".join(f"n={k}: {v}" for k, v in sorted(by_n.items()))
+        print(f"  {cat:14s} {len(cat_sources[cat])} source(s)  [{spread}]")
+        if max(by_n) < MIN_N:
+            need = MIN_N - max(by_n)
+            print(f"      no cell reaches MIN_N={MIN_N}: needs {need} more "
+                  f"contributing source(s) before any average may be published.")
+
     singles = {(a_["category"], a_["sole_source"]) for a_ in averages
                if a_["display"] == "single"}
     for cat, sole in sorted(singles):
         who = sole or "an unnameable source"
-        print(f"    NOT A CATEGORY AVERAGE: {cat!r} has one contributor ({who}). "
-              f"The site must label it, not average it.")
+        print(f"    single-source cells in {cat!r} ({who}) must be LABELLED, "
+              f"not averaged.")
 
     tiers: dict[str, set] = defaultdict(set)
     for r in rows:

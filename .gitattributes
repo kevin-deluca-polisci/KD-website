@@ -1,0 +1,36 @@
+# Append-only archive logs: take BOTH sides on a merge instead of conflicting.
+#
+# WHY: these files are written independently by two producers — the daily
+# GitHub Action at 11:00 UTC and a local ./forecast/run.sh afterwards. Both
+# append rows for the same snapshot date, so git sees two different additions
+# at the same place and stops with a conflict. That happened on 2026-08-20 and
+# blocked the push entirely.
+#
+# `merge=union` keeps every line from both sides rather than asking a human to
+# arbitrate a log file. The duplicate rows that union merging produces are then
+# collapsed on the next run: append_raw_manifest() keeps exactly one row per
+# (date, source, artifact) and sets its hash to the bytes actually on disk.
+# So the pair is self-healing — union never loses data, and the next capture
+# reconciles it against reality.
+#
+# NOTE the ordering guarantee this gives up: union merge may interleave rows
+# from the two sides. Nothing here depends on row order — every consumer reads
+# these by key — but do not add one.
+forecast/data/*/raw_manifest.csv merge=union
+forecast/data/*/manifest.csv     merge=union
+
+# Generated payloads (assets/forecast_*.json, forecast/data/*/site.json) get NO
+# rule here, deliberately.
+#
+# The obvious thing to write is `merge=ours`, and it does not work: only text,
+# binary and union are built-in low-level drivers. `ours` needs a
+# merge.ours.driver config entry on every clone including the CI runner, and
+# without it git silently falls back to a normal merge and conflicts anyway.
+# Verified rather than assumed — it conflicted in a scratch repo.
+#
+# These files are rebuilt deterministically from derived/ by publish.py, so the
+# resolution never needs a human reading a diff:
+#
+#     git checkout --ours assets/forecast_2026.json
+#     python3 forecast/collect/publish.py
+#     git add assets/forecast_2026.json

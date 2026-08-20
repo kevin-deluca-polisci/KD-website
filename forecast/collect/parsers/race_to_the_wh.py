@@ -449,7 +449,12 @@ def _filled(data) -> int:
 # --------------------------------------------------------------------------
 
 _SHEET_PROB = re.compile(r"^\s*(win|chance)", re.I)
-_SHEET_MARGIN = re.compile(r"margin|lean", re.I)
+# NOT "lean". The House ratings workbook has sheets named "Lean D" and
+# "Lean R" — those are rating BUCKETS listing which seats fall in each
+# category, not margins. Matching them produced 23 district "margins" that
+# were really bucket membership, all positive, all plausible-looking, and all
+# meaningless. "Margin" is the only sheet name that means a margin.
+_SHEET_MARGIN = re.compile(r"margin", re.I)
 _SHEET_RATING = re.compile(r"^\s*rating", re.I)
 _SHEET_SEATS = re.compile(r"seat", re.I)
 _SHEET_LIST = re.compile(r"^\s*list\s*$", re.I)
@@ -491,11 +496,37 @@ def _live_payload(art: LoadedArtifact) -> tuple[list[str], list] | None:
     return [str(x) for x in names], data
 
 
+# Which live workbooks carry LEVELS we can use, as opposed to derived views of
+# them. Default-deny, and the reason is a bug this exact list exists to stop.
+#
+# The deck ships 63 live workbooks and many reuse the same sheet names for
+# different quantities. "26 Sen - Biggest Shifts" has a sheet called "Margin"
+# holding the CHANGE in margin since the last update. Sheet-name matching
+# cannot tell it from the real thing, and because artifacts are read in name
+# order it sorted ahead of "Sen 26 - Main Graphics" and claimed every Senate
+# race first. The archive duly recorded Idaho at D+11.6 and Alabama at D+3.9 —
+# both are R+20-plus seats, and both numbers were real, just answers to a
+# different question.
+#
+# The same failure mode produced House seats_D and seats_R of 24 apiece, from
+# map workbooks whose sheets are named "Seats Dems can Flip", and 23 bogus
+# district margins from a ratings table with columns headed "Lean D"/"Lean R".
+#
+# An allowlist rots if Race to the WH renames a chart. That is the cheaper
+# failure: a rename shows up as missing rows and raises, whereas a denylist
+# fails by silently admitting the next "Biggest Movers" chart at full
+# confidence. parse() reports what it skipped so a rename is visible.
+_AUTHORITATIVE = re.compile(
+    r"main\s+graphics|race\s+rating|detailed\s+list|table\s+summarizing", re.I)
+
+
 def _parse_live(art: LoadedArtifact, ctx: Context, seen: set) -> list[Row]:
     got = _live_payload(art)
     if got is None:
         return []
     names, sheets = got
+    if not _AUTHORITATIVE.search(str(art.meta.get("live_title") or "")):
+        return []
     title = str(art.meta.get("live_title") or "")
     prefer = "house" if re.search(r"\bhouse\b", title, re.I) else "senate"
     rows: list[Row] = []
@@ -646,6 +677,8 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     live_payloads = 0
     populated_cells = 0
     live_titles: list[str] = []
+    used_books: list[str] = []
+    skipped_books: list[str] = []
     header_samples: list[str] = []
 
     for name, art in artifacts.items():
@@ -653,6 +686,11 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         # are where every actual number comes from.
         if name.startswith("live__") or _live_payload(art) is not None:
             live_payloads += 1
+            title = str(art.meta.get("live_title") or name)
+            if _AUTHORITATIVE.search(title):
+                used_books.append(title)
+            else:
+                skipped_books.append(title)
             rows.extend(_parse_live(art, ctx, seen))
             continue
 
@@ -757,6 +795,12 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                                         unit="prob" if q == "win_prob_D" else "pct"))
 
     if rows:
+        if live_payloads and not used_books:
+            raise ValueError(
+                f"{live_payloads} live workbook(s) captured but NONE matched the "
+                f"authoritative allowlist — Race to the WH has probably renamed "
+                f"its master charts. Titles seen: "
+                f"{sorted(set(skipped_books))[:8]}")
         return rows
 
     # ---------------------------------------------------------------------

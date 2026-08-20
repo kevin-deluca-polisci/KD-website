@@ -29,6 +29,8 @@ def main(argv=None) -> int:
     ratings = rd(d / "expert_ratings.csv")
     model = json.loads((d / "fundamentals_model.json").read_text()) \
             if (d / "fundamentals_model.json").exists() else None
+    polling = json.loads((d / "polling_model.json").read_text()) \
+              if (d / "polling_model.json").exists() else None
 
     dates = sorted({r["snapshot_date"] for r in avgs}) or [
         dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")]
@@ -63,6 +65,66 @@ def main(argv=None) -> int:
         if r["race_id"] == NATL_HOUSE and r["quantity"] == "margin_D":
             series[r["category"]].append([r["snapshot_date"], float(r["mean"])])
 
+    # The polling model's Senate table, trimmed to what the page renders.
+    # Deliberately NOT the whole file: site.json is public, and shipping every
+    # intermediate invites someone to read a diagnostic as a forecast.
+    senate = None
+    if polling and polling.get("senate", {}).get("races"):
+        s_ = polling["senate"]
+        senate = {
+            "tide_D": polling["election_day_tide_D"],
+            "generic_ballot": polling["generic_ballot"]["value"],
+            "shrink_lambda": polling["shrink_lambda"],
+            "sigma": s_["sigma_total"],
+            "expected_D_seats_up": s_["expected_D_seats_up"],
+            "D_seats_up_80pct": s_["D_seats_up_80pct"],
+            "holdover_D": s_.get("holdover_D_assumed"),
+            "prob_D_50_plus": s_.get("prob_D_50_plus"),
+            # Carried so the page can show it. A one-seat change in the
+            # baseline moves this by ~20 points, which is more than any
+            # modelling choice in the model — publishing the headline without
+            # it would be publishing false precision.
+            "sensitivity": s_.get("prob_D_50_plus_sensitivity"),
+            "races": [{"state": k, **v} for k, v in
+                      sorted(s_["races"].items(),
+                             key=lambda kv: -kv[1]["expected_margin_D"])],
+        }
+
+    # Expert ratings, reshaped for rendering. The CSV is one row per
+    # (date, race, forecaster) — 1,836 of them — and a template is the wrong
+    # place to pivot that. Templates render; Python computes.
+    #
+    # Only the latest snapshot, and only races where at least one forecaster
+    # sees a contest: a table of 435 rows that says "Safe R" 300 times teaches
+    # nothing. `disagreement` is the spread between the most D and most R
+    # rating on the same seat, which is the column worth sorting by.
+    panel = defaultdict(dict)
+    meta_ = {}
+    for r in ratings:
+        if r["snapshot_date"] != latest or ":" not in r.get("value", ""):
+            continue
+        who, label = r["value"].split(":", 1)
+        panel[r["race_id"]][who] = label
+        meta_[r["race_id"]] = {"chamber": r["chamber"], "state": r["state"],
+                               "district": r.get("district", "")}
+    ORD = {"Safe D": 0, "Solid D": 0, "Likely D": 1, "Lean D": 2, "Tilt D": 3,
+           "Toss-up": 4, "Tossup": 4,
+           "Tilt R": 5, "Lean R": 6, "Likely R": 7, "Safe R": 8, "Solid R": 8}
+    ratings_panel = []
+    for rid, who in panel.items():
+        vals = [ORD[v] for v in who.values() if v in ORD]
+        if not vals or (min(vals) in (0, 8) and max(vals) in (0, 8)
+                        and min(vals) == max(vals)):
+            continue                     # unanimous Safe: nothing to show
+        ratings_panel.append({
+            "race_id": rid, **meta_[rid],
+            "n_forecasters": len(who),
+            "disagreement": max(vals) - min(vals),
+            "mean_rating": round(sum(vals) / len(vals), 2),
+            "ratings": [{"forecaster": k, "label": v} for k, v in sorted(who.items())],
+        })
+    ratings_panel.sort(key=lambda x: (-x["disagreement"], x["race_id"]))
+
     out = {
         "cycle": a.cycle,
         "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
@@ -70,8 +132,9 @@ def main(argv=None) -> int:
         "snapshot_count": len(dates),
         "headline": sorted(headline, key=lambda x: x["category"]),
         "series": {k: sorted(v) for k, v in series.items()},
-        "expert_ratings": ratings,
+        "expert_ratings_panel": ratings_panel,
         "fundamentals_model": model,
+        "polling_model": senate,
         "suppressed_cells": len(supp),
         "display_note": (
             "A row with display='single' has ONE contributing source and is not "
@@ -87,6 +150,22 @@ def main(argv=None) -> int:
     p.write_text(json.dumps(out, indent=2))
     print(f"  wrote {p.relative_to(REPO)}  "
           f"({len(headline)} categories, {len(dates)} snapshots)")
+
+    # Hugo reads this at build time from assets/, NOT from data/.
+    #
+    # Two reasons, and the second one is load-bearing:
+    #   1. never point Hugo at forecast/data/ — that is the whole archive
+    #      including the private tiers, and Hugo would ingest all of it.
+    #   2. a template that reads .Site.Data forces Hugo to assemble the entire
+    #      data map, and this site's data/*.csv load as [][]string, which Hugo
+    #      0.123 cannot merge. One .Site.Data reference from the forecast page
+    #      broke the whole build with "unexpected data type [][]string in file
+    #      media.csv". Loading from assets/ via resources.Get avoids the data
+    #      map entirely.
+    hugo = REPO / "assets" / f"forecast_{a.cycle}.json"
+    hugo.parent.mkdir(parents=True, exist_ok=True)
+    hugo.write_text(json.dumps(out, indent=2))
+    print(f"  wrote {hugo.relative_to(REPO)}  (Hugo build-time data)")
     return 0
 
 if __name__ == "__main__":

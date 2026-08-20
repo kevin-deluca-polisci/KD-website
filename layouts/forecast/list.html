@@ -1,0 +1,274 @@
+{{/* Loaded as a RESOURCE, deliberately not via .Site.Data.
+
+     Touching .Site.Data forces Hugo to assemble the whole data map, and this
+     site's data/*.csv files load as [][]string, which Hugo 0.123 cannot merge
+     into that map — "unexpected data type [][]string in file media.csv", and
+     the build fails. The existing templates read those CSVs through the older
+     data.GetCSV path and never assemble .Site.Data, so the incompatibility was
+     always there but nothing had stepped on it. One reference from this page
+     was enough to break the deploy.
+
+     resources.Get sidesteps the data map completely and is the approach Hugo
+     now recommends anyway. Verified against 0.123.0 (what deploy.yml pins). */}}
+{{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
+{{- $p := $d.polling_model -}}
+{{- $f := $d.fundamentals_model -}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ .Title }} — PLSC 2219</title>
+<meta name="description" content="{{ .Params.description }}">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       line-height:1.6;color:#1a1a1a;background:#fff}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  header.top{background:#0b1e3a;color:#fff;padding:14px 0;font-size:.9em}
+  header.top a{color:#a8c8f0;text-decoration:none}
+  header.top a:hover{text-decoration:underline}
+  .hero{background:#0b1e3a;color:#fff;padding:44px 0 52px}
+  .hero h1{font-size:2.4em;line-height:1.15;margin-bottom:10px;font-weight:700}
+  .hero p{color:#c5d6ec;max-width:70ch}
+  .stamp{margin-top:18px;font-size:.85em;color:#8fb0d4}
+  section{padding:42px 0;border-bottom:1px solid #eee}
+  h2{font-size:1.45em;margin-bottom:6px}
+  .sub{color:#666;margin-bottom:22px;max-width:72ch}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+  .card{border:1px solid #e2e2e2;border-radius:10px;padding:20px;background:#fcfcfd}
+  .badge{display:inline-block;font-size:.68em;letter-spacing:.06em;text-transform:uppercase;
+         background:#0b1e3a;color:#fff;border-radius:3px;padding:3px 7px;margin-bottom:12px;font-weight:600}
+  .badge.archive{background:#5a6b7d}
+  .big{font-size:2.5em;font-weight:700;line-height:1.05;margin:2px 0}
+  .D{color:#1c5fa8}.R{color:#b02a2a}
+  .muted{color:#666;font-size:.9em}
+  table{width:100%;border-collapse:collapse;font-size:.9em;margin-top:8px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #eee}
+  th{font-weight:600;color:#444;border-bottom:2px solid #ddd;font-size:.88em}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .note{background:#fff8e6;border-left:3px solid #d9a520;padding:14px 16px;margin:18px 0;font-size:.92em}
+  .note strong{color:#7a5c00}
+  details{margin-top:14px}
+  summary{cursor:pointer;font-weight:600;color:#1c5fa8}
+  footer{padding:34px 0 48px;color:#666;font-size:.88em}
+  .bar{display:inline-block;height:9px;border-radius:2px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <a href="/">← kevinmdeluca.com</a> &nbsp;·&nbsp; PLSC 2219 · Yale University
+</div></header>
+
+<div class="hero"><div class="wrap">
+  <h1>{{ .Title }}</h1>
+  <p>A daily archive of who is forecasting the 2026 midterms, what they say, and
+     where they disagree — plus the models we build in class from public data.</p>
+  <p class="stamp">
+    Snapshot {{ $d.latest_snapshot }} · {{ $d.snapshot_count }} snapshot{{ if ne $d.snapshot_count 1 }}s{{ end }} collected
+  </p>
+</div></div>
+
+<!-- ===================== CLASS MODELS (the lead) ===================== -->
+<section><div class="wrap">
+  <h2>The class models</h2>
+  <p class="sub">Built in PLSC 2219 from public-domain inputs, and published in full
+     because every input is redistributable. These are teaching models: the point is
+     that you can see, and argue with, every choice inside them.</p>
+
+  <div class="cards">
+    {{- with $f }}
+    <div class="card">
+      <span class="badge">PLSC 2219 class model</span>
+      <div class="muted">Fundamentals · national House margin</div>
+      <div class="big {{ if gt .margin_D 0.0 }}D{{ else }}R{{ end }}">
+        {{ if gt .margin_D 0.0 }}D+{{ printf "%.1f" .margin_D }}{{ else }}R+{{ printf "%.1f" (mul .margin_D -1) }}{{ end }}
+      </div>
+      <div class="muted">80% interval
+        {{ printf "%.1f" .margin_D_80_low }} to {{ printf "%.1f" .margin_D_80_high }} points</div>
+      <p class="muted" style="margin-top:12px">Fit on 20 midterms, 1946–2022:
+         presidential approval, real income growth, and seats held before the election.</p>
+    </div>
+    {{- end }}
+
+    {{- with $p }}
+    <div class="card">
+      <span class="badge">PLSC 2219 class model</span>
+      <div class="muted">Polling · Senate</div>
+      <div class="big">{{ printf "%.1f" .expected_D_seats_up }} <span style="font-size:.4em;font-weight:400;color:#666">of 35 D seats</span></div>
+      <div class="muted">80% interval {{ index .D_seats_up_80pct 0 }}–{{ index .D_seats_up_80pct 1 }} ·
+        with {{ .holdover_D }} holdovers ⇒ {{ printf "%.0f" (add .expected_D_seats_up (float .holdover_D)) }} total</div>
+      <p class="muted" style="margin-top:12px">
+        Generic ballot D+{{ printf "%.1f" .generic_ballot }}, shrunk by
+        λ={{ printf "%.2f" .shrink_lambda }} to an election-day tide of
+        <strong>D+{{ printf "%.1f" .tide_D }}</strong>, then carried to states by PVI.
+      </p>
+    </div>
+    {{- end }}
+  </div>
+
+  {{- with $p }}
+  {{- if .sensitivity }}
+  <div class="note">
+    <strong>Read this before quoting a probability.</strong>
+    This model puts the Democrats' chance of reaching 50+ Senate seats at
+    <strong>{{ printf "%.0f%%" (mul .prob_D_50_plus 100) }}</strong> — but that rests on a
+    bookkeeping assumption, not a forecast: how many Democratic seats are <em>not</em> on
+    the ballot. Move it by one seat and the headline moves about twenty points:
+    <table style="max-width:420px;margin-top:10px">
+      <tr><th>Holdover D seats</th><th class="num">P(D reach 50+)</th></tr>
+      {{- range $k, $v := .sensitivity }}
+      {{/* holdover_D arrives from JSON as a float64, so "%d" renders
+           %!d(float64=34) and the comparison silently never matches. */}}
+      <tr><td>{{ $k }}{{ if eq $k (printf "%.0f" $p.holdover_D) }} (used){{ end }}</td>
+          <td class="num">{{ printf "%.0f%%" (mul $v 100) }}</td></tr>
+      {{- end }}
+    </table>
+    <p style="margin-top:10px">No modelling choice in the model matters this much.
+       That is the lesson, not a footnote.</p>
+  </div>
+  {{- end }}
+  {{- end }}
+</div></section>
+
+<!-- ===================== SENATE TABLE ===================== -->
+{{- with $p }}
+<section><div class="wrap">
+  <h2>Senate, race by race</h2>
+  <p class="sub">Expected margin is the election-day national tide plus twice the state's
+     partisan lean. Lean is our own reconstruction from official returns, not a
+     licensed index. Nothing here knows who the candidates are — which is exactly why
+     it disagrees with the professionals in states with unusually strong recruits.</p>
+  <table>
+    <tr><th>State</th><th class="num">Expected margin</th><th class="num">P(D)</th>
+        <th class="num">State lean</th><th></th></tr>
+    {{- range .races }}
+    <tr>
+      <td><strong>{{ .state }}</strong></td>
+      <td class="num {{ if gt .expected_margin_D 0.0 }}D{{ else }}R{{ end }}">
+        {{ if gt .expected_margin_D 0.0 }}D+{{ printf "%.1f" .expected_margin_D }}{{ else }}R+{{ printf "%.1f" (mul .expected_margin_D -1) }}{{ end }}
+      </td>
+      {{/* Never print 100% or 0%. The model's own sigma does not justify that
+           much confidence, and a table full of certainties is the fastest way
+           to lose a reader who knows Wyoming is not literally unwinnable. */}}
+      {{- $pd := mul .win_prob_D 100 }}
+      <td class="num">
+        {{- if ge $pd 99.5 }}&gt;99%
+        {{- else if lt $pd 0.5 }}&lt;1%
+        {{- else }}{{ printf "%.0f%%" $pd }}{{ end -}}
+      </td>
+      <td class="num muted">
+        {{ if gt .pvi 0.0 }}D+{{ printf "%.1f" .pvi }}{{ else }}R+{{ printf "%.1f" (mul .pvi -1) }}{{ end }}
+      </td>
+      <td style="width:130px">
+        <span class="bar" style="width:{{ math.Round (mul .win_prob_D 100) }}px;background:#1c5fa8"></span>
+      </td>
+    </tr>
+    {{- end }}
+  </table>
+</div></section>
+{{- end }}
+
+<!-- ===================== THE ARCHIVE ===================== -->
+<section><div class="wrap">
+  <h2>What the archive holds</h2>
+  <p class="sub">Every forecaster we are permitted to collect, captured daily and stored
+     as raw bytes before anything is parsed, so a parser fixed in October can be re-run
+     over the whole history.</p>
+
+  <div class="cards">
+    {{- range $d.headline }}
+    <div class="card">
+      <span class="badge {{ if ne .sole_source "class model" }}archive{{ end }}">
+        {{ if eq .display "single" }}single source{{ else }}{{ .n_sources }} sources{{ end }}
+      </span>
+      <div class="muted">{{ title .category }} · national House margin</div>
+      <div class="big {{ if gt .margin_D 0.0 }}D{{ else }}R{{ end }}">
+        {{ if gt .margin_D 0.0 }}D+{{ printf "%.1f" .margin_D }}{{ else }}R+{{ printf "%.1f" (mul .margin_D -1) }}{{ end }}
+      </div>
+      {{- if eq .display "single" }}
+      <div class="muted">{{ with .sole_source }}{{ . }}{{ else }}source not nameable under its terms{{ end }} — not a category average</div>
+      {{- else }}
+      <div class="muted">range {{ printf "%.1f" .low }} to {{ printf "%.1f" .high }}</div>
+      {{- end }}
+    </div>
+    {{- end }}
+  </div>
+
+  {{- if gt $d.suppressed_cells 0 }}
+  <div class="note">
+    <strong>{{ $d.suppressed_cells }} cells are withheld today.</strong>
+    {{ $d.disclosure_note }}
+  </div>
+  {{- end }}
+</div></section>
+
+<!-- ===================== DISAGREEMENT ===================== -->
+{{- with $d.expert_ratings_panel }}
+<section><div class="wrap">
+  <h2>Where the forecasters disagree</h2>
+  <p class="sub">{{ len . }} seats on which the raters do not all say the same thing,
+     sorted by how far apart they are. Ratings are transcribed from Wikipedia
+     (CC BY-SA) and are deliberately never averaged: “Lean R” is not a number, and
+     turning it into one is a modelling choice worth arguing about out loud.</p>
+  <table>
+    <tr><th>Seat</th><th class="num">Spread</th><th>Ratings</th></tr>
+    {{- range first 25 . }}
+    <tr>
+      <td><strong>{{ .state }}{{ with .district }}-{{ . }}{{ end }}</strong></td>
+      <td class="num">{{ .disagreement }}</td>
+      <td class="muted">
+        {{- range $i, $r := .ratings }}{{ if $i }} · {{ end }}{{ $r.forecaster }}: <strong>{{ $r.label }}</strong>{{ end -}}
+      </td>
+    </tr>
+    {{- end }}
+  </table>
+  {{- if gt (len .) 25 }}
+  <p class="muted" style="margin-top:12px">Showing the 25 widest of {{ len . }}.</p>
+  {{- end }}
+</div></section>
+{{- end }}
+
+<!-- ===================== METHODS ===================== -->
+<section><div class="wrap">
+  <h2>Methods, and what we are unsure about</h2>
+  <p class="sub">The judgment calls that move the answer most, stated rather than buried.</p>
+  <details open>
+    <summary>The four choices that matter</summary>
+    <table>
+      <tr><th>Choice</th><th>What we did</th><th>Why it is arguable</th></tr>
+      <tr><td>Generic-ballot shrinkage</td>
+          <td>λ decays from 1.0 at Election Day toward 0.5 far out; λ={{ printf "%.2f" $p.shrink_lambda }} today</td>
+          <td>A stylised reading of Bafumi–Erikson–Wlezien, not a re-estimation. We hold no historical generic-ballot series to fit.</td></tr>
+      <tr><td>Race-level uncertainty</td>
+          <td>σ={{ printf "%.1f" $p.sigma }} points, regressed from official Senate returns against prior-cycle lean</td>
+          <td>One cycle, n≈30. Cannot yet separate a national polling miss from state-level noise.</td></tr>
+      <tr><td>Seat baseline</td>
+          <td>{{ $p.holdover_D }} Democratic holdovers</td>
+          <td>Worth ~20 points of headline probability per seat. See the box above.</td></tr>
+      <tr><td>No bias correction</td>
+          <td>None applied</td>
+          <td>Generic-ballot bias is conditional on presidential approval rather than constant, so a fixed adjustment fits the last cycle and calls it a law.</td></tr>
+    </table>
+  </details>
+  <div class="note">
+    <strong>What is not published here, and why.</strong>
+    Several sources permit collection but not republication of their individual
+    numbers during the cycle, so those appear only inside averages with at least
+    three contributors. District-level forecasts are withheld entirely: given the
+    published national tide, a district forecast reveals its partisan index exactly,
+    and that index is licensed. The full per-forecaster archive will be released
+    after the election as a documented dataset.
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p>PLSC 2219 · Yale University · <a href="/">Kevin DeLuca</a></p>
+  <p style="margin-top:6px">Generated {{ $d.generated_at }} from snapshot {{ $d.latest_snapshot }}.
+     Race ratings © their respective forecasters, transcribed from Wikipedia under CC BY-SA 4.0.
+     Official returns via MIT Election Data and Science Lab (CC0).</p>
+</div></footer>
+
+</body>
+</html>

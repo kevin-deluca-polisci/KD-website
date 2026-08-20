@@ -23,6 +23,13 @@
 */submissions/
 */derived/by_source_all.csv
 
+# Model output built from a gated input. The House polling model is derived
+# from Cook's district PVI, and given the published national tide the index is
+# exactly recoverable: PVI = (district margin - tide) / 2. So the district
+# numbers are as private as the PVI itself, and must NOT live under derived/,
+# which is published wholesale.
+*/model_private/
+
 # Explicitly published
 !*/derived/
 !*/manifest.csv

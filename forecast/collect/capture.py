@@ -754,13 +754,35 @@ def append_raw_manifest(cycle: int, snapshot_date: str, dry_run: bool) -> Path |
     out = DATA_DIR / str(cycle) / "raw_manifest.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
 
-    existing: set[tuple] = set()
+    # RECONCILE, don't skip.
+    #
+    # This used to key on (date, source, artifact) and skip anything already
+    # present. That silently broke the guarantee the file exists to provide.
+    # Two captures can happen on one date — the daily Action at 11:00 UTC and a
+    # local run.sh afterwards — and the second OVERWRITES the stored bytes,
+    # because RawStore names files per date, not per run. Skip-if-present then
+    # left the manifest asserting the FIRST run's hash for bytes that had since
+    # been replaced. A hash nobody can verify against the released archive is
+    # worse than no hash: it looks like proof and isn't.
+    #
+    # Observed for real on 2026-08-20: of 89 artifacts, the bytes on disk
+    # matched the local manifest 89/89 and the Action's 13/89.
+    #
+    # So the rule is now: exactly one row per (date, source, artifact), and its
+    # hash is whatever is ACTUALLY stored. A changed hash rewrites the row and
+    # is reported. This also makes the file safe to union-merge in git (see
+    # .gitattributes) — duplicates introduced by a merge collapse on next run.
+    prior: dict[tuple, dict] = {}
+    order: list[tuple] = []
     if out.exists():
         with out.open(encoding="utf-8") as fh:
-            existing = {(r["snapshot_date"], r["source_id"], r["artifact"])
-                        for r in csv.DictReader(fh)}
+            for r in csv.DictReader(fh):
+                key = (r["snapshot_date"], r["source_id"], r["artifact"])
+                if key not in prior:
+                    order.append(key)
+                prior[key] = r          # a later duplicate wins
 
-    new_rows = []
+    current: dict[tuple, dict] = {}
     if raw_root.is_dir():
         for sdir in sorted(raw_root.iterdir()):
             day = sdir / snapshot_date
@@ -772,22 +794,35 @@ def append_raw_manifest(cycle: int, snapshot_date: str, dry_run: bool) -> Path |
                 except Exception:
                     continue
                 key = (snapshot_date, sdir.name, meta_path.name[:-len(".meta.json")])
-                if key in existing:
-                    continue
-                new_rows.append({
+                current[key] = {
                     "snapshot_date": snapshot_date, "source_id": sdir.name,
                     "artifact": key[2], "sha256": meta.get("sha256", ""),
                     "bytes": meta.get("bytes", ""), "status": meta.get("status", ""),
                     "fetched_at": meta.get("fetched_at", ""),
-                })
-    if not new_rows:
-        return out if out.exists() else None
-    write_header = not out.exists()
-    with out.open("a", newline="", encoding="utf-8") as fh:
+                }
+
+    added = sum(1 for k in current if k not in prior)
+    changed = [k for k, v in current.items()
+               if k in prior and prior[k].get("sha256") != v["sha256"]]
+
+    merged = dict(prior)
+    merged.update(current)
+    for k in current:
+        if k not in order:
+            order.append(k)
+
+    if not added and not changed and out.exists() and len(order) == len(prior):
+        return out
+
+    with out.open("w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=RAW_MANIFEST_FIELDS)
-        if write_header:
-            w.writeheader()
-        w.writerows(new_rows)
+        w.writeheader()
+        w.writerows(merged[k] for k in order)
+    if changed:
+        print(f"  raw_manifest: {len(changed)} artifact(s) re-captured today — "
+              f"rows updated to the bytes now stored "
+              f"({', '.join('/'.join(k[1:]) for k in changed[:3])}"
+              f"{'...' if len(changed) > 3 else ''})")
     return out
 
 

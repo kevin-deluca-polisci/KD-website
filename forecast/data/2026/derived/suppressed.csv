@@ -5,7 +5,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,polling,NATL_HOUSE_2026,national,,,margin_D_adjusted,pct,1,,,,,gated,single,,only 1 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_AK_01_2026,house,AK,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_AL_01_2026,house,AL,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_AL_02_2026,house,AL,02,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_AL_02_2026,house,AL,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_AL_03_2026,house,AL,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_AL_04_2026,house,AL,04,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -37,7 +36,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_CA_10_2026,house,CA,10,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_11_2026,house,CA,11,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_12_2026,house,CA,12,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_CA_13_2026,house,CA,13,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_13_2026,house,CA,13,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_14_2026,house,CA,14,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_15_2026,house,CA,15,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -47,7 +45,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_CA_19_2026,house,CA,19,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_20_2026,house,CA,20,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_21_2026,house,CA,21,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_CA_22_2026,house,CA,22,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_22_2026,house,CA,22,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_23_2026,house,CA,23,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CA_24_2026,house,CA,24,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -81,7 +78,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_CO_01_2026,house,CO,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CO_02_2026,house,CO,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CO_03_2026,house,CO,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_CO_04_2026,house,CO,04,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CO_04_2026,house,CO,04,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CO_05_2026,house,CO,05,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_CO_06_2026,house,CO,06,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -103,11 +99,9 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_FL_08_2026,house,FL,08,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_FL_09_2026,house,FL,09,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_FL_10_2026,house,FL,10,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_FL_11_2026,house,FL,11,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_FL_11_2026,house,FL,11,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_FL_12_2026,house,FL,12,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_FL_13_2026,house,FL,13,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_FL_14_2026,house,FL,14,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_FL_14_2026,house,FL,14,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_FL_15_2026,house,FL,15,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_FL_16_2026,house,FL,16,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -180,7 +174,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_KY_03_2026,house,KY,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_KY_04_2026,house,KY,04,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_KY_05_2026,house,KY,05,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_KY_06_2026,house,KY,06,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_KY_06_2026,house,KY,06,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_LA_01_2026,house,LA,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_LA_02_2026,house,LA,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -206,7 +199,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_MD_07_2026,house,MD,07,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_MD_08_2026,house,MD,08,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_ME_01_2026,house,ME,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_ME_02_2026,house,ME,02,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_ME_02_2026,house,ME,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_MI_01_2026,house,MI,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_MI_02_2026,house,MI,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -215,7 +207,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_MI_05_2026,house,MI,05,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_MI_06_2026,house,MI,06,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_MI_07_2026,house,MI,07,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_MI_08_2026,house,MI,08,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_MI_08_2026,house,MI,08,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_MI_09_2026,house,MI,09,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_MI_10_2026,house,MI,10,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -249,11 +240,9 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_NC_03_2026,house,NC,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NC_04_2026,house,NC,04,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NC_05_2026,house,NC,05,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_NC_06_2026,house,NC,06,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NC_06_2026,house,NC,06,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NC_07_2026,house,NC,07,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NC_08_2026,house,NC,08,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_NC_09_2026,house,NC,09,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NC_09_2026,house,NC,09,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NC_10_2026,house,NC,10,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NC_11_2026,house,NC,11,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -262,7 +251,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_NC_14_2026,house,NC,14,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_ND_01_2026,house,ND,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NE_01_2026,house,NE,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_NE_02_2026,house,NE,02,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NE_02_2026,house,NE,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NE_03_2026,house,NE,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NH_01_2026,house,NH,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -282,17 +270,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_NM_01_2026,house,NM,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NM_02_2026,house,NM,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NM_03_2026,house,NM,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_NV_01_2026,house,NV,01,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NV_01_2026,house,NV,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NV_02_2026,house,NV,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_NV_03_2026,house,NV,03,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NV_03_2026,house,NV,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NV_04_2026,house,NV,04,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NY_01_2026,house,NY,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NY_02_2026,house,NY,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_NY_03_2026,house,NY,03,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NY_03_2026,house,NY,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_NY_04_2026,house,NY,04,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NY_04_2026,house,NY,04,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NY_05_2026,house,NY,05,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NY_06_2026,house,NY,06,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -316,17 +300,14 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_NY_24_2026,house,NY,24,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NY_25_2026,house,NY,25,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_NY_26_2026,house,NY,26,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_OH_01_2026,house,OH,01,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_01_2026,house,OH,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_02_2026,house,OH,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_03_2026,house,OH,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_04_2026,house,OH,04,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_05_2026,house,OH,05,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_06_2026,house,OH,06,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_OH_07_2026,house,OH,07,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_07_2026,house,OH,07,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_08_2026,house,OH,08,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_OH_09_2026,house,OH,09,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_09_2026,house,OH,09,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_10_2026,house,OH,10,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_OH_11_2026,house,OH,11,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -376,7 +357,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_TN_02_2026,house,TN,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TN_03_2026,house,TN,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TN_04_2026,house,TN,04,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_TN_05_2026,house,TN,05,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TN_05_2026,house,TN,05,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TN_06_2026,house,TN,06,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TN_07_2026,house,TN,07,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -396,7 +376,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_TX_12_2026,house,TX,12,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TX_13_2026,house,TX,13,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TX_14_2026,house,TX,14,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_TX_15_2026,house,TX,15,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TX_15_2026,house,TX,15,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TX_16_2026,house,TX,16,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_TX_17_2026,house,TX,17,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -429,7 +408,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_VA_02_2026,house,VA,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_VA_03_2026,house,VA,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_VA_04_2026,house,VA,04,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_VA_05_2026,house,VA,05,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_VA_05_2026,house,VA,05,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_VA_06_2026,house,VA,06,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_VA_07_2026,house,VA,07,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
@@ -448,7 +426,6 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,me
 2026-08-20,professional,HOU_WA_08_2026,house,WA,08,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_WA_09_2026,house,WA,09,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_WA_10_2026,house,WA,10,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
-2026-08-20,professional,HOU_WI_01_2026,house,WI,01,margin_D,pct,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_WI_01_2026,house,WI,01,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_WI_02_2026,house,WI,02,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories
 2026-08-20,professional,HOU_WI_03_2026,house,WI,03,win_prob_D,prob,2,,,,,gated,thin,,only 2 contributing source(s); MIN_N=3 for gated categories

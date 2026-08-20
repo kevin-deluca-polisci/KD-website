@@ -206,12 +206,23 @@ if run_stage publish && [[ $DRY -eq 0 ]]; then
   banner "5/5  publish"
   python3 forecast/collect/publish.py --cycle "$CYCLE" || FAILED+=("publish")
 
-  # Commit ONLY the public tier. raw/ and parsed/ are gitignored; this add list
+  # Commit ONLY the public tier. This stays an explicit allowlist rather than
+  # `git add -A` on purpose: gitignore is the first line of defence, not the
+  # only one, and a private file that slips past it should still not be swept
+  # into a public commit. (It happened — model_private/ was tracked and pushed
+  # because the live .gitignore had drifted from data_gitignore.txt.)
+  #
+  # assets/forecast_<cycle>.json is what Hugo renders the page from. It is
+  # produced by publish.py from derived/ only, and without it on this list the
+  # site silently freezes at whatever snapshot was last committed.
+  #
+  # raw/ and parsed/ are gitignored; this add list
   # is the second line of defence in case a .gitignore edit ever slips.
   git add forecast/data/"$CYCLE"/derived \
           forecast/data/"$CYCLE"/manifest.csv \
           forecast/data/"$CYCLE"/raw_manifest.csv \
-          forecast/data/"$CYCLE"/site.json 2>/dev/null || true
+          forecast/data/"$CYCLE"/site.json \
+          assets/forecast_"$CYCLE".json 2>/dev/null || true
 
   if git diff --staged --quiet; then
     echo "  nothing changed"

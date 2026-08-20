@@ -1,10 +1,19 @@
 # Daily capture — stage 1 only.
 # Install at .github/workflows/forecast-capture.yml in KD-website.
 #
-# Captures raw bytes, pushes them to the PRIVATE archive repo, and commits only
-# the public tier (hash manifest + run manifest) back to this repo. It does not
-# parse, aggregate, publish, or deploy — you do that in the weekly local run,
-# where you can look at the numbers before they go live.
+# Captures raw bytes, pushes them to the PRIVATE archive repo, then runs the
+# full pipeline and publishes the public tier back to this repo, which triggers
+# the Pages deploy. The site therefore rebuilds daily.
+#
+# This used to stop after capture, on the reasoning that a human should read
+# the numbers before they go live. That reasoning was sound — in one day of
+# work this pipeline produced Idaho at D+11.6, House seats of 24-24, and a
+# Senate forecast for fifteen states with no 2026 Senate race, none of which
+# raised an exception. What replaced the human is forecast/collect/sanity.py:
+# assertions about the WORLD (35 Senate races, probabilities in [0,1], House
+# seats summing to 435, no category moving five points overnight) that must
+# pass before anything is committed. If the gate trips, nothing is published,
+# yesterday's page stays up, and an issue is opened.
 #
 # SETUP (once):
 #   1. Create a PRIVATE repo, e.g. kevin-deluca-polisci/plsc2219-raw
@@ -24,7 +33,11 @@ on:
       backfill: {description: "Include Wikipedia revision backfill (run once)", type: boolean, required: false, default: false}
 
 concurrency: {group: forecast-capture, cancel-in-progress: false}
-permissions: {contents: write}
+# issues: write is needed by the gate's issue-opening step. Without it that
+# step fails with 'Resource not accessible by integration' — and it only runs
+# when something has ALREADY gone wrong, so the failure would surface exactly
+# when the alarm was supposed to.
+permissions: {contents: write, issues: write}
 
 env:
   RAW_ARCHIVE_REPO: kevin-deluca-polisci/plsc2219-raw
@@ -82,22 +95,77 @@ jobs:
           git remote add origin \
             "https://x-access-token:${{ secrets.RAW_ARCHIVE_TOKEN }}@github.com/${RAW_ARCHIVE_REPO}.git" 2>/dev/null || true
           git push origin HEAD:main
+      # ---- publish -------------------------------------------------------
+      # Added when the site moved to a daily rebuild. Ordering matters: the
+      # models read parsed/, aggregate enforces the publication tiers and
+      # exits non-zero if they are violated, publish assembles the payload,
+      # and sanity refuses to let obviously-wrong numbers reach the page.
+      #
+      # Every step here is `set -e` by default, so a failure anywhere stops
+      # before the commit. Nothing is published on a bad day; yesterday's page
+      # stays up, which is the better of the two failure modes.
+      - name: Parse, model, aggregate, publish
+        if: inputs.dry_run != true
+        run: |
+          python3 forecast/collect/parse.py     --cycle "$CYCLE" --all
+          python3 forecast/model/state_pvi.py   --cycle "$CYCLE"
+          python3 forecast/model/polling.py     --cycle "$CYCLE"
+          python3 forecast/collect/aggregate.py --cycle "$CYCLE"
+          python3 forecast/collect/publish.py   --cycle "$CYCLE"
+
+      - name: Sanity gate
+        if: inputs.dry_run != true
+        id: sanity
+        run: python3 forecast/collect/sanity.py --cycle "$CYCLE"
 
       - name: Commit the public tier only
         if: inputs.dry_run != true
         run: |
           git config user.name  "forecast-archive[bot]"
           git config user.email "forecast-archive@users.noreply.github.com"
-          # Hashes and run provenance only. raw/ is gitignored here; naming the
-          # paths explicitly is the second line of defence in case that slips.
+          # An explicit allowlist, never `git add -A`. gitignore is the first
+          # line of defence, not the only one — model_private/ was once tracked
+          # and pushed because the live .gitignore had drifted.
           git add "forecast/data/${CYCLE}/raw_manifest.csv" \
-                  "forecast/data/${CYCLE}/manifest.csv" 2>/dev/null || true
+                  "forecast/data/${CYCLE}/manifest.csv" \
+                  "forecast/data/${CYCLE}/derived" \
+                  "forecast/data/${CYCLE}/site.json" \
+                  "assets/forecast_${CYCLE}.json" 2>/dev/null || true
           git diff --staged --quiet && { echo "nothing to commit"; exit 0; }
-          git commit -m "forecast: capture hashes $(date -u +%Y-%m-%d)"
+          git commit -m "forecast: daily update $(date -u +%Y-%m-%d)"
           for i in 1 2 3; do
             git pull --rebase --autostash origin "${{ github.ref_name }}" && break; sleep 5
           done
           git push
+
+      # A failed gate must be visible, not buried in a red X on a cron job
+      # nobody watches.
+      - name: Open an issue if the gate blocked publication
+        if: failure() && steps.sanity.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Forecast sanity gate blocked publication (${new Date().toISOString().slice(0,10)})`;
+            const body = [
+              'The daily forecast run captured and parsed normally, but the sanity',
+              'gate refused to publish. **The site still shows yesterday\'s numbers.**',
+              '',
+              `Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              '',
+              'Reproduce locally:',
+              '```',
+              './forecast/run.sh --from parse',
+              'python3 forecast/collect/sanity.py',
+              '```',
+            ].join('\n');
+            const {data: existing} = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'forecast-gate'});
+            if (existing.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title, body, labels: ['forecast-gate']});
+            }
 
       - name: Report partial failure
         if: steps.capture.outcome == 'failure'
