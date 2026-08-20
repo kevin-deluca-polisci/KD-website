@@ -19,7 +19,7 @@ needed — which matters, because the course does not cover simulation.
 Publication: `individual`. It is our model; we can publish whatever we like.
 """
 from __future__ import annotations
-import argparse, csv, json, statistics, sys
+import argparse, csv, glob, json, statistics, sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -72,6 +72,33 @@ def fit(winsorise_2022=True):
     r2 = 1 - sum(e*e for e in resid)/sum((v-ybar)**2 for v in y)
     return b, loeo, r2
 
+# Which of the three FRED variants the model consumes, and why, is argued in
+# collect/parsers/fred.py. Short version: the fitted quantity is an annual
+# average against an annual average, and income_growth_ytd is the only variant
+# with that shape.
+INCOME_QUANTITY = "income_growth_ytd"
+
+
+def income_from_archive(cycle: int) -> tuple[float, str] | None:
+    """(value, provenance) from the newest parsed date that carries FRED."""
+    for f in sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")), reverse=True):
+        vals = {}
+        with open(f, encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                if r["source_id"] == "fred":
+                    try:
+                        vals[r["quantity"]] = float(r["value"])
+                    except (TypeError, ValueError):
+                        pass
+        if INCOME_QUANTITY in vals:
+            months = vals.get("income_ytd_months")
+            where = Path(f).stem
+            prov = (f"FRED {INCOME_QUANTITY} as of {where}"
+                    + (f", {int(months)} month(s) of the year in hand" if months else ""))
+            return vals[INCOME_QUANTITY], prov
+    return None
+
+
 def predict(b, approval, income, seats_before):
     return b[0] + b[1]*approval + b[2]*income + b[3]*seats_before
 
@@ -82,14 +109,28 @@ def main(argv=None) -> int:
                     help="president's approval (Gallup basis — do NOT feed a poll "
                          "average, the historical column is Gallup-only and the "
                          "house effect is a couple of points)")
-    ap.add_argument("--income", type=float, default=1.5,
-                    help="PLACEHOLDER until FRED A229RX0A048NBEA is pulled")
+    ap.add_argument("--income", type=float, default=None,
+                    help="real income growth, pct. Default: read from the FRED "
+                         "capture (income_growth_ytd). Pass a value to override.")
     ap.add_argument("--seats-before", type=float, default=220,
                     help="seats the president's party won last time (R won 220 in 2024)")
     ap.add_argument("--date", default=None)
     a = ap.parse_args(argv)
 
     b, loeo, r2 = fit()
+    if a.income is not None:
+        income, income_prov, placeholder = a.income, "command line", False
+    else:
+        got = income_from_archive(a.cycle)
+        if got:
+            income, income_prov, placeholder = got[0], got[1], False
+        else:
+            # No FRED capture yet. Fall back, but say so loudly and mark it in
+            # the output so the page can label it rather than implying the
+            # number is grounded.
+            income, income_prov, placeholder = 1.5, "PLACEHOLDER (no FRED capture found)", True
+    a.income = income
+
     pp = predict(b, a.approval, a.income, a.seats_before)   # president's party share
     margin_d = 100 - 2*pp                                    # D minus R
     z = 1.2816                                               # 80%
@@ -101,7 +142,9 @@ def main(argv=None) -> int:
         "r2": round(r2,3), "loeo_rmse": round(loeo,3),
         "inputs": {"approval": a.approval, "income_growth": a.income,
                    "seats_before": a.seats_before,
-                   "income_is_placeholder": abs(a.income - 1.5) < 1e-9},
+                   "income_is_placeholder": placeholder,
+                   "income_source": income_prov,
+                   "approval_source": "hand-set; no live approval feed yet"},
         "pres_party_two_party_vote": round(pp,2),
         "margin_D": round(margin_d,2),
         "margin_D_80_low": round(100-2*(pp+z*loeo),2),
@@ -116,7 +159,11 @@ def main(argv=None) -> int:
           f"(80% D+{out['margin_D_80_low']:.1f} to D+{out['margin_D_80_high']:.1f}), "
           f"LOEO {loeo:.2f}")
     if out["inputs"]["income_is_placeholder"]:
-        print("  WARNING: income growth is still the 1.5 placeholder — pull FRED A229RX0A048NBEA")
+        print("  WARNING: income growth is still the 1.5 placeholder — the FRED")
+        print("           capture has not run yet. ./forecast/run.sh will fix it.")
+    else:
+        print(f"  income growth {a.income:+.2f}%  ({income_prov})")
+    print(f"  approval {a.approval:.1f} — hand-set, not pulled from a live feed")
     return 0
 
 if __name__ == "__main__":

@@ -336,7 +336,12 @@ def handle_http(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[int,
         if prev_hash and prev_hash == meta.get("sha256"):
             days = _days_between(prev_date, store.snapshot_date)
             meta["unchanged_since"] = prev_date
-            if days is not None and days >= STALE_AFTER_DAYS:
+            # Per-source override. A monthly series is byte-identical for about
+            # thirty days by definition, so the ten-day default would emit a
+            # STALE note every month for a source behaving perfectly. Warnings
+            # that always fire are warnings nobody reads.
+            limit = int(src.get("stale_after_days") or STALE_AFTER_DAYS)
+            if days is not None and days >= limit:
                 notes.append(f"STALE: {name} byte-identical since {prev_date} "
                              f"({days}d) — the source may have stopped updating")
         b += store.write(src["id"], name, body, meta)
@@ -665,7 +670,12 @@ def handle_infogram(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[
         if prev_hash and prev_hash == meta.get("sha256"):
             days = _days_between(prev_date, store.snapshot_date)
             meta["unchanged_since"] = prev_date
-            if days is not None and days >= STALE_AFTER_DAYS:
+            # Per-source override. A monthly series is byte-identical for about
+            # thirty days by definition, so the ten-day default would emit a
+            # STALE note every month for a source behaving perfectly. Warnings
+            # that always fire are warnings nobody reads.
+            limit = int(src.get("stale_after_days") or STALE_AFTER_DAYS)
+            if days is not None and days >= limit:
                 notes.append(f"STALE: {name} byte-identical since {prev_date} "
                              f"({days}d) — the source may have stopped updating")
         b += store.write(src["id"], name, body, meta)

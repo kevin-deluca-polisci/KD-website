@@ -154,6 +154,69 @@ def check_derived(c: Checks, cycle: int) -> None:
              f"seats_D {seats['seats_D']} + seats_R {seats['seats_R']} = {total}")
 
 
+def check_model_freshness(c: Checks, cycle: int) -> None:
+    """
+    Did every model actually re-run against today's data?
+
+    A model that silently stops updating is the worst failure this pipeline can
+    have, because nothing looks broken: the page renders, the number is
+    plausible, the date at the top is today's. It just is not the number the
+    model would produce if you ran it.
+
+    This happened. fundamentals.py was omitted from the daily workflow, and the
+    site served D+9.5 for days after the model had moved to D+10.5, because the
+    model had started reading live income data and nobody re-ran it.
+
+    The check: the inputs the model recorded must match what is in the archive
+    right now. If FRED has moved and the model has not, the numbers disagree and
+    we refuse to publish.
+    """
+    d = DATA / str(cycle) / "derived"
+    fm = d / "fundamentals_model.json"
+    if not c.ok(fm.exists(), "fundamentals model exists"):
+        return
+    model = json.loads(fm.read_text())
+    recorded = (model.get("inputs") or {}).get("income_growth")
+    if recorded is None:
+        c.ok(False, "fundamentals model records its inputs",
+             "no inputs.income_growth — cannot verify freshness")
+        return
+
+    # What does the archive say right now?
+    files = sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")))
+    live = None
+    for f in reversed(files):
+        for r in csv.DictReader(Path(f).open(encoding="utf-8")):
+            if r["source_id"] == "fred" and r["quantity"] == "income_growth_ytd":
+                live = float(r["value"])
+                break
+        if live is not None:
+            break
+    if live is None:
+        c.passes.append("fundamentals freshness (no FRED rows yet, skipped)")
+        return
+    c.ok(abs(float(recorded) - live) < 1e-6,
+         "fundamentals model is current",
+         f"model was built with income_growth={recorded} but the archive now says "
+         f"{live}. Re-run forecast/model/fundamentals.py — it is probably missing "
+         f"from the daily workflow.")
+
+    # And the second link in the chain, which is the one that actually broke:
+    # the model can be current while the PAYLOAD still carries an older run,
+    # if publish.py ran before the model did (or did not run at all). Checking
+    # the model against the archive would not have caught that. Checking the
+    # payload against the model does.
+    site = REPO / "assets" / f"forecast_{cycle}.json"
+    if site.exists():
+        pub = (json.loads(site.read_text()).get("fundamentals_model") or {}).get("margin_D")
+        mod = model.get("margin_D")
+        if pub is not None and mod is not None:
+            c.ok(abs(float(pub) - float(mod)) < 1e-6,
+                 "published page matches the fundamentals model",
+                 f"the page says D{float(pub):+.2f} but the model now says "
+                 f"D{float(mod):+.2f}. publish.py needs to run after the models.")
+
+
 def check_movement(c: Checks, cycle: int) -> None:
     """
     Did anything jump overnight?
@@ -218,6 +281,7 @@ def main(argv=None) -> int:
     check_site_payload(c, a.cycle)
     check_derived(c, a.cycle)
     check_movement(c, a.cycle)
+    check_model_freshness(c, a.cycle)
     check_privacy(c, a.cycle)
 
     print("=" * 68)

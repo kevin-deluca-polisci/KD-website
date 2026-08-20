@@ -109,6 +109,14 @@ jobs:
         run: |
           python3 forecast/collect/parse.py     --cycle "$CYCLE" --all
           python3 forecast/model/state_pvi.py   --cycle "$CYCLE"
+          # fundamentals MUST run daily. It was left out of this list when the
+          # daily pipeline was written, on the reasoning that it is a static
+          # model whose inputs arrive as CLI arguments. That stopped being true
+          # the moment it started reading real income growth out of the FRED
+          # capture: the model now moves with the data, and skipping it froze
+          # the published figure at D+9.5 while the model itself had moved to
+          # D+10.5. A frozen number on a live page is worse than no number.
+          python3 forecast/model/fundamentals.py --cycle "$CYCLE"
           python3 forecast/model/polling.py     --cycle "$CYCLE"
           python3 forecast/collect/aggregate.py --cycle "$CYCLE"
           python3 forecast/collect/publish.py   --cycle "$CYCLE"

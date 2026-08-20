@@ -72,7 +72,15 @@ NEVER_PUBLISH = {"pvi", "pvi_prior"}
 
 # Reference baselines, not forecasts. Averaging a 2024 RESULT into a 2026
 # forecast category would be a category error in the literal sense.
-NOT_A_FORECAST = {"margin_D_pres_2024", "margin_D_prior_senate"}
+NOT_A_FORECAST = {
+    "margin_D_pres_2024", "margin_D_prior_senate",
+    # Economic inputs, not predictions. Averaging "real income growth" across
+    # forecasters would be meaningless — there is one true value and FRED
+    # publishes it. They live in the archive because the fundamentals model
+    # consumes them and the archive should record what it was fed.
+    "income_growth_last_full_year", "income_growth_ytd",
+    "income_growth_yoy_latest_month", "income_ytd_months",
+}
 
 
 def read_parsed(cycle: int) -> list[dict]:

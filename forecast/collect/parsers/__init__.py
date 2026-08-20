@@ -52,6 +52,16 @@ QUANTITIES = {
     "margin_D_adjusted",      # house-effect / likely-voter adjusted polling margin
     "margin_D_pres_2024",     # statewide 2024 presidential two-party margin
     "margin_D_prior_senate",  # statewide 2024 Senate two-party margin
+    # Economic inputs to the fundamentals model. NOT forecasts — they are
+    # right-hand-side variables, and aggregate.py excludes them from every
+    # average via NOT_A_FORECAST. Three variants because the election-year
+    # annual figure does not exist until the year after the election, so
+    # something has to stand in for it and the choice is a judgment call
+    # that deserves to be visible. See parsers/fred.py.
+    "income_growth_last_full_year",
+    "income_growth_ytd",
+    "income_growth_yoy_latest_month",
+    "income_ytd_months",
 }
 
 # Chamber-level pseudo-races. Same ID convention as real races so the class

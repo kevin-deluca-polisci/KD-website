@@ -229,6 +229,71 @@ sources:
 
   # --------------------------------------------- baselines (static reference) --
 
+  - id: fred
+    name: FRED / BEA — real disposable personal income per capita
+    category: fundamentals
+    method: http
+    enabled: true
+    cadence: monthly
+    publication: individual
+    declared_inputs: []
+    license: permitted
+    robots_checked: 2026-08-20
+    # A monthly series is byte-identical for about thirty days by definition.
+    # The ten-day default would emit a STALE note every single month for a
+    # source behaving perfectly, and a warning that always fires is one nobody
+    # reads. Forty-five days still catches a genuinely abandoned series.
+    stale_after_days: 45
+    config:
+      urls:
+        - name: income_annual
+          url: https://fred.stlouisfed.org/graph/fredgraph.csv?id=A229RX0A048NBEA
+        - name: income_monthly
+          url: https://fred.stlouisfed.org/graph/fredgraph.csv?id=A229RX0
+    notes: |
+      THE THIRD INPUT TO THE FUNDAMENTALS MODEL, which until 2026-08-20 was the
+      literal number 1.5 with a comment reading PLACEHOLDER. That number was
+      reaching the public page inside "D+9.5", presented with an 80% interval
+      and the words "fit on 20 midterms, 1946-2022". The fit was real; one of
+      the inputs was not.
+
+      DEFINITION, VERIFIED NOT ASSUMED. The model was fitted on the election
+      year's year-over-year percentage change in A229RX0A048NBEA (annual,
+      chained 2017 dollars):
+          2021 annual  51,888
+          2022 annual  48,716
+          change       (48716 - 51888) / 51888 * 100 = -6.113
+      and HISTORY in fundamentals.py records 2022 as -6.11. Exact match.
+
+      THE STRUCTURAL AWKWARDNESS: the 2026 annual observation does not exist
+      until 2027, and that is true of every cycle this model will ever run in.
+      The fitted quantity is unavailable on election day by construction, so
+      something must stand in for it. The parser emits three candidates rather
+      than silently picking one — last full year, year-to-date average vs prior
+      full year, and latest month year-over-year — and the model uses the
+      year-to-date figure because it has the same shape as the fitted quantity
+      (an average against an average). Burying that choice inside a single
+      number called "income" is how the last placeholder became invisible.
+
+      UNITS CAVEAT: the monthly series is seasonally adjusted (SAAR), the
+      annual one is not. Averaging SA months approximates the NSA annual figure
+      closely but not exactly, so the year-to-date estimate carries slop the
+      last-full-year figure does not.
+
+      LICENCE: U.S. Bureau of Economic Analysis, tagged on FRED as "Public
+      Domain: Citation Requested". Redistributable with attribution; cite BEA
+      via FRED. ROBOTS (checked 2026-08-20): fred.stlouisfed.org gives the
+      wildcard Crawl-delay 1 and disallows only /graph/graph-landing.php,
+      /graph/image.php, /graph/fredgraph.png, /searchresults and /seriesBeta.
+      The .csv endpoint used here is NOT disallowed. GPTBot, ChatGPT-User and
+      Google-Extended get a 30-day crawl-delay; ClaudeBot is not named and
+      falls through to the wildcard.
+
+      NOT A FORECAST: these are right-hand-side variables, so aggregate.py
+      excludes them from every average via NOT_A_FORECAST. There is one true
+      value and BEA publishes it; averaging it across forecasters would be
+      meaningless.
+
   - id: medsl
     name: MIT Election Data and Science Lab — official returns
     category: fundamentals
@@ -525,6 +590,31 @@ sources:
     robots_checked: 2026-08-19
     config: {urls: []}
     notes: >
+
+      PLANNED PRIMARY SOURCE (decision 2026-08-20). Kevin is subscribing for API
+      access. Once live this is intended to carry the bulk of the archive's
+      race-level data — it is the most comprehensive single feed available and
+      the easiest to consume — and it should also supply PRESIDENTIAL APPROVAL,
+      which is currently the last hand-set input in the fundamentals model
+      (approval=38.0, typed in, not pulled).
+
+      *** PAYING FOR ACCESS IS NOT PERMISSION TO REPUBLISH. *** These are
+      separate questions and conflating them is the easiest way to get this
+      project into trouble. A subscription grants us the right to READ the
+      data; what we may PUBLISH is governed by the subscription terms, which
+      have not been read yet. Until they have been:
+        - keep license: permission_pending and enabled: false
+        - when the subscription is live, read the terms and set `publication`
+          to what they actually allow (aggregate_only is the safe default)
+        - record the plan tier, the date, and the clause relied on, in these
+          notes — future-us will not remember
+      robots.txt blocking ClaudeBot, GPTBot, CCBot and Scrapy by name stops
+      mattering once we are an authenticated paying client rather than a
+      crawler, but the licence question is untouched by that.
+
+      NOT INDEPENDENT: stacks an expert-ratings sub-model, so it is not a clean
+      separate draw from the professional category. Set declared_inputs when
+      the methodology is known.
       /api/csv exists and is robots-ALLOWED but returns 401 — paid.
       robots blocks ClaudeBot, GPTBot, CCBot, and `Scrapy` BY NAME, which is an
       unusually direct signal against automated collection. Ask first.
