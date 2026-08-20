@@ -7,9 +7,12 @@ no access to parsed/ or raw/ by construction, so it cannot leak even if
 someone later edits it carelessly.
 """
 from __future__ import annotations
-import argparse, csv, json, datetime as dt
+import argparse, csv, json, sys, datetime as dt
 from collections import defaultdict
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import charts   # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 DATA = REPO / "forecast" / "data"
@@ -125,6 +128,11 @@ def main(argv=None) -> int:
         })
     ratings_panel.sort(key=lambda x: (-x["disagreement"], x["race_id"]))
 
+    # Accumulate the timeline and lay out both panels. This is the only part of
+    # publish.py that WRITES to derived/ rather than only reading it, because
+    # the history has to survive tomorrow's overwrite of the model files.
+    chart_data = charts.build(d, latest)
+
     out = {
         "cycle": a.cycle,
         "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
@@ -135,6 +143,7 @@ def main(argv=None) -> int:
         "expert_ratings_panel": ratings_panel,
         "fundamentals_model": model,
         "polling_model": senate,
+        "charts": chart_data,
         "suppressed_cells": len(supp),
         "display_note": (
             "A row with display='single' has ONE contributing source and is not "

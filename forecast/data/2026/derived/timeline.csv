@@ -1,0 +1,8 @@
+snapshot_date,series,panel,unit,value,low,high,n_sources,label
+2026-08-19,professional,margin,pct,5.73,5.73,5.73,1,Professional forecasters
+2026-08-20,fundamentals,margin,pct,10.48,4.61,16.35,1,Fundamentals (class model)
+2026-08-20,polling,margin,pct,5.674,,,1,Polling (class model)
+2026-08-20,professional,margin,pct,5.73,5.73,5.73,1,Professional forecasters
+2026-08-19,professional,prob,prob,0.8686,,,1,Professional forecasters
+2026-08-19,market,prob,prob,0.875,,,1,Prediction markets
+2026-08-20,market,prob,prob,0.875,,,1,Prediction markets

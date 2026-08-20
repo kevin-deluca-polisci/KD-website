@@ -1,0 +1,239 @@
+#!/usr/bin/env python3
+"""
+Timeline accumulation and chart geometry for the public page.
+
+TWO JOBS, AND THE FIRST ONE IS THE IMPORTANT ONE.
+
+1. ACCUMULATE. The point of this archive is watching methods move: do
+   fundamentals, polling, the professionals and the markets converge as the
+   election approaches, or does one of them sit systematically high all year?
+   You cannot answer that from a snapshot, and until now nothing kept the
+   history.
+
+   category_averages.csv already accumulates by date, so the professional and
+   market series have a past. Our OWN models did not: fundamentals_model.json
+   and polling_model.json are overwritten on every run, so each day destroyed
+   the previous day's answer. Every day that went by without this file was a
+   day of the series permanently lost. That is why this exists.
+
+   timeline.csv is therefore append-only and idempotent: one row per
+   (date, series), rewritten if the same date is recomputed, never duplicated.
+
+2. LAY OUT. Turn that series into plot coordinates here, in Python, rather
+   than doing arithmetic in Go templates. The template should place elements,
+   not compute scales.
+
+COLOUR IS NOT DECORATION HERE. The four hues are assigned per ENTITY and fixed
+for the life of the project, so "professional" is the same amber in the margin
+panel and the probability panel. Rotating colour by position in the chart would
+mean a series changed colour when another was added, which is the fastest way
+to make a time series lie. The set was validated for colour-vision deficiency
+(worst adjacent pair ΔE 16.2 protan) rather than chosen by eye. Amber and
+magenta fall below 3:1 against the light surface, which is why every series is
+directly labelled and a table view ships alongside.
+"""
+from __future__ import annotations
+
+import csv
+import json
+from pathlib import Path
+
+TIMELINE_FIELDS = ["snapshot_date", "series", "panel", "unit",
+                   "value", "low", "high", "n_sources", "label"]
+
+# entity -> (light, dark). Fixed. Never reassign by position.
+COLORS = {
+    "fundamentals": ("#4a3aa7", "#9085e9"),
+    "polling":      ("#008300", "#199e70"),
+    "professional": ("#eda100", "#c98500"),
+    "market":       ("#e87ba4", "#d55181"),
+}
+LABELS = {
+    "fundamentals": "Fundamentals (class model)",
+    "polling":      "Polling (class model)",
+    "professional": "Professional forecasters",
+    "market":       "Prediction markets",
+}
+ORDER = ["fundamentals", "polling", "professional", "market"]
+
+
+def _rd(p: Path) -> list[dict]:
+    return list(csv.DictReader(p.open(encoding="utf-8"))) if p.exists() else []
+
+
+def _f(x):
+    try:
+        return float(x)
+    except (TypeError, ValueError):
+        return None
+
+
+def collect_today(derived: Path, snapshot: str) -> list[dict]:
+    """Everything we can say about today, one row per series."""
+    out = []
+
+    fm = derived / "fundamentals_model.json"
+    if fm.exists():
+        m = json.loads(fm.read_text())
+        if m.get("margin_D") is not None:
+            out.append(dict(snapshot_date=snapshot, series="fundamentals",
+                            panel="margin", unit="pct", value=m["margin_D"],
+                            low=m.get("margin_D_80_low"), high=m.get("margin_D_80_high"),
+                            n_sources=1, label=LABELS["fundamentals"]))
+
+    pm = derived / "polling_model.json"
+    if pm.exists():
+        m = json.loads(pm.read_text())
+        if m.get("election_day_tide_D") is not None:
+            out.append(dict(snapshot_date=snapshot, series="polling",
+                            panel="margin", unit="pct", value=m["election_day_tide_D"],
+                            low="", high="", n_sources=1, label=LABELS["polling"]))
+
+    # Professional and market come from the published averages, which already
+    # carry history — so these rows can be rebuilt for past dates too.
+    for r in _rd(derived / "category_averages.csv"):
+        if r["race_id"] != "NATL_HOUSE_2026":
+            continue
+        cat, q, v = r["category"], r["quantity"], _f(r["mean"])
+        if v is None:
+            continue
+        if cat == "professional" and q == "margin_D":
+            out.append(dict(snapshot_date=r["snapshot_date"], series="professional",
+                            panel="margin", unit="pct", value=round(v, 3),
+                            low=_f(r.get("min")) or "", high=_f(r.get("max")) or "",
+                            n_sources=r.get("n_sources", 1), label=LABELS["professional"]))
+        elif q == "win_prob_D" and cat in ("professional", "market"):
+            out.append(dict(snapshot_date=r["snapshot_date"], series=cat,
+                            panel="prob", unit="prob", value=round(v, 4),
+                            low="", high="", n_sources=r.get("n_sources", 1),
+                            label=LABELS[cat]))
+    return out
+
+
+def update_timeline(derived: Path, snapshot: str) -> list[dict]:
+    """Merge today's rows into timeline.csv. Idempotent on (date, series, panel)."""
+    path = derived / "timeline.csv"
+    rows = {(r["snapshot_date"], r["series"], r["panel"]): r for r in _rd(path)}
+    for r in collect_today(derived, snapshot):
+        rows[(r["snapshot_date"], r["series"], r["panel"])] = r
+    ordered = sorted(rows.values(), key=lambda r: (r["panel"], r["snapshot_date"],
+                                                   ORDER.index(r["series"])
+                                                   if r["series"] in ORDER else 9))
+    with path.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.DictWriter(fh, fieldnames=TIMELINE_FIELDS)
+        w.writeheader()
+        for r in ordered:
+            w.writerow({k: r.get(k, "") for k in TIMELINE_FIELDS})
+    return ordered
+
+
+# --------------------------------------------------------------------------
+# Geometry. Output is in a 0-100 x 0-100 box; the template scales it.
+# --------------------------------------------------------------------------
+
+def _nice_ticks(lo: float, hi: float, n: int = 4) -> list[float]:
+    if hi <= lo:
+        hi = lo + 1
+    raw = (hi - lo) / n
+    mag = 10 ** (len(str(int(abs(raw)))) - 1) if abs(raw) >= 1 else 0.1
+    for m in (1, 2, 2.5, 5, 10):
+        step = m * mag
+        if step >= raw:
+            break
+    start = (int(lo / step)) * step
+    ticks = []
+    v = start
+    while v <= hi + step * 0.5:
+        if v >= lo - step * 0.5:
+            ticks.append(round(v, 4))
+        v += step
+    return ticks
+
+
+def build_panel(rows: list[dict], panel: str) -> dict | None:
+    rs = [r for r in rows if r["panel"] == panel]
+    if not rs:
+        return None
+    dates = sorted({r["snapshot_date"] for r in rs})
+    vals = [_f(r["value"]) for r in rs if _f(r["value"]) is not None]
+    bands = [_f(r[k]) for r in rs for k in ("low", "high") if _f(r.get(k)) is not None]
+    lo, hi = min(vals + bands), max(vals + bands)
+    pad = max((hi - lo) * 0.18, 0.5 if panel == "margin" else 0.04)
+    lo, hi = lo - pad, hi + pad
+    ticks = _nice_ticks(lo, hi)
+    if ticks:
+        lo, hi = min(lo, ticks[0]), max(hi, ticks[-1])
+
+    def X(d):
+        # A single date sits in the middle rather than at x=0, where it would
+        # look like a truncated chart instead of a young one.
+        return 50.0 if len(dates) == 1 else dates.index(d) / (len(dates) - 1) * 100
+    def Y(v):
+        return 100 - (v - lo) / (hi - lo) * 100
+
+    series = []
+    for key in ORDER:
+        pts = sorted((r for r in rs if r["series"] == key),
+                     key=lambda r: r["snapshot_date"])
+        if not pts:
+            continue
+        coords = [{"x": round(X(r["snapshot_date"]), 2),
+                   "y": round(Y(_f(r["value"])), 2),
+                   "date": r["snapshot_date"], "v": _f(r["value"])}
+                  for r in pts if _f(r["value"]) is not None]
+        if not coords:
+            continue
+        last = pts[-1]
+        band = None
+        if _f(last.get("low")) is not None and _f(last.get("high")) is not None:
+            band = {"y_low": round(Y(_f(last["low"])), 2),
+                    "y_high": round(Y(_f(last["high"])), 2),
+                    "low": _f(last["low"]), "high": _f(last["high"])}
+        series.append({
+            "key": key, "label": LABELS.get(key, key),
+            "color": COLORS.get(key, ("#666", "#999"))[0],
+            "color_dark": COLORS.get(key, ("#666", "#999"))[1],
+            "points": coords,
+            "polyline": " ".join(f"{c['x']},{c['y']}" for c in coords),
+            "last": coords[-1], "band": band,
+            "n_sources": last.get("n_sources", 1),
+        })
+    # Direct-label de-collision.
+    #
+    # Two series can sit on top of each other, and here they actually do: the
+    # class polling model says D+5.67 and the professionals say D+5.73. That is
+    # a real and interesting agreement, but drawn naively the second label lands
+    # exactly on the first and one of the two numbers silently disappears — the
+    # reader sees two series in the legend and one value on the chart.
+    #
+    # So push labels apart vertically until they clear each other, keeping their
+    # order. The MARKERS stay where the data is; only the text moves.
+    gap = 8.0 if panel == "margin" else 13.0
+    for s_ in sorted(series, key=lambda x: x["last"]["y"]):
+        s_["label_y"] = s_["last"]["y"]
+    ordered_lbl = sorted(series, key=lambda x: x["label_y"])
+    for i in range(1, len(ordered_lbl)):
+        prev, cur = ordered_lbl[i - 1], ordered_lbl[i]
+        if cur["label_y"] - prev["label_y"] < gap:
+            cur["label_y"] = prev["label_y"] + gap
+    for s_ in series:
+        s_["label_nudged"] = abs(s_["label_y"] - s_["last"]["y"]) > 0.5
+
+    return {
+        "panel": panel,
+        "unit": "pct" if panel == "margin" else "prob",
+        "dates": dates, "n_dates": len(dates),
+        "y_ticks": [{"v": t, "y": round(Y(t), 2),
+                     "label": (f"D+{t:.0f}" if t > 0 else ("EVEN" if abs(t) < 1e-9
+                               else f"R+{abs(t):.0f}")) if panel == "margin"
+                              else f"{t*100:.0f}%"}
+                    for t in ticks],
+        "zero_y": round(Y(0.0), 2) if panel == "margin" and lo < 0 < hi else None,
+        "half_y": round(Y(0.5), 2) if panel == "prob" and lo < 0.5 < hi else None,
+        "series": series,
+    }
+
+
+def build(derived: Path, snapshot: str) -> dict:
+    rows = update_timeline(derived, snapshot)
+    return {p: build_panel(rows, p) for p in ("margin", "prob")}

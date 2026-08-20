@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-20T21:39:24.049513+00:00",
+  "generated_at": "2026-08-20T21:52:06.726177+00:00",
   "latest_snapshot": "2026-08-20",
   "snapshot_count": 2,
   "headline": [
@@ -4624,6 +4624,220 @@
         "win_prob_D": 0.0
       }
     ]
+  },
+  "charts": {
+    "margin": {
+      "panel": "margin",
+      "unit": "pct",
+      "dates": [
+        "2026-08-19",
+        "2026-08-20"
+      ],
+      "n_dates": 2,
+      "y_ticks": [
+        {
+          "v": 0,
+          "y": 100.0,
+          "label": "EVEN"
+        },
+        {
+          "v": 5,
+          "y": 75.0,
+          "label": "D+5"
+        },
+        {
+          "v": 10,
+          "y": 50.0,
+          "label": "D+10"
+        },
+        {
+          "v": 15,
+          "y": 25.0,
+          "label": "D+15"
+        },
+        {
+          "v": 20,
+          "y": 0.0,
+          "label": "D+20"
+        }
+      ],
+      "zero_y": null,
+      "half_y": null,
+      "series": [
+        {
+          "key": "fundamentals",
+          "label": "Fundamentals (class model)",
+          "color": "#4a3aa7",
+          "color_dark": "#9085e9",
+          "points": [
+            {
+              "x": 100.0,
+              "y": 47.6,
+              "date": "2026-08-20",
+              "v": 10.48
+            }
+          ],
+          "polyline": "100.0,47.6",
+          "last": {
+            "x": 100.0,
+            "y": 47.6,
+            "date": "2026-08-20",
+            "v": 10.48
+          },
+          "band": {
+            "y_low": 76.95,
+            "y_high": 18.25,
+            "low": 4.61,
+            "high": 16.35
+          },
+          "n_sources": 1,
+          "label_y": 47.6,
+          "label_nudged": false
+        },
+        {
+          "key": "polling",
+          "label": "Polling (class model)",
+          "color": "#008300",
+          "color_dark": "#199e70",
+          "points": [
+            {
+              "x": 100.0,
+              "y": 71.63,
+              "date": "2026-08-20",
+              "v": 5.674
+            }
+          ],
+          "polyline": "100.0,71.63",
+          "last": {
+            "x": 100.0,
+            "y": 71.63,
+            "date": "2026-08-20",
+            "v": 5.674
+          },
+          "band": null,
+          "n_sources": 1,
+          "label_y": 79.35,
+          "label_nudged": true
+        },
+        {
+          "key": "professional",
+          "label": "Professional forecasters",
+          "color": "#eda100",
+          "color_dark": "#c98500",
+          "points": [
+            {
+              "x": 0.0,
+              "y": 71.35,
+              "date": "2026-08-19",
+              "v": 5.73
+            },
+            {
+              "x": 100.0,
+              "y": 71.35,
+              "date": "2026-08-20",
+              "v": 5.73
+            }
+          ],
+          "polyline": "0.0,71.35 100.0,71.35",
+          "last": {
+            "x": 100.0,
+            "y": 71.35,
+            "date": "2026-08-20",
+            "v": 5.73
+          },
+          "band": {
+            "y_low": 71.35,
+            "y_high": 71.35,
+            "low": 5.73,
+            "high": 5.73
+          },
+          "n_sources": "1",
+          "label_y": 71.35,
+          "label_nudged": false
+        }
+      ]
+    },
+    "prob": {
+      "panel": "prob",
+      "unit": "prob",
+      "dates": [
+        "2026-08-19",
+        "2026-08-20"
+      ],
+      "n_dates": 2,
+      "y_ticks": [
+        {
+          "v": 0.8,
+          "y": 100.0,
+          "label": "80%"
+        },
+        {
+          "v": 0.9,
+          "y": 13.04,
+          "label": "90%"
+        }
+      ],
+      "zero_y": null,
+      "half_y": null,
+      "series": [
+        {
+          "key": "professional",
+          "label": "Professional forecasters",
+          "color": "#eda100",
+          "color_dark": "#c98500",
+          "points": [
+            {
+              "x": 0.0,
+              "y": 40.35,
+              "date": "2026-08-19",
+              "v": 0.8686
+            }
+          ],
+          "polyline": "0.0,40.35",
+          "last": {
+            "x": 0.0,
+            "y": 40.35,
+            "date": "2026-08-19",
+            "v": 0.8686
+          },
+          "band": null,
+          "n_sources": "1",
+          "label_y": 47.78,
+          "label_nudged": true
+        },
+        {
+          "key": "market",
+          "label": "Prediction markets",
+          "color": "#e87ba4",
+          "color_dark": "#d55181",
+          "points": [
+            {
+              "x": 0.0,
+              "y": 34.78,
+              "date": "2026-08-19",
+              "v": 0.875
+            },
+            {
+              "x": 100.0,
+              "y": 34.78,
+              "date": "2026-08-20",
+              "v": 0.875
+            }
+          ],
+          "polyline": "0.0,34.78 100.0,34.78",
+          "last": {
+            "x": 100.0,
+            "y": 34.78,
+            "date": "2026-08-20",
+            "v": 0.875
+          },
+          "band": null,
+          "n_sources": "1",
+          "label_y": 34.78,
+          "label_nudged": false
+        }
+      ]
+    }
   },
   "suppressed_cells": 513,
   "display_note": "A row with display='single' has ONE contributing source and is not a category average. Render it named, never as a consensus.",

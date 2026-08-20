@@ -53,6 +53,28 @@
   summary{cursor:pointer;font-weight:600;color:#1c5fa8}
   footer{padding:34px 0 48px;color:#666;font-size:.88em}
   .bar{display:inline-block;height:9px;border-radius:2px;vertical-align:middle}
+
+  /* ---- chart tokens. Hues are per-ENTITY and fixed; see charts.py. ---- */
+  .viz{--c-fundamentals:#4a3aa7;--c-polling:#008300;--c-professional:#eda100;
+       --c-market:#e87ba4;--grid:#e6e6e6;--axis:#8a8a8a;--ink:#52514e}
+  /* NO dark-mode block here, deliberately. The rest of this page commits to a
+     light design with a fixed white background, so inverting only the chart
+     produced near-black gridlines on white — worse than either mode. The
+     validated dark steps are #9085e9 / #199e70 / #c98500 / #d55181; add them
+     together with a dark surface for the page, not before. */
+  .viz svg{width:100%;height:auto;display:block;overflow:visible}
+  .viz .gridline{stroke:var(--grid);stroke-width:1}
+  .viz .baseline{stroke:var(--axis);stroke-width:1;stroke-dasharray:3 3}
+  .viz .tick{fill:var(--ink);font-size:11px}
+  .viz .dlabel{font-size:11.5px;font-weight:600}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:10px 0 0;font-size:.86em;color:#555}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .swatch{width:11px;height:11px;border-radius:2px;display:inline-block}
+  .thin-note{font-size:.85em;color:#777;margin-top:10px;font-style:italic}
+  .stale{display:none;background:#fdecea;border-left:3px solid #b02a2a;
+         padding:12px 16px;margin:0 0 18px;font-size:.92em}
+  .stale strong{color:#7a1c1c}
+  .fresh{font-size:.85em;color:#666;margin-top:6px}
 </style>
 </head>
 <body>
@@ -66,9 +88,149 @@
   <p>A daily archive of who is forecasting the 2026 midterms, what they say, and
      where they disagree — plus the models we build in class from public data.</p>
   <p class="stamp">
-    Snapshot {{ $d.latest_snapshot }} · {{ $d.snapshot_count }} snapshot{{ if ne $d.snapshot_count 1 }}s{{ end }} collected
+    <span id="snapshot-date" data-date="{{ $d.latest_snapshot }}">Snapshot {{ $d.latest_snapshot }}</span>
+    · {{ $d.snapshot_count }} snapshot{{ if ne $d.snapshot_count 1 }}s{{ end }} collected
+    <span id="fresh-note" class="fresh"></span>
   </p>
 </div></div>
+
+<!-- ===================== TIMELINE (the lead) ===================== -->
+{{- $ch := $d.charts }}
+<section><div class="wrap viz">
+
+  <div class="stale" id="stale-banner">
+    <strong>This page has not updated in <span id="stale-days"></span> days.</strong>
+    The daily collection may have stopped. The numbers below are still those of
+    the snapshot named above, not today's.
+  </div>
+
+  <h2>How the methods are moving</h2>
+  <p class="sub">Each line is a different way of forecasting the same thing: the
+     national House margin. The question this archive exists to answer is whether
+     they converge as the election approaches, or whether one of them sits
+     systematically above the others all year.</p>
+
+  {{- with $ch.margin }}
+  {{- $L := 56.0 }}{{ $T := 16.0 }}{{ $W := 634.0 }}{{ $H := 180.0 }}
+  <svg viewBox="0 0 720 232" role="img"
+       aria-label="National House margin forecasts over time, by method">
+
+    {{- range .y_ticks }}
+    {{- $y := add $T (mul (div .y 100.0) $H) }}
+    <line class="gridline" x1="{{ $L }}" y1="{{ $y }}" x2="{{ add $L $W }}" y2="{{ $y }}"/>
+    <text class="tick" x="{{ sub $L 8 }}" y="{{ add $y 4 }}" text-anchor="end">{{ .label }}</text>
+    {{- end }}
+
+    {{- with .zero_y }}
+    {{- $y := add $T (mul (div . 100.0) $H) }}
+    <line class="baseline" x1="{{ $L }}" y1="{{ $y }}" x2="{{ add $L $W }}" y2="{{ $y }}"/>
+    {{- end }}
+
+    {{- range $s := .series }}
+    {{- $col := printf "var(--c-%s)" $s.key }}
+
+    {{- with $s.band }}
+    {{- $y1 := add $T (mul (div .y_high 100.0) $H) }}
+    {{- $y2 := add $T (mul (div .y_low 100.0) $H) }}
+    {{- $x := add $L (mul (div $s.last.x 100.0) $W) }}
+    <line x1="{{ $x }}" y1="{{ $y1 }}" x2="{{ $x }}" y2="{{ $y2 }}"
+          stroke="{{ $col }}" stroke-width="2" opacity="0.32" stroke-linecap="round"/>
+    {{- end }}
+
+    {{- if gt (len $s.points) 1 }}
+    <polyline fill="none" stroke="{{ $col }}" stroke-width="2"
+              stroke-linejoin="round" stroke-linecap="round"
+              points="{{ range $i, $c := $s.points }}{{ if $i }} {{ end }}{{ add $L (mul (div $c.x 100.0) $W) }},{{ add $T (mul (div $c.y 100.0) $H) }}{{ end }}"/>
+    {{- end }}
+
+    {{- range $s.points }}
+    {{- $cx := add $L (mul (div .x 100.0) $W) }}
+    {{- $cy := add $T (mul (div .y 100.0) $H) }}
+    <circle cx="{{ $cx }}" cy="{{ $cy }}" r="4.5" fill="{{ $col }}"
+            stroke="var(--surface, #fff)" stroke-width="2">
+      <title>{{ $s.label }} — {{ .date }}: D+{{ printf "%.1f" .v }}</title>
+    </circle>
+    {{- end }}
+
+    {{- $lx := add (add $L (mul (div $s.last.x 100.0) $W)) 10 }}
+    {{- $ly := add (add $T (mul (div $s.label_y 100.0) $H)) 4 }}
+    <text class="dlabel" x="{{ $lx }}" y="{{ $ly }}" fill="{{ $col }}">D+{{ printf "%.1f" $s.last.v }}</text>
+    {{- end }}
+
+    <line class="gridline" x1="{{ $L }}" y1="{{ add $T $H }}" x2="{{ add $L $W }}" y2="{{ add $T $H }}"/>
+    {{- $n := len .dates }}
+    {{- range $i, $dt := .dates }}
+    {{- $x := cond (eq $n 1) (add $L (mul 0.5 $W)) (add $L (mul (div (float $i) (float (sub $n 1))) $W)) }}
+    {{- if or (eq $i 0) (eq $i (sub $n 1)) }}
+    <text class="tick" x="{{ $x }}" y="{{ add (add $T $H) 18 }}"
+          text-anchor="{{ if eq $i 0 }}start{{ else }}end{{ end }}">{{ $dt }}</text>
+    {{- end }}
+    {{- end }}
+  </svg>
+
+  <div class="legend">
+    {{- range .series }}
+    <span><i class="swatch" style="background:var(--c-{{ .key }})"></i>{{ .label }}</span>
+    {{- end }}
+  </div>
+
+  {{- if lt .n_dates 3 }}
+  <p class="thin-note">Collection began {{ index .dates 0 }}. With
+     {{ .n_dates }} snapshot{{ if ne .n_dates 1 }}s{{ end }} there is no trend to
+     read yet; the series fills in once a day and this chart becomes useful in a
+     couple of weeks.</p>
+  {{- end }}
+
+  <details style="margin-top:14px">
+    <summary>See the numbers</summary>
+    <table>
+      <tr><th>Method</th><th>Date</th><th class="num">Margin</th><th class="num">Sources</th></tr>
+      {{- range $s := .series }}{{- range $s.points }}
+      <tr><td>{{ $s.label }}</td><td>{{ .date }}</td>
+          <td class="num">D+{{ printf "%.2f" .v }}</td>
+          <td class="num">{{ $s.n_sources }}</td></tr>
+      {{- end }}{{- end }}
+    </table>
+  </details>
+  {{- end }}
+
+  {{- with $ch.prob }}
+  <h2 style="margin-top:34px">Chance Democrats win the House</h2>
+  <p class="sub">Markets and forecasters quote probabilities rather than margins,
+     so they cannot share an axis with the chart above. Same data, different
+     question.</p>
+  {{- $L := 56.0 }}{{ $T := 12.0 }}{{ $W := 634.0 }}{{ $H := 110.0 }}
+  <svg viewBox="0 0 720 160" role="img"
+       aria-label="Probability Democrats win the House, by source, over time">
+    {{- range .y_ticks }}
+    {{- $y := add $T (mul (div .y 100.0) $H) }}
+    <line class="gridline" x1="{{ $L }}" y1="{{ $y }}" x2="{{ add $L $W }}" y2="{{ $y }}"/>
+    <text class="tick" x="{{ sub $L 8 }}" y="{{ add $y 4 }}" text-anchor="end">{{ .label }}</text>
+    {{- end }}
+    {{- range $s := .series }}
+    {{- $col := printf "var(--c-%s)" $s.key }}
+    {{- if gt (len $s.points) 1 }}
+    <polyline fill="none" stroke="{{ $col }}" stroke-width="2" stroke-linejoin="round"
+              points="{{ range $i, $c := $s.points }}{{ if $i }} {{ end }}{{ add $L (mul (div $c.x 100.0) $W) }},{{ add $T (mul (div $c.y 100.0) $H) }}{{ end }}"/>
+    {{- end }}
+    {{- range $s.points }}
+    <circle cx="{{ add $L (mul (div .x 100.0) $W) }}" cy="{{ add $T (mul (div .y 100.0) $H) }}"
+            r="4.5" fill="{{ $col }}" stroke="var(--surface,#fff)" stroke-width="2">
+      <title>{{ $s.label }} — {{ .date }}: {{ printf "%.0f%%" (mul .v 100) }}</title>
+    </circle>
+    {{- end }}
+    {{- $lx := add (add $L (mul (div $s.last.x 100.0) $W)) 10 }}
+    {{- $ly := add (add $T (mul (div $s.label_y 100.0) $H)) 4 }}
+    <text class="dlabel" x="{{ $lx }}" y="{{ $ly }}" fill="{{ $col }}">{{ printf "%.0f%%" (mul $s.last.v 100) }}</text>
+    {{- end }}
+  </svg>
+  <div class="legend">
+    {{- range .series }}
+    <span><i class="swatch" style="background:var(--c-{{ .key }})"></i>{{ .label }}</span>
+    {{- end }}
+  </div>
+  {{- end }}
+</div></section>
 
 <!-- ===================== CLASS MODELS (the lead) ===================== -->
 <section><div class="wrap">
@@ -270,5 +432,35 @@
      Official returns via MIT Election Data and Science Lab (CC0).</p>
 </div></footer>
 
+<script>
+/* Staleness is computed IN THE BROWSER, from the snapshot date baked into the
+   page, against the reader's own clock.
+
+   The tempting alternative is to compute it at build time in Hugo. That does
+   not work, and the reason is the whole point of the banner: if the daily
+   pipeline stops, Hugo stops rebuilding too, so a build-time "days old" value
+   freezes at whatever it was on the last successful run. It would read "0 days
+   old" forever, on a page that had not moved in a month. Only the viewer's
+   clock keeps counting. */
+(function () {
+  var snap = document.getElementById("snapshot-date");
+  if (!snap) return;
+  var d = new Date(snap.getAttribute("data-date") + "T12:00:00Z");
+  if (isNaN(d)) return;
+  var days = Math.floor((Date.now() - d.getTime()) / 86400000);
+  var fresh = document.getElementById("fresh-note");
+  if (fresh) {
+    fresh.textContent = days <= 0 ? "Updated today."
+      : days === 1 ? "Updated yesterday."
+      : "Updated " + days + " days ago.";
+  }
+  if (days >= 2) {
+    var b = document.getElementById("stale-banner");
+    var n = document.getElementById("stale-days");
+    if (n) n.textContent = days;
+    if (b) b.style.display = "block";
+  }
+})();
+</script>
 </body>
 </html>
