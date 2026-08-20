@@ -258,9 +258,13 @@
     <div class="card">
       <span class="badge">PLSC 2219 class model</span>
       <div class="muted">Polling · Senate</div>
-      <div class="big">{{ printf "%.1f" .expected_D_seats_up }} <span style="font-size:.4em;font-weight:400;color:#666">of 35 D seats</span></div>
-      <div class="muted">80% interval {{ index .D_seats_up_80pct 0 }}–{{ index .D_seats_up_80pct 1 }} ·
-        with {{ .holdover_D }} holdovers ⇒ {{ printf "%.0f" (add .expected_D_seats_up (float .holdover_D)) }} total</div>
+      <div class="big">{{ if .expected_D_total }}{{ printf "%.0f" .expected_D_total }}{{ else }}{{ printf "%.1f" .expected_D_seats_up }}{{ end }} <span style="font-size:.4em;font-weight:400;color:#666">of 100 Senate seats</span></div>
+      {{- if .D_total_80pct }}
+      <div class="muted">80% interval {{ index .D_total_80pct 0 }}–{{ index .D_total_80pct 1 }} ·
+        50 needed for control</div>
+      <div class="muted" style="margin-top:4px">{{ printf "%.1f" .expected_D_seats_up }} of the 35 seats
+        on the ballot, plus {{ printf "%.0f" .holdover_D }} Democratic seats not up this year</div>
+      {{- end }}
       <p class="muted" style="margin-top:12px">
         Generic ballot D+{{ printf "%.1f" .generic_ballot }}, shrunk by
         λ={{ printf "%.2f" .shrink_lambda }} to an election-day tide of

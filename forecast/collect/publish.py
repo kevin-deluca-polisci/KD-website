@@ -82,6 +82,16 @@ def main(argv=None) -> int:
             "expected_D_seats_up": s_["expected_D_seats_up"],
             "D_seats_up_80pct": s_["D_seats_up_80pct"],
             "holdover_D": s_.get("holdover_D_assumed"),
+            # Total chamber seats, not just the ones on the ballot. "15 of 35"
+            # is the modelling quantity; "49 of 100" is the thing a reader
+            # actually wants, because 50 is the number that decides control.
+            # Computed here rather than in the template so the arithmetic is
+            # testable and the page only ever displays.
+            "expected_D_total": (round(s_["expected_D_seats_up"] + s_["holdover_D_assumed"], 2)
+                                 if s_.get("holdover_D_assumed") is not None else None),
+            "D_total_80pct": ([s_["D_seats_up_80pct"][0] + s_["holdover_D_assumed"],
+                               s_["D_seats_up_80pct"][1] + s_["holdover_D_assumed"]]
+                              if s_.get("holdover_D_assumed") is not None else None),
             "prob_D_50_plus": s_.get("prob_D_50_plus"),
             # Carried so the page can show it. A one-seat change in the
             # baseline moves this by ~20 points, which is more than any
