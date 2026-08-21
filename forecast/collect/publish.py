@@ -120,28 +120,25 @@ def _seat_markers(chamber: str, proj: dict | None, avgs: list[dict],
                   latest: str) -> dict:
     """Every method's seat count, for the ladder's tick marks.
 
-    Our two models answer from the projection; the professionals and the
-    markets answer through the published category average, which means a
-    category that is withheld today simply has no marker — correct, and
-    visibly different from a category that has no opinion.
+    All four read through the published category average, ours included. They
+    used to be split — the class models from the projection, the outside ones
+    from the average — which was fine only while a category held exactly one
+    model. The moment fundamentals holds two, the ladder's mark and the table's
+    number would have come from different places and quietly disagreed.
+
+    A category that is withheld today simply has no marker, which is correct
+    and visibly different from a category that has no opinion.
     """
-    out: dict[str, float | None] = {}
-    p = (proj or {}).get("projections") or {}
-    for key in ("fundamentals", "polling"):
-        got = p.get(key) or {}
-        if chamber == "senate":
-            out[key] = (got.get("senate") or {}).get("expected_D_total")
-        else:
-            out[key] = (got.get("house") or {}).get("expected_D_seats")
+    out: dict[str, float] = {}
     rid = NATL_SENATE if chamber == "senate" else NATL_HOUSE
     for r in avgs:
         if (r["snapshot_date"] == latest and r["race_id"] == rid
-                and r["quantity"] == "seats_D" and r["category"] in ("professional", "market")):
+                and r["quantity"] == "seats_D"):
             try:
                 out[r["category"]] = float(r["mean"])
             except (TypeError, ValueError):
                 pass
-    return {k: v for k, v in out.items() if v is not None}
+    return out
 
 
 def build_ladders(senate: dict | None, proj: dict | None,
@@ -204,42 +201,51 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
         return None
 
     # ---- national: four categories, two chambers, three quantities ----
+    #
+    # EVERY category now answers through the published average, ours included.
+    # The class models used to be read straight out of seat_projections.json
+    # and shown as their own thing, which meant "Fundamentals" was our model
+    # and a second fundamentals model would have appeared beside it rather
+    # than in it. aggregate.class_model_rows() emits them as ordinary
+    # contributors, so this loop no longer needs to know which categories are
+    # ours — and when Ray Fair arrives, nothing here changes.
+    #
+    # Intervals are the exception and stay keyed to the model. An 80% interval
+    # is not an averageable quantity: the mean of two intervals is not the
+    # interval of the mean, and a category holding two models has no single
+    # interval to state. They are carried per model, and the page labels them
+    # as belonging to a model rather than to the category.
     national = []
     for cat in CATEGORY_ORDER:
         p = projections.get(cat) or {}
         s, h = p.get("senate") or {}, p.get("house") or {}
-        margin = cat_cell(NATL_HOUSE, "margin_D", cat)
         row = {
             "category": cat, "label": CATEGORY_LABEL[cat],
-            "ours": cat in projections,
-            # Our own models answer from the projection; everyone else answers
-            # through the published category average.
-            "house_margin": (p.get("tide_D") if cat in projections
-                             else (margin or {}).get("value")),
-            "house_margin_withheld": bool((margin or {}).get("withheld")),
-            "house_seats": h.get("expected_D_seats"),
+            # Intervals: from the model, and only while the category has
+            # exactly one. n_sources is filled in below.
             "house_seats_80": h.get("D_seats_80pct"),
-            "house_prob": h.get("prob_D_majority"),
-            "senate_seats": s.get("expected_D_total"),
             "senate_seats_80": s.get("D_total_80pct"),
-            "senate_prob": s.get("prob_D_51_plus"),
-            "n_sources": (margin or {}).get("n"),
-            "sole_source": (margin or {}).get("sole_source", ""),
+            "n_sources": None, "sole_source": "",
         }
-        if cat not in projections:
-            for key, (race, qty) in (
-                ("house_seats", (NATL_HOUSE, "seats_D")),
-                ("house_prob", (NATL_HOUSE, "win_prob_D")),
-                ("senate_seats", (NATL_SENATE, "seats_D")),
-                ("senate_prob", (NATL_SENATE, "win_prob_D")),
-            ):
-                got = cat_cell(race, qty, cat)
-                row[key] = (got or {}).get("value")
-                row[key + "_withheld"] = bool((got or {}).get("withheld"))
-                if got and got.get("sole_source"):
-                    row["sole_source"] = got["sole_source"]
-                if got and got.get("n"):
-                    row["n_sources"] = row["n_sources"] or got["n"]
+        for key, (race, qty) in (
+            ("house_margin", (NATL_HOUSE, "margin_D")),
+            ("house_seats", (NATL_HOUSE, "seats_D")),
+            ("house_prob", (NATL_HOUSE, "win_prob_D")),
+            ("senate_seats", (NATL_SENATE, "seats_D")),
+            ("senate_prob", (NATL_SENATE, "win_prob_D")),
+        ):
+            got = cat_cell(race, qty, cat)
+            row[key] = (got or {}).get("value")
+            row[key + "_withheld"] = bool((got or {}).get("withheld"))
+            if got and got.get("sole_source"):
+                row["sole_source"] = got["sole_source"]
+            if got and got.get("n"):
+                row["n_sources"] = max(row["n_sources"] or 0, got["n"])
+        # Once a category holds more than one model, whose interval would it
+        # be? Drop them rather than attribute one model's uncertainty to the
+        # whole category.
+        if (row["n_sources"] or 0) > 1:
+            row["house_seats_80"] = row["senate_seats_80"] = None
         if any(row.get(k) is not None for k in
                ("house_margin", "house_seats", "house_prob",
                 "senate_seats", "senate_prob")):
@@ -252,14 +258,10 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
         entry = {"state": st, "race_id": rid,
                  "competitive": r.get("competitive", False), "cats": {}}
         for cat in CATEGORY_ORDER:
-            p = projections.get(cat)
-            if p is not None:
-                got = (p.get("races") or {}).get(st)
-                if got:
-                    entry["cats"][cat] = {"margin": got["expected_margin_D"],
-                                          "prob": got["win_prob_D"],
-                                          "withheld": False, "n": 1}
-                continue
+            # Same rule as the national table: every category answers through
+            # the published average, ours included. class_model_rows() emits
+            # the per-race margin and probability for both class models, so
+            # there is no longer a branch here for "our" categories.
             m = cat_cell(rid, "margin_D", cat)
             w = cat_cell(rid, "win_prob_D", cat)
             if m or w:

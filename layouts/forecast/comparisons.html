@@ -32,9 +32,13 @@
           <th class="num">Senate seats</th><th class="num">P(D Senate)</th></tr>
       {{- range .national }}
       <tr>
+        {{/* No "class model" tag. Every category here is now an average of
+             every forecast of that kind, ours included, so singling ours out
+             would say something that is no longer true. "Class model" is also
+             being kept for what it will eventually mean: the average of the
+             students' final forecasts. */}}
         <td><strong>{{ .label }}</strong>
-          {{- if .ours }} <span class="muted">· class model</span>
-          {{- else if .sole_source }} <span class="muted">· {{ .n_sources }} source{{ if ne (printf "%v" .n_sources) "1" }}s{{ end }}</span>{{ end }}</td>
+          {{- if .sole_source }} <span class="muted">· {{ .n_sources }} source{{ if ne (printf "%v" .n_sources) "1" }}s{{ end }}</span>{{ end }}</td>
         <td class="num {{ with .house_margin }}{{ if gt . 0.0 }}D{{ else }}R{{ end }}{{ end }}">
           {{- with .house_margin }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}
           {{- else }}{{ if .house_margin_withheld }}<span class="muted">withheld</span>{{ else }}—{{ end }}{{ end }}</td>

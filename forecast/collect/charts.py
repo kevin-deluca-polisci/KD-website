@@ -100,83 +100,83 @@ def _f(x):
 
 
 def collect_today(derived: Path, snapshot: str) -> list[dict]:
-    """Everything we can say about today, one row per series."""
+    """Everything we can say about today, one row per series.
+
+    VALUES come from category_averages.csv for every category, ours included.
+    They used to be split: the two class models were read straight out of their
+    JSON while professional and market came from the averages. That was fine
+    only while a category held exactly one model — the moment fundamentals
+    holds two, this chart would have plotted our model and the comparisons
+    table would have shown the average of both, and the same page would have
+    carried two different numbers under one name.
+
+    INTERVALS still come from the models, because only a model states one. An
+    80% interval is not averageable: the mean of two intervals is not the
+    interval of the mean. So a band is attached only where the category has a
+    single contributor and that contributor is a model of ours. A category with
+    two models plots as a bare dot, and the page already says what a bare dot
+    means — a point estimate with no stated uncertainty.
+    """
     out = []
 
+    # (series, panel) -> (low, high), from whichever model states one.
+    bands: dict[tuple, tuple] = {}
     fm = derived / "fundamentals_model.json"
     if fm.exists():
         m = json.loads(fm.read_text())
-        if m.get("margin_D") is not None:
-            out.append(dict(snapshot_date=snapshot, series="fundamentals",
-                            panel="margin", unit="pct", value=m["margin_D"],
-                            low=m.get("margin_D_80_low"), high=m.get("margin_D_80_high"),
-                            n_sources=1, label=LABELS["fundamentals"]))
-
+        if m.get("margin_D_80_low") is not None:
+            bands[("fundamentals", "margin")] = (m["margin_D_80_low"],
+                                                 m["margin_D_80_high"])
     pm = derived / "polling_model.json"
     if pm.exists():
         m = json.loads(pm.read_text())
-        if m.get("election_day_tide_D") is not None:
-            out.append(dict(snapshot_date=snapshot, series="polling",
-                            panel="margin", unit="pct", value=m["election_day_tide_D"],
-                            low=m.get("tide_D_80_low", ""),
-                            high=m.get("tide_D_80_high", ""),
-                            n_sources=1, label=LABELS["polling"]))
-
-    # Seat counts and chamber probabilities for our own two models. Until
-    # seats.py existed these four series were simply absent, which is why the
-    # tracker could only ever compare methods on the national margin — the one
-    # quantity markets do not quote.
+        if m.get("tide_D_80_low") is not None:
+            bands[("polling", "margin")] = (m["tide_D_80_low"], m["tide_D_80_high"])
     sp = derived / "seat_projections.json"
     if sp.exists():
         m = json.loads(sp.read_text())
         for series, p in (m.get("projections") or {}).items():
-            if series not in LABELS:
-                continue
-            s, h = p.get("senate") or {}, p.get("house") or {}
-            for panel, value, low, high in (
-                ("senate_seats", s.get("expected_D_total"),
-                 *(s.get("D_total_80pct") or ("", ""))),
-                ("senate_prob", s.get("prob_D_51_plus"), "", ""),
-                ("house_seats", h.get("expected_D_seats"),
-                 *(h.get("D_seats_80pct") or ("", ""))),
-                ("house_prob", h.get("prob_D_majority"), "", ""),
-            ):
-                if value is None:
-                    continue
-                out.append(dict(snapshot_date=snapshot, series=series, panel=panel,
-                                unit="prob" if panel.endswith("prob") else "seats",
-                                value=value, low=low, high=high,
-                                n_sources=1, label=LABELS[series]))
+            s_, h_ = p.get("senate") or {}, p.get("house") or {}
+            if s_.get("D_total_80pct"):
+                bands[(series, "senate_seats")] = tuple(s_["D_total_80pct"])
+            if h_.get("D_seats_80pct"):
+                bands[(series, "house_seats")] = tuple(h_["D_seats_80pct"])
 
-    # Professional and market come from the published averages, which already
-    # carry history — so these rows can be rebuilt for past dates too.
-    #
     # The Senate probability here is the chance of CONTROL, which needs 51
-    # seats. That is why our own series above uses prob_D_51_plus and not the
-    # better-known 50+ figure: a chart is not allowed to put two different
-    # events on the same axis because they happen to be called the same thing.
+    # seats — which is why class_model_rows emits prob_D_51_plus and not the
+    # better-known 50+ figure. A chart is not allowed to put two different
+    # events on one axis because they happen to share a name.
     PANEL_OF = {
         ("NATL_HOUSE_2026", "seats_D"): "house_seats",
         ("NATL_HOUSE_2026", "win_prob_D"): "house_prob",
         ("NATL_SENATE_2026", "seats_D"): "senate_seats",
         ("NATL_SENATE_2026", "win_prob_D"): "senate_prob",
+        ("NATL_HOUSE_2026", "margin_D"): "margin",
     }
     for r in _rd(derived / "category_averages.csv"):
         cat, q, v = r["category"], r["quantity"], _f(r["mean"])
-        if v is None or cat not in ("professional", "market"):
-            continue
-        if r["race_id"] == "NATL_HOUSE_2026" and q == "margin_D" and cat == "professional":
-            out.append(dict(snapshot_date=r["snapshot_date"], series="professional",
-                            panel="margin", unit="pct", value=round(v, 3),
-                            low=_f(r.get("min")) or "", high=_f(r.get("max")) or "",
-                            n_sources=r.get("n_sources", 1), label=LABELS["professional"]))
+        if v is None or cat not in LABELS:
             continue
         panel = PANEL_OF.get((r["race_id"], q))
-        if panel:
-            out.append(dict(snapshot_date=r["snapshot_date"], series=cat, panel=panel,
-                            unit="prob" if panel.endswith("prob") else "seats",
-                            value=round(v, 4), low="", high="",
-                            n_sources=r.get("n_sources", 1), label=LABELS[cat]))
+        if not panel:
+            continue
+        try:
+            n = int(r.get("n_sources") or 1)
+        except (TypeError, ValueError):
+            n = 1
+        low = high = ""
+        if n == 1 and (cat, panel) in bands and r["snapshot_date"] == snapshot:
+            low, high = bands[(cat, panel)]
+        elif panel == "margin" and cat in ("professional", "market"):
+            # Not an 80% interval — the spread across contributing sources.
+            # Kept because it is the only dispersion those categories offer.
+            low, high = _f(r.get("min")) or "", _f(r.get("max")) or ""
+        out.append(dict(
+            snapshot_date=r["snapshot_date"], series=cat, panel=panel,
+            unit=("prob" if panel.endswith("prob")
+                  else "pct" if panel == "margin" else "seats"),
+            value=round(v, 4), low=low, high=high,
+            n_sources=n, label=LABELS[cat]))
     return out
 
 

@@ -195,6 +195,7 @@
                   "cls" "R" "note" "Seats the model has the Republicans winning, closest first.")) }}
       {{- if $side.rows }}
       <div class="card">
+        <span class="badge">Polling model</span>
         <h2 class="{{ $side.cls }}">{{ $side.title }}</h2>
         <p class="sub">{{ len $side.rows }} of the {{ $p.n_competitive }} unsettled
            races. {{ $side.note }}</p>
@@ -217,9 +218,13 @@
       {{- end }}
       {{- end }}
     </div>
-    <p class="thin-note">{{ .competitive_note }} Expected margin is the
-       election-day national tide plus twice the state's partisan lean; nothing
-       here knows who the candidates are.</p>
+    <p class="thin-note">These are the <a href="/forecast/methods/#polling">polling
+       model's</a> numbers, not a consensus of forecasters — the election-day
+       national tide it derives from the generic ballot, carried to each state
+       by twice that state's partisan lean. Nothing in it knows who the
+       candidates are. What the other three methods say about the same races is
+       on the <a href="/forecast/comparisons/">comparisons page</a>.
+       {{ .competitive_note }}</p>
     {{- $ne := where .races "state" "NE" }}
     {{- if and $ne (index $ne 0).competitive }}
     <div class="note">
@@ -232,29 +237,61 @@
     {{- end }}
     {{- end }}
 
+    {{/* Two columns, like the Senate — but split down the middle of one
+         ordered list rather than by which way each district leans. The
+         Senate's competitive seats happen to divide nine and nine; the House's
+         forty-five do not divide evenly by lean, and a column of six beside a
+         column of thirty-nine is not two columns. So the ordering is kept
+         whole and cut in half: the first column runs from the most Democratic
+         drawn district to the middle, the second from the middle to the most
+         Republican. */}}
     {{- if eq $ck "house" }}
-    <div class="card">
-      <h2>The districts around the line</h2>
-      <p class="sub">Ordered by expected margin. Seat number is the Democratic
-         count if every district above it falls their way.</p>
-      <table>
-        <tr><th class="num">Seat</th><th>District</th><th class="num">Expected margin</th>
-            <th class="num">P(D)</th></tr>
-        {{- range $L0.seats }}
-        <tr{{ if not .competitive }} class="muted"{{ end }}>
-          <td class="num">{{ .seat_no }}{{ if .threshold }} ◀{{ end }}</td>
-          <td><strong>{{ .label }}</strong></td>
-          <td class="num {{ if gt .margin 0.0 }}D{{ else }}R{{ end }}">
-            {{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}</td>
-          <td class="num">{{ printf "%.0f%%" (mul .win_prob_D 100) }}</td>
-        </tr>
-        {{- end }}
-      </table>
-      <p class="thin-note">◀ marks the seat that reaches the majority. Showing
-         {{ $L0.n_drawn }} of {{ $L0.n_races }} districts; the rest are safe at
-         either end. The full set is in
-         <code>forecast/data/2026/derived/seat_projections.json</code>.</p>
+    {{- $rows := $L0.seats }}
+    {{- $half := int (math.Ceil (div (len $rows) 2.0)) }}
+    <div class="cards">
+      {{- range $col := (slice
+            (dict "rows" (first $half $rows) "title" "Above the line")
+            (dict "rows" (after $half $rows) "title" "Below the line")) }}
+      {{- if $col.rows }}
+      <div class="card">
+        <span class="badge">Polling model</span>
+        <h2>{{ $col.title }}</h2>
+        <p class="sub">Seats {{ (index $col.rows 0).seat_no }}–{{ (index $col.rows (sub (len $col.rows) 1)).seat_no }},
+           ordered by expected margin.</p>
+        <table class="full">
+          <tr><th class="num">Seat</th><th>District</th><th class="num">Margin</th>
+              <th class="num">P(D)</th></tr>
+          {{- range $col.rows }}
+          <tr{{ if not .competitive }} class="muted"{{ end }}>
+            <td class="num">{{ .seat_no }}{{ if .threshold }} ◀{{ end }}</td>
+            <td><strong>{{ .label }}</strong></td>
+            <td class="num {{ if gt .margin 0.0 }}D{{ else }}R{{ end }}">
+              {{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}</td>
+            <td class="num">{{ printf "%.0f%%" (mul .win_prob_D 100) }}</td>
+          </tr>
+          {{- end }}
+        </table>
+      </div>
+      {{- end }}
+      {{- end }}
     </div>
+    <div class="note">
+      <strong>Why so many districts share a margin.</strong>
+      Cook publishes PVI as a whole number — CA-22 is R+5, not R+5.3 — and this
+      model maps one point of PVI to two points of margin. Every district
+      margin is therefore the same national tide plus an even number, so they
+      land on a 2-point grid: 435 districts take only
+      {{ len $L0.seats }} drawn values, and a dozen or more can share one. It is
+      arithmetic rather than a bug, but it has a consequence worth knowing:
+      inside a tied group the seat ORDER is arbitrary, so the district named at
+      the majority line is one of several that could equally have been named.
+      Read it as “the majority is decided around here”, not as a call on that
+      district. <a href="/forecast/methods/#polling">How the mapping works</a>.
+    </div>
+    <p class="thin-note">◀ marks the seat that reaches the majority. Showing
+       {{ $L0.n_drawn }} of {{ $L0.n_races }} districts; the rest are safe at
+       either end. The full set is in
+       <code>forecast/data/2026/derived/seat_projections.json</code>.</p>
     {{- end }}
   </div>
   {{- end }}

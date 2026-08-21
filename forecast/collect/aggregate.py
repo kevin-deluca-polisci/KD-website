@@ -46,6 +46,10 @@ DATA_DIR = REPO_ROOT / "forecast" / "data"
 MIN_N = 3           # disclosure floor for any average containing a gated source
 CYCLE_DEFAULT = 2026
 
+# The two chamber-wide race ids, spelled the same way the parsers spell them.
+NATL_HOUSE = "NATL_HOUSE_2026"
+NATL_SENATE = "NATL_SENATE_2026"
+
 # Honesty floor, separate from the disclosure floor above and applying to EVERY
 # category regardless of licence. The scope doc's rule: "a category average of
 # one source is republication with extra steps, both analytically and legally."
@@ -91,6 +95,92 @@ def read_parsed(cycle: int) -> list[dict]:
     for p in sorted(d.glob("*.csv")):
         with p.open(encoding="utf-8") as fh:
             rows.extend(csv.DictReader(fh))
+    return rows
+
+
+# The class models, named as sources. They are not captured from anywhere, so
+# they never appear in parsed/ — but they ARE forecasts of their category, and
+# the category number should be the average of every forecast of that kind
+# including ours.
+CLASS_MODELS = {
+    "fundamentals": "class_fundamentals",
+    "polling": "class_polling",
+}
+
+
+def class_model_rows(cycle: int) -> list[dict]:
+    """The class models as ordinary contributors to their own category.
+
+    WHY THIS EXISTS. Until now the two class models bypassed this file
+    entirely: publish.py read them straight out of their JSON and pasted them
+    onto the page as their own rows, so "Fundamentals" was our model and
+    nothing else, and a second fundamentals model arriving tomorrow would have
+    sat in a category average NEXT TO ours rather than being averaged with it.
+    That is the wrong shape for a page whose whole claim is that a category is
+    a way of knowing rather than a person. Emitting them here as rows makes
+    them contributors like any other: the mean, the min/max, the spread and
+    the n all pick them up for free, and adding Ray Fair later is a registry
+    entry and a parser rather than a change to how the page thinks.
+
+    Read from seat_projections.json because it holds BOTH models in one shape
+    already — the same tide pushed through the same seat machinery — so the
+    two cannot drift apart here through a copy-paste.
+
+    Tier is `individual`: these are ours, we publish the code, and there is no
+    licence to gate. That also means they never count toward MIN_N, which is
+    correct — the floor exists to stop a reader recovering a gated forecast by
+    subtraction, and a number we publish in full subtracts out to nothing.
+
+    NOT emitted: `pvi`. It rides along inside each race entry and it is Cook's
+    proprietary index. NEVER_PUBLISH would catch it downstream anyway; not
+    writing it is the belt to that braces.
+    """
+    p = DATA_DIR / str(cycle) / "derived" / "seat_projections.json"
+    if not p.exists():
+        return []
+    proj = json.loads(p.read_text())
+    date = proj.get("snapshot_date")
+    if not date:
+        return []
+
+    rows: list[dict] = []
+
+    def emit(cat, race_id, chamber, state, district, quantity, value, unit):
+        if value is None:
+            return
+        rows.append({
+            "snapshot_date": date, "source_id": CLASS_MODELS[cat],
+            "category": cat, "publication": "individual",
+            "race_id": race_id, "chamber": chamber, "state": state,
+            "district": district, "quantity": quantity,
+            "value": float(value), "unit": unit,
+            "captured_at": "", "raw_sha256": "", "raw_path": "",
+        })
+
+    for cat, model in (proj.get("projections") or {}).items():
+        if cat not in CLASS_MODELS:
+            continue
+        senate, house = model.get("senate") or {}, model.get("house") or {}
+        emit(cat, NATL_HOUSE, "national", "", "", "margin_D",
+             model.get("tide_D"), "margin")
+        emit(cat, NATL_HOUSE, "national", "", "", "seats_D",
+             house.get("expected_D_seats"), "seats")
+        emit(cat, NATL_HOUSE, "national", "", "", "win_prob_D",
+             house.get("prob_D_majority"), "prob")
+        emit(cat, NATL_SENATE, "national", "", "", "seats_D",
+             senate.get("expected_D_total"), "seats")
+        # 51+ is a majority. 50+ is a tie the vice-president breaks, and every
+        # outside forecast and market this is averaged against prices the
+        # majority, so averaging our 50+ against their 51+ would compare two
+        # different events and call the difference disagreement.
+        emit(cat, NATL_SENATE, "national", "", "", "win_prob_D",
+             senate.get("prob_D_51_plus"), "prob")
+        for st, r in (model.get("races") or {}).items():
+            rid = f"SEN_{st}_2026"
+            emit(cat, rid, "senate", st, "", "margin_D",
+                 r.get("expected_margin_D"), "margin")
+            emit(cat, rid, "senate", st, "", "win_prob_D",
+                 r.get("win_prob_D"), "prob")
     return rows
 
 
@@ -302,6 +392,50 @@ def audit(rows: list[dict], averages, by_source, suppressed) -> list[str]:
     return problems
 
 
+def would_shrink(cycle: int, averages: list[dict]) -> list[str]:
+    """Snapshot dates this run would publish LESS of than is already published.
+
+    THE HAZARD. raw/ is pushed to a separate private archive and parsed/ is
+    never committed, so a clone of this repo carries the DERIVED data for every
+    day but the inputs for none of them. Run aggregate.py in such a clone and
+    it rebuilds category_averages.csv from whatever parsed/ happens to hold
+    locally — typically the day or two you captured yourself — and writes it
+    over a file covering weeks. The write succeeds, the audit passes, every
+    number that survives is correct, and the archive is quietly shorter than
+    it was. Nothing downstream notices: publish.py reads the newest date and
+    the site looks entirely normal.
+
+    Counting DATES is not enough, and the first version of this check made
+    exactly that mistake. The class models are emitted from
+    seat_projections.json, which carries the newest date whether or not the
+    parsed store does — so a local run still produces a row for today, the
+    date set matches, and the check passes while today quietly loses every
+    contributor except ours. Compare the row count per date instead: that is
+    the thing actually being destroyed.
+
+    This is not a merge. A day cannot be reconstructed without its bytes, so
+    the only safe move is to refuse. Recover by cloning the raw archive and
+    re-running parse.py --all, or by letting the daily Action do it where the
+    whole store lives.
+    """
+    p = DATA_DIR / str(cycle) / "derived" / "category_averages.csv"
+    if not p.exists():
+        return []
+    have: dict[str, int] = defaultdict(int)
+    with p.open(encoding="utf-8") as fh:
+        for r in csv.DictReader(fh):
+            have[r["snapshot_date"]] += 1
+    now: dict[str, int] = defaultdict(int)
+    for a in averages:
+        now[a["snapshot_date"]] += 1
+    out = []
+    for date in sorted(have):
+        before, after = have[date], now.get(date, 0)
+        if after < before:
+            out.append(f"{date}: {before} rows published, this run has {after}")
+    return out
+
+
 def write(cycle: int, averages, by_source, suppressed, ratings) -> list[Path]:
     d = DATA_DIR / str(cycle) / "derived"
     d.mkdir(parents=True, exist_ok=True)
@@ -333,9 +467,12 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Aggregate parsed rows for publication.")
     ap.add_argument("--cycle", type=int, default=CYCLE_DEFAULT)
     ap.add_argument("--check", action="store_true", help="audit only, write nothing")
+    ap.add_argument("--force", action="store_true",
+                    help="write even if it drops previously published snapshot "
+                         "dates (see would_shrink)")
     a = ap.parse_args(argv)
 
-    rows = read_parsed(a.cycle)
+    rows = read_parsed(a.cycle) + class_model_rows(a.cycle)
     if not rows:
         print("No parsed rows. Run parse.py first.")
         return 0
@@ -343,6 +480,7 @@ def main(argv=None) -> int:
     averages, by_source, suppressed = aggregate(rows)
     ratings = ratings_panel(rows)
     problems = audit(rows, averages, by_source, suppressed)
+    shrunk = would_shrink(a.cycle, averages)
 
     print("=" * 70)
     print(f"aggregate · cycle {a.cycle}")
@@ -413,6 +551,27 @@ def main(argv=None) -> int:
     if a.check:
         print("  --check: nothing written")
         return 0
+
+    if shrunk and not a.force:
+        print("\n  *** REFUSING TO WRITE: this run would shorten the archive ***")
+        print(f"    {len(shrunk)} snapshot date(s) would lose rows:")
+        for line in shrunk[:8]:
+            print(f"      {line}")
+        if len(shrunk) > 8:
+            print(f"      … and {len(shrunk) - 8} more")
+        print("    parsed/ is not committed and raw/ lives in the private "
+              "archive, so a fresh clone can rebuild the newest day but not the")
+        print("    older ones. Writing now would drop them from derived/ with "
+              "no way to get them back except a re-parse.")
+        print("    Fix: clone the raw archive and re-run parse.py --cycle "
+              f"{a.cycle} --all, or let the daily Action do it where the whole")
+        print("    store lives. Use --force only if shortening the archive is "
+              "what you actually mean.")
+        return 1
+    if shrunk and a.force:
+        print(f"\n  --force: shortening {len(shrunk)} previously published "
+              f"snapshot date(s) in derived/.")
+
     for p in write(a.cycle, averages, by_source, suppressed, ratings):
         print(f"  wrote {p.relative_to(REPO_ROOT)}")
     return 0

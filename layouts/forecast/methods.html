@@ -226,8 +226,22 @@
         <tr><td><a href="https://www.racetothewh.com/allpolls">Race to the WH</a></td>
             <td class="muted">Per-race poll list, collected for the Senate.</td></tr>
       </table>
-      <p class="thin-note">All three permit collection but not per-poll
-         republication during the cycle.</p>
+        <tr><td><a href="https://en.wikipedia.org/wiki/2026_United_States_House_of_Representatives_elections">Wikipedia's aggregator table</a></td>
+            <td class="muted">A CC BY-SA table listing several aggregators' current
+                generic-ballot averages side by side — Decision Desk HQ, RealClearPolling,
+                Silver Bulletin, Race to the WH and others. Each row is attributed to the
+                aggregator that produced it and inherits that aggregator's own licence,
+                so nothing is republished that its owner has not permitted. This is what
+                gives the polling category enough contributors to clear the disclosure
+                floor, and it is the reason a polling average appears at all.</td></tr>
+      </table>
+      <p class="thin-note">The named three permit collection but not per-poll
+         republication during the cycle. Note what the polling category average
+         actually mixes: most aggregators publish TODAY's generic ballot, while
+         our own model contributes its ELECTION-DAY tide, which is that number
+         shrunk toward the eventual result. They are both polling-based
+         estimates of the national House margin, but they are not estimates of
+         the same instant.</p>
     </div>
   </section>
 
@@ -254,6 +268,23 @@
         <tr><td><a href="https://votehub.com/">VoteHub</a></td>
             <td class="muted">Polling aggregation and race ratings.</td></tr>
       </table>
+      <h3>Registered but not collecting</h3>
+      <table>
+        <tr><th>Forecaster</th><th class="wrap">Why not</th></tr>
+        <tr><td><a href="https://projects.cnalysis.com/">CNalysis</a></td>
+            <td class="wrap muted">No 2026 forecast published yet. Their project
+                index still lists only the 2023–24 cycle. Registered so that
+                collection starts the day one appears.</td></tr>
+        <tr><td><a href="https://elections-daily.com/election-ratings/">Elections Daily</a></td>
+            <td class="wrap muted">Same: their ratings hub still shows 2024.</td></tr>
+        <tr><td><a href="https://jhkforecasts.com/">JHK Forecasts</a></td>
+            <td class="wrap muted">Forecasts moved behind a paid subscription.
+                Paid sources are out of scope, and paying for access would not
+                be permission to republish in any case.</td></tr>
+      </table>
+      <p class="thin-note">Both CNalysis and Elections Daily would be genuinely
+         new opinions rather than duplicates: neither is among the twelve raters
+         reaching us through Wikipedia's ratings tables.</p>
       {{- with index $mi "grant_williams" }}
       <h3>Current figures, where the licence permits</h3>
       <table style="max-width:520px">
@@ -292,7 +323,18 @@
         <tr><td><a href="https://kalshi.com/">Kalshi</a></td>
             <td class="muted">CFTC-regulated US event exchange running the same contracts.</td>
             <td class="num">{{ with index $mi "kalshi" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ else }}—{{ end }}</td></tr>
+        <tr><td><a href="https://www.predictit.org/">PredictIt</a></td>
+            <td class="muted">Real-money exchange with an $850 position cap and the
+                longest academic record of the three — the market economists have
+                actually studied. Alone among them it lists individual Senate
+                races, which is where the market column on the comparisons page
+                comes from.</td>
+            <td class="num">{{ with index $mi "predictit" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ with .house_win_prob_D }}<br>{{ printf "%.0f%%" (mul . 100) }} D House{{ end }}{{ else }}—{{ end }}</td></tr>
       </table>
+      <p class="thin-note">A price here is the LAST TRADE, which on a thin market
+         can be hours old and on either side of a wide spread. Nothing smooths
+         it, and no market on this page is adjusted for the longshot bias its
+         own literature documents.</p>
       <div class="note">
         <strong>Markets price control, not 50 seats.</strong>
         Democratic Senate control needs 51, because a 50–50 tie is broken by a
@@ -301,8 +343,11 @@
         ({{ printf "%.0f%%" (mul . 100) }}), not the 50-plus one
         ({{ printf "%.0f%%" (mul $p.prob_D_50_plus 100) }}){{ end }}{{ end }}.
       </div>
-      <p class="thin-note">Neither exchange lists a seat-count market for 2026,
-         so the markets series is absent from the seat-count view on the tracker.</p>
+      <p class="thin-note">No exchange lists a seat-count market for 2026 that
+         resolves to a single number — PredictIt runs one in buckets ("192 or
+         fewer"), which is not a seat count and is deliberately not parsed as
+         one — so the markets series is absent from the seat-count view on the
+         tracker.</p>
     </div>
   </section>
 
