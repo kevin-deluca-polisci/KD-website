@@ -63,6 +63,14 @@ DATA = REPO / "forecast" / "data"
 # considered before it can be published rather than after.
 HOUSE_PUBLIC_FIELDS = ("n_districts", "expected_D_seats", "D_seats_80pct",
                        "prob_D_218_plus", "pvi_source", "districts")
+# Sources that publish a national House margin and leave the seat count to
+# whoever wants one. Mapped to the category their forecast belongs to.
+EXTERNAL_TIDES = {
+    "fair": "fundamentals",
+}
+# Spelled the same way the parsers spell it.
+NATL_HOUSE = "NATL_HOUSE_2026"
+
 HOUSE_MAJORITY = 218
 
 
@@ -120,16 +128,30 @@ def main(argv=None) -> int:
     cal = polling.calibrate_sigma(a.cycle)
     sigma = cal["sigma_total"] if cal.get("ok") else 9.0
 
-    # Tides. Both are read from files another step already wrote, so this
-    # module can never disagree with what the site says those models predict —
-    # a second implementation of the fundamentals equation here would be a
-    # second thing to keep in sync, and it would drift.
-    tides = {}
+    # Tides, ONE PER MODEL rather than one per category.
+    #
+    # Each model's own national margin is pushed through partisan lean
+    # separately and the resulting seat counts are averaged afterwards, in
+    # aggregate.py, alongside every other forecast in the category. The
+    # alternative — average the tides first, then push the average through
+    # once — gives a different answer, because the map from national margin to
+    # seats is not linear near the majority line: a seat that flips at D+2 and
+    # one that flips at D+10 do not average into a seat that flips at D+6.
+    # Projecting each model and averaging the projections keeps each model's
+    # own answer intact and visible.
+    #
+    # Every tide is read from a file some earlier step wrote, so this module
+    # cannot disagree with what the site says a model predicts. A second
+    # implementation of the fundamentals equation here would be a second thing
+    # to keep in sync, and it would drift.
+    tides: dict[str, tuple[str, float]] = {}   # source_id -> (category, tide)
+
     fm = d / "fundamentals_model.json"
     if fm.exists():
         m = json.loads(fm.read_text())
         if m.get("margin_D") is not None:
-            tides["fundamentals"] = float(m["margin_D"])
+            tides["class_fundamentals"] = ("fundamentals", float(m["margin_D"]))
+
     pm = d / "polling_model.json"
     if pm.exists():
         m = json.loads(pm.read_text())
@@ -141,7 +163,24 @@ def main(argv=None) -> int:
         tide_key = ("nowcast_tide_D" if m.get("nowcast_tide_D") is not None
                     else "election_day_tide_D")
         if m.get(tide_key) is not None:
-            tides["polling"] = float(m[tide_key])
+            tides["class_polling"] = ("polling", float(m[tide_key]))
+
+    # Outside models that publish a national margin and nothing else. Fair
+    # gives a two-party House vote share and stops there; the seat count that
+    # share implies is ours to compute, and computing it the same way we
+    # compute our own is the only thing that makes the two comparable. Read
+    # from the parsed rows for the snapshot rather than from derived/, because
+    # these arrive through capture and parse like any other source.
+    for r in rows:
+        if (r.get("source_id") in EXTERNAL_TIDES
+                and r.get("race_id") == NATL_HOUSE
+                and r.get("quantity") == "margin_D"):
+            try:
+                tides[r["source_id"]] = (EXTERNAL_TIDES[r["source_id"]],
+                                         float(r["value"]))
+            except (TypeError, ValueError):
+                continue
+
     if not tides:
         print("  no tides available — run fundamentals.py and polling.py first")
         return 1
@@ -152,11 +191,15 @@ def main(argv=None) -> int:
     print("=" * 68)
 
     projections = {}
-    for name, tide in sorted(tides.items()):
+    for name, (category, tide) in sorted(tides.items()):
         p = project(tide, pvi, states, rows, sigma, a.holdover_d)
+        # The category travels WITH the projection. aggregate.py files each
+        # one under it, so adding a model is a registry entry plus a line in
+        # EXTERNAL_TIDES and nothing downstream has to learn its name.
+        p["category"] = category
         projections[name] = p
         s, h = p["senate"], p.get("house")
-        print(f"\n  {name.upper()}  tide D{tide:+.2f}")
+        print(f"\n  {name.upper()}  [{category}]  tide D{tide:+.2f}")
         print(f"      SENATE  {s['expected_D_total']:.1f} of 100 "
               f"(80% {s['D_total_80pct'][0]}-{s['D_total_80pct'][1]})   "
               f"P(50+) {s['prob_D_50_plus']:.3f}   P(51+) {s['prob_D_51_plus']:.3f}")

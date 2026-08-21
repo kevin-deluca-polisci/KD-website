@@ -135,7 +135,13 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
     sp = derived / "seat_projections.json"
     if sp.exists():
         m = json.loads(sp.read_text())
-        for series, p in (m.get("projections") or {}).items():
+        # Projections are keyed by SOURCE and carry their category. A band is
+        # a property of one model, so it is keyed by category here only to be
+        # matched against a category average — and only used below when that
+        # average has a single contributor, which is the case where the two
+        # mean the same thing.
+        for _sid, p in (m.get("projections") or {}).items():
+            series = p.get("category") or _sid
             s_, h_ = p.get("senate") or {}, p.get("house") or {}
             if s_.get("D_total_80pct"):
                 bands[(series, "senate_seats")] = tuple(s_["D_total_80pct"])

@@ -98,38 +98,47 @@ def read_parsed(cycle: int) -> list[dict]:
     return rows
 
 
-# The class models, named as sources. They are not captured from anywhere, so
-# they never appear in parsed/ — but they ARE forecasts of their category, and
-# the category number should be the average of every forecast of that kind
-# including ours.
-CLASS_MODELS = {
-    "fundamentals": "class_fundamentals",
-    "polling": "class_polling",
-}
+# Sources whose national margin already reaches its category by another route,
+# and which must therefore contribute SEATS here and not a margin.
+#
+#   class_polling  its tide is the generic ballot unchanged — which is to say
+#                  it is Silver Bulletin's average read straight through.
+#                  Emitting it would put that aggregator into the polling mean
+#                  twice and quietly double its weight.
+#   fair           his published vote share is captured and parsed like any
+#                  other source, so the margin is already a row. seats.py adds
+#                  the seat count that share implies; the margin would be the
+#                  same number a second time.
+#
+# What each genuinely contributes is the seat projection: carrying a national
+# margin through partisan lean is work neither an aggregator nor Fair does.
+MARGIN_FROM_ELSEWHERE = {"class_polling", "fair"}
 
 
 def class_model_rows(cycle: int) -> list[dict]:
-    """The class models as ordinary contributors to their own category.
+    """Seat projections as ordinary contributors to their own category.
 
-    WHY THIS EXISTS. Until now the two class models bypassed this file
-    entirely: publish.py read them straight out of their JSON and pasted them
-    onto the page as their own rows, so "Fundamentals" was our model and
-    nothing else, and a second fundamentals model arriving tomorrow would have
-    sat in a category average NEXT TO ours rather than being averaged with it.
-    That is the wrong shape for a page whose whole claim is that a category is
-    a way of knowing rather than a person. Emitting them here as rows makes
-    them contributors like any other: the mean, the min/max, the spread and
-    the n all pick them up for free, and adding Ray Fair later is a registry
-    entry and a parser rather than a change to how the page thinks.
+    WHY THIS EXISTS. The class models used to bypass this file entirely:
+    publish.py read them straight out of their JSON and pasted them onto the
+    page, so "Fundamentals" was our model and nothing else, and a second
+    fundamentals model arriving would have sat in a category average NEXT TO
+    ours rather than being averaged with it. That is the wrong shape for a page
+    whose whole claim is that a category is a way of knowing rather than a
+    person. Emitting these as rows makes them contributors like any other: the
+    mean, the min/max, the spread and the n all pick them up for free.
 
-    Read from seat_projections.json because it holds BOTH models in one shape
-    already — the same tide pushed through the same seat machinery — so the
-    two cannot drift apart here through a copy-paste.
+    Read from seat_projections.json, which holds every model in one shape — the
+    same machinery applied to each tide — so they cannot drift apart here
+    through a copy-paste. Each projection carries the CATEGORY it belongs to,
+    so this function never has to learn a model's name: seats.py adds a model
+    and it appears in the right average.
 
-    Tier is `individual`: these are ours, we publish the code, and there is no
-    licence to gate. That also means they never count toward MIN_N, which is
-    correct — the floor exists to stop a reader recovering a gated forecast by
-    subtraction, and a number we publish in full subtracts out to nothing.
+    Tier is `individual`. Our own models are ours and there is no licence to
+    gate; Fair's seat projection is OUR arithmetic on his published share, so
+    it is likewise ours to show. That also keeps them out of the MIN_N count,
+    which is correct — the floor exists to stop a reader recovering a gated
+    forecast by subtraction, and a number published in full subtracts out to
+    nothing.
 
     NOT emitted: `pvi`. It rides along inside each race entry and it is Cook's
     proprietary index. NEVER_PUBLISH would catch it downstream anyway; not
@@ -145,11 +154,12 @@ def class_model_rows(cycle: int) -> list[dict]:
 
     rows: list[dict] = []
 
-    def emit(cat, race_id, chamber, state, district, quantity, value, unit):
+    def emit(source_id, cat, race_id, chamber, state, district, quantity,
+             value, unit):
         if value is None:
             return
         rows.append({
-            "snapshot_date": date, "source_id": CLASS_MODELS[cat],
+            "snapshot_date": date, "source_id": source_id,
             "category": cat, "publication": "individual",
             "race_id": race_id, "chamber": chamber, "state": state,
             "district": district, "quantity": quantity,
@@ -157,43 +167,31 @@ def class_model_rows(cycle: int) -> list[dict]:
             "captured_at": "", "raw_sha256": "", "raw_path": "",
         })
 
-    for cat, model in (proj.get("projections") or {}).items():
-        if cat not in CLASS_MODELS:
+    for source_id, model in (proj.get("projections") or {}).items():
+        cat = model.get("category")
+        if not cat:
             continue
         senate, house = model.get("senate") or {}, model.get("house") or {}
-        # The national MARGIN, but only from fundamentals.
-        #
-        # Since the polling model became a nowcast its tide is the generic
-        # ballot unchanged — which is to say it is Silver Bulletin's average,
-        # read straight through. Emitting it here would put that one
-        # aggregator into the polling mean twice, once under its own name and
-        # once under ours, and quietly give it double weight. The polling
-        # model's own contribution is the SEAT projection below: carrying a
-        # tide through partisan lean is work no aggregator does.
-        #
-        # Fundamentals is different. Its margin is estimated from approval,
-        # income and seats defended, and shares no input with anything else in
-        # its category, so it belongs in the mean.
-        if cat != "polling":
-            emit(cat, NATL_HOUSE, "national", "", "", "margin_D",
+        if source_id not in MARGIN_FROM_ELSEWHERE:
+            emit(source_id, cat, NATL_HOUSE, "national", "", "", "margin_D",
                  model.get("tide_D"), "margin")
-        emit(cat, NATL_HOUSE, "national", "", "", "seats_D",
+        emit(source_id, cat, NATL_HOUSE, "national", "", "", "seats_D",
              house.get("expected_D_seats"), "seats")
-        emit(cat, NATL_HOUSE, "national", "", "", "win_prob_D",
+        emit(source_id, cat, NATL_HOUSE, "national", "", "", "win_prob_D",
              house.get("prob_D_majority"), "prob")
-        emit(cat, NATL_SENATE, "national", "", "", "seats_D",
+        emit(source_id, cat, NATL_SENATE, "national", "", "", "seats_D",
              senate.get("expected_D_total"), "seats")
         # 51+ is a majority. 50+ is a tie the vice-president breaks, and every
         # outside forecast and market this is averaged against prices the
         # majority, so averaging our 50+ against their 51+ would compare two
         # different events and call the difference disagreement.
-        emit(cat, NATL_SENATE, "national", "", "", "win_prob_D",
+        emit(source_id, cat, NATL_SENATE, "national", "", "", "win_prob_D",
              senate.get("prob_D_51_plus"), "prob")
         for st, r in (model.get("races") or {}).items():
             rid = f"SEN_{st}_2026"
-            emit(cat, rid, "senate", st, "", "margin_D",
+            emit(source_id, cat, rid, "senate", st, "", "margin_D",
                  r.get("expected_margin_D"), "margin")
-            emit(cat, rid, "senate", st, "", "win_prob_D",
+            emit(source_id, cat, rid, "senate", st, "", "win_prob_D",
                  r.get("win_prob_D"), "prob")
     return rows
 

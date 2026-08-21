@@ -151,11 +151,21 @@
          <a href="https://fairmodel.econ.yale.edu/vote2024/index2.htm">Forecast page</a> ·
          <a href="https://elischolar.library.yale.edu/cowles-discussion-paper-series/1895/">paper</a></p>
       {{- with index $mi "fair" }}
-      <div class="muted">Today: <strong>{{ printf "%.1f" .house_margin_D }}</strong></div>
-      {{- else }}
-      <p class="thin-note">Not yet in the daily collection, so no figure is shown
-         and it is not in the fundamentals average.</p>
+      {{- with .house_margin_D }}
+      <div class="muted">Today: <strong class="{{ if gt . 0.0 }}D{{ else }}R{{ end }}">{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}</strong>
+         <span class="muted">— a {{ printf "%.2f" (add 50.0 (div . 2)) }}% two-party
+         share for House Democrats, converted to a margin</span></div>
       {{- end }}
+      {{- end }}
+      <p class="thin-note">We take the number Fair publishes rather than
+         re-estimating his equation. The equation is in the paper and is
+         reproducible; its inputs are not — the inflation and growth terms for a
+         cycle still running come from his own quarterly macro forecasts, which
+         are a separate model we do not have. Recomputing it with our guesses at
+         those would produce a number that is not his forecast while carrying
+         his name. His seat projection here is ours: his national margin pushed
+         through the same partisan lean as every other model on this page, so
+         the two are comparable.</p>
     </div>
 
     <div class="card">

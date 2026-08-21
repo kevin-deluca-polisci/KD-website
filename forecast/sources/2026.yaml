@@ -792,6 +792,71 @@ sources:
   # ADDED 2026-08-21 — free sources, no subscription
   # =========================================================================
 
+  - id: fair
+    name: Ray Fair — mid-term House vote-share equation
+    category: fundamentals
+    method: http
+    enabled: true
+    cadence: daily
+    # TIER: individual, i.e. we may name him and show his number.
+    #
+    # This is a judgment and it is the one line to change if you disagree.
+    # The reasoning: what Fair publishes here is a SINGLE SCALAR and a dated
+    # history of the same scalar, on a university page, from a documented
+    # equation, alongside the paper that estimates it. It is published to be
+    # cited — that is what an academic forecast is for — and quoting "Fair:
+    # D+1.8" with a link is citation, not redistribution of a dataset.
+    #
+    # There is also a practical consequence worth being explicit about rather
+    # than letting it decide the question quietly. At aggregate_only he would
+    # be one gated contributor in a two-source category, which is below MIN_N,
+    # so the fundamentals average would be suppressed and the open-subset
+    # fallback would publish our model alone. He would never appear, and the
+    # category would go on looking like a consensus of one.
+    publication: individual
+    license: permitted
+    # CAVEAT, stated rather than glossed: this date records the day the source
+    # was reviewed, NOT a successful read of robots.txt. fairmodel.econ.yale.edu
+    # times out serving robots.txt to an automated fetcher — repeatedly, from
+    # two different networks — so the file could not be retrieved to check.
+    # The judgment made in its absence: one GET of one public university page,
+    # once a day, of a document published for citation. Worth confirming from a
+    # browser when convenient, and worth disabling if robots turns out to
+    # disallow it.
+    robots_checked: 2026-08-21
+    url_checked: 2026-08-21
+    # Fair revises roughly quarterly, when a new quarter of GDP data lands.
+    # A ten-day staleness warning would fire for three months out of every
+    # four on a source behaving exactly as intended.
+    stale_after_days: 120
+    declared_inputs: []
+    config:
+      urls:
+        - name: house_prediction
+          url: https://fairmodel.econ.yale.edu/vote2020/indeane1.htm
+    notes: |
+      NOTE THE URL. It lives under /vote2020/, not /vote2026/ — the directory
+      is named for when the page was created, not for the cycle it forecasts.
+      Three guessed 2026-shaped paths were tried first and all 404'd, which is
+      the same mistake that put CNalysis and Elections Daily in the registry
+      pointing at nothing.
+
+      WE TAKE THE PUBLISHED NUMBER, WE DO NOT RE-ESTIMATE IT. The equation is
+      in the paper and is reproducible; its inputs are not. Pcc and Zcc for a
+      cycle in progress come from Fair's own quarterly macro forecasts, a
+      separate model we do not have. Recomputing with our own guesses would
+      produce a number that is not his forecast while carrying his name.
+
+      UNITS. He publishes Vcc, the Democratic share of the two-party House
+      vote. The parser converts: margin = 2 * (share - 50). Dropping the 2
+      would halve his forecast and make him look closer to our model than he
+      is.
+
+      ONE CAPTURE BACKFILLS THE SERIES. The page keeps its own history of past
+      predictions with the date each was made, and the parser records all of
+      them backdated. As of the first capture that is four points running from
+      December 2025.
+
   - id: predictit
     name: PredictIt
     category: market

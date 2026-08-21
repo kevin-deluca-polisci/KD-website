@@ -165,7 +165,11 @@ def build_ladders(senate: dict | None, proj: dict | None,
             left_label=f"{hold_D} D seats not on the ballot",
             right_label=f"{100 - hold_D - n_up} R seats not on the ballot")
 
-    p = ((proj or {}).get("projections") or {}).get("polling") or {}
+    # The district ladder is drawn from the polling model's own district
+    # margins. Projections are keyed by SOURCE now, not by category, so this
+    # asks for the model by name; the fallback keeps an older payload working.
+    _pr = (proj or {}).get("projections") or {}
+    p = _pr.get("class_polling") or _pr.get("polling") or {}
     districts = p.get("districts") or []
     house = p.get("house") or {}
     if districts and house:
@@ -215,9 +219,18 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
     # interval of the mean, and a category holding two models has no single
     # interval to state. They are carried per model, and the page labels them
     # as belonging to a model rather than to the category.
+    # category -> the single projection in it, where there is exactly one.
+    # Intervals belong to a model, so a category holding two models has no
+    # interval to state and gets none.
+    by_cat: dict[str, list] = defaultdict(list)
+    for _sid, _p in projections.items():
+        if _p.get("category"):
+            by_cat[_p["category"]].append(_p)
+
     national = []
     for cat in CATEGORY_ORDER:
-        p = projections.get(cat) or {}
+        only = by_cat.get(cat) or []
+        p = only[0] if len(only) == 1 else {}
         s, h = p.get("senate") or {}, p.get("house") or {}
         row = {
             "category": cat, "label": CATEGORY_LABEL[cat],
