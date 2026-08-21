@@ -133,8 +133,15 @@ def main(argv=None) -> int:
     pm = d / "polling_model.json"
     if pm.exists():
         m = json.loads(pm.read_text())
-        if m.get("election_day_tide_D") is not None:
-            tides["polling"] = float(m["election_day_tide_D"])
+        # The NOWCAST, not the election-day projection. The polling line on
+        # this site is "what the polls say today, carried through partisan
+        # lean"; feeding the shrunk tide here would have made the seat
+        # projection a November forecast while the margin beside it was a
+        # nowcast, and the two would have disagreed by construction.
+        tide_key = ("nowcast_tide_D" if m.get("nowcast_tide_D") is not None
+                    else "election_day_tide_D")
+        if m.get(tide_key) is not None:
+            tides["polling"] = float(m[tide_key])
     if not tides:
         print("  no tides available — run fundamentals.py and polling.py first")
         return 1

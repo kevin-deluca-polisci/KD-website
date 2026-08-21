@@ -161,8 +161,22 @@ def class_model_rows(cycle: int) -> list[dict]:
         if cat not in CLASS_MODELS:
             continue
         senate, house = model.get("senate") or {}, model.get("house") or {}
-        emit(cat, NATL_HOUSE, "national", "", "", "margin_D",
-             model.get("tide_D"), "margin")
+        # The national MARGIN, but only from fundamentals.
+        #
+        # Since the polling model became a nowcast its tide is the generic
+        # ballot unchanged — which is to say it is Silver Bulletin's average,
+        # read straight through. Emitting it here would put that one
+        # aggregator into the polling mean twice, once under its own name and
+        # once under ours, and quietly give it double weight. The polling
+        # model's own contribution is the SEAT projection below: carrying a
+        # tide through partisan lean is work no aggregator does.
+        #
+        # Fundamentals is different. Its margin is estimated from approval,
+        # income and seats defended, and shares no input with anything else in
+        # its category, so it belongs in the mean.
+        if cat != "polling":
+            emit(cat, NATL_HOUSE, "national", "", "", "margin_D",
+                 model.get("tide_D"), "margin")
         emit(cat, NATL_HOUSE, "national", "", "", "seats_D",
              house.get("expected_D_seats"), "seats")
         emit(cat, NATL_HOUSE, "national", "", "", "win_prob_D",

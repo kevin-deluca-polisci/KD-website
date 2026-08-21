@@ -576,7 +576,30 @@ def main(argv=None) -> int:
     gb = generic_ballot(rows)
     days = _days_to_election(date)
     lam = shrink_lambda(days)
-    tide = gb["value"] * lam
+
+    # THE PUBLISHED TIDE IS A NOWCAST: the generic ballot as it stands, not
+    # shrunk toward even.
+    #
+    # This model used to publish gb * lambda — its estimate of where the tide
+    # will END UP in November. That is a defensible forecast, but it made the
+    # polling category incoherent as a category. The other members of it are
+    # poll aggregators publishing what the polls say TODAY, and averaging
+    # today's reading with a projection of November's is averaging two
+    # different questions and calling the gap disagreement.
+    #
+    # It also destroyed the thing the site exists to show. If polling is
+    # already shrunk toward the eventual answer, it starts near fundamentals
+    # and stays there; the convergence between methods over the autumn — which
+    # is the phenomenon this archive is built to watch — is assumed rather
+    # than observed. A nowcast can move. Whether it drifts toward the
+    # fundamentals line between now and November is then a fact about the
+    # world instead of a consequence of the arithmetic.
+    #
+    # The shrinkage is not thrown away: lambda and the election-day projection
+    # are still computed and published beside the nowcast, so the difference
+    # between "today" and "November" stays visible and stays teachable.
+    tide = gb["value"]
+    election_day_tide = gb["value"] * lam
 
     if a.sigma is not None:
         sigma, sigma_src = a.sigma, "command line"
@@ -594,7 +617,9 @@ def main(argv=None) -> int:
     print("=" * 68)
     print(f"  generic ballot   D{gb['value']:+.2f}  ({gb['used']}"
           + (f", raw D{gb['raw']:+.2f}" if gb.get("raw") is not None else "") + ")")
-    print(f"  shrinkage        lambda = {lam:.3f}   -> election-day tide D{tide:+.2f}")
+    print(f"  nowcast tide     D{tide:+.2f}  (the generic ballot as it stands)")
+    print(f"  shrinkage        lambda = {lam:.3f}   -> election-day projection "
+          f"D{election_day_tide:+.2f}  (diagnostic; not used downstream)")
     print(f"  sigma            {sigma:.2f} pts  ({sigma_src})")
     if cal.get("ok"):
         print(f"      fit: slope {cal['slope']:.2f} on 2xPVI, intercept "
@@ -625,7 +650,14 @@ def main(argv=None) -> int:
     out = {
         "snapshot_date": date, "days_to_election": days,
         "generic_ballot": gb, "shrink_lambda": round(lam, 4),
-        "election_day_tide_D": round(tide, 3),
+        # The headline: what the polls say now. Everything downstream — the
+        # seat projection, the category average, the tracker line — uses this.
+        "nowcast_tide_D": round(tide, 3),
+        # The same number shrunk toward even, i.e. where this model thinks the
+        # tide lands in November. Published as a diagnostic and NOT fed to the
+        # seat machinery, so the polling line on the site is a nowcast
+        # throughout.
+        "election_day_tide_D": round(election_day_tide, 3),
         # The tide carries an interval of its own, and it was missing — the
         # strip chart showed fundamentals with an 80% band and polling as a
         # bare dot, which reads as "the polling model is certain" when in fact
@@ -657,7 +689,8 @@ def main(argv=None) -> int:
             hp = DATA / str(a.cycle) / "model_private" / "polling_model_house.json"
             hp.parent.mkdir(parents=True, exist_ok=True)
             hp.write_text(json.dumps({**h, "snapshot_date": date,
-                                      "election_day_tide_D": round(tide, 3)}, indent=2))
+                                      "nowcast_tide_D": round(tide, 3),
+                                      "election_day_tide_D": round(election_day_tide, 3)}, indent=2))
             print(f"\n  HOUSE · {h['n_districts']} districts")
             print(f"      expected D seats {h['expected_D_seats']:.1f}  "
                   f"(80% {h['D_seats_80pct'][0]}-{h['D_seats_80pct'][1]})")

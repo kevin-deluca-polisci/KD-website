@@ -262,9 +262,13 @@
         {{- if .D_total_80pct }}
         <div class="muted">80% interval {{ index .D_total_80pct 0 }}–{{ index .D_total_80pct 1 }} · 51 for a majority</div>
         {{- end }}
-        <p class="muted" style="margin-top:12px">Generic ballot D+{{ printf "%.1f" .generic_ballot }},
-           shrunk by λ={{ printf "%.2f" .shrink_lambda }} to an election-day tide of
-           <strong>D+{{ printf "%.1f" .tide_D }}</strong>, then carried to states by partisan lean.</p>
+        <p class="muted" style="margin-top:12px">A nowcast: the generic ballot as
+           it stands, <strong>D+{{ printf "%.1f" .tide_D }}</strong>, carried to
+           each state by partisan lean. Not a projection of November — that is
+           the point, because it leaves room to watch whether polling drifts
+           toward the fundamentals line over the autumn{{ with .election_day_tide_D }};
+           shrinking it by λ={{ printf "%.2f" $.shrink_lambda }} would give
+           D+{{ printf "%.1f" . }}{{ end }}.</p>
         <p class="muted"><a href="/forecast/contests/">Race by race →</a></p>
       </div>
       {{- end }}

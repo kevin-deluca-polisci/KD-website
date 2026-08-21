@@ -181,7 +181,11 @@
         <tr><th>Step</th><th class="num">Value</th></tr>
         <tr><td>Generic ballot average</td><td class="num">D+{{ printf "%.2f" .generic_ballot }}</td></tr>
         <tr><td>Shrinkage λ</td><td class="num">{{ printf "%.3f" .shrink_lambda }}</td></tr>
-        <tr><td>Election-day tide</td><td class="num">D+{{ printf "%.2f" .tide_D }}</td></tr>
+        <tr><td>Nowcast tide</td><td class="num">D+{{ printf "%.2f" .tide_D }}</td></tr>
+        {{- with .election_day_tide_D }}
+        <tr><td class="muted">…shrunk toward November <span class="muted">(diagnostic, not used)</span></td>
+            <td class="num muted">D+{{ printf "%.2f" . }}</td></tr>
+        {{- end }}
         <tr><td>Race-level σ</td><td class="num">{{ printf "%.2f" .sigma }} pts</td></tr>
         <tr><td>D Senate seats</td><td class="num">{{ printf "%.0f" .expected_D_total }} of 100
             {{- if .D_total_80pct }} <span class="muted">(80% {{ index .D_total_80pct 0 }}–{{ index .D_total_80pct 1 }})</span>{{ end }}</td></tr>
@@ -285,24 +289,25 @@
       <p class="thin-note">Both CNalysis and Elections Daily would be genuinely
          new opinions rather than duplicates: neither is among the twelve raters
          reaching us through Wikipedia's ratings tables.</p>
-      {{- with index $mi "grant_williams" }}
-      <h3>Current figures, where the licence permits</h3>
-      <table style="max-width:520px">
-        <tr><th>Grant Williams</th><th class="num">House</th><th class="num">Senate</th></tr>
-        <tr><td>National margin</td>
-            <td class="num">{{ with .house_margin_D }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ else }}—{{ end }}</td>
-            <td class="num">{{ with .senate_margin_D }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ else }}—{{ end }}</td></tr>
-        <tr><td>Expected D seats</td>
-            <td class="num">{{ with .house_seats_D }}{{ printf "%.0f" . }}{{ else }}—{{ end }}</td>
-            <td class="num">{{ with .senate_seats_D }}{{ printf "%.0f" . }}{{ else }}—{{ end }}</td></tr>
-        <tr><td>P(D control)</td>
-            <td class="num">{{ with .house_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td>
-            <td class="num">{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td></tr>
-      </table>
-      {{- end }}
-      <p class="thin-note">The rest permit collection but not per-forecaster
-         republication during the cycle, so they appear only inside a category
-         average — see <a href="#disclosure">what is not published</a>.</p>
+            {{/* No per-forecaster figures here any more.
+
+           This card used to print Grant Williams' national numbers under the
+           heading "Current figures, where the licence permits" — which is an
+           accurate description of why HE was the one shown and a poor reason
+           for a reader to see him rather than anyone else. It made one
+           forecaster look like the category's representative when the only
+           thing distinguishing him is an MIT licence, a fact about paperwork.
+
+           What this page publishes for the professional category is the
+           average, on the comparisons page. This card's job is to say who is
+           in it and link to them. */}}
+      <p class="thin-note">No individual forecaster's numbers are shown on this
+         site. What we publish for this category is the average across everyone
+         in it — wisdom of the crowd rather than a pick — and it is on the
+         <a href="/forecast/comparisons/">comparisons page</a>. Most of these
+         forecasters permit collection but not per-forecaster republication
+         during the cycle anyway; see
+         <a href="#disclosure">what is not published</a>.</p>
     </div>
   </section>
 

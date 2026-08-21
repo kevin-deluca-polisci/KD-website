@@ -401,7 +401,11 @@ def main(argv=None) -> int:
     if polling and polling.get("senate", {}).get("races"):
         s_ = polling["senate"]
         senate = {
-            "tide_D": polling["election_day_tide_D"],
+            # The nowcast. Older polling_model.json files predate the key,
+            # so fall back rather than crashing on a replayed snapshot.
+            "tide_D": polling.get("nowcast_tide_D",
+                                  polling.get("election_day_tide_D")),
+            "election_day_tide_D": polling.get("election_day_tide_D"),
             "generic_ballot": polling["generic_ballot"]["value"],
             "shrink_lambda": polling["shrink_lambda"],
             "sigma": s_["sigma_total"],
