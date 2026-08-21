@@ -86,9 +86,19 @@
                    the win probability: vivid at the safe ends, muted purple
                    at a coin flip. The bar's direction and length already say
                    which party and by how much, so this adds the one thing
-                   they cannot — how sure any of it is — instead of spending
-                   the colour channel restating them. Replaces a flat party
-                   fill plus a binary opacity for "competitive". */}}
+                   they cannot — how sure any of it is.
+
+                   THE fill ATTRIBUTE IS A FALLBACK AND MUST STAY. A payload
+                   written before charts.py grew `shade` has no such field, so
+                   the class renders as the literal "lad-" and matches no rule
+                   — and an SVG rect with no fill from any source paints
+                   BLACK. That is what shipped: the legend read correctly
+                   because it hardcodes the ramp, while every bar on the chart
+                   went black until the next pipeline run. A CSS rule always
+                   beats a presentation attribute, so when `shade` IS present
+                   the ramp still wins; when it is absent the chart degrades to
+                   party colours instead of to a silhouette. */}}
+              fill="{{ if eq .lead "D" }}var(--D){{ else }}var(--R){{ end }}"
               class="lad-{{ .shade }}">
           <title>{{ .label }} — expected {{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}, P(D) {{ printf "%.0f%%" (mul .win_prob_D 100) }}. Democratic seat number {{ .seat_no }}.</title>
         </rect>

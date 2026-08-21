@@ -68,7 +68,14 @@ sources:
       # which ~128 were noise: Kalshi's Politics category is dominated by
       # legislative-action markets (tariff votes, expulsions, Epstein files) and
       # foreign elections. Anchoring is what does the work here.
-      series_include: "^(HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
+      #
+      # KX[DR](HOUSE|SENATE)SEATS are the seat-COUNT ladders, and they are the
+      # only place any exchange quotes a distribution over seat counts rather
+      # than a single control price. They were missing from this list, which is
+      # why the Markets column for seats was empty. The R-side variants are
+      # captured too though nothing parses them yet — bytes are cheap, and a
+      # series we already hold history for is one we can backfill.
+      series_include: "^(HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KX[DR]HOUSESEATS|KX[DR]SENATESEATS|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
       series_exclude: "^(PRESPARTY|KXPRES)"
       series_category: Politics
       page_limit: 200
