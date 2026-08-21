@@ -10,11 +10,9 @@
   {{- $B := add $T $H }}
   <div class="card">
     <h2>The seat that decides control</h2>
-    <p class="sub">Every Senate seat, ordered from the most Democratic to the most
-       Republican, with each one's expected margin drawn as a bar. Reading left to
-       right, the bars are the Democrats' seats in the order they would fall.
-       Control is not decided by the average race. It is decided by one specific
-       race in the middle of that order, and this is a picture of which one.</p>
+    <p class="sub">Every Senate seat, ordered most Democratic to most Republican,
+       with each one's expected margin as a bar. Reading left to right, the bars
+       are the Democrats' seats in the order they would fall.</p>
 
     <div class="viz">
     <svg viewBox="0 0 720 {{ add $B 92 }}" role="img"
@@ -97,54 +95,45 @@
     </svg>
     </div>
 
-    {{- with .tipping_50 }}
-    <p class="sub" style="margin-top:18px">
-      <strong>{{ .state }} is the fiftieth Democratic seat.</strong>
-      The model has it at
-      {{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }},
-      so {{ if gt .swing_needed 0.0 }}a uniform {{ printf "%.1f" .swing_needed }}-point move toward
-      the Democrats nationwide would carry it, and with it a fifty-fifty
-      Senate{{ else }}the Democrats already hold it in expectation{{ end }}.
-    </p>
-    {{- end }}
-    {{- with .tipping_51 }}
-    <p class="muted">
-      Fifty is a tie, and a tie is broken by the vice-president, who is a
-      Republican this cycle. The first seat that is actually a majority is the
-      fifty-first, which is <strong>{{ .state }}</strong> at
-      {{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}.
-      A chart that draws only the fifty-line is quietly assuming a friendly
-      vice-president.
-    </p>
-    {{- end }}
-    {{- if $p }}
-    <p class="muted" style="margin-top:10px">
-      Run as a simulation rather than read off the order, the model puts the
-      chance of the Democrats reaching 50 at
-      <strong>{{ printf "%.0f%%" (mul $p.prob_D_50_plus 100) }}</strong>{{ with $p.prob_D_51_plus }}
-      and of an outright majority at <strong>{{ printf "%.0f%%" (mul . 100) }}</strong>{{ end }}.
-      Both numbers rest on the assumption that {{ $p.holdover_D }} Democratic
-      seats carry over untouched; move that by one and the first figure moves by
-      about twenty points.
-    </p>
-    {{- end }}
-    <p class="thin-note">Margins beyond ±{{ printf "%.0f" .clip }} points are clipped and
-       marked with a notch. Nothing above that threshold has any bearing on where
-       the majority lands, and drawing Wyoming at true length would squash every
-       race that does.</p>
+    <table style="max-width:520px;margin-top:18px">
+      <tr><th>Threshold</th><th>Seat</th><th class="num">Expected margin</th><th class="num">P(D)</th></tr>
+      {{- with .tipping_50 }}
+      <tr><td>50th — a tie</td><td><strong>{{ .state }}</strong></td>
+          <td class="num">{{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}</td>
+          <td class="num">{{ printf "%.0f%%" (mul .win_prob_D 100) }}</td></tr>
+      {{- end }}
+      {{- with .tipping_51 }}
+      <tr><td>51st — a majority</td><td><strong>{{ .state }}</strong></td>
+          <td class="num">{{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}</td>
+          <td class="num">{{ printf "%.0f%%" (mul .win_prob_D 100) }}</td></tr>
+      {{- end }}
+      {{- if $p }}
+      <tr><td>Simulated P(D reach 50+)</td><td colspan="2"></td>
+          <td class="num">{{ printf "%.0f%%" (mul $p.prob_D_50_plus 100) }}</td></tr>
+      {{- with $p.prob_D_51_plus }}
+      <tr><td>Simulated P(D majority)</td><td colspan="2"></td>
+          <td class="num">{{ printf "%.0f%%" (mul . 100) }}</td></tr>
+      {{- end }}
+      {{- end }}
+    </table>
+    {{- with .tipping_50 }}{{ if gt .swing_needed 0.0 }}
+    <p class="muted" style="margin-top:12px">A uniform
+       {{ printf "%.1f" .swing_needed }}-point move toward the Democrats carries
+       {{ .state }}, and with it a fifty-fifty Senate. A tie is broken by the
+       vice-president, who is a Republican this cycle.</p>
+    {{- end }}{{ end }}
+    <p class="thin-note">Margins beyond ±{{ printf "%.0f" .clip }} points are clipped
+       and notched. Probabilities assume {{ with $p }}{{ $p.holdover_D }}{{ end }}
+       Democratic holdover seats; one seat moves them about twenty points.</p>
   </div>
   {{- end }}
 
   {{- with $p }}
   <div class="card">
     <h2>Senate, race by race</h2>
-    <p class="sub">The {{ .n_competitive }} races the model does not consider settled —
-       New Jersey through Nebraska in the order above. Expected margin is the
-       election-day national tide plus twice the state's partisan lean. The lean is
-       our own reconstruction from official returns, not a licensed index, so these
-       numbers are ours to publish. Nothing here knows who the candidates are, which
-       is exactly why it disagrees with the professionals where a party has an
-       unusually strong recruit.</p>
+    <p class="sub">The {{ .n_competitive }} races the model does not consider
+       settled. Expected margin is the election-day national tide plus twice the
+       state's partisan lean; nothing here knows who the candidates are.</p>
     <table>
       <tr><th>State</th><th class="num">Expected margin</th><th class="num">P(D)</th>
           <th class="num">State lean</th><th></th></tr>
@@ -177,21 +166,16 @@
     {{- $ne := where .races "state" "NE" }}
     {{- if and $ne (index $ne 0).competitive }}
     <div class="note">
-      <strong>* Nebraska is the case this model cannot handle.</strong>
-      There is no Democrat on the ballot. Dan Osborn is running as an independent,
-      and against a two-party model that fact simply does not exist — the number
-      above is what a generic Democrat would be expected to do in Nebraska, which
-      is not the race being held. It is left in the table rather than dropped
-      because a model failing visibly is more useful to look at than a model
-      quietly omitting the seat it cannot represent. Handling it properly means
-      modelling a three-way race where the second-place party has effectively
-      withdrawn, which is a different piece of machinery.
+      <strong>* Nebraska has no Democrat on the ballot.</strong>
+      Dan Osborn is running as an independent, which a two-party model cannot
+      represent: the number above is what a generic Democrat would do in
+      Nebraska, not the race being held. Left in rather than dropped.
     </div>
     {{- end }}
-    <p class="thin-note">There is no House table on this page. The House model runs
-       daily but its district numbers stay unpublished, for a reason set out under
-       <a href="/forecast/methods/#house">what is not published</a> on the methods
-       page — it is a licensing constraint rather than a modelling one.</p>
+    <p class="thin-note">No House table: district numbers stay unpublished for
+       the reason set out under
+       <a href="/forecast/methods/#disclosure">what is not published</a>. Chamber
+       totals are on the <a href="/forecast/">tracker</a>.</p>
   </div>
   {{- end }}
 </div>

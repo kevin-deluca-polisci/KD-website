@@ -11,7 +11,12 @@
    never renders in the wrong theme and then flips. A deferred script here
    produces a white flash on every navigation for dark-mode readers. */
 (function(){try{var t=localStorage.getItem("fx-theme");
-if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}
+/* Mark that scripting is on, before first paint. Everything that hides content
+   is gated on this class, so a reader without JavaScript gets every panel and
+   every section laid out one after another instead of a page of toggles that
+   do nothing. */
+document.documentElement.className+=" js";})();
 </script>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
@@ -129,6 +134,37 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
   .swatch{width:11px;height:11px;border-radius:2px;display:inline-block}
   .thin-note{font-size:.85em;color:var(--ink-3);margin-top:12px;font-style:italic}
   .bar{display:inline-block;height:9px;border-radius:2px;vertical-align:middle}
+
+  /* ---- segmented controls: chamber / metric toggles, methods sub-nav ---- */
+  .segs{display:flex;flex-wrap:wrap;gap:14px;margin:2px 0 20px}
+  .seg{display:inline-flex;background:var(--bg);border:1px solid var(--border);
+       border-radius:8px;padding:3px;gap:2px}
+  .seg button{font:inherit;font-size:.85em;font-weight:550;cursor:pointer;
+              border:0;background:none;color:var(--ink-2);
+              padding:5px 13px;border-radius:6px;line-height:1.4}
+  .seg button:hover{color:var(--ink)}
+  .seg button[aria-selected="true"]{background:var(--surface);color:var(--ink);
+              box-shadow:0 1px 2px rgba(0,0,0,.08)}
+  .seglabel{font-size:.72em;text-transform:uppercase;letter-spacing:.07em;
+            color:var(--ink-3);align-self:center;font-weight:650}
+  /* No JS: every panel and section stays visible and the controls disappear,
+     so the page degrades into one long scroll rather than into nothing. */
+  .seg{display:none}
+  .js .seg{display:inline-flex}
+  .js [data-panel][hidden],.js [data-section][hidden]{display:none}
+
+  /* ---- methods sub-navigation ---- */
+  nav.sub{display:flex;gap:3px;flex-wrap:wrap;margin:0 0 22px;
+          border-bottom:1px solid var(--border);padding-bottom:0}
+  nav.sub a{padding:8px 14px;text-decoration:none;color:var(--ink-2);
+            font-size:.9em;font-weight:550;border-bottom:2px solid transparent;
+            margin-bottom:-1px}
+  nav.sub a:hover{color:var(--ink)}
+  nav.sub a[aria-current="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+  :root[data-theme="dark"] nav.sub a[aria-current="true"]{border-bottom-color:var(--link)}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) nav.sub a[aria-current="true"]{border-bottom-color:var(--link)}
+  }
 </style>
 </head>
 <body>

@@ -39,60 +39,36 @@ def rd(p):
     return list(csv.DictReader(p.open(encoding="utf-8"))) if p.exists() else []
 
 
-# Every model that may be shown BY NAME on the comparison page, with the two
-# things a reader needs in order to argue with it: where to find it, and what
-# it is actually made of. Anything not in here is either ours or gated.
+# ---------------------------------------------------------------------------
+# The four-category spread.
 #
-# The gate is not editorial. by_source_open.csv contains exactly the sources
-# whose terms permit per-forecaster republication during the cycle, and
-# aggregate.py re-derives that guarantee from its own output and refuses to
-# write if it is violated. So the comparison page can only ever name a source
-# that is already in that file — which is why the code below joins on it rather
-# than on a list of forecasters someone typed.
-NAMED = {
-    "grant_williams": {
-        "label": "Grant Williams",
-        "url": "https://grantwilliamsforecast.com/",
-        "kind": "professional",
-        "what": "A published statistical forecast combining district-level "
-                "partisan lean, polling, incumbency and candidate quality. "
-                "Released under an MIT licence, which is why it can be shown "
-                "here race by race while most of its competitors cannot.",
-    },
-    "polymarket": {
-        "label": "Polymarket",
-        "url": "https://polymarket.com/",
-        "kind": "market",
-        "what": "Real-money prediction markets. The price of a contract that "
-                "pays $1 if an event happens is read as a probability, which "
-                "is a reasonable approximation and not an identity — fees, "
-                "capital costs and the favourite-longshot bias all push it "
-                "around at the extremes.",
-    },
-    "medsl": {
-        "label": "MIT Election Lab",
-        "url": "https://electionlab.mit.edu/data",
-        "kind": "returns",
-        "what": "Certified official returns, not a forecast. Used here as the "
-                "baseline a forecast has to beat: what the state actually did "
-                "last time. Public domain (CC0).",
-    },
-}
+# Per race, what each FAMILY of forecast says — not one named forecaster
+# against another. That framing was wrong twice over. It implied a benchmark
+# where we have no evidence of one, and it only worked at all because exactly
+# one outside per-race forecast happens to carry a permissive licence, which is
+# a fact about paperwork rather than about quality.
+#
+# Categories also make the disclosure question disappear. A category average is
+# already the published tier: aggregate.py decides what may appear in one and
+# refuses to write if the answer is nothing. Nothing here re-derives that
+# judgment, and nothing here can name a forecaster the aggregator withheld.
+# ---------------------------------------------------------------------------
+
+CATEGORY_ORDER = ["fundamentals", "polling", "professional", "market"]
+CATEGORY_LABEL = {"fundamentals": "Fundamentals", "polling": "Polling",
+                  "professional": "Professional", "market": "Markets"}
 
 
 def build_model_index(d: Path, latest: str) -> dict:
     """Today's national numbers, keyed by source, for the methods page.
 
-    The methods page has to name a model and then show what it currently says,
-    and the two halves live in different places on purpose: the prose and the
-    links are editorial and belong in the template, the numbers are data and
-    belong here. A template that hardcodes "Grant Williams says D+5.7" is a
-    number that goes stale silently.
+    Prose and links are editorial and live in the template; numbers are data
+    and live here. A template that hardcodes "X says D+5.7" is a number that
+    goes stale silently.
 
     Built from by_source_open.csv, which by construction holds only sources
     whose terms permit being quoted by name. A gated forecaster cannot appear
-    here even if someone adds them to the template — the lookup simply misses
-    and the page says so.
+    here even if someone adds them to the template — the lookup simply misses.
     """
     idx: dict[str, dict] = defaultdict(dict)
     for r in rd(d / "by_source_open.csv"):
@@ -109,176 +85,140 @@ def build_model_index(d: Path, latest: str) -> dict:
     return dict(idx)
 
 
-def build_comparison(d: Path, latest: str, senate: dict | None,
-                     model: dict | None, avgs: list[dict]) -> dict | None:
-    """Model against model, race by race, using only nameable sources.
+def _cat_cells(avgs: list[dict], latest: str) -> dict:
+    """(race_id, quantity, category) -> the published average, or its absence.
 
-    The pedagogy is the point. Two forecasts of the same seat that disagree by
-    ten points are not both noise: one of them knows something the other does
-    not, and which one is a question a student can actually answer by reading.
-    Maine is this cycle's worked example — the structural model has it dark
-    blue because Maine votes Democratic for president, and the forecast that
-    knows Susan Collins is on the ballot has it nearly tied.
-
-    Returns None rather than an empty scaffold when there is nothing to compare,
-    so the template can drop the whole section instead of rendering a table of
-    dashes.
+    Carries the suppressed cells too. A withheld number is not the same as a
+    missing one, and a page that renders both as an empty cell is telling the
+    reader that nobody has an opinion when in fact we have one and may not
+    show it.
     """
-    rows = [r for r in rd(d / "by_source_open.csv") if r["snapshot_date"] == latest]
-    if not rows:
-        return None
-
-    def pick(src, chamber, qty, key="state"):
-        return {r[key]: float(r["value"]) for r in rows
-                if r["source_id"] == src and r["chamber"] == chamber
-                and r["quantity"] == qty and r["value"] not in ("", None)}
-
-    def one(src, race, qty):
-        for r in rows:
-            if r["source_id"] == src and r["race_id"] == race and r["quantity"] == qty:
-                return float(r["value"])
-        return None
-
-    # ---- national: the same two questions, asked of every method we have ----
-    natl = []
-    if model:
-        natl.append({"key": "fundamentals", "label": "Fundamentals",
-                     "who": "class model", "house_margin": model["margin_D"],
-                     "house_prob": None, "house_seats": None,
-                     "senate_prob": None, "senate_prob_basis": ""})
-    if senate:
-        natl.append({"key": "polling", "label": "Polling", "who": "class model",
-                     "house_margin": senate["tide_D"], "house_prob": None,
-                     "house_seats": None,
-                     "senate_prob": senate.get("prob_D_51_plus"),
-                     "senate_prob_basis": "51+"})
-    for src in ("grant_williams", "polymarket"):
-        meta = NAMED[src]
-        hm, hp = one(src, NATL_HOUSE, "margin_D"), one(src, NATL_HOUSE, "win_prob_D")
-        hs, sp = one(src, NATL_HOUSE, "seats_D"), one(src, NATL_SENATE, "win_prob_D")
-        if hm is hp is hs is sp is None:
+    out: dict[tuple, dict] = {}
+    for r in avgs:
+        if r["snapshot_date"] != latest:
             continue
-        natl.append({"key": src, "label": meta["label"], "who": meta["kind"],
-                     "url": meta["url"], "house_margin": hm, "house_prob": hp,
-                     "house_seats": hs, "senate_prob": sp,
-                     # Outside forecasts and markets resolve on CONTROL, which
-                     # needs 51 given a Republican vice-president. Ours is
-                     # stated at 51+ above for exactly this reason; without the
-                     # basis label the two columns would silently compare
-                     # different events.
-                     "senate_prob_basis": "51+" if sp is not None else ""})
+        try:
+            v = float(r["mean"])
+        except (TypeError, ValueError):
+            continue
+        out[(r["race_id"], r["quantity"], r["category"])] = {
+            "value": v, "n": int(r["n_sources"]),
+            "n_gated": int(r.get("n_gated") or 0),
+            "display": r.get("display", "ok"),
+            "sole_source": r.get("sole_source", ""),
+            "withheld": False,
+        }
+    return out
 
-    # ---- senate, race by race ----
-    gw_m, gw_p = pick("grant_williams", "senate", "margin_D"), \
-                 pick("grant_williams", "senate", "win_prob_D")
-    pres = pick("medsl", "national", "margin_D_pres_2024")
+
+def _withheld_cells(supp: list[dict], latest: str) -> set:
+    return {(r["race_id"], r["quantity"], r["category"]) for r in supp
+            if r["snapshot_date"] == latest}
+
+
+def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
+                 supp: list[dict], senate: dict | None) -> dict | None:
+    """National and per-race, four categories each."""
+    cells = _cat_cells(avgs, latest)
+    withheld = _withheld_cells(supp, latest)
+    projections = (proj or {}).get("projections") or {}
+
+    def cat_cell(race, qty, cat):
+        got = cells.get((race, qty, cat))
+        if got:
+            return got
+        if (race, qty, cat) in withheld:
+            return {"value": None, "withheld": True}
+        return None
+
+    # ---- national: four categories, two chambers, three quantities ----
+    national = []
+    for cat in CATEGORY_ORDER:
+        p = projections.get(cat) or {}
+        s, h = p.get("senate") or {}, p.get("house") or {}
+        margin = cat_cell(NATL_HOUSE, "margin_D", cat)
+        row = {
+            "category": cat, "label": CATEGORY_LABEL[cat],
+            "ours": cat in projections,
+            # Our own models answer from the projection; everyone else answers
+            # through the published category average.
+            "house_margin": (p.get("tide_D") if cat in projections
+                             else (margin or {}).get("value")),
+            "house_margin_withheld": bool((margin or {}).get("withheld")),
+            "house_seats": h.get("expected_D_seats"),
+            "house_seats_80": h.get("D_seats_80pct"),
+            "house_prob": h.get("prob_D_majority"),
+            "senate_seats": s.get("expected_D_total"),
+            "senate_seats_80": s.get("D_total_80pct"),
+            "senate_prob": s.get("prob_D_51_plus"),
+            "n_sources": (margin or {}).get("n"),
+            "sole_source": (margin or {}).get("sole_source", ""),
+        }
+        if cat not in projections:
+            for key, (race, qty) in (
+                ("house_seats", (NATL_HOUSE, "seats_D")),
+                ("house_prob", (NATL_HOUSE, "win_prob_D")),
+                ("senate_seats", (NATL_SENATE, "seats_D")),
+                ("senate_prob", (NATL_SENATE, "win_prob_D")),
+            ):
+                got = cat_cell(race, qty, cat)
+                row[key] = (got or {}).get("value")
+                row[key + "_withheld"] = bool((got or {}).get("withheld"))
+                if got and got.get("sole_source"):
+                    row["sole_source"] = got["sole_source"]
+                if got and got.get("n"):
+                    row["n_sources"] = row["n_sources"] or got["n"]
+        if any(row.get(k) is not None for k in
+               ("house_margin", "house_seats", "house_prob",
+                "senate_seats", "senate_prob")):
+            national.append(row)
+
+    # ---- per race: the Senate, one row per seat ----
     races = []
     for r in (senate or {}).get("races", []):
-        st, ours = r["state"], r["expected_margin_D"]
-        gw = gw_m.get(st)
-        races.append({
-            "state": st, "ours": ours, "ours_prob": r["win_prob_D"],
-            "gw": gw, "gw_prob": gw_p.get(st),
-            "pres_2024": pres.get(st),
-            "gap": round(ours - gw, 2) if gw is not None else None,
-            # Sign disagreement is the loud case: the two models do not merely
-            # differ on how much, they differ on who wins.
-            "opposed": gw is not None and (ours > 0) != (gw > 0),
-            "competitive": r.get("competitive", False),
-        })
-    # Competitive races first, then by size of disagreement.
-    #
-    # Sorting purely by gap puts Kentucky, Oklahoma, Alabama and Idaho at the
-    # top, where the two models are arguing about whether a Republican wins by
-    # ten or by twenty-four. That disagreement is real and it is diagnostic —
-    # it is the linear PVI mapping overshooting at the tails — but it is not
-    # the thing a reader came for, and burying Maine below four safe seats
-    # teaches the wrong lesson about what to look at.
-    races.sort(key=lambda x: (not x["competitive"],
-                              -(abs(x["gap"]) if x["gap"] is not None else -1),
-                              x["state"]))
-    gaps = [abs(x["gap"]) for x in races if x["gap"] is not None]
-    comp_gaps = [abs(x["gap"]) for x in races
-                 if x["gap"] is not None and x["competitive"]]
-    safe_gaps = [x["gap"] for x in races
-                 if x["gap"] is not None and not x["competitive"]]
+        st, rid = r["state"], f"SEN_{r['state']}_2026"
+        entry = {"state": st, "race_id": rid,
+                 "competitive": r.get("competitive", False), "cats": {}}
+        for cat in CATEGORY_ORDER:
+            p = projections.get(cat)
+            if p is not None:
+                got = (p.get("races") or {}).get(st)
+                if got:
+                    entry["cats"][cat] = {"margin": got["expected_margin_D"],
+                                          "prob": got["win_prob_D"],
+                                          "withheld": False, "n": 1}
+                continue
+            m = cat_cell(rid, "margin_D", cat)
+            w = cat_cell(rid, "win_prob_D", cat)
+            if m or w:
+                entry["cats"][cat] = {
+                    "margin": (m or {}).get("value"),
+                    "prob": (w or {}).get("value"),
+                    "withheld": bool((m or {}).get("withheld")
+                                     or (w or {}).get("withheld")),
+                    "n": (m or w or {}).get("n"),
+                }
+        have = [c for c, v in entry["cats"].items() if v.get("prob") is not None]
+        entry["n_cats"] = len(have)
+        if len(have) >= 2:
+            ps = [entry["cats"][c]["prob"] for c in have]
+            entry["prob_spread"] = round(max(ps) - min(ps), 4)
+        else:
+            entry["prob_spread"] = None
+        races.append(entry)
 
-    # Geometry for the dumbbell chart: one row per competitive race, two dots
-    # joined by a rule. Scaled over the competitive races ONLY. Letting Wyoming
-    # into the range calculation would compress every row that matters into the
-    # middle sixth of the plot, which is the same mistake the timeline panel
-    # made before its axis was fixed.
-    comp = [x for x in races if x["competitive"] and x["gap"] is not None]
-    span = [v for x in comp for v in (x["ours"], x["gw"]) if v is not None]
-    dumbbell = None
-    if span:
-        lo, hi = min(span), max(span)
-        pad = max((hi - lo) * 0.08, 1.0)
-        lo, hi = lo - pad, hi + pad
-        def X(v):
-            return round((v - lo) / (hi - lo) * 100, 2)
-        dumbbell = {
-            "lo": round(lo, 2), "hi": round(hi, 2),
-            "zero_x": X(0.0) if lo < 0 < hi else None,
-            "ticks": [{"v": t, "x": X(t),
-                       "label": "EVEN" if t == 0 else
-                                (f"D+{t}" if t > 0 else f"R+{abs(t)}")}
-                      for t in (-20, -10, 0, 10, 20) if lo <= t <= hi],
-            "rows": [{"state": x["state"], "gap": x["gap"], "opposed": x["opposed"],
-                      "ours": x["ours"], "gw": x["gw"],
-                      "x_ours": X(x["ours"]), "x_gw": X(x["gw"]),
-                      "x_pres": X(x["pres_2024"]) if x["pres_2024"] is not None
-                                and lo <= x["pres_2024"] <= hi else None,
-                      "pres_2024": x["pres_2024"]}
-                     for x in comp],
-        }
-
-    # How much of the professional category we are allowed to name. Derived
-    # from the published files rather than asserted, so it cannot drift out of
-    # date when a source's terms change.
-    prof_n = next((int(a["n_sources"]) for a in avgs
-                   if a["snapshot_date"] == latest and a["race_id"] == NATL_HOUSE
-                   and a["quantity"] == "margin_D" and a["category"] == "professional"), 0)
-    named_prof = len({r["source_id"] for r in rows
-                      if NAMED.get(r["source_id"], {}).get("kind") == "professional"})
-
+    covered = sorted({c for r in races for c in r["cats"]},
+                     key=CATEGORY_ORDER.index)
+    missing = [c for c in CATEGORY_ORDER if c not in covered]
     return {
-        "national": natl,
-        "senate": races,
-        "dumbbell": dumbbell,
-        "sources": NAMED,
-        "stats": {
-            "n": len(gaps),
-            "mean_abs_gap": round(sum(gaps) / len(gaps), 2) if gaps else None,
-            "max_gap": round(max(gaps), 2) if gaps else None,
-            "n_opposed": sum(1 for x in races if x["opposed"]),
-            "n_competitive": len(comp_gaps),
-            "mean_abs_gap_competitive": (round(sum(comp_gaps) / len(comp_gaps), 2)
-                                         if comp_gaps else None),
-            # SIGNED, not absolute, and that is the whole point of carrying it:
-            # a mean near zero would say the two models scatter around each
-            # other, and a mean well below zero says ours is systematically
-            # more Republican in seats that are not close. This cycle it is the
-            # second, which is the linear PVI-to-margin mapping running out of
-            # road in the deepest-red states rather than a disagreement about
-            # any particular race.
-            "mean_signed_gap_safe": (round(sum(safe_gaps) / len(safe_gaps), 2)
-                                     if safe_gaps else None),
-        },
-        "professional_named": named_prof,
-        "professional_total": prof_n,
-        "naming_note": (
-            ((f"The only professional forecast in today's average may be shown "
-              f"by name." if prof_n == 1 else
-              f"All {prof_n} professional forecasts in today's average may be "
-              f"shown by name.")
-             if named_prof >= prof_n else
-             f"{named_prof} of the {prof_n} professional forecasts in today's "
-             f"average may be shown by name. The rest permit collection but not "
-             f"per-forecaster republication during the cycle, so they appear only "
-             f"inside the category average on the tracker.")
-            + " The full archive is released after the election."),
+        "national": national,
+        "races": races,
+        "categories": CATEGORY_ORDER,
+        "labels": CATEGORY_LABEL,
+        "categories_per_race": covered,
+        "categories_missing_per_race": missing,
     }
+
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
@@ -293,6 +233,8 @@ def main(argv=None) -> int:
             if (d / "fundamentals_model.json").exists() else None
     polling = json.loads((d / "polling_model.json").read_text()) \
               if (d / "polling_model.json").exists() else None
+    proj = json.loads((d / "seat_projections.json").read_text()) \
+           if (d / "seat_projections.json").exists() else None
 
     dates = sorted({r["snapshot_date"] for r in avgs}) or [
         dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")]
@@ -368,47 +310,18 @@ def main(argv=None) -> int:
         senate["n_competitive"] = sum(1 for r in senate["races"] if r["competitive"])
         senate["competitive_note"] = COMPETITIVE_NOTE
 
-    # Expert ratings, reshaped for rendering. The CSV is one row per
-    # (date, race, forecaster) — 1,836 of them — and a template is the wrong
-    # place to pivot that. Templates render; Python computes.
-    #
-    # Only the latest snapshot, and only races where at least one forecaster
-    # sees a contest: a table of 435 rows that says "Safe R" 300 times teaches
-    # nothing. `disagreement` is the spread between the most D and most R
-    # rating on the same seat, which is the column worth sorting by.
-    panel = defaultdict(dict)
-    meta_ = {}
-    for r in ratings:
-        if r["snapshot_date"] != latest or ":" not in r.get("value", ""):
-            continue
-        who, label = r["value"].split(":", 1)
-        panel[r["race_id"]][who] = label
-        meta_[r["race_id"]] = {"chamber": r["chamber"], "state": r["state"],
-                               "district": r.get("district", "")}
-    ORD = {"Safe D": 0, "Solid D": 0, "Likely D": 1, "Lean D": 2, "Tilt D": 3,
-           "Toss-up": 4, "Tossup": 4,
-           "Tilt R": 5, "Lean R": 6, "Likely R": 7, "Safe R": 8, "Solid R": 8}
-    ratings_panel = []
-    for rid, who in panel.items():
-        vals = [ORD[v] for v in who.values() if v in ORD]
-        if not vals or (min(vals) in (0, 8) and max(vals) in (0, 8)
-                        and min(vals) == max(vals)):
-            continue                     # unanimous Safe: nothing to show
-        ratings_panel.append({
-            "race_id": rid, **meta_[rid],
-            "n_forecasters": len(who),
-            "disagreement": max(vals) - min(vals),
-            "mean_rating": round(sum(vals) / len(vals), 2),
-            "ratings": [{"forecaster": k, "label": v} for k, v in sorted(who.items())],
-        })
-    ratings_panel.sort(key=lambda x: (-x["disagreement"], x["race_id"]))
-
-    # Accumulate the timeline and lay out both panels. This is the only part of
+    # Accumulate the timeline and lay out every panel. This is the only part of
     # publish.py that WRITES to derived/ rather than only reading it, because
     # the history has to survive tomorrow's overwrite of the model files.
+    #
+    # The old expert_ratings_panel is gone. It pivoted 1,836 rows into a
+    # thirty-row table of comma-separated labels, and the ratings are now drawn
+    # as a spread instead — charts.build_ratings_spread. Same data, and the
+    # count has since grown to 4,206 rows across twelve raters, which is well
+    # past what any table was going to carry.
     chart_data = charts.build(d, latest)
     chart_data["ladder"] = charts.build_ladder(senate)
-    comparison = build_comparison(d, latest, senate, model, avgs)
+    spread = build_spread(d, latest, proj, avgs, supp, senate)
     model_index = build_model_index(d, latest)
 
     out = {
@@ -418,11 +331,11 @@ def main(argv=None) -> int:
         "snapshot_count": len(dates),
         "headline": sorted(headline, key=lambda x: x["category"]),
         "series": {k: sorted(v) for k, v in series.items()},
-        "expert_ratings_panel": ratings_panel,
         "fundamentals_model": model,
         "polling_model": senate,
+        "seat_projections": proj,
         "charts": chart_data,
-        "comparison": comparison,
+        "spread": spread,
         "model_index": model_index,
         "suppressed_cells": len(supp),
         "display_note": (

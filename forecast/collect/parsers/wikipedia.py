@@ -30,19 +30,43 @@ from __future__ import annotations
 import re
 
 from . import (Context, LoadedArtifact, RATING_LEVEL as LEVEL, Row,
-               TOSSUP_LABELS as TOSSUP, is_state, race_id)
+               TOSSUP_LABELS as TOSSUP, STATE_NAMES, is_state, race_id,
+               state_from_text)
 
-# Header cell -> our source id. Matched against the cleaned header text.
+# Header cell -> our source id.
+#
+# Matched against the header with wikilinks expanded to "target display", not
+# against the display text alone. The Senate table abbreviates every column to
+# initials — [[Race to the WH|WH]], [[The Economist|Econ]], [[FiftyPlusOne|FPO]],
+# [[Split Ticket (website)|ST]] — so display-only matching found almost nothing
+# there, and adding two-letter needles to compensate would be worse: "IE" is a
+# substring of a great many words. The link target carries the full name, so
+# matching on target-plus-display keeps the needles long and unambiguous.
+#
+# Order matters: the first needle that appears wins.
 FORECASTERS = [
-    ("COOK", "cook"), ("IE", "inside_elections"), ("INSIDE", "inside_elections"),
-    ("ROTHENBERG", "inside_elections"), ("SABATO", "sabato"),
-    ("CRYSTAL BALL", "sabato"), ("DDHQ", "ddhq"), ("DECISION DESK", "ddhq"),
-    ("ECONOMIST", "economist"), ("SPLIT TICKET", "split_ticket"),
-    ("ARGUMENT", "split_ticket"), ("VOTEHUB", "votehub"),
+    ("INSIDE ELECTIONS", "inside_elections"), ("ROTHENBERG", "inside_elections"),
+    ("COOK", "cook"),
+    ("SABATO", "sabato"), ("CRYSTAL BALL", "sabato"),
+    ("DECISION DESK", "ddhq"), ("DDHQ", "ddhq"),
+    ("ECONOMIST", "economist"),
+    ("SPLIT TICKET", "split_ticket"), ("ARGUMENT", "split_ticket"),
+    ("VOTEHUB", "votehub"),
     ("RACE TO THE WH", "race_to_the_wh"), ("RTWH", "race_to_the_wh"),
+    ("FIFTYPLUSONE", "fiftyplusone"), ("FIFTY PLUS ONE", "fiftyplusone"),
+    ("SILVER BULLETIN", "silver_bulletin"),
+    ("REALCLEARPOLITICS", "rcp"), ("REALCLEARPOLLING", "rcp"), ("RCP", "rcp"),
     ("FOX", "fox_power_rankings"), ("CNALYSIS", "cnalysis"),
     ("ELECTIONS DAILY", "elections_daily"), ("JHK", "jhk_forecasts"),
 ]
+
+# Headers that must never be read as a forecaster column, checked first.
+#
+# The partisan-index column links to [[Cook Partisan Voting Index|PVI]], and
+# with link targets in scope that header contains the word COOK. Without this
+# guard the index column would be read as Cook's rating column, which is both
+# wrong and the most confusing possible way to be wrong.
+NOT_A_FORECASTER = ("PARTISAN VOTING INDEX", "COOK PVI")
 
 _ROWSEP = re.compile(r"^\|-")
 _USHR = re.compile(r"\{\{\s*ushr\s*\|\s*([A-Z]{2})\s*\|\s*(\d{1,2}|AL)\s*", re.I)
@@ -67,12 +91,68 @@ def _clean(cell: str) -> str:
     return re.sub(r"\s+", " ", cell).strip()
 
 
+def _expand_links(cell: str) -> str:
+    """[[Target|Display]] -> "Target Display", so both halves are searchable."""
+    return re.sub(r"\[\[([^|\]]*)\|([^\]]+)\]\]", r"\1 \2", cell)
+
+
 def _forecaster(header: str) -> str | None:
-    h = _clean(header).upper()
+    h = _clean(_expand_links(header)).upper()
+    if any(bad in h for bad in NOT_A_FORECASTER):
+        return None
     for needle, sid in FORECASTERS:
         if needle in h:
             return sid
     return None
+
+
+# A seat cell, in any of the three forms the two articles actually use.
+#
+#   {{ushr|AL|2}}                                            House, template
+#   {{ussenate|AL}}                                          Senate, template
+#   [[2026 United States Senate election in Alabama|...]]    Senate, article link
+#
+# The third form is why the Senate ratings never parsed: the walker recognised
+# a data row only by the presence of a seat TEMPLATE, and the Senate article
+# does not use one. Twelve raters times thirty-five races went silently
+# missing, and silently is the operative word — the table was skipped whole, so
+# the "no rows at all" guard at the bottom never fired either.
+_ARTICLE_HOUSE = re.compile(
+    r"\[\[\s*20\d\d United States House of Representatives election"
+    r"s?\s+in\s+([A-Za-z .]+?)(?:'s\s+(\d{1,2})\w{0,2}|\s+at-large)"
+    r"\s+congressional district", re.I)
+_ARTICLE_SENATE = re.compile(
+    r"\[\[\s*20\d\d United States Senate election\s+in\s+([A-Za-z .]+?)\s*[|\]]", re.I)
+
+
+def _seat(cell: str) -> tuple[str, str, str] | None:
+    """-> (chamber, postal, district) or None."""
+    m = _USHR.search(cell)
+    if m:
+        st, d = m.group(1).upper(), m.group(2).upper()
+        return ("house", st, "1" if d == "AL" else d) if is_state(st) else None
+
+    m = _ARTICLE_HOUSE.search(cell)
+    if m:
+        st = state_from_text(m.group(1))
+        return ("house", st, m.group(2) or "1") if st else None
+
+    m = _USS.search(cell)
+    if m:
+        st = m.group(1).upper()
+        return ("senate", st, "") if is_state(st) else None
+
+    m = _ARTICLE_SENATE.search(cell)
+    if m:
+        st = state_from_text(m.group(1))
+        return ("senate", st, "") if st else None
+
+    # Last resort: a bare state name or postal code in a header cell. Kept for
+    # tables that name the state and nothing else, and deliberately narrow —
+    # race_id refuses non-states outright, and a stray two-letter match used to
+    # abort an entire parse.
+    st = state_from_text(_clean(cell))
+    return ("senate", st, "") if st else None
 
 
 def _rating(cell: str) -> tuple[str, float] | None:
@@ -125,8 +205,14 @@ def _tables(text: str):
         cur: list[str] | None = None
 
         for ln in (l.rstrip() for l in block.splitlines()):
-            is_seat = ln.startswith("!") and re.search(
-                r"\{\{\s*(ushr|ussen|uss)\b", ln, re.I)
+            # Editors annotate each rating cell with the rater's name in an
+            # HTML comment — "<!--Cook--> | {{USRaceRating|Solid|R}}" — so the
+            # line does not begin with a pipe and the cell was dropped. Strip
+            # leading comments before deciding what kind of line this is.
+            ln = re.sub(r"^\s*(?:<!--.*?-->\s*)+", "", ln)
+            if not ln:
+                continue
+            is_seat = ln.startswith("!") and _seat(ln[1:]) is not None
 
             if is_seat:
                 if cur:
@@ -175,27 +261,17 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             for cells in table:
                 if not cells:
                     continue
-                seat = cells[0]
-                m = _USHR.search(seat)
-                if m:
-                    st, d = m.group(1).upper(), m.group(2).upper()
-                    d = "1" if d == "AL" else d
-                    try:
-                        rid, chamber, dist = race_id("house", st, d), "house", f"{int(d):02d}"
-                    except (ValueError, TypeError):
-                        continue
-                else:
-                    m = _USS.search(seat) or re.search(r"\b([A-Z]{2})\b", _clean(seat))
-                    if not m:
-                        continue
-                    st = m.group(1).upper()
-                    # The fallback is a bare two-letter match, which catches
-                    # abbreviations that are not states. race_id now refuses
-                    # those outright, so check first rather than letting one
-                    # stray cell abort the whole 1,989-row parse.
-                    if not is_state(st):
-                        continue
-                    rid, chamber, dist = race_id("senate", st), "senate", ""
+                got = _seat(cells[0])
+                if got is None:
+                    continue
+                chamber, st, d = got
+                try:
+                    if chamber == "house":
+                        rid, dist = race_id("house", st, d), f"{int(d):02d}"
+                    else:
+                        rid, dist = race_id("senate", st), ""
+                except (ValueError, TypeError):
+                    continue
 
                 # Cook PVI rides in this table too. PRIVATE — see the docstring.
                 for c in cells[1:4]:

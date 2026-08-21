@@ -41,6 +41,32 @@ from pathlib import Path
 TIMELINE_FIELDS = ["snapshot_date", "series", "panel", "unit",
                    "value", "low", "high", "n_sources", "label"]
 
+# The panels the site knows how to draw, and the ONLY panels timeline.csv is
+# allowed to keep. Anything else is a leftover from a previous shape of the
+# file — the probability panel used to be called "prob" before it split by
+# chamber — and a stale panel is worse than a missing one, because it sits in
+# the accumulated history looking like data.
+PANELS = ("margin", "house_seats", "house_prob", "senate_seats", "senate_prob")
+
+# Chamber x metric, which is what the tracker toggles between. Kept here rather
+# than in the template so the axis labels and the units travel with the data.
+VIEWS = {
+    "house_seats":  {"chamber": "house",  "metric": "seats",
+                     "label": "Democratic House seats", "unit": "seats",
+                     "reference": 218, "reference_label": "218 — a majority",
+                     "total": 435},
+    "house_prob":   {"chamber": "house",  "metric": "prob",
+                     "label": "Chance of a Democratic House", "unit": "prob",
+                     "reference": 0.5, "reference_label": "even"},
+    "senate_seats": {"chamber": "senate", "metric": "seats",
+                     "label": "Democratic Senate seats", "unit": "seats",
+                     "reference": 51, "reference_label": "51 — a majority",
+                     "total": 100},
+    "senate_prob":  {"chamber": "senate", "metric": "prob",
+                     "label": "Chance of a Democratic Senate", "unit": "prob",
+                     "reference": 0.5, "reference_label": "even"},
+}
+
 # entity -> (light, dark). Fixed. Never reassign by position.
 COLORS = {
     "fundamentals": ("#4a3aa7", "#9085e9"),
@@ -93,31 +119,69 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
                             panel="margin", unit="pct", value=m["election_day_tide_D"],
                             low="", high="", n_sources=1, label=LABELS["polling"]))
 
+    # Seat counts and chamber probabilities for our own two models. Until
+    # seats.py existed these four series were simply absent, which is why the
+    # tracker could only ever compare methods on the national margin — the one
+    # quantity markets do not quote.
+    sp = derived / "seat_projections.json"
+    if sp.exists():
+        m = json.loads(sp.read_text())
+        for series, p in (m.get("projections") or {}).items():
+            if series not in LABELS:
+                continue
+            s, h = p.get("senate") or {}, p.get("house") or {}
+            for panel, value, low, high in (
+                ("senate_seats", s.get("expected_D_total"),
+                 *(s.get("D_total_80pct") or ("", ""))),
+                ("senate_prob", s.get("prob_D_51_plus"), "", ""),
+                ("house_seats", h.get("expected_D_seats"),
+                 *(h.get("D_seats_80pct") or ("", ""))),
+                ("house_prob", h.get("prob_D_majority"), "", ""),
+            ):
+                if value is None:
+                    continue
+                out.append(dict(snapshot_date=snapshot, series=series, panel=panel,
+                                unit="prob" if panel.endswith("prob") else "seats",
+                                value=value, low=low, high=high,
+                                n_sources=1, label=LABELS[series]))
+
     # Professional and market come from the published averages, which already
     # carry history — so these rows can be rebuilt for past dates too.
+    #
+    # The Senate probability here is the chance of CONTROL, which needs 51
+    # seats. That is why our own series above uses prob_D_51_plus and not the
+    # better-known 50+ figure: a chart is not allowed to put two different
+    # events on the same axis because they happen to be called the same thing.
+    PANEL_OF = {
+        ("NATL_HOUSE_2026", "seats_D"): "house_seats",
+        ("NATL_HOUSE_2026", "win_prob_D"): "house_prob",
+        ("NATL_SENATE_2026", "seats_D"): "senate_seats",
+        ("NATL_SENATE_2026", "win_prob_D"): "senate_prob",
+    }
     for r in _rd(derived / "category_averages.csv"):
-        if r["race_id"] != "NATL_HOUSE_2026":
-            continue
         cat, q, v = r["category"], r["quantity"], _f(r["mean"])
-        if v is None:
+        if v is None or cat not in ("professional", "market"):
             continue
-        if cat == "professional" and q == "margin_D":
+        if r["race_id"] == "NATL_HOUSE_2026" and q == "margin_D" and cat == "professional":
             out.append(dict(snapshot_date=r["snapshot_date"], series="professional",
                             panel="margin", unit="pct", value=round(v, 3),
                             low=_f(r.get("min")) or "", high=_f(r.get("max")) or "",
                             n_sources=r.get("n_sources", 1), label=LABELS["professional"]))
-        elif q == "win_prob_D" and cat in ("professional", "market"):
-            out.append(dict(snapshot_date=r["snapshot_date"], series=cat,
-                            panel="prob", unit="prob", value=round(v, 4),
-                            low="", high="", n_sources=r.get("n_sources", 1),
-                            label=LABELS[cat]))
+            continue
+        panel = PANEL_OF.get((r["race_id"], q))
+        if panel:
+            out.append(dict(snapshot_date=r["snapshot_date"], series=cat, panel=panel,
+                            unit="prob" if panel.endswith("prob") else "seats",
+                            value=round(v, 4), low="", high="",
+                            n_sources=r.get("n_sources", 1), label=LABELS[cat]))
     return out
 
 
 def update_timeline(derived: Path, snapshot: str) -> list[dict]:
     """Merge today's rows into timeline.csv. Idempotent on (date, series, panel)."""
     path = derived / "timeline.csv"
-    rows = {(r["snapshot_date"], r["series"], r["panel"]): r for r in _rd(path)}
+    rows = {(r["snapshot_date"], r["series"], r["panel"]): r for r in _rd(path)
+            if r["panel"] in PANELS}
     for r in collect_today(derived, snapshot):
         rows[(r["snapshot_date"], r["series"], r["panel"])] = r
     ordered = sorted(rows.values(), key=lambda r: (r["panel"], r["snapshot_date"],
@@ -172,9 +236,21 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
             v = _f(pts[-1].get(k))
             if v is not None:
                 bands.append(v)
+    view = VIEWS.get(panel, {})
+    unit = view.get("unit", "pct")
     lo, hi = min(vals + bands), max(vals + bands)
-    pad = max((hi - lo) * 0.18, 0.5 if panel == "margin" else 0.04)
+    # A reference line only widens the axis when it is close enough to be worth
+    # drawing. Forcing 218 into view when every series sits near 250 would push
+    # the interesting part of the chart into the top third; leaving it out when
+    # a series is about to cross it would hide the only thing that matters.
+    ref = view.get("reference")
+    if ref is not None and lo - (hi - lo) * 0.6 <= ref <= hi + (hi - lo) * 0.6:
+        lo, hi = min(lo, ref), max(hi, ref)
+    pad = max((hi - lo) * 0.18,
+              {"pct": 0.5, "prob": 0.04, "seats": 2.0}.get(unit, 0.5))
     lo, hi = lo - pad, hi + pad
+    if unit == "prob":
+        lo, hi = max(0.0, lo), min(1.0, hi)
     ticks = _nice_ticks(lo, hi)
     if ticks:
         lo, hi = min(lo, ticks[0]), max(hi, ticks[-1])
@@ -204,6 +280,12 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
             band = {"y_low": round(Y(_f(last["low"])), 2),
                     "y_high": round(Y(_f(last["high"])), 2),
                     "low": _f(last["low"]), "high": _f(last["high"])}
+        # A series can STOP. It happened the day a second professional
+        # forecaster came online: the category then held one open source and
+        # one gated one, which is below the disclosure floor, so the average
+        # became unpublishable and the line simply ended. Drawn without a mark,
+        # the last point still sits at the right-hand edge next to a current
+        # date and reads as today's number. It is not.
         series.append({
             "key": key, "label": LABELS.get(key, key),
             "color": COLORS.get(key, ("#666", "#999"))[0],
@@ -211,6 +293,8 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
             "points": coords,
             "polyline": " ".join(f"{c['x']},{c['y']}" for c in coords),
             "last": coords[-1], "band": band,
+            "last_date": coords[-1]["date"],
+            "stale": coords[-1]["date"] != dates[-1],
             "n_sources": last.get("n_sources", 1),
         })
     # Direct-label de-collision.
@@ -223,7 +307,7 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
     #
     # So push labels apart vertically until they clear each other, keeping their
     # order. The MARKERS stay where the data is; only the text moves.
-    gap = 8.0 if panel == "margin" else 13.0
+    gap = 8.0 if unit == "pct" else 13.0
     for s_ in sorted(series, key=lambda x: x["last"]["y"]):
         s_["label_y"] = s_["last"]["y"]
     ordered_lbl = sorted(series, key=lambda x: x["label_y"])
@@ -258,23 +342,32 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
             s_["sx_low"] = round((s_["band"]["low"] - lo) / (hi - lo) * 100, 2)
             s_["sx_high"] = round((s_["band"]["high"] - lo) / (hi - lo) * 100, 2)
 
+    def fmt(t: float) -> str:
+        if unit == "prob":
+            return f"{t * 100:.0f}%"
+        if unit == "seats":
+            return f"{t:.0f}"
+        return f"D+{t:.0f}" if t > 0 else ("EVEN" if abs(t) < 1e-9 else f"R+{abs(t):.0f}")
+
     return {
         "panel": panel,
-        "unit": "pct" if panel == "margin" else "prob",
+        "unit": unit,
+        "label": view.get("label", ""),
+        "chamber": view.get("chamber", ""),
+        "metric": view.get("metric", "margin"),
+        "total": view.get("total"),
         "dates": dates, "n_dates": len(dates), "dense": dense,
         "date_ticks": date_ticks,
-        "x_ticks": [{"v": t["v"], "x": round((t["v"] - lo) / (hi - lo) * 100, 2),
-                     "label": t["label"]} for t in
-                    [{"v": t, "label": (f"D+{t:.0f}" if t > 0 else
-                       ("EVEN" if abs(t) < 1e-9 else f"R+{abs(t):.0f}"))
-                       if panel == "margin" else f"{t*100:.0f}%"} for t in ticks]],
-        "y_ticks": [{"v": t, "y": round(Y(t), 2),
-                     "label": (f"D+{t:.0f}" if t > 0 else ("EVEN" if abs(t) < 1e-9
-                               else f"R+{abs(t):.0f}")) if panel == "margin"
-                              else f"{t*100:.0f}%"}
-                    for t in ticks],
-        "zero_y": round(Y(0.0), 2) if panel == "margin" and lo < 0 < hi else None,
-        "half_y": round(Y(0.5), 2) if panel == "prob" and lo < 0.5 < hi else None,
+        "x_ticks": [{"v": t, "x": round((t - lo) / (hi - lo) * 100, 2),
+                     "label": fmt(t)} for t in ticks],
+        "y_ticks": [{"v": t, "y": round(Y(t), 2), "label": fmt(t)} for t in ticks],
+        # One generalised reference line. Was two special cases — zero for the
+        # margin panel, one-half for the probability panel — which had no room
+        # for "218 seats" and would have needed a third.
+        "ref_y": (round(Y(ref), 2) if ref is not None and lo < ref < hi else None),
+        "ref_label": view.get("reference_label", ""),
+        "ref_value": ref,
+        "zero_y": round(Y(0.0), 2) if unit == "pct" and lo < 0 < hi else None,
         "series": series,
     }
 
@@ -395,6 +488,140 @@ def _ladder_y(m: float) -> float:
     return 50 - (m / LADDER_CLIP) * 50
 
 
+# --------------------------------------------------------------------------
+# Ratings spread: where the raters disagree, drawn rather than tabulated.
+# --------------------------------------------------------------------------
+
+# The ordinal scale as the parser numbers it: 0 is Safe D, 10 is Safe R.
+# Drawn with Democrats on the RIGHT, matching every other value axis on the
+# site, where D+ is the positive direction.
+RATING_TICKS = [(0.0, "Safe D"), (3.0, "Lean D"), (5.0, "Toss-up"),
+                (7.0, "Lean R"), (10.0, "Safe R")]
+
+# Source ids are for joins; people have names. Printing `fox_power_rankings` at
+# a reader is a database column escaping onto a page.
+RATER_NAMES = {
+    "cook": "Cook Political Report",
+    "inside_elections": "Inside Elections",
+    "sabato": "Sabato's Crystal Ball",
+    "ddhq": "Decision Desk HQ",
+    "economist": "The Economist",
+    "race_to_the_wh": "Race to the WH",
+    "rcp": "RealClearPolitics",
+    "fox_power_rankings": "Fox News Power Rankings",
+    "votehub": "VoteHub",
+    "fiftyplusone": "FiftyPlusOne",
+    "split_ticket": "Split Ticket",
+    "silver_bulletin": "Silver Bulletin",
+    "cnalysis": "CNalysis",
+    "elections_daily": "Elections Daily",
+    "jhk_forecasts": "JHK Forecasts",
+}
+
+
+def rater_name(sid: str) -> str:
+    return RATER_NAMES.get(sid, sid.replace("_", " ").title())
+
+
+def _rating_x(numeric: float) -> float:
+    return round((10.0 - max(0.0, min(10.0, numeric))) / 10.0 * 100.0, 2)
+
+
+def build_ratings_spread(derived: Path, snapshot: str, chamber: str,
+                         top_n: int = 24) -> dict | None:
+    """One row per seat, one dot per rater, sorted by how far apart they are.
+
+    This replaces a table that had grown to thirty rows of comma-separated
+    labels — "cook: Lean R · ddhq: Toss-up · economist: Lean D · ..." — which
+    is a format that hides the only thing it is trying to show. Twelve raters
+    on one seat is a distribution, and a distribution should be drawn.
+
+    Dots at the same value are stacked rather than overplotted, so a column of
+    six at Toss-up reads as six and not as one.
+    """
+    rows = [r for r in _rd(derived / "expert_ratings.csv")
+            if r["snapshot_date"] == snapshot and r["chamber"] == chamber]
+    if not rows:
+        return None
+
+    by_seat: dict[str, dict[str, str]] = {}
+    meta: dict[str, dict] = {}
+    for r in rows:
+        v = r.get("value", "")
+        if ":" not in v:
+            continue
+        who, label = v.split(":", 1)
+        by_seat.setdefault(r["race_id"], {})[who] = label
+        meta[r["race_id"]] = {"state": r["state"], "district": r.get("district", "")}
+
+    # Label -> position, derived from the labels themselves rather than from a
+    # second copy of the scale. rating_numeric rows carry the number but not
+    # which rater said it, so the join would be by row order — fragile.
+    NUM = {"Safe D": 0.0, "Solid D": 0.0, "Likely D": 1.5, "Lean D": 3.0,
+           "Tilt D": 4.0, "Toss-up": 5.0, "Tossup": 5.0,
+           "Tilt R": 6.0, "Lean R": 7.0, "Likely R": 8.5,
+           "Safe R": 10.0, "Solid R": 10.0}
+
+    seats = []
+    for rid, who in by_seat.items():
+        vals = {k: NUM[v] for k, v in who.items() if v in NUM}
+        if len(vals) < 2:
+            continue
+        lo, hi = min(vals.values()), max(vals.values())
+
+        # One dot per distinct RATING, sized by how many raters chose it —
+        # not one dot per rater stacked upward. Twelve raters agreeing makes a
+        # twelve-high column, and a chart whose row height depends on how much
+        # its raters agree is unreadable in exactly the rows where agreement
+        # is the finding. Size carries the count; every row is one line tall.
+        groups: dict[float, list[str]] = {}
+        for k in sorted(vals):
+            groups.setdefault(vals[k], []).append(k)
+        biggest = max(len(v) for v in groups.values())
+        dots = [{"v": v, "x": _rating_x(v), "n": len(ks),
+                 "label": who[ks[0]],
+                 "forecasters": [rater_name(k) for k in ks],
+                 # Area, not radius, tracks the count — a radius that doubles
+                 # looks four times as big and would read as four raters.
+                 "r": round(2.6 + 2.4 * (len(ks) / biggest) ** 0.5, 2)}
+                for v, ks in sorted(groups.items())]
+
+        seats.append({
+            "race_id": rid, **meta[rid],
+            "n": len(vals), "spread": round(hi - lo, 1),
+            "mean": round(sum(vals.values()) / len(vals), 2),
+            "x_lo": _rating_x(hi), "x_hi": _rating_x(lo),   # hi numeric = more R = left
+            "x_mean": _rating_x(sum(vals.values()) / len(vals)),
+            "n_distinct": len(groups),
+            "dots": dots,
+        })
+    if not seats:
+        return None
+    # Unanimous seats carry no spread to show. They are counted, not drawn.
+    contested = [s for s in seats if s["spread"] > 0]
+    contested.sort(key=lambda s: (-s["spread"], s["race_id"]))
+    shown = contested[:top_n]
+    if not shown:
+        return None
+    return {
+        "chamber": chamber,
+        "n_seats": len(seats),
+        "n_contested": len(contested),
+        "n_unanimous": len(seats) - len(contested),
+        "n_shown": len(shown),
+        "n_raters": len({f for s in seats for d in s["dots"]
+                         for f in d["forecasters"]}),
+        "raters": sorted({f for s in seats for d in s["dots"]
+                          for f in d["forecasters"]}, key=str.lower),
+        "ticks": [{"v": v, "x": _rating_x(v), "label": lab} for v, lab in RATING_TICKS],
+        "seats": shown,
+    }
+
+
 def build(derived: Path, snapshot: str) -> dict:
     rows = update_timeline(derived, snapshot)
-    return {p: build_panel(rows, p) for p in ("margin", "prob")}
+    out = {p: build_panel(rows, p) for p in PANELS}
+    out["views"] = VIEWS
+    out["ratings"] = {c: build_ratings_spread(derived, snapshot, c)
+                      for c in ("senate", "house")}
+    return out

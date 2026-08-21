@@ -40,6 +40,87 @@
   }
 })();
 
+/* Segmented toggles.
+   One generic handler rather than one per chart. A group declares its
+   dimensions ("chamber", "metric"); each panel declares its coordinates; the
+   panel whose coordinates match every current selection is the one shown.
+   Adding a third dimension later needs no new JavaScript. */
+(function () {
+  document.querySelectorAll("[data-toggle-group]").forEach(function (bar) {
+    var name = bar.getAttribute("data-toggle-group");
+    var box = document.querySelector('[data-group="' + name + '"]');
+    if (!box) return;
+    var dims = {};
+    bar.querySelectorAll(".seg").forEach(function (seg) {
+      var dim = seg.getAttribute("data-dim");
+      var on = seg.querySelector('button[aria-selected="true"]') ||
+               seg.querySelector("button");
+      dims[dim] = on && on.getAttribute("data-value");
+      seg.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b) return;
+        seg.querySelectorAll("button").forEach(function (x) {
+          x.setAttribute("aria-selected", String(x === b));
+        });
+        dims[dim] = b.getAttribute("data-value");
+        paint();
+      });
+    });
+    function paint() {
+      var shown = null;
+      box.querySelectorAll("[data-panel]").forEach(function (p) {
+        var ok = Object.keys(dims).every(function (k) {
+          return p.getAttribute("data-" + k) === dims[k];
+        });
+        p.hidden = !ok;
+        if (ok) shown = p;
+      });
+      /* Never leave the reader looking at nothing. If no panel matches — a
+         combination with no data yet — fall back to the first one and say so
+         rather than rendering an empty card. */
+      var none = box.querySelector("[data-empty]");
+      if (none) none.hidden = !!shown;
+    }
+    paint();
+  });
+})();
+
+/* Methods sub-navigation: one section at a time, with the hash as the address
+   so a link to #markets opens on markets rather than at the top. */
+(function () {
+  var nav = document.querySelector("nav.sub");
+  if (!nav) return;
+  var links = Array.prototype.slice.call(nav.querySelectorAll("a"));
+  function show(id, push) {
+    var found = false;
+    document.querySelectorAll("[data-section]").forEach(function (s) {
+      var on = s.getAttribute("data-section") === id;
+      s.hidden = !on;
+      if (on) found = true;
+    });
+    if (!found) return false;
+    links.forEach(function (a) {
+      a.setAttribute("aria-current",
+        String(a.getAttribute("href") === "#" + id));
+    });
+    if (push && window.history && history.replaceState) {
+      history.replaceState(null, "", "#" + id);
+    }
+    return true;
+  }
+  links.forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var id = a.getAttribute("href").slice(1);
+      if (show(id, true)) { e.preventDefault(); window.scrollTo(0, 0); }
+    });
+  });
+  var start = (location.hash || "").slice(1);
+  if (!start || !show(start, false)) show(links[0].getAttribute("href").slice(1), false);
+  window.addEventListener("hashchange", function () {
+    show((location.hash || "").slice(1), false);
+  });
+})();
+
 /* Theme toggle. The button label names the mode you would GET by pressing it,
    not the mode you are in — the other convention reads as a status display and
    people click it expecting nothing to happen. */

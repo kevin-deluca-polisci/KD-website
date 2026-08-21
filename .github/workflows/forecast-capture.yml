@@ -118,6 +118,12 @@ jobs:
           # D+10.5. A frozen number on a live page is worse than no number.
           python3 forecast/model/fundamentals.py --cycle "$CYCLE"
           python3 forecast/model/polling.py     --cycle "$CYCLE"
+          # seats.py runs LAST of the models and reads the two JSONs the
+          # steps above write. It pushes each tide through the same seat
+          # machinery, which is what gives fundamentals and polling a seat
+          # count and a chamber probability instead of a national margin
+          # and four empty cells.
+          python3 forecast/model/seats.py       --cycle "$CYCLE"
           python3 forecast/collect/aggregate.py --cycle "$CYCLE"
           python3 forecast/collect/publish.py   --cycle "$CYCLE"
 

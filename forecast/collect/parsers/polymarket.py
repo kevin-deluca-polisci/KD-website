@@ -81,20 +81,36 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                     rid, chamber, state, district = race_id("senate", st), "senate", st, ""
                 else:
                     continue
-                # Prefer the outcome explicitly naming a party.
-                side, price = None, None
+                # Record EVERY party outcome the market carries, not just the
+                # first one found.
+                #
+                # The previous version broke out of this loop on the first
+                # match, so a two-outcome market stored one side and dropped
+                # the other — and which side survived depended on the order
+                # Polymarket happened to list them in. The result was an
+                # archive where some races had P(D), some had P(R), and
+                # anything comparing across races had to guess whether a
+                # missing D price meant "no market" or "the R price won the
+                # race to be stored". Store both; let the reader subtract.
+                found: dict[str, float] = {}
                 for i, o in enumerate(outs):
-                    if i < len(prices) and re.search(r"republic|GOP", o, re.I):
-                        side, price = "R", prices[i]; break
-                    if i < len(prices) and re.search(r"democrat", o, re.I):
-                        side, price = "D", prices[i]; break
-                if side is None:
-                    side, price = ("R" if re.search(r"republic|GOP", blob, re.I) else "D"), prices[0]
-                if not (0.0 <= price <= 1.0):
-                    continue
-                rows.append(ctx.row(art, race_id=rid, chamber=chamber, state=state,
-                                    district=district, quantity=f"win_prob_{side}",
-                                    value=round(price, 4), unit="prob"))
+                    if i >= len(prices):
+                        break
+                    if re.search(r"republic|GOP", o, re.I):
+                        found.setdefault("R", prices[i])
+                    elif re.search(r"democrat", o, re.I):
+                        found.setdefault("D", prices[i])
+                if not found:
+                    # A Yes/No market on a titled proposition — the party is in
+                    # the wording rather than the outcome list.
+                    found = {"R" if re.search(r"republic|GOP", blob, re.I) else "D":
+                             prices[0]}
+                for side, price in found.items():
+                    if not (0.0 <= price <= 1.0):
+                        continue
+                    rows.append(ctx.row(art, race_id=rid, chamber=chamber, state=state,
+                                        district=district, quantity=f"win_prob_{side}",
+                                        value=round(price, 4), unit="prob"))
     if not rows:
         raise ValueError(f"parsed 0 rows from {seen_events} Polymarket events")
     return rows

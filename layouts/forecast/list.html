@@ -1,9 +1,17 @@
-{{/* TRACKER — the front page. Timeline first, then today's spread, then toplines.
+{{/* TRACKER — the front page.
 
      Data comes in via resources.Get rather than .Site.Data on purpose: touching
      .Site.Data forces Hugo to assemble the whole data map, and this site's
      data/*.csv load as [][]string, which Hugo 0.123 cannot merge. One reference
-     was enough to break the entire build. */}}
+     was enough to break the entire build.
+
+     The lead chart is ONE timeline with two toggles rather than three stacked
+     charts. Markets quote a probability and not a margin, so on a margin axis
+     they had to live in a separate panel below — which put the one series most
+     readers came for furthest from the top, and made the comparison the whole
+     site exists for into something you had to scroll between. Seat counts and
+     chamber probabilities are quantities every method can answer, so on those
+     axes all four sit together. */}}
 {{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
 {{- $ch := $d.charts -}}
 {{- $p := $d.polling_model -}}
@@ -13,100 +21,135 @@
 
 <div class="wrap viz">
 
-  {{- with $ch.margin }}
   <div class="card">
-    <h2>How the methods are moving</h2>
-    <p class="sub">Each line forecasts the same quantity: the national House
-       popular-vote margin. The question this tracker exists to answer is whether
-       they converge as the election approaches, or whether one of them sits
-       systematically above the others all year.</p>
+    <h2>Four ways of forecasting, one chart</h2>
 
-    {{- $L := 56.0 }}{{ $T := 16.0 }}{{ $W := 634.0 }}{{ $H := 180.0 }}
-    {{- $pan := . }}
-    <svg viewBox="0 0 720 232" role="img"
-         aria-label="National House margin forecasts over time, by method">
-      {{- range .y_ticks }}
-      {{- $y := add $T (mul (div .y 100.0) $H) }}
-      <line class="gridline" x1="{{ $L }}" y1="{{ $y }}" x2="{{ add $L $W }}" y2="{{ $y }}"/>
-      <text class="tick" x="{{ sub $L 8 }}" y="{{ add $y 4 }}" text-anchor="end">{{ .label }}</text>
-      {{- end }}
-      {{- with .zero_y }}
-      <line class="baseline" x1="{{ $L }}" y1="{{ add $T (mul (div . 100.0) $H) }}"
-            x2="{{ add $L $W }}" y2="{{ add $T (mul (div . 100.0) $H) }}"/>
-      {{- end }}
-
-      {{- range $s := .series }}
-      {{- $col := printf "var(--c-%s)" $s.key }}
-      {{- with $s.band }}
-      {{- $x := add $L (mul (div $s.last.x 100.0) $W) }}
-      <line x1="{{ $x }}" y1="{{ add $T (mul (div .y_high 100.0) $H) }}"
-            x2="{{ $x }}" y2="{{ add $T (mul (div .y_low 100.0) $H) }}"
-            stroke="{{ $col }}" stroke-width="2" opacity="0.32" stroke-linecap="round"/>
-      {{- end }}
-      {{- if gt (len $s.points) 1 }}
-      <polyline fill="none" stroke="{{ $col }}" stroke-width="2"
-                stroke-linejoin="round" stroke-linecap="round"
-                points="{{ range $i, $c := $s.points }}{{ if $i }} {{ end }}{{ add $L (mul (div $c.x 100.0) $W) }},{{ add $T (mul (div $c.y 100.0) $H) }}{{ end }}"/>
-      {{- end }}
-      {{- if not $pan.dense }}
-      {{- range $s.points }}
-      <circle cx="{{ add $L (mul (div .x 100.0) $W) }}" cy="{{ add $T (mul (div .y 100.0) $H) }}"
-              r="4.5" fill="{{ $col }}" stroke="var(--surface)" stroke-width="2">
-        <title>{{ $s.label }} — {{ .date }}: D+{{ printf "%.1f" .v }}</title>
-      </circle>
-      {{- end }}
-      {{- else }}
-      <circle cx="{{ add $L (mul (div $s.last.x 100.0) $W) }}"
-              cy="{{ add $T (mul (div $s.last.y 100.0) $H) }}"
-              r="4.5" fill="{{ $col }}" stroke="var(--surface)" stroke-width="2">
-        <title>{{ $s.label }} — {{ $s.last.date }}: D+{{ printf "%.1f" $s.last.v }}</title>
-      </circle>
-      {{- end }}
-      <text class="dlabel" x="{{ add (add $L (mul (div $s.last.x 100.0) $W)) 10 }}"
-            y="{{ add (add $T (mul (div $s.label_y 100.0) $H)) 4 }}"
-            fill="{{ $col }}">D+{{ printf "%.1f" $s.last.v }}</text>
-      {{- end }}
-
-      <line class="gridline" x1="{{ $L }}" y1="{{ add $T $H }}" x2="{{ add $L $W }}" y2="{{ add $T $H }}"/>
-      {{- range .date_ticks }}
-      <text class="tick" x="{{ add $L (mul (div .x 100.0) $W) }}" y="{{ add (add $T $H) 18 }}"
-            text-anchor="{{ .anchor }}">{{ .date }}</text>
-      {{- end }}
-    </svg>
-
-    <div class="legend">
-      {{- range .series }}
-      <span><i class="swatch" style="background:var(--c-{{ .key }})"></i>{{ .label }}</span>
-      {{- end }}
+    <div class="segs" data-toggle-group="tracker">
+      <span class="seglabel">Chamber</span>
+      <div class="seg" data-dim="chamber">
+        <button type="button" data-value="house" aria-selected="true">House</button>
+        <button type="button" data-value="senate" aria-selected="false">Senate</button>
+      </div>
+      <span class="seglabel">Showing</span>
+      <div class="seg" data-dim="metric">
+        <button type="button" data-value="seats" aria-selected="true">Democratic seats</button>
+        <button type="button" data-value="prob" aria-selected="false">Chance of a majority</button>
+      </div>
     </div>
 
-    {{- if lt .n_dates 3 }}
-    <p class="thin-note">Collection began {{ index .dates 0 }}. With {{ .n_dates }}
-       snapshot{{ if ne .n_dates 1 }}s{{ end }} there is no trend to read yet; the
-       series fills in once a day.</p>
-    {{- end }}
+    <div data-group="tracker">
+    {{- range $vk := (slice "house_seats" "house_prob" "senate_seats" "senate_prob") }}
+    {{- $pan := index $ch $vk }}
+    {{- if $pan }}
+    <div data-panel data-chamber="{{ $pan.chamber }}" data-metric="{{ $pan.metric }}">
+      <p class="sub">{{ $pan.label }}{{ with $pan.total }}, of {{ . }}{{ end }}.
+         {{ if eq $pan.chamber "senate" }}A majority needs 51: a 50–50 tie is broken
+         by the vice-president, who is a Republican this cycle.{{ end }}</p>
 
-    <details>
-      <summary>See the numbers</summary>
-      <table>
-        <tr><th>Method</th><th>Date</th><th class="num">Margin</th><th class="num">Sources</th></tr>
-        {{- range $s := .series }}{{- range $s.points }}
-        <tr><td>{{ $s.label }}</td><td>{{ .date }}</td>
-            <td class="num">D+{{ printf "%.2f" .v }}</td>
-            <td class="num">{{ $s.n_sources }}</td></tr>
-        {{- end }}{{- end }}
-      </table>
-    </details>
+      {{- $L := 56.0 }}{{ $T := 18.0 }}{{ $W := 618.0 }}{{ $H := 176.0 }}
+      <svg viewBox="0 0 720 234" role="img"
+           aria-label="{{ $pan.label }} over time, by method">
+        {{- range $pan.y_ticks }}
+        {{- $y := add $T (mul (div .y 100.0) $H) }}
+        <line class="gridline" x1="{{ $L }}" y1="{{ $y }}" x2="{{ add $L $W }}" y2="{{ $y }}"/>
+        <text class="tick" x="{{ sub $L 8 }}" y="{{ add $y 4 }}" text-anchor="end">{{ .label }}</text>
+        {{- end }}
+        {{- with $pan.ref_y }}
+        <line class="baseline" x1="{{ $L }}" y1="{{ add $T (mul (div . 100.0) $H) }}"
+              x2="{{ add $L $W }}" y2="{{ add $T (mul (div . 100.0) $H) }}"/>
+        {{/* Centred. Neither end is safe: series are labelled at their last
+             point, which is the right edge for a live series and the left edge
+             for one that stopped, and this label collided with each in turn.
+             The middle of the plot is the one place no direct label goes. */}}
+        <text class="tick" x="{{ add $L (div $W 2) }}" text-anchor="middle"
+              y="{{ sub (add $T (mul (div . 100.0) $H)) 6 }}"
+              style="fill:var(--ink-3)">{{ $pan.ref_label }}</text>
+        {{- end }}
+
+        {{- range $s := $pan.series }}
+        {{- $col := printf "var(--c-%s)" $s.key }}
+        {{- with $s.band }}
+        {{- $x := add $L (mul (div $s.last.x 100.0) $W) }}
+        <line x1="{{ $x }}" y1="{{ add $T (mul (div .y_high 100.0) $H) }}"
+              x2="{{ $x }}" y2="{{ add $T (mul (div .y_low 100.0) $H) }}"
+              stroke="{{ $col }}" stroke-width="2" opacity="0.32" stroke-linecap="round"/>
+        {{- end }}
+        {{- if gt (len $s.points) 1 }}
+        <polyline fill="none" stroke="{{ $col }}" stroke-width="2"
+                  stroke-linejoin="round" stroke-linecap="round"
+                  {{ if $s.stale }}stroke-dasharray="5 4"{{ end }}
+                  points="{{ range $i, $c := $s.points }}{{ if $i }} {{ end }}{{ add $L (mul (div $c.x 100.0) $W) }},{{ add $T (mul (div $c.y 100.0) $H) }}{{ end }}"/>
+        {{- end }}
+        {{- $op := cond $s.stale "0.5" "1" }}
+        {{- if not $pan.dense }}
+        {{- range $s.points }}
+        <circle cx="{{ add $L (mul (div .x 100.0) $W) }}" cy="{{ add $T (mul (div .y 100.0) $H) }}"
+                r="4.5" fill="{{ $col }}" stroke="var(--surface)" stroke-width="2" opacity="{{ $op }}">
+          <title>{{ $s.label }} — {{ .date }}: {{ if eq $pan.unit "prob" }}{{ printf "%.0f%%" (mul .v 100) }}{{ else }}{{ printf "%.0f" .v }}{{ end }}</title>
+        </circle>
+        {{- end }}
+        {{- else }}
+        <circle cx="{{ add $L (mul (div $s.last.x 100.0) $W) }}"
+                cy="{{ add $T (mul (div $s.last.y 100.0) $H) }}"
+                r="4.5" fill="{{ $col }}" stroke="var(--surface)" stroke-width="2" opacity="{{ $op }}"/>
+        {{- end }}
+        <text class="dlabel" x="{{ add (add $L (mul (div $s.last.x 100.0) $W)) 9 }}"
+              y="{{ add (add $T (mul (div $s.label_y 100.0) $H)) 4 }}"
+              fill="{{ $col }}"{{ if $s.stale }} opacity=".65"{{ end }}>
+          {{- if eq $pan.unit "prob" }}{{ printf "%.0f%%" (mul $s.last.v 100) }}{{ else }}{{ printf "%.0f" $s.last.v }}{{ end -}}
+        </text>
+        {{- end }}
+
+        <line class="gridline" x1="{{ $L }}" y1="{{ add $T $H }}" x2="{{ add $L $W }}" y2="{{ add $T $H }}"/>
+        {{- range $pan.date_ticks }}
+        <text class="tick" x="{{ add $L (mul (div .x 100.0) $W) }}" y="{{ add (add $T $H) 18 }}"
+              text-anchor="{{ .anchor }}">{{ .date }}</text>
+        {{- end }}
+      </svg>
+
+      <div class="legend">
+        {{- range $pan.series }}
+        <span><i class="swatch" style="background:var(--c-{{ .key }})"></i>{{ .label }}{{ if .stale }} <span class="muted">· last {{ .last_date }}</span>{{ end }}</span>
+        {{- end }}
+      </div>
+
+      {{- $stale := where $pan.series "stale" true }}
+      {{- with $stale }}
+      <p class="thin-note">{{ range $i, $s := . }}{{ if $i }}, {{ end }}{{ $s.label }}{{ end }}
+         stopped on {{ (index . 0).last_date }} and is drawn faded. That category gained a second
+         contributor whose terms do not permit republication, which puts the
+         average below the disclosure floor —
+         <a href="/forecast/methods/#disclosure">why</a>.</p>
+      {{- end }}
+      {{- if lt $pan.n_dates 3 }}
+      <p class="thin-note">Collection began {{ index $pan.dates 0 }}. With
+         {{ $pan.n_dates }} snapshot{{ if ne $pan.n_dates 1 }}s{{ end }} there is no
+         trend to read yet.</p>
+      {{- end }}
+
+      <details>
+        <summary>See the numbers</summary>
+        <table>
+          <tr><th>Method</th><th>Date</th><th class="num">{{ if eq $pan.unit "prob" }}Chance{{ else }}Seats{{ end }}</th></tr>
+          {{- range $s := $pan.series }}{{- range $s.points }}
+          <tr><td>{{ $s.label }}</td><td>{{ .date }}</td>
+              <td class="num">{{ if eq $pan.unit "prob" }}{{ printf "%.1f%%" (mul .v 100) }}{{ else }}{{ printf "%.1f" .v }}{{ end }}</td></tr>
+          {{- end }}{{- end }}
+        </table>
+      </details>
+    </div>
+    {{- end }}
+    {{- end }}
+      <p data-empty class="muted" hidden>No series for that combination yet.</p>
+    </div>
   </div>
-  {{- end }}
 
   {{- with $ch.margin }}
   <div class="card">
-    <h2>Where the methods stand today</h2>
-    <p class="sub">The same numbers on one axis, so the spread is visible without
-       tracing lines. A bar is an 80% interval; a bare dot means that method
-       publishes a point estimate with no stated uncertainty, which is itself
-       worth noticing.</p>
+    <h2>The national House margin today</h2>
+    <p class="sub">A bar is an 80% interval; a bare dot is a point estimate with no
+       stated uncertainty. Markets are absent because they quote probabilities,
+       not margins.</p>
     {{- $SL := 150.0 }}{{ $SW := 470.0 }}{{ $SH := add 30 (mul 42 (len .series)) }}
     <svg viewBox="0 0 720 {{ add $SH 16 }}" role="img"
          aria-label="Current national House margin by method, with intervals">
@@ -120,72 +163,25 @@
       {{- $y := add 42 (mul 42 $i) }}
       {{- $col := printf "var(--c-%s)" $s.key }}
       <text class="rowlab" x="0" y="{{ add $y 3 }}">{{ $s.label }}</text>
-      <text class="rowsub" x="0" y="{{ add $y 18 }}">{{ $s.n_sources }} source{{ if ne (printf "%v" $s.n_sources) "1" }}s{{ end }}</text>
+      <text class="rowsub" x="0" y="{{ add $y 18 }}">{{ if $s.stale }}as of {{ $s.last_date }}{{ else }}{{ $s.n_sources }} source{{ if ne (printf "%v" $s.n_sources) "1" }}s{{ end }}{{ end }}</text>
       {{- if $s.sx_low }}
       <line x1="{{ add $SL (mul (div $s.sx_low 100.0) $SW) }}" y1="{{ $y }}"
             x2="{{ add $SL (mul (div $s.sx_high 100.0) $SW) }}" y2="{{ $y }}"
             stroke="{{ $col }}" stroke-width="7" opacity="0.3" stroke-linecap="round"/>
       {{- end }}
       <circle cx="{{ add $SL (mul (div $s.sx 100.0) $SW) }}" cy="{{ $y }}" r="6"
-              fill="{{ $col }}" stroke="var(--surface)" stroke-width="2"/>
+              fill="{{ $col }}" stroke="var(--surface)" stroke-width="2"
+              {{ if $s.stale }}opacity=".55"{{ end }}/>
       <text class="rowval" x="700" y="{{ add $y 4 }}" text-anchor="end">D+{{ printf "%.1f" $s.last.v }}</text>
       {{- end }}
     </svg>
   </div>
   {{- end }}
 
-  {{- with $ch.prob }}
-  <div class="card">
-    <h2>Chance Democrats win the House</h2>
-    <p class="sub">Markets and forecasters quote probabilities rather than margins,
-       so they cannot share an axis with the charts above. Same election,
-       different question, and no honest way to put them on one scale.</p>
-    {{- $L := 56.0 }}{{ $T := 12.0 }}{{ $W := 634.0 }}{{ $H := 110.0 }}
-    {{- $pan := . }}
-    <svg viewBox="0 0 720 160" role="img"
-         aria-label="Probability Democrats win the House, by source, over time">
-      {{- range .y_ticks }}
-      {{- $y := add $T (mul (div .y 100.0) $H) }}
-      <line class="gridline" x1="{{ $L }}" y1="{{ $y }}" x2="{{ add $L $W }}" y2="{{ $y }}"/>
-      <text class="tick" x="{{ sub $L 8 }}" y="{{ add $y 4 }}" text-anchor="end">{{ .label }}</text>
-      {{- end }}
-      {{- range $s := .series }}
-      {{- $col := printf "var(--c-%s)" $s.key }}
-      {{- if gt (len $s.points) 1 }}
-      <polyline fill="none" stroke="{{ $col }}" stroke-width="2" stroke-linejoin="round"
-                points="{{ range $i, $c := $s.points }}{{ if $i }} {{ end }}{{ add $L (mul (div $c.x 100.0) $W) }},{{ add $T (mul (div $c.y 100.0) $H) }}{{ end }}"/>
-      {{- end }}
-      {{- if not $pan.dense }}
-      {{- range $s.points }}
-      <circle cx="{{ add $L (mul (div .x 100.0) $W) }}" cy="{{ add $T (mul (div .y 100.0) $H) }}"
-              r="4.5" fill="{{ $col }}" stroke="var(--surface)" stroke-width="2">
-        <title>{{ $s.label }} — {{ .date }}: {{ printf "%.0f%%" (mul .v 100) }}</title>
-      </circle>
-      {{- end }}
-      {{- else }}
-      <circle cx="{{ add $L (mul (div $s.last.x 100.0) $W) }}"
-              cy="{{ add $T (mul (div $s.last.y 100.0) $H) }}"
-              r="4.5" fill="{{ $col }}" stroke="var(--surface)" stroke-width="2"/>
-      {{- end }}
-      <text class="dlabel" x="{{ add (add $L (mul (div $s.last.x 100.0) $W)) 10 }}"
-            y="{{ add (add $T (mul (div $s.label_y 100.0) $H)) 4 }}"
-            fill="{{ $col }}">{{ printf "%.0f%%" (mul $s.last.v 100) }}</text>
-      {{- end }}
-    </svg>
-    <div class="legend">
-      {{- range .series }}
-      <span><i class="swatch" style="background:var(--c-{{ .key }})"></i>{{ .label }}</span>
-      {{- end }}
-    </div>
-  </div>
-  {{- end }}
-
   <div class="card">
     <h2>The class models</h2>
     <p class="sub">Built in PLSC 2219 from public-domain inputs and published in
-       full, because every input is redistributable. The point of a teaching model
-       is that you can see, and argue with, every choice inside it.
-       <a href="/forecast/methods/">The choices are here</a>.</p>
+       full. <a href="/forecast/methods/">Every choice inside them is here</a>.</p>
     <div class="cards">
       {{- with $f }}
       <div class="card" style="margin:0">
@@ -205,7 +201,7 @@
         <div class="muted">Senate seats</div>
         <div class="big">{{ if .expected_D_total }}{{ printf "%.0f" .expected_D_total }}{{ else }}{{ printf "%.1f" .expected_D_seats_up }}{{ end }} <span style="font-size:.38em;font-weight:400;color:var(--ink-3)">of 100</span></div>
         {{- if .D_total_80pct }}
-        <div class="muted">80% interval {{ index .D_total_80pct 0 }}–{{ index .D_total_80pct 1 }} · 50 needed for control</div>
+        <div class="muted">80% interval {{ index .D_total_80pct 0 }}–{{ index .D_total_80pct 1 }} · 51 for a majority</div>
         {{- end }}
         <p class="muted" style="margin-top:12px">Generic ballot D+{{ printf "%.1f" .generic_ballot }},
            shrunk by λ={{ printf "%.2f" .shrink_lambda }} to an election-day tide of

@@ -477,21 +477,59 @@ def handle_polymarket(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tupl
         except Exception as e:
             notes.append(f"slug {slug} failed: {e}")
 
-    # ONE snapshot of the active-event list. The previous version issued one
-    # request per "search term" but never actually sent the term as a query, so
-    # it stored the same multi-megabyte response several times over.
+    # The active-event list, PAGED.
+    #
+    # The previous version asked for limit=500 in one request. Polymarket caps
+    # the page at 100 and returns 100 without complaining, so every run
+    # collected the first hundred active events and stopped — which happened to
+    # be the governors, and is why no per-state Senate market was ever in the
+    # archive. A silent cap is the worst kind: the response is a valid 200 with
+    # plausible content, so nothing downstream had any way to notice.
+    #
+    # Two stopping rules, and the second one matters more than it looks. Stop
+    # when a page comes back short, which is the normal end of the list. Also
+    # stop when a page is byte-identical to the one before it, because an API
+    # that ignores `offset` would otherwise loop until max_pages, storing the
+    # same multi-megabyte body over and over into an archive that is already
+    # the largest thing on disk.
     if cfg.get("snapshot_active_events"):
-        params = {"limit": cfg.get("page_limit", 500),
-                  "active": "true", "closed": "false"}
-        url = f"{base}/events?{urllib.parse.urlencode(params)}"
-        try:
-            body, meta = fetcher.get(url)
-            b += store.write(src["id"], "active-events", body, meta)
-            n += 1
-        except Exception as e:
-            notes.append(f"active-events snapshot failed: {e}")
+        limit = min(int(cfg.get("page_limit", 100)), 100)
+        max_pages = int(cfg.get("max_pages", 8))
+        prev_digest = None
+        pages = 0
+        for page in range(max_pages):
+            params = {"limit": limit, "offset": page * limit,
+                      "active": "true", "closed": "false"}
+            url = f"{base}/events?{urllib.parse.urlencode(params)}"
+            try:
+                body, meta = fetcher.get(url)
+            except Exception as e:
+                notes.append(f"active-events page {page} failed: {e}")
+                break
 
-    notes.append("per-seat market coverage was unverified in the audit; check the stored events")
+            digest = hashlib.sha256(body).hexdigest()
+            if digest == prev_digest:
+                notes.append(f"active-events page {page} repeated page "
+                             f"{page - 1} byte for byte — offset looks ignored, "
+                             f"stopping")
+                break
+            prev_digest = digest
+
+            b += store.write(src["id"], f"active-events-{page:02d}", body, meta)
+            n += 1
+            pages += 1
+
+            try:
+                count = len(json.loads(body))
+            except Exception:
+                count = limit          # unparseable: keep going, the parser will shout
+            if count < limit:
+                break
+        else:
+            notes.append(f"active-events hit max_pages={max_pages} and the list "
+                         f"had not ended — raise it or narrow the query")
+        notes.append(f"active-events: {pages} page(s) of up to {limit}")
+
     return n, b, notes
 
 

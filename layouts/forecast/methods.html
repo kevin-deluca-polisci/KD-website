@@ -1,380 +1,366 @@
+{{/* METHODS — one section at a time, via the sub-nav.
+
+     Sections are all present in the HTML and hidden with JS, not fetched. That
+     keeps every anchor linkable, keeps the page usable with scripting off (the
+     CSS only hides when the `js` class is set), and costs nothing: the whole
+     page is text.
+
+     Numbers come from $d.model_index, built in publish.py from the tier that
+     permits naming a source. Never hardcode a figure into this file — that is
+     a number that goes stale without anyone noticing. */}}
 {{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
 {{- $p := $d.polling_model -}}
 {{- $f := $d.fundamentals_model -}}
 {{- $mi := $d.model_index -}}
+{{- $proj := $d.seat_projections -}}
 {{ partial "forecast/head.html" (dict "page" . "d" $d) }}
 {{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
 
 <div class="wrap">
 
-  <div class="card">
-    <h2>What goes into each number</h2>
-    <p class="sub">The tracker shows four averages. Each one is a family of
-       forecasts that share a way of knowing, and the interesting thing about the
-       chart is that the four families disagree — so it matters what is inside
-       each. This page lists every model that contributes, what it is made of,
-       and where to go and read it. Our own two models get the most detail,
-       because they are the ones you can hold us to.</p>
-    <table>
-      <tr><th>Category</th><th>What its members have in common</th><th class="num">In today's average</th></tr>
-      <tr><td><strong>Fundamentals</strong></td>
-          <td class="muted">Predicts from conditions rather than from opinion: the economy, presidential approval, how many seats are being defended. Knows nothing about candidates or polls.</td>
-          <td class="num">{{ range $d.headline }}{{ if eq .category "fundamentals" }}{{ .n_sources }}{{ end }}{{ end }}</td></tr>
-      <tr><td><strong>Polling</strong></td>
-          <td class="muted">Starts from what people tell pollsters, then does something to it — averaging, weighting, correcting for how early it is.</td>
-          <td class="num">{{ range $d.headline }}{{ if eq .category "polling" }}{{ .n_sources }}{{ end }}{{ end }}</td></tr>
-      <tr><td><strong>Professional</strong></td>
-          <td class="muted">Published statistical forecasts that combine most of the above plus candidate quality, fundraising and local knowledge.</td>
-          <td class="num">{{ range $d.headline }}{{ if eq .category "professional" }}{{ .n_sources }}{{ end }}{{ end }}</td></tr>
-      <tr><td><strong>Markets</strong></td>
-          <td class="muted">Prices from people betting money. Not a model at all — an aggregate of everyone else's models, plus whatever else the traders think they know.</td>
-          <td class="num">{{ range $d.headline }}{{ if eq .category "market" }}{{ .n_sources }}{{ end }}{{ end }}</td></tr>
-    </table>
-    <p class="thin-note">Expert ratings — Cook, Sabato, Inside Elections and the
-       rest — are collected but deliberately kept out of all four averages.
-       “Lean R” is not a number, and the choice of number to turn it into is a
-       modelling decision worth arguing about rather than burying. They have
-       their own panel on the comparisons page.</p>
-  </div>
+  <nav class="sub">
+    <a href="#overview" aria-current="true">Overview</a>
+    <a href="#fundamentals">Fundamentals</a>
+    <a href="#polling">Polling</a>
+    <a href="#professional">Professional</a>
+    <a href="#markets">Markets</a>
+    <a href="#ratings">Ratings</a>
+    <a href="#disclosure">What is not published</a>
+  </nav>
 
-  <!-- ==================== FUNDAMENTALS ==================== -->
-  <div class="card">
-    <h2>Fundamentals</h2>
-    <p class="sub">Two very different models sit in this family, and the
-       difference between them is instructive: they disagree about what
-       “fundamentals” even means.</p>
+  <!-- ============================== OVERVIEW ============================== -->
+  <section data-section="overview" id="overview">
+    <div class="card">
+      <h2>What goes into each number</h2>
+      <p class="sub">Four categories, each a family of forecasts that share a way
+         of knowing. Our own two models get the most detail because they are the
+         ones you can hold us to.</p>
+      <table>
+        <tr><th>Category</th><th>What its members have in common</th></tr>
+        <tr><td><strong>Fundamentals</strong></td>
+            <td class="muted">Predicts from conditions rather than opinion: the economy, presidential approval, seats defended. Knows nothing about candidates or polls.</td></tr>
+        <tr><td><strong>Polling</strong></td>
+            <td class="muted">Starts from what people tell pollsters, then averages, weights, or corrects for how early it is.</td></tr>
+        <tr><td><strong>Professional</strong></td>
+            <td class="muted">Published statistical forecasts combining most of the above plus candidate quality, fundraising and local knowledge.</td></tr>
+        <tr><td><strong>Markets</strong></td>
+            <td class="muted">Prices from people betting money — an aggregate of everyone else's models plus whatever the traders think they know.</td></tr>
+      </table>
+      <p class="thin-note">Expert ratings are collected but kept out of all four
+         averages: “Lean R” is not a number, and choosing which number to make it
+         is a modelling decision. They have their own
+         <a href="#ratings">section</a> and a
+         <a href="/forecast/comparisons/">graphic</a>.</p>
+    </div>
 
+    <div class="card">
+      <h2>The choices that move the answer</h2>
+      <p class="sub">Everything in our two models that is a judgment rather than a
+         measurement.</p>
+      <table>
+        <tr><th>Choice</th><th>What we did</th><th>Why it is arguable</th></tr>
+        <tr><td>Generic-ballot shrinkage</td>
+            <td>λ decays from 1.0 at Election Day toward 0.5 far out{{ with $p }}; λ={{ printf "%.2f" .shrink_lambda }} today{{ end }}</td>
+            <td class="muted">A stylised reading of Bafumi–Erikson–Wlezien, not a re-estimation.</td></tr>
+        <tr><td>Race-level uncertainty</td>
+            <td>{{ with $p }}σ={{ printf "%.1f" .sigma }} points{{ end }}, from official Senate returns against prior-cycle lean</td>
+            <td class="muted">One cycle, n≈30. Cannot separate a national polling miss from state-level noise.</td></tr>
+        <tr><td>Seat baseline</td>
+            <td>{{ with $p }}{{ printf "%.0f" .holdover_D }}{{ end }} Democratic holdovers</td>
+            <td class="muted">Bookkeeping, not forecast — worth about twenty points of headline probability per seat.</td></tr>
+        <tr><td>Lean to margin</td>
+            <td>Expected margin = national tide + 2 × state lean</td>
+            <td class="muted">Linear, and it overshoots at the tails where there are not enough voters left to swing.</td></tr>
+        <tr><td>No bias correction</td>
+            <td>None applied</td>
+            <td class="muted">Generic-ballot bias is conditional on approval rather than constant.</td></tr>
+        <tr><td>Approval input</td>
+            <td>Hand-set</td>
+            <td class="muted">The last input not on a live feed, and the model is sensitive to it.</td></tr>
+        <tr><td>Two-party assumption</td>
+            <td>Every race modelled as D versus R</td>
+            <td class="muted">Nebraska has no Democrat and a serious independent; the model cannot represent that.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================ FUNDAMENTALS =========================== -->
+  <section data-section="fundamentals" id="fundamentals" hidden>
     {{- with $f }}
-    <h3>Our model — the class fundamentals model</h3>
-    <p class="muted">Presidential approval, real income growth, and how many seats
-       the president's party is defending. No polls, no markets, no candidate
-       quality. Fit on all 20 midterms from 1946 to 2022 and scored by
-       leave-one-election-out error, because with n = 20 an in-sample R² means
-       very little.</p>
-    {{- with .coefficients }}
-    <p style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;
-              background:var(--bg);border:1px solid var(--border);border-radius:7px;
-              padding:12px 14px;overflow-x:auto;margin:14px 0">R two-party House vote =
-       {{ printf "%.2f" .intercept }}
-       + {{ printf "%.3f" .approval }} × approval
-       + {{ printf "%.3f" .income_growth }} × real income growth
-       + {{ printf "%.3f" (index . "seats_before") }} × seats held going in</p>
-    {{- end }}
-    <div class="muted">Leave-one-out RMSE {{ printf "%.2f" .loeo_rmse }} points ·
-       in-sample R² {{ printf "%.2f" .r2 }} ·
-       today: <strong class="{{ if gt .margin_D 0.0 }}D{{ else }}R{{ end }}">{{ if gt .margin_D 0.0 }}D+{{ printf "%.1f" .margin_D }}{{ else }}R+{{ printf "%.1f" (mul .margin_D -1) }}{{ end }}</strong>
-       (80% {{ printf "%.1f" .margin_D_80_low }} to {{ printf "%.1f" .margin_D_80_high }})</div>
-
-    {{- with .inputs }}
-    <h3>Inputs today</h3>
-    <table>
-      <tr><th>Input</th><th class="num">Value</th><th>Source</th></tr>
-      <tr><td>Presidential approval</td><td class="num">{{ .approval }}%</td>
-          <td class="muted">hand-set, not yet a live feed</td></tr>
-      <tr><td>Real income growth</td><td class="num">{{ .income_growth }}%</td>
-          <td class="muted"><a href="https://fred.stlouisfed.org/series/A229RX0">FRED / BEA</a>, real disposable personal income per capita, year to date</td></tr>
-      <tr><td>Seats held going in</td><td class="num">{{ index . "seats_before" }}</td>
-          <td class="muted">current chamber</td></tr>
-    </table>
-    {{- end }}
-    {{- with .sensitivity }}
-    <h3>Sensitivity to approval</h3>
-    <table>
-      <tr><th class="num">Approval</th><th class="num">Predicted D margin</th></tr>
-      {{- range . }}
-      <tr><td class="num">{{ .approval }}%</td>
-          <td class="num">D+{{ printf "%.1f" .margin_D }}</td></tr>
+    <div class="card">
+      <h2>Our fundamentals model</h2>
+      <p class="sub">Presidential approval, real income growth, and seats
+         defended. Fit on all 20 midterms from 1946 to 2022 and scored by
+         leave-one-election-out error.</p>
+      {{- with .coefficients }}
+      <p style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;
+                background:var(--bg);border:1px solid var(--border);border-radius:7px;
+                padding:12px 14px;overflow-x:auto;margin:14px 0">R two-party House vote =
+         {{ printf "%.2f" .intercept }}
+         + {{ printf "%.3f" .approval }} × approval
+         + {{ printf "%.3f" .income_growth }} × real income growth
+         + {{ printf "%.3f" (index . "seats_before") }} × seats held going in</p>
       {{- end }}
-    </table>
-    {{- end }}
-    {{- end }}
-
-    <h3>Ray Fair's vote-share equations</h3>
-    <p class="muted">The oldest continuously published fundamentals model in the
-       field, run at Yale since the 1970s. Fair estimates three equations at once
-       — the presidential vote, the on-term House vote and the midterm House vote
-       — on data going back to 1916, and the headline finding is that the economy
-       moves all three in much the same way. Two features make it a useful
-       contrast with our model. It reads the economy directly, from growth and
-       inflation, where we read it through presidential approval; and it carries
-       an explicit balancing term, so a party that has done well is predicted to
-       lose ground at the following midterm rather than to keep it. Fair also
-       finds no presidential coattails on same-term House races: presidential and
-       House votes move together because the economy moves both, not because one
-       drags the other.</p>
-    <p class="muted"><a href="https://fairmodel.econ.yale.edu/vote2024/index2.htm">Fair's
-       congressional forecast page</a> ·
-       <a href="https://elischolar.library.yale.edu/cowles-discussion-paper-series/1895/">the
-       paper behind it</a></p>
-    {{- with index $mi "fair" }}
-    <div class="muted">Today: <strong>{{ printf "%.1f" .house_margin_D }}</strong></div>
-    {{- else }}
-    <p class="thin-note">Not yet in the daily collection, so no current figure is
-       shown here. It is not in the fundamentals average either — this page never
-       describes a model as contributing when it is not. Adding it is a
-       collection job, not a modelling one.</p>
-    {{- end }}
-
-    <h3>Inputs that are not forecasts</h3>
-    <p class="muted">Two sources feed the fundamentals family without predicting
-       anything themselves, and they are listed here so that “our own data” never
-       has to be taken on trust.
-       <a href="https://fred.stlouisfed.org/series/A229RX0">FRED</a> supplies real
-       disposable personal income per capita, pulled fresh every day.
-       <a href="https://electionlab.mit.edu/data">The MIT Election Data and Science
-       Lab</a> supplies certified official returns under a public-domain
-       dedication, which is what our state partisan lean is reconstructed from.
-       That reconstruction is why the Senate table can be published at all — see
-       <a href="#house">what is not published</a>.</p>
-  </div>
-
-  <!-- ==================== POLLING ==================== -->
-  <div class="card">
-    <h2>Polling</h2>
-
-    {{- with $p }}
-    <h3>Our model — the class polling model</h3>
-    <p class="muted">The generic ballot as a national tide, shrunk toward even
-       because early leads overstate the eventual result, then carried to each
-       state by its partisan lean. The shrinkage is the part worth arguing with:
-       a lead in August is not a lead in November, and the model discounts it by
-       an amount that decays as the election approaches.</p>
-    <table>
-      <tr><th>Step</th><th class="num">Value</th></tr>
-      <tr><td>Generic ballot average</td><td class="num">D+{{ printf "%.2f" .generic_ballot }}</td></tr>
-      <tr><td>Shrinkage λ</td><td class="num">{{ printf "%.3f" .shrink_lambda }}</td></tr>
-      <tr><td>Election-day tide</td><td class="num">D+{{ printf "%.2f" .tide_D }}</td></tr>
-      <tr><td>Race-level σ</td><td class="num">{{ printf "%.2f" .sigma }} pts</td></tr>
-      <tr><td>Expected D Senate seats</td>
-          <td class="num">{{ printf "%.1f" .expected_D_total }} of 100</td></tr>
-    </table>
-
-    {{- if .sensitivity }}
-    <div class="note">
-      <strong>Read this before quoting a probability.</strong>
-      This model puts the Democrats' chance of reaching 50+ Senate seats at
-      <strong>{{ printf "%.0f%%" (mul .prob_D_50_plus 100) }}</strong>{{ with .prob_D_51_plus }},
-      and of an outright majority of 51 at <strong>{{ printf "%.0f%%" (mul . 100) }}</strong>{{ end }}.
-      Both rest on a bookkeeping assumption rather than a forecast: how many
-      Democratic seats are <em>not</em> on the ballot. Move it by one seat and the
-      headline moves about twenty points.
-      <table style="max-width:420px;margin-top:10px">
-        <tr><th>Holdover D seats</th><th class="num">P(D reach 50+)</th></tr>
-        {{- range $k, $v := .sensitivity }}
-        <tr><td>{{ $k }}{{ if eq $k (printf "%.0f" $p.holdover_D) }} (used){{ end }}</td>
-            <td class="num">{{ printf "%.0f%%" (mul $v 100) }}</td></tr>
+      <table>
+        <tr><th>Input</th><th class="num">Value</th><th>Source</th></tr>
+        {{- with .inputs }}
+        <tr><td>Presidential approval</td><td class="num">{{ .approval }}%</td>
+            <td class="muted">hand-set, not yet a live feed</td></tr>
+        <tr><td>Real income growth</td><td class="num">{{ .income_growth }}%</td>
+            <td class="muted"><a href="https://fred.stlouisfed.org/series/A229RX0">FRED / BEA</a>, year to date</td></tr>
+        <tr><td>Seats held going in</td><td class="num">{{ index . "seats_before" }}</td>
+            <td class="muted">current chamber</td></tr>
         {{- end }}
       </table>
-      <p style="margin-top:10px">No modelling choice in this file matters that much.
-         That is the lesson, not a footnote.</p>
+      <table style="margin-top:16px">
+        <tr><th>Output</th><th class="num">Today</th></tr>
+        <tr><td>National House margin</td>
+            <td class="num">{{ if gt .margin_D 0.0 }}D+{{ printf "%.1f" .margin_D }}{{ else }}R+{{ printf "%.1f" (mul .margin_D -1) }}{{ end }}
+                <span class="muted">(80% {{ printf "%.1f" .margin_D_80_low }} to {{ printf "%.1f" .margin_D_80_high }})</span></td></tr>
+        {{- with $proj }}{{ with (index .projections "fundamentals") }}
+        <tr><td>D House seats</td><td class="num">{{ printf "%.0f" .house.expected_D_seats }} of {{ .house.n_districts }}
+            <span class="muted">(80% {{ index .house.D_seats_80pct 0 }}–{{ index .house.D_seats_80pct 1 }})</span></td></tr>
+        <tr><td>D Senate seats</td><td class="num">{{ printf "%.0f" .senate.expected_D_total }} of 100
+            <span class="muted">(80% {{ index .senate.D_total_80pct 0 }}–{{ index .senate.D_total_80pct 1 }})</span></td></tr>
+        {{- end }}{{ end }}
+        <tr><td>Fit</td><td class="num">LOO RMSE {{ printf "%.2f" .loeo_rmse }} pts · in-sample R² {{ printf "%.2f" .r2 }}</td></tr>
+      </table>
+      {{- with .sensitivity }}
+      <h3>Sensitivity to approval</h3>
+      <table style="max-width:340px">
+        <tr><th class="num">Approval</th><th class="num">D margin</th></tr>
+        {{- range . }}
+        <tr><td class="num">{{ .approval }}%</td><td class="num">D+{{ printf "%.1f" .margin_D }}</td></tr>
+        {{- end }}
+      </table>
+      {{- end }}
+      <p class="thin-note">The seat counts come from pushing this margin through
+         the same seat machinery the polling model uses, so any difference
+         between the two models is a difference in the national tide and nothing
+         else.</p>
     </div>
     {{- end }}
-    {{- end }}
 
-    <h3>Where the polling comes from</h3>
-    <p class="muted">Our model does not run its own polling average. It takes one
-       from someone who does, which makes the choice of whose average to use a
-       modelling decision in its own right.</p>
-    <p class="muted"><strong><a href="https://www.natesilver.net/">Silver
-       Bulletin</a></strong> publishes a generic-congressional-ballot average with
-       house-effect adjustments and a recency weighting, and is the series this
-       model currently reads.
-       <strong><a href="https://www.realclearpolling.com/latest-polls/2026">RealClearPolling</a></strong>
-       publishes a simpler unweighted average of recent polls, collected here as
-       a second opinion — the gap between the two is a decent measure of how much
-       the weighting choices matter.
-       <strong><a href="https://www.racetothewh.com/allpolls">Race to the WH</a></strong>
-       maintains a per-race poll list which we collect for the Senate.</p>
-    <p class="thin-note">All three permit collection but not per-poll
-       republication during the cycle. Their numbers reach this site only inside a
-       category average, never as individual rows. That is a licence constraint,
-       not a judgment about their quality — and we are asking.</p>
-  </div>
-
-  <!-- ==================== PROFESSIONAL ==================== -->
-  <div class="card">
-    <h2>Professional forecasts</h2>
-    <p class="sub">Published models that combine polling, fundamentals, candidate
-       quality and money. This is the category most people mean by “the
-       forecast”, and it is also the category we are least free to reproduce.</p>
-
-    <h3>Shown by name</h3>
-    {{- with index $mi "grant_williams" }}
-    <p class="muted"><strong><a href="https://grantbw4.github.io/2026-midterms-forecast/">Grant
-       Williams' 2026 midterms forecast</a></strong> — a district- and state-level
-       statistical model built on partisan lean, polling, incumbency and candidate
-       quality, published openly under an MIT licence. That licence is the only
-       reason it can appear on the comparisons page race by race while the rest of
-       this category cannot, and it is why almost every named comparison on this
-       site is against this model.</p>
-    <table style="max-width:520px">
-      <tr><th>Today</th><th class="num">House</th><th class="num">Senate</th></tr>
-      <tr><td>National margin</td>
-          <td class="num">{{ with .house_margin_D }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ else }}—{{ end }}</td>
-          <td class="num">{{ with .senate_margin_D }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ else }}—{{ end }}</td></tr>
-      <tr><td>Expected D seats</td>
-          <td class="num">{{ with .house_seats_D }}{{ printf "%.0f" . }}{{ else }}—{{ end }}</td>
-          <td class="num">{{ with .senate_seats_D }}{{ printf "%.0f" . }}{{ else }}—{{ end }}</td></tr>
-      <tr><td>P(Democratic control)</td>
-          <td class="num">{{ with .house_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td>
-          <td class="num">{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td></tr>
-    </table>
-    {{- end }}
-
-    <h3>Collected, but shown only inside the average</h3>
-    <p class="muted">These forecasters permit us to read and store their numbers
-       but not to reprint them forecaster by forecaster while the election is
-       running. They are named here because naming who we collect is a matter of
-       provenance; their figures are not shown anywhere on this site except
-       folded into a category average with at least three gated contributors.</p>
-    <table>
-      <tr><th>Forecaster</th><th>What it is</th></tr>
-      <tr><td><a href="https://votes.decisiondeskhq.com/forecast/2026">Decision Desk HQ</a></td>
-          <td class="muted">A polls-plus-fundamentals model paired with a live results operation, covering House, Senate and governors.</td></tr>
-      <tr><td><a href="https://www.economist.com/interactive/us-midterms-2026">The Economist</a></td>
-          <td class="muted">A Bayesian model in the lineage of the magazine's presidential forecasts, pooling polls across states with a fundamentals prior.</td></tr>
-      <tr><td><a href="https://www.racetothewh.com/senate/26">Race to the WH</a></td>
-          <td class="muted">Race-by-race probabilities with an unusually long published history of its own trend lines, plus a poll database.</td></tr>
-      <tr><td><a href="https://split-ticket.org/">Split Ticket</a></td>
-          <td class="muted">Best known for candidate-quality metrics — how much a nominee runs ahead of or behind the partisan baseline of the seat.</td></tr>
-      <tr><td><a href="https://www.gelliottmorris.com/">FiftyPlusOne (G. Elliott Morris)</a></td>
-          <td class="muted">Successor project to the author's earlier work at The Economist and FiveThirtyEight.</td></tr>
-      <tr><td><a href="https://votehub.com/">VoteHub</a></td>
-          <td class="muted">Polling aggregation and race ratings.</td></tr>
-    </table>
-    {{- with $d.comparison }}
-    <p class="thin-note">{{ .naming_note }}</p>
-    {{- end }}
-  </div>
-
-  <!-- ==================== MARKETS ==================== -->
-  <div class="card">
-    <h2>Markets</h2>
-    <p class="sub">Not models. A market price is what someone will pay for a
-       contract that pays out if an event happens, and reading that price as a
-       probability is a good approximation rather than an identity — fees, the
-       cost of tying up capital until November, and a well-documented tendency to
-       overprice longshots all push it around, most of all at the extremes.</p>
-    <table>
-      <tr><th>Market</th><th>What it is</th><th class="num">Today</th></tr>
-      <tr><td><a href="https://polymarket.com/">Polymarket</a></td>
-          <td class="muted">Real-money markets on chamber control and individual races.</td>
-          <td class="num">{{ with index $mi "polymarket" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ if .house_win_prob_D }}<br>{{ printf "%.0f%%" (mul .house_win_prob_D 100) }} D House{{ end }}{{ else }}—{{ end }}</td></tr>
-      <tr><td><a href="https://kalshi.com/">Kalshi</a></td>
-          <td class="muted">A CFTC-regulated US event exchange running the same contracts.</td>
-          <td class="num">{{ with index $mi "kalshi" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ else }}—{{ end }}</td></tr>
-    </table>
-    <div class="note">
-      <strong>These are not answering our question.</strong>
-      A market on “Democratic Senate” pays out on <em>control</em>, which needs 51
-      seats given a Republican vice-president. Our own headline is the chance of
-      reaching 50. Those are different events{{ with $p }}{{ with .prob_D_51_plus }},
-      and in our model they differ by about
-      {{ printf "%.0f" (mul (sub $p.prob_D_50_plus .) 100) }} points{{ end }}{{ end }}.
-      Wherever this site compares against a market, it compares against the 51-seat
-      figure.
+    <div class="card">
+      <h2>Ray Fair's vote-share equations</h2>
+      <p class="muted">Three equations estimated together — presidential, on-term
+         House and midterm House — on data back to 1916. Reads the economy
+         directly from growth and inflation where ours reads it through
+         approval, and carries an explicit balancing term, so a party that has
+         done well is predicted to lose ground at the following midterm.
+         <a href="https://fairmodel.econ.yale.edu/vote2024/index2.htm">Forecast page</a> ·
+         <a href="https://elischolar.library.yale.edu/cowles-discussion-paper-series/1895/">paper</a></p>
+      {{- with index $mi "fair" }}
+      <div class="muted">Today: <strong>{{ printf "%.1f" .house_margin_D }}</strong></div>
+      {{- else }}
+      <p class="thin-note">Not yet in the daily collection, so no figure is shown
+         and it is not in the fundamentals average.</p>
+      {{- end }}
     </div>
-  </div>
 
-  <!-- ==================== RATINGS ==================== -->
-  <div class="card">
-    <h2>Expert ratings</h2>
-    <p class="sub">The oldest tradition in the business, and the one that refuses
-       to give you a number. A rating is an ordered category — Safe, Likely, Lean,
-       Toss-up — produced by people who talk to campaigns.</p>
-    <p class="muted">We collect ratings from
-       <a href="https://www.cookpolitical.com/ratings">Cook Political Report</a>,
-       <a href="https://centerforpolitics.org/crystalball/2026-house/">Sabato's Crystal Ball</a>,
-       <a href="https://insideelections.com/ratings">Inside Elections</a>,
-       <a href="https://votes.decisiondeskhq.com/">Decision Desk HQ</a> and
-       Fox News' power rankings, transcribed from
-       <a href="https://en.wikipedia.org/wiki/2026_United_States_House_of_Representatives_elections">Wikipedia's
-       ratings tables</a> under CC BY-SA 4.0 with attribution.</p>
-    <p class="muted">They are kept out of every average on purpose. Turning “Lean
-       R” into a margin requires picking a number, and whichever number you pick
-       is a modelling assumption doing real work while looking like data entry.
-       What ratings are good for is <em>disagreement</em>: when four raters look
-       at the same seat and two say Toss-up and two say Likely R, that spread is
-       information, and it is shown as a spread on the comparisons page rather
-       than averaged into silence.</p>
-  </div>
+    <div class="card">
+      <h2>Inputs that are not forecasts</h2>
+      <p class="muted"><a href="https://fred.stlouisfed.org/series/A229RX0">FRED</a>
+         supplies real disposable personal income per capita, pulled daily.
+         <a href="https://electionlab.mit.edu/data">MIT Election Lab</a> supplies
+         certified official returns under a public-domain dedication — the basis
+         for our state partisan lean, and the reason the Senate table can be
+         published at all.</p>
+    </div>
+  </section>
 
-  <!-- ==================== JUDGMENT CALLS ==================== -->
-  <div class="card">
-    <h2>The choices that move the answer</h2>
-    <p class="sub">Every number above that is a judgment rather than a measurement,
-       stated rather than buried.</p>
-    <table>
-      <tr><th>Choice</th><th>What we did</th><th>Why it is arguable</th></tr>
-      <tr><td>Generic-ballot shrinkage</td>
-          <td>λ decays from 1.0 at Election Day toward 0.5 far out{{ with $p }}; λ={{ printf "%.2f" .shrink_lambda }} today{{ end }}</td>
-          <td class="muted">A stylised reading of Bafumi–Erikson–Wlezien, not a re-estimation. We hold no historical generic-ballot series to fit.</td></tr>
-      <tr><td>Race-level uncertainty</td>
-          <td>{{ with $p }}σ={{ printf "%.1f" .sigma }} points{{ end }}, regressed from official Senate returns against prior-cycle lean</td>
-          <td class="muted">One cycle, n≈30. Cannot yet separate a national polling miss from state-level noise.</td></tr>
-      <tr><td>Seat baseline</td>
-          <td>{{ with $p }}{{ printf "%.0f" .holdover_D }}{{ end }} Democratic holdovers</td>
-          <td class="muted">Bookkeeping, not forecast, and worth about twenty points of headline probability per seat.</td></tr>
-      <tr><td>Lean to margin</td>
-          <td>Expected margin = national tide + 2 × state lean</td>
-          <td class="muted">Linear, and it visibly overshoots at the tails: against the one professional forecast we can compare to, our margins in safe seats run about four points more Republican on average.</td></tr>
-      <tr><td>No bias correction</td>
-          <td>None applied</td>
-          <td class="muted">Generic-ballot bias is conditional on presidential approval rather than constant, so a fixed adjustment fits the last cycle and calls it a law.</td></tr>
-      <tr><td>Approval input</td>
-          <td>Hand-set</td>
-          <td class="muted">The last input not pulled from a live feed. Trackers disagree, and the model is sensitive to it.</td></tr>
-      <tr><td>Two-party assumption</td>
-          <td>Every race modelled as D versus R</td>
-          <td class="muted">Nebraska has no Democrat and a serious independent. The model cannot represent that at all, and says so on the races page rather than dropping the seat.</td></tr>
-    </table>
-  </div>
+  <!-- ============================== POLLING ============================== -->
+  <section data-section="polling" id="polling" hidden>
+    {{- with $p }}
+    <div class="card">
+      <h2>Our polling model</h2>
+      <p class="sub">The generic ballot as a national tide, shrunk toward even
+         because early leads overstate the eventual result, then carried to each
+         state by its partisan lean.</p>
+      <table>
+        <tr><th>Step</th><th class="num">Value</th></tr>
+        <tr><td>Generic ballot average</td><td class="num">D+{{ printf "%.2f" .generic_ballot }}</td></tr>
+        <tr><td>Shrinkage λ</td><td class="num">{{ printf "%.3f" .shrink_lambda }}</td></tr>
+        <tr><td>Election-day tide</td><td class="num">D+{{ printf "%.2f" .tide_D }}</td></tr>
+        <tr><td>Race-level σ</td><td class="num">{{ printf "%.2f" .sigma }} pts</td></tr>
+        <tr><td>D Senate seats</td><td class="num">{{ printf "%.0f" .expected_D_total }} of 100
+            {{- if .D_total_80pct }} <span class="muted">(80% {{ index .D_total_80pct 0 }}–{{ index .D_total_80pct 1 }})</span>{{ end }}</td></tr>
+        {{- with $proj }}{{ with (index .projections "polling") }}
+        <tr><td>D House seats</td><td class="num">{{ printf "%.0f" .house.expected_D_seats }} of {{ .house.n_districts }}
+            <span class="muted">(80% {{ index .house.D_seats_80pct 0 }}–{{ index .house.D_seats_80pct 1 }})</span></td></tr>
+        {{- end }}{{ end }}
+        <tr><td>P(D reach 50+)</td><td class="num">{{ printf "%.0f%%" (mul .prob_D_50_plus 100) }}</td></tr>
+        {{- with .prob_D_51_plus }}
+        <tr><td>P(D majority, 51+)</td><td class="num">{{ printf "%.0f%%" (mul . 100) }}</td></tr>
+        {{- end }}
+      </table>
 
-  <!-- ==================== DISCLOSURE ==================== -->
-  <div class="card" id="house">
-    <h2>What is not published, and why</h2>
-    <p class="sub">Three separate restrictions, none of them the same thing.</p>
+      {{- if .sensitivity }}
+      <div class="note">
+        <strong>Read this before quoting a probability.</strong>
+        Both Senate figures rest on a bookkeeping assumption: how many Democratic
+        seats are <em>not</em> on the ballot. One seat moves the headline about
+        twenty points.
+        <table style="max-width:400px;margin-top:10px">
+          <tr><th>Holdover D seats</th><th class="num">P(D reach 50+)</th></tr>
+          {{- range $k, $v := .sensitivity }}
+          <tr><td>{{ $k }}{{ if eq $k (printf "%.0f" $p.holdover_D) }} (used){{ end }}</td>
+              <td class="num">{{ printf "%.0f%%" (mul $v 100) }}</td></tr>
+          {{- end }}
+        </table>
+      </div>
+      {{- end }}
+    </div>
+    {{- end }}
 
-    <h3>Sources that permit collection but not republication</h3>
-    <p class="muted">Several forecasters allow us to read and store their numbers
-       but not to reprint them race by race during the cycle. Those appear only
-       inside an average with at least three <em>gated</em> contributors, so no
-       individual forecast can be backed out by subtraction. The floor counts
-       gated sources rather than all sources for exactly that reason: a source we
-       publish by name adds nothing to anyone's protection, because a reader can
-       subtract it straight back out. That rule is enforced in code, and the
-       aggregator re-derives it from its own output and refuses to write if it is
-       violated.
-       {{- if gt $d.suppressed_cells 0 }}
-       Today that withholds <strong>{{ $d.suppressed_cells }}</strong> cells.
-       {{- end }}</p>
+    <div class="card">
+      <h2>Where the polling comes from</h2>
+      <p class="muted">The model does not run its own polling average; it takes
+         one, which makes the choice of whose a modelling decision.</p>
+      <table>
+        <tr><th>Source</th><th>What it is</th></tr>
+        <tr><td><a href="https://www.natesilver.net/">Silver Bulletin</a></td>
+            <td class="muted">Generic-ballot average with house-effect adjustments and recency weighting. The series this model reads.</td></tr>
+        <tr><td><a href="https://www.realclearpolling.com/latest-polls/2026">RealClearPolling</a></td>
+            <td class="muted">Simpler unweighted average of recent polls, collected as a second opinion.</td></tr>
+        <tr><td><a href="https://www.racetothewh.com/allpolls">Race to the WH</a></td>
+            <td class="muted">Per-race poll list, collected for the Senate.</td></tr>
+      </table>
+      <p class="thin-note">All three permit collection but not per-poll
+         republication during the cycle.</p>
+    </div>
+  </section>
 
-    <h3>Licensed indices, and why there is no House table</h3>
-    <p class="muted">The House model exists and runs daily. It is not published,
-       and the reason is arithmetic rather than caution. District forecasts are
-       built from a licensed partisan index, and given the national tide — which
-       we do publish — that index is exactly recoverable from any district
-       forecast:</p>
-    <p style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
-              background:var(--bg);border:1px solid var(--border);border-radius:7px;
-              padding:12px 14px;margin:14px 0">PVI = (district margin − national tide) ÷ 2</p>
-    <p class="muted">So publishing 435 district margins would republish the index
-       itself. The district run writes to a gitignored directory and stays there.
-       This becomes publishable the day we hold a district-level presidential
-       baseline we are allowed to redistribute, which is a licensing question
-       rather than a modelling one. The Senate table has no such problem: its
-       state lean is our own reconstruction from
-       <a href="https://electionlab.mit.edu/data">public-domain official returns</a>,
-       so it is ours to publish.</p>
+  <!-- =========================== PROFESSIONAL ============================ -->
+  <section data-section="professional" id="professional" hidden>
+    <div class="card">
+      <h2>Professional forecasts</h2>
+      <p class="sub">Published models combining polling, fundamentals, candidate
+         quality and money. The category we are least free to reproduce.</p>
+      <table>
+        <tr><th>Forecaster</th><th>What it is</th></tr>
+        <tr><td><a href="https://grantbw4.github.io/2026-midterms-forecast/">Grant Williams</a></td>
+            <td class="muted">An open-source district- and state-level model built on partisan lean, polling, incumbency and candidate quality. MIT-licensed, so it is the one forecast in this category we may quote race by race. No published track record from a previous cycle.</td></tr>
+        <tr><td><a href="https://votes.decisiondeskhq.com/forecast/2026">Decision Desk HQ</a></td>
+            <td class="muted">Polls-plus-fundamentals model paired with a live results operation.</td></tr>
+        <tr><td><a href="https://www.economist.com/interactive/us-midterms-2026">The Economist</a></td>
+            <td class="muted">Bayesian model pooling polls across states with a fundamentals prior.</td></tr>
+        <tr><td><a href="https://www.racetothewh.com/senate/26">Race to the WH</a></td>
+            <td class="muted">Race-by-race probabilities with a long published history of its own trend lines.</td></tr>
+        <tr><td><a href="https://split-ticket.org/">Split Ticket</a></td>
+            <td class="muted">Candidate-quality metrics — how far a nominee runs ahead of or behind the seat's baseline.</td></tr>
+        <tr><td><a href="https://www.gelliottmorris.com/">FiftyPlusOne</a></td>
+            <td class="muted">G. Elliott Morris, successor to earlier work at The Economist and FiveThirtyEight.</td></tr>
+        <tr><td><a href="https://votehub.com/">VoteHub</a></td>
+            <td class="muted">Polling aggregation and race ratings.</td></tr>
+      </table>
+      {{- with index $mi "grant_williams" }}
+      <h3>Current figures, where the licence permits</h3>
+      <table style="max-width:520px">
+        <tr><th>Grant Williams</th><th class="num">House</th><th class="num">Senate</th></tr>
+        <tr><td>National margin</td>
+            <td class="num">{{ with .house_margin_D }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ else }}—{{ end }}</td>
+            <td class="num">{{ with .senate_margin_D }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ else }}—{{ end }}</td></tr>
+        <tr><td>Expected D seats</td>
+            <td class="num">{{ with .house_seats_D }}{{ printf "%.0f" . }}{{ else }}—{{ end }}</td>
+            <td class="num">{{ with .senate_seats_D }}{{ printf "%.0f" . }}{{ else }}—{{ end }}</td></tr>
+        <tr><td>P(D control)</td>
+            <td class="num">{{ with .house_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td>
+            <td class="num">{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td></tr>
+      </table>
+      {{- end }}
+      <p class="thin-note">The rest permit collection but not per-forecaster
+         republication during the cycle, so they appear only inside a category
+         average — see <a href="#disclosure">what is not published</a>.</p>
+    </div>
+  </section>
 
-    <h3>What is published</h3>
-    <p class="muted">Category averages, our own models in full, the individual
-       forecasts whose licences permit it, and a manifest of SHA-256 hashes for
-       every capture, committed on the day it was taken. The hashes are a
-       commitment without a disclosure: when the full archive is released after
-       the election, anyone can verify that the released bytes are bit-identical
-       to what was collected on the dates claimed. Same logic as
-       preregistration.</p>
-  </div>
+  <!-- ============================== MARKETS ============================== -->
+  <section data-section="markets" id="markets" hidden>
+    <div class="card">
+      <h2>Markets</h2>
+      <p class="sub">Not models. A price is what someone will pay for a contract
+         that pays out if an event happens; reading it as a probability is a
+         good approximation rather than an identity — fees, the cost of tying up
+         capital until November, and a documented tendency to overprice
+         longshots all push it around at the extremes.</p>
+      <table>
+        <tr><th>Market</th><th>What it is</th><th class="num">Today</th></tr>
+        <tr><td><a href="https://polymarket.com/">Polymarket</a></td>
+            <td class="muted">Real-money markets on chamber control and individual races.</td>
+            <td class="num">{{ with index $mi "polymarket" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ with .house_win_prob_D }}<br>{{ printf "%.0f%%" (mul . 100) }} D House{{ end }}{{ else }}—{{ end }}</td></tr>
+        <tr><td><a href="https://kalshi.com/">Kalshi</a></td>
+            <td class="muted">CFTC-regulated US event exchange running the same contracts.</td>
+            <td class="num">{{ with index $mi "kalshi" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ else }}—{{ end }}</td></tr>
+      </table>
+      <div class="note">
+        <strong>Markets price control, not 50 seats.</strong>
+        Democratic Senate control needs 51, because a 50–50 tie is broken by a
+        Republican vice-president. Everywhere this site compares against a
+        market it uses our 51-seat figure{{ with $p }}{{ with .prob_D_51_plus }}
+        ({{ printf "%.0f%%" (mul . 100) }}), not the 50-plus one
+        ({{ printf "%.0f%%" (mul $p.prob_D_50_plus 100) }}){{ end }}{{ end }}.
+      </div>
+      <p class="thin-note">Neither exchange lists a seat-count market for 2026,
+         so the markets series is absent from the seat-count view on the tracker.</p>
+    </div>
+  </section>
+
+  <!-- ============================== RATINGS ============================== -->
+  <section data-section="ratings" id="ratings" hidden>
+    <div class="card">
+      <h2>Expert ratings</h2>
+      <p class="sub">Ordered categories — Safe, Likely, Lean, Tilt, Toss-up —
+         produced by people who talk to campaigns.</p>
+      {{- with $d.charts.ratings.senate }}
+      <p class="muted">{{ .n_raters }} raters, transcribed from Wikipedia under
+         CC BY-SA 4.0 with attribution: {{ delimit .raters ", " }}.</p>
+      {{- end }}
+      <p class="muted">They are kept out of every average. Turning “Lean R” into
+         a margin requires picking a number, and whichever number you pick is a
+         modelling assumption doing real work while looking like data entry.
+         What ratings are good for is disagreement, which is drawn as a spread
+         on the <a href="/forecast/comparisons/">comparisons page</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============================ DISCLOSURE ============================= -->
+  <section data-section="disclosure" id="disclosure" hidden>
+    <div class="card">
+      <h2>What is not published, and why</h2>
+
+      <h3>Sources that permit collection but not republication</h3>
+      <p class="muted">Those appear only inside an average with at least three
+         <em>gated</em> contributors, so no individual forecast can be backed out
+         by subtraction. The floor counts gated sources rather than all sources:
+         a source we publish by name adds nothing to anyone's protection, since
+         a reader can subtract it straight back out. Enforced in code, and the
+         aggregator re-derives it from its own output and refuses to write if it
+         is violated.
+         {{- if gt $d.suppressed_cells 0 }} Today it withholds
+         <strong>{{ $d.suppressed_cells }}</strong> cells.{{ end }}</p>
+
+      <h3>Licensed indices, and why there is no House table</h3>
+      <p class="muted">District forecasts are built from a licensed partisan
+         index. Given the national tide, which we publish, that index is exactly
+         recoverable from any district forecast:</p>
+      <p style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+                background:var(--bg);border:1px solid var(--border);border-radius:7px;
+                padding:12px 14px;margin:14px 0">PVI = (district margin − national tide) ÷ 2</p>
+      <p class="muted">So no district margins are published. Chamber totals are:
+         a seat count is a sum over 435 districts and cannot be inverted back to
+         any of them. The Senate has no such problem — its state lean is our own
+         reconstruction from
+         <a href="https://electionlab.mit.edu/data">public-domain returns</a>.</p>
+
+      <h3>What is published</h3>
+      <p class="muted">Category averages, our own models in full, the individual
+         forecasts whose licences permit it, and a manifest of SHA-256 hashes for
+         every capture, committed on the day it was taken. When the full archive
+         is released after the election, anyone can verify the released bytes are
+         bit-identical to what was collected on the dates claimed.</p>
+    </div>
+  </section>
+
 </div>
 {{ partial "forecast/foot.html" (dict "page" . "d" $d) }}

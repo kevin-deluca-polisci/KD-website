@@ -178,8 +178,15 @@ fi
 
 # ---- 3. our fundamentals model --------------------------------------------
 if run_stage model; then
-  banner "3/5  fundamentals model"
-  python3 forecast/model/fundamentals.py --cycle "$CYCLE" || FAILED+=("model")
+  banner "3/5  models"
+  # All four, in dependency order, and all of them every run. This stage
+  # used to be fundamentals alone, which quietly meant a local run.sh
+  # published a fresh fundamentals number beside a stale polling one.
+  # seats.py is last: it reads what the two model steps just wrote.
+  python3 forecast/model/state_pvi.py    --cycle "$CYCLE" || FAILED+=("state_pvi")
+  python3 forecast/model/fundamentals.py --cycle "$CYCLE" || FAILED+=("fundamentals")
+  python3 forecast/model/polling.py      --cycle "$CYCLE" || FAILED+=("polling")
+  python3 forecast/model/seats.py        --cycle "$CYCLE" || FAILED+=("seats")
 fi
 
 # ---- 4. aggregate: the privacy boundary ------------------------------------
