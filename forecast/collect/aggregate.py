@@ -44,6 +44,11 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = REPO_ROOT / "forecast" / "data"
 
 MIN_N = 3           # disclosure floor for any average containing a gated source
+# How much of a date's published rows may disappear in a re-run before
+# aggregate.py refuses to write. Generous on purpose: a parser correction
+# removes a handful of cells, a lost day removes almost all of them, and the
+# gap between those two is enormous. See would_shrink().
+DROP_TOLERANCE = 0.10
 CYCLE_DEFAULT = 2026
 
 # The two chamber-wide race ids, spelled the same way the parsers spell them.
@@ -405,46 +410,103 @@ def audit(rows: list[dict], averages, by_source, suppressed) -> list[str]:
 
 
 def would_shrink(cycle: int, averages: list[dict]) -> list[str]:
-    """Snapshot dates this run would publish LESS of than is already published.
+    """Snapshot dates this run would publish materially LESS of.
 
     THE HAZARD. raw/ is pushed to a separate private archive and parsed/ is
     never committed, so a clone of this repo carries the DERIVED data for every
     day but the inputs for none of them. Run aggregate.py in such a clone and
     it rebuilds category_averages.csv from whatever parsed/ happens to hold
-    locally — typically the day or two you captured yourself — and writes it
-    over a file covering weeks. The write succeeds, the audit passes, every
-    number that survives is correct, and the archive is quietly shorter than
-    it was. Nothing downstream notices: publish.py reads the newest date and
-    the site looks entirely normal.
+    locally and writes it over a file covering weeks. The write succeeds, the
+    audit passes, every number that survives is correct, and the archive is
+    quietly shorter. Nothing downstream notices: publish.py reads the newest
+    date and the site looks entirely normal.
 
-    Counting DATES is not enough, and the first version of this check made
-    exactly that mistake. The class models are emitted from
-    seat_projections.json, which carries the newest date whether or not the
-    parsed store does — so a local run still produces a row for today, the
-    date set matches, and the check passes while today quietly loses every
-    contributor except ours. Compare the row count per date instead: that is
-    the thing actually being destroyed.
+    WHAT COUNTS AS SHRINKING, AND WHY NOT "ANY DECREASE".
+    The first version refused on a decrease of even one row, and the first
+    thing it blocked was a fix rather than a fault: correcting the Polymarket
+    parser dropped one junk cell — an untagged candidate market that should
+    never have been a row — and two dates went 1000 -> 999. A guard that
+    cannot tell a repaired parser from a lost day will be answered with
+    --force, routinely, and then it is not a guard at all.
 
-    This is not a merge. A day cannot be reconstructed without its bytes, so
-    the only safe move is to refuse. Recover by cloning the raw archive and
-    re-running parse.py --all, or by letting the daily Action do it where the
-    whole store lives.
+    A lost day does not look like that. It loses most of its rows, or it loses
+    a whole CATEGORY, because the missing inputs are entire sources. So:
+
+      - any category that vanishes from a date is a refusal, whatever the
+        count. Categories only disappear when their sources do.
+      - a row count that falls by more than DROP_TOLERANCE is a refusal.
+      - anything smaller is reported and allowed, because that is what a
+        parser getting more accurate looks like.
+
+    A day cannot be reconstructed without its bytes, so refusing is the only
+    safe move. Recover by cloning the raw archive and re-running parse.py
+    --all, or by letting the daily Action do it where the whole store lives.
+    """
+    p = DATA_DIR / str(cycle) / "derived" / "category_averages.csv"
+    if not p.exists():
+        return []
+
+    have: dict[str, int] = defaultdict(int)
+    have_cats: dict[str, set] = defaultdict(set)
+    with p.open(encoding="utf-8") as fh:
+        for r in csv.DictReader(fh):
+            have[r["snapshot_date"]] += 1
+            have_cats[r["snapshot_date"]].add(r["category"])
+
+    now: dict[str, int] = defaultdict(int)
+    now_cats: dict[str, set] = defaultdict(set)
+    for a in averages:
+        now[a["snapshot_date"]] += 1
+        now_cats[a["snapshot_date"]].add(a["category"])
+
+    out = []
+    for date in sorted(have):
+        before, after = have[date], now.get(date, 0)
+        lost_cats = sorted(have_cats[date] - now_cats.get(date, set()))
+        if lost_cats:
+            out.append(f"{date}: loses categor{'y' if len(lost_cats) == 1 else 'ies'} "
+                       f"{', '.join(lost_cats)} ({before} rows -> {after})")
+            continue
+        if before and (before - after) / before > DROP_TOLERANCE:
+            pct = 100.0 * (before - after) / before
+            out.append(f"{date}: {before} rows published, this run has {after} "
+                       f"({pct:.0f}% fewer)")
+    return out
+
+
+def small_drops(cycle: int, averages: list[dict]) -> list[str]:
+    """Dates that lose a few rows — allowed, but said out loud.
+
+    This is what a parser correction looks like from here, and it should be
+    visible in the run log rather than silent. If it appears on a day nobody
+    changed a parser, that is worth a look.
     """
     p = DATA_DIR / str(cycle) / "derived" / "category_averages.csv"
     if not p.exists():
         return []
     have: dict[str, int] = defaultdict(int)
+    have_cats: dict[str, set] = defaultdict(set)
     with p.open(encoding="utf-8") as fh:
         for r in csv.DictReader(fh):
             have[r["snapshot_date"]] += 1
+            have_cats[r["snapshot_date"]].add(r["category"])
     now: dict[str, int] = defaultdict(int)
+    now_cats: dict[str, set] = defaultdict(set)
     for a in averages:
         now[a["snapshot_date"]] += 1
+        now_cats[a["snapshot_date"]].add(a["category"])
     out = []
     for date in sorted(have):
         before, after = have[date], now.get(date, 0)
-        if after < before:
-            out.append(f"{date}: {before} rows published, this run has {after}")
+        # A date that would_shrink() refuses must not ALSO be reported here as
+        # an allowed drop. Losing a category is a refusal whatever the row
+        # count, and a date can lose one while shedding only a handful of rows —
+        # which is exactly how the same day ended up in both lists, printed as
+        # tolerable immediately above the paragraph refusing to write it.
+        if have_cats[date] - now_cats.get(date, set()):
+            continue
+        if after < before and (before - after) / before <= DROP_TOLERANCE:
+            out.append(f"{date}: {before} -> {after} ({before - after} fewer)")
     return out
 
 
@@ -493,6 +555,7 @@ def main(argv=None) -> int:
     ratings = ratings_panel(rows)
     problems = audit(rows, averages, by_source, suppressed)
     shrunk = would_shrink(a.cycle, averages)
+    nibbles = small_drops(a.cycle, averages)
 
     print("=" * 70)
     print(f"aggregate · cycle {a.cycle}")
@@ -564,13 +627,29 @@ def main(argv=None) -> int:
         print("  --check: nothing written")
         return 0
 
+    if nibbles:
+        # Allowed, but never silent. A handful of rows leaving a published date
+        # is what a parser correction looks like; on a day nobody touched a
+        # parser it is worth a second look.
+        print(f"\n  {len(nibbles)} published date(s) lose a few rows "
+              f"(within the {DROP_TOLERANCE:.0%} tolerance — allowed):")
+        for line in nibbles[:8]:
+            print(f"      {line}")
+        if len(nibbles) > 8:
+            print(f"      … and {len(nibbles) - 8} more")
+        print("    Expected after a parser fix that stops emitting a bad cell. "
+              "Unexpected otherwise.")
+
     if shrunk and not a.force:
         print("\n  *** REFUSING TO WRITE: this run would shorten the archive ***")
-        print(f"    {len(shrunk)} snapshot date(s) would lose rows:")
+        print(f"    {len(shrunk)} snapshot date(s) lose a whole category, or "
+              f"more than {DROP_TOLERANCE:.0%} of their rows:")
         for line in shrunk[:8]:
             print(f"      {line}")
         if len(shrunk) > 8:
             print(f"      … and {len(shrunk) - 8} more")
+        print("    That is the shape of MISSING INPUTS, not of a corrected "
+              "parser: categories only vanish when their sources do.")
         print("    parsed/ is not committed and raw/ lives in the private "
               "archive, so a fresh clone can rebuild the newest day but not the")
         print("    older ones. Writing now would drop them from derived/ with "

@@ -75,11 +75,34 @@ sources:
       # why the Markets column for seats was empty. The R-side variants are
       # captured too though nothing parses them yet — bytes are cheap, and a
       # series we already hold history for is one we can backfill.
+      #
+      # They are ALSO in series_always below, and that is the entry that does the
+      # work: adding them here changed nothing, because Kalshi's series index
+      # does not list them at all. See series_always.
       series_include: "^(HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KX[DR]HOUSESEATS|KX[DR]SENATESEATS|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
       series_exclude: "^(PRESPARTY|KXPRES)"
       series_category: Politics
       page_limit: 200
       max_pages: 20
+      # Fetched by name every run, whether or not discovery lists them.
+      #
+      # WHY THIS EXISTS. Kalshi's /series index is incomplete. Verified
+      # 2026-08-21: ?category=Politics returns 2,211 series and ?category=
+      # Elections returns 79, neither carries a cursor to page past, and
+      # KXDHOUSESEATS is in neither — while /series/KXDHOUSESEATS answers for it
+      # (category "Elections") and /markets?series_ticker=KXDHOUSESEATS returns
+      # the full open ladder, priced, six buckets deep. Adding the ticker to
+      # series_include on 08-19 therefore had no effect: you cannot filter a list
+      # into containing something.
+      #
+      # The cost of a hardcoded ticker is a rename we would not notice, so
+      # capture.py NOTES loudly when one of these comes back with no markets.
+      # Keep the list to things checked by hand.
+      series_always:
+        - KXDHOUSESEATS
+        - KXDSENATESEATS
+        - KXRHOUSESEATS
+        - KXRSENATESEATS
     notes: >
       Prices are fixed-point STRINGS ("0.4200") since the integer-cent fields
       were removed in Q1 2026 — do not coerce to int in the parser.

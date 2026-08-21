@@ -417,12 +417,43 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
         if not cursor or not series:
             break
 
+    # SERIES DISCOVERY CANNOT SEE. Kalshi's /series index is not a complete list
+    # of its series. KXDHOUSESEATS — the seat-count ladder, the only place any
+    # exchange quotes a DISTRIBUTION over seat counts rather than a single
+    # control price — is absent from it: /series?category=Politics returns 2,211
+    # series without it, /series?category=Elections returns 79 without it, and
+    # neither response carries a cursor to page past. The series endpoint answers
+    # for it directly (category "Elections", tags House / House Combos) and
+    # /markets?series_ticker=KXDHOUSESEATS returns the full open ladder. So the
+    # series exists and is tradeable; it is simply not indexed.
+    #
+    # Discovery exists because Kalshi renames series mid-cycle and a hardcoded
+    # ticker list guarantees silent data loss. That reasoning is intact — this is
+    # the opposite failure and needs the opposite remedy. `series_always` is
+    # fetched whether or not discovery found it. Keep the list short: every entry
+    # is one we have checked by hand.
+    #
+    # RESOLVED BEFORE THE PRUNE BELOW, which keeps only what `matched` names and
+    # would otherwise delete these artifacts on the very run that wrote them.
+    always = [t for t in (cfg.get("series_always") or []) if t]
+    unseen = sorted(set(always) - set(matched))
+    if unseen:
+        notes.append(f"series_always: {len(unseen)} ticker(s) discovery did not "
+                     f"list, fetching anyway: {unseen}")
+    # `discovered` is what the INDEX actually returned, and it is what the prune
+    # below is allowed to reason about. Pruning on the extended list would let a
+    # run in which discovery failed outright still look non-empty — the always
+    # list alone — and empty the day's directory of everything else, which is the
+    # exact failure the prune's own guard was written to prevent.
+    discovered = list(matched)
+    matched.extend(always)
+
     # Prune market files for series we no longer collect. Idempotent overwrite
     # replaces same-named artifacts but never removes retired ones, so tightening
     # the filter left 265 stale files behind that the parser then re-read every
     # day forever. Only prune when discovery actually succeeded — a failed run
     # must never be able to empty the directory.
-    if matched and not fetcher.dry_run:
+    if discovered and not fetcher.dry_run:
         keep = {store._slugify(f"markets-{t}") for t in set(matched)}
         day = store.root / src["id"] / store.snapshot_date
         removed = 0
@@ -448,15 +479,32 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
         notes.append(f"NEAR MISS — election-shaped but unmatched: {shaped[:8]}")
 
     # Capture markets for each matched series.
+    empty_always: list[str] = []
     for ticker in sorted(set(matched)):
         url = f"{base}/markets?{urllib.parse.urlencode({'series_ticker': ticker, 'limit': 1000})}"
         try:
             body, meta = fetcher.get(url)
             b += store.write(src["id"], f"markets-{ticker}", body, meta)
             n += 1
+            if ticker in set(always):
+                try:
+                    if not (json.loads(body).get("markets") or []):
+                        empty_always.append(ticker)
+                except (json.JSONDecodeError, AttributeError):
+                    empty_always.append(ticker)
         except Exception as e:
             # Isolate per-ticker failures. One dead series must not abort the run.
             notes.append(f"market fetch failed for {ticker}: {e}")
+
+    if empty_always:
+        # A ticker we asked for BY NAME came back with nothing. Discovery cannot
+        # catch a rename here — that is the whole reason these are hardcoded — so
+        # this note is the only warning we will get, and it must not read like
+        # ordinary quiet. Check the ticker against kalshi.com before assuming the
+        # markets simply closed.
+        notes.append(f"series_always returned NO MARKETS for {empty_always} — "
+                     f"renamed or delisted? These are hardcoded tickers; "
+                     f"discovery will not find the replacement on its own.")
 
     return n, b, notes
 

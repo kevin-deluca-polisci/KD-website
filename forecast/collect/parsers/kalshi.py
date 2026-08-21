@@ -223,6 +223,13 @@ def _seat_rows(markets: list, art, ctx) -> list:
 # parser failure — an error that fires every day for a permanent, understood
 # condition is one nobody reads, and it would bury a real one.
 _UNPARSED_SERIES = {
+    "KXRHOUSESEATS":
+        "the Republican-side mirror of the seat-count ladder. Captured because "
+        "bytes are cheap and a series we already hold history for is one we can "
+        "backfill; not parsed because the D ladder already gives us the whole "
+        "distribution and reading both would double-count it.",
+    "KXRSENATESEATS":
+        "as KXRHOUSESEATS, for the Senate.",
     "KXGENERICBALLOTVOTEHUB":
         "weekly threshold ladder on what VoteHub's generic-ballot AVERAGE will "
         "read on a given date. A market about a poll aggregator's number, not "
@@ -237,6 +244,49 @@ def _series_of(ticker: str) -> str:
     return ticker.split("-", 1)[0]
 
 
+def _expected_to_parse(series: str, ctx: Context) -> bool:
+    """Should this series produce rows today?
+
+    THE POSITIVE EXPECTATION, AND WHY IT REPLACED A NEGATIVE ONE.
+
+    The old test was "did anything at all classify?" — if a run ended with
+    markets seen and no rows, it raised. That reads as a strong check and is in
+    fact a very weak one, because it is a claim about the WHOLE capture rather
+    than about any series we care about. The first real archive replay showed
+    how it fails: the 2026-08-19 capture predates the allowlist tightening, so
+    it holds 137 series of Kalshi's Politics category — impeachment calls,
+    congressional pay rises, tariff votes, Epstein files, foreign elections, a
+    Super Bowl market — 89 tickers of which can never classify to a 2026 race
+    because they are not about one. Nothing was wrong and nothing could be
+    fixed, and the parser raised on that day, and would have raised on it every
+    single run from then to November.
+
+    An error that fires forever on a permanent, understood condition is one
+    nobody reads, and it buries the real one. So the question is asked about
+    each series instead, and asked the other way round: this series is one we
+    said we wanted (it matches the registry's series_include) and is not on the
+    knowingly-unparsed list, therefore it OWES us rows. A series outside the
+    allowlist owes us nothing — it is either historical noise or something a
+    future capture will stop collecting, and either way its silence is data
+    about Kalshi rather than a fault in this file.
+
+    Deriving the expectation from series_include rather than a list in here
+    means tightening the registry tightens the check, with nothing to keep in
+    sync by hand.
+    """
+    if series in _UNPARSED_SERIES:
+        return False
+    pat = (ctx.source.get("config") or {}).get("series_include")
+    if not pat:
+        # No allowlist configured: we asked for everything, so we cannot claim
+        # any particular series was promised to us.
+        return False
+    try:
+        return bool(re.match(pat, series))
+    except re.error:
+        return False
+
+
 def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     market_arts = [a for n, a in artifacts.items() if n.startswith("markets-")]
     if not market_arts:
@@ -249,9 +299,12 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     rows: list[Row] = []
     unmatched: list[str] = []
     empty_series: list[str] = []
+    rows_by_series: dict[str, int] = {}   # series -> rows it produced
     priced = 0                     # markets that had a usable price
     seen_markets = 0               # markets present, priced or not
     for art in market_arts:
+        series = art.name.replace("markets-", "")
+        rows_by_series.setdefault(series, 0)
         payload = art.json()
         markets = payload.get("markets", []) or []
         if not markets:
@@ -260,7 +313,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             # Kalshi has not opened 2026 chamber-control markets under them. That
             # is a fact about Kalshi, not a parser bug, and the empty response is
             # itself worth archiving — the day they open, the archive shows it.
-            empty_series.append(art.name.replace("markets-", ""))
+            empty_series.append(series)
             continue
         seen_markets += len(markets)
         # Seat ladders first: they are read as a distribution across markets,
@@ -269,6 +322,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         got = _seat_rows(markets, art, ctx)
         if got:
             rows.extend(got)
+            rows_by_series[series] += len(got)
             priced += len(markets)
             continue
         for m in markets:
@@ -291,6 +345,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                                 district=district,
                                 quantity=f"win_prob_{side}", value=round(p, 4),
                                 unit="prob"))
+            rows_by_series[series] += 1
     if seen_markets and priced == 0:
         # MARKETS EXIST AND NOT ONE OF THEM HAD A READABLE PRICE. That is a
         # parser fault, not a fact about Kalshi, and it must be loud.
@@ -311,28 +366,42 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             f"first market: "
             f"{sorted(k for k in sample if 'price' in k or 'bid' in k or 'ask' in k)}")
 
-    if not rows and priced == 0:
-        # Captured fine; Kalshi simply has nothing priced and classifiable for
-        # 2026 races today. That is a fact about Kalshi, not a parser fault, and
-        # an empty list is the honest report. See the registry notes.
-        return []
-
-    if not rows:
-        live = len(market_arts) - len(empty_series)
-        if live == 0:
-            # Every captured series was empty. Nothing to parse and nothing wrong.
-            raise ValueError(
-                f"all {len(empty_series)} captured Kalshi series are empty — no "
-                f"open 2026 markets under: {sorted(empty_series)[:8]}. "
-                f"Re-check series_include in the registry; the tickers may have "
-                f"been renamed, or the markets may genuinely not be open yet.")
-        surprising = [t for t in unmatched if _series_of(t) not in _UNPARSED_SERIES]
-        if not surprising:
-            # Everything that went unclassified came from a series we
-            # knowingly do not parse. Nothing is wrong and nothing is missing.
-            return rows
+    if not market_arts or len(empty_series) == len(market_arts):
+        # Every captured series was a shell. Nothing to parse — but also nothing
+        # collected, on a day we asked for a dozen series, so a human should
+        # look at whether the tickers were renamed.
         raise ValueError(
-            f"{live} series had markets but none classified to a race "
-            f"({len(surprising)} unexpected tickers unmatched). "
-            f"Sample: {surprising[:5]}")
+            f"all {len(empty_series)} captured Kalshi series are empty — no "
+            f"open 2026 markets under: {sorted(empty_series)[:8]}. "
+            f"Re-check series_include in the registry; the tickers may have "
+            f"been renamed, or the markets may genuinely not be open yet.")
+
+    # THE CHECK: every series the registry asked for, that carried markets, and
+    # that we did not declare unparsed, must have produced at least one row.
+    # See _expected_to_parse for why this is asked per series rather than of the
+    # capture as a whole.
+    starved = sorted(s for s, n in rows_by_series.items()
+                     if n == 0 and s not in empty_series
+                     and _expected_to_parse(s, ctx))
+    if starved:
+        sample = [t for t in unmatched if _series_of(t) in set(starved)][:5]
+        raise ValueError(
+            f"{len(starved)} allowlisted Kalshi series carried markets but "
+            f"produced no rows: {starved[:6]}. These are series the registry "
+            f"asks for and this parser claims to read, so a classifier or a "
+            f"price field has probably changed. Unmatched tickers from them: "
+            f"{sample}")
+
+    # Unclassified tickers from series outside the allowlist are historical
+    # noise: captures taken before series_include was tightened hold Kalshi's
+    # whole Politics category. Say so once, quietly, and carry on — this is
+    # information about what is in the archive, not a fault.
+    noise = sorted({_series_of(t) for t in unmatched
+                    if _series_of(t) not in _UNPARSED_SERIES
+                    and not _expected_to_parse(_series_of(t), ctx)})
+    if noise:
+        n = sum(1 for t in unmatched if _series_of(t) in set(noise))
+        print(f"      kalshi: {n} ticker(s) from {len(noise)} non-allowlisted "
+              f"series ignored (capture predates the allowlist): "
+              f"{noise[:6]}{' …' if len(noise) > 6 else ''}")
     return rows
