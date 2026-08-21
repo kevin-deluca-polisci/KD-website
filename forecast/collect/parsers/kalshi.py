@@ -396,6 +396,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     rows: list[Row] = []
     unmatched: list[str] = []
     empty_series: list[str] = []
+    unparsed_seen: list[str] = []   # captured on purpose, read by nothing
     rows_by_series: dict[str, int] = {}   # series -> rows it produced
     priced = 0                     # markets that had a usable price
     seen_markets = 0               # markets present, priced or not
@@ -412,10 +413,35 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             # itself worth archiving — the day they open, the archive shows it.
             empty_series.append(series)
             continue
+
+        # KNOWINGLY-UNPARSED SERIES ARE SKIPPED HERE, BEFORE ANYTHING ELSE.
+        #
+        # Declaring a series unparsed used to mean only that no ladder reader
+        # claimed it — and then its markets fell straight through to the
+        # per-market classifier below, which is worse than parsing it wrong on
+        # purpose. KXRHOUSESEATS is the case that proved it. Every bucket of
+        # the Republican seat ladder carries "HOUSE" in its ticker and "party"
+        # in its title, so _CTRL_H read each one as a chamber-CONTROL market;
+        # "Republican" contains no standalone REP or R token, so the side test
+        # called every one of them Democratic. The result was eleven bucket
+        # prices — 0.015, 0.0255, 0.0465, 0.084 and so on — filed as
+        # P(Democratic House) beside the one real value of 0.797, dragging
+        # Kalshi's contribution to about 0.15 and the whole markets category
+        # from 0.88 down to 0.61 while Polymarket and PredictIt both said 0.81
+        # or better.
+        #
+        # Nothing complained, because each row was individually well-formed.
+        # A ladder bucket is a probability in [0,1] about the House, which is
+        # exactly what the validator checks for.
+        #
+        # Skipped before `seen_markets` too, so these markets are invisible to
+        # the price-field accounting as well: they are not evidence that prices
+        # parse, and they must not be evidence that prices are broken either.
+        if series in _UNPARSED_SERIES:
+            unparsed_seen.append(series)
+            continue
+
         seen_markets += len(markets)
-        # Seat ladders first: they are read as a distribution across markets,
-        # not one market at a time, so they cannot go through the per-market
-        # loop below.
         # Ladders first: both kinds are read as a distribution ACROSS markets,
         # not one market at a time, so neither can go through the per-market
         # loop below.

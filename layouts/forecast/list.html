@@ -164,13 +164,13 @@
     <div data-panel data-chamber="{{ $ck }}">
       {{- $pan := index $ch (printf "%s_seats" $ck) }}
       {{- with $pan }}
-      <p class="sub">{{ .label }}, of {{ .total }}. A bar labelled <em>80%</em> is
-         one model's own interval. A bar labelled <em>n sources</em> is the
-         distance between forecasters who disagree — a different thing, and
-         worth reading differently: a wide interval means one model is unsure,
-         a wide spread means several are confident about different answers. A
-         bare dot is a point estimate with neither, which is itself worth
-         noticing.</p>
+      <p class="sub">{{ .label }}, of {{ .total }}. A bar is the <em>spread
+         between the sources in that method</em> — how far apart they are
+         today, not how uncertain any one of them is. A bare dot means the
+         method has one contributor, which cannot disagree with itself. For
+         what a single model says about its own uncertainty, see the
+         <a href="/forecast/methods/">methods page</a>: each states an 80%
+         interval, and those are wider than anything drawn here.</p>
       {{- $SL := 132.0 }}{{ $SW := 470.0 }}{{ $SH := add 34 (mul 44 (len .series)) }}
       <svg viewBox="0 0 720 {{ add $SH 18 }}" role="img"
            aria-label="Current {{ $ck }} seat forecasts by method, with intervals">
@@ -188,9 +188,8 @@
           {{- if $s.stale }}as of {{ $s.last_date }}
           {{- else if $s.band }}
             {{- if eq $s.band.kind "spread" }}{{ $s.band.n }} sources: {{ printf "%.0f" $s.band.low }}–{{ printf "%.0f" $s.band.high }}
-            {{- else if eq $s.band.kind "interval" }}80% {{ printf "%.0f" $s.band.low }}–{{ printf "%.0f" $s.band.high }}
             {{- else }}{{ printf "%.0f" $s.band.low }}–{{ printf "%.0f" $s.band.high }}{{ end }}
-          {{- else }}no stated interval{{ end }}</text>
+          {{- else }}one source{{ end }}</text>
         {{- if $s.sx_low }}
         <line x1="{{ add $SL (mul (div $s.sx_low 100.0) $SW) }}" y1="{{ $y }}"
               x2="{{ add $SL (mul (div $s.sx_high 100.0) $SW) }}" y2="{{ $y }}"
@@ -224,9 +223,8 @@
           {{- if $s.stale }}as of {{ $s.last_date }}
           {{- else if $s.band }}
             {{- if eq $s.band.kind "spread" }}{{ $s.band.n }} sources: {{ printf "%.1f" $s.band.low }} to {{ printf "%.1f" $s.band.high }}
-            {{- else if eq $s.band.kind "interval" }}80% {{ printf "%.1f" $s.band.low }} to {{ printf "%.1f" $s.band.high }}
             {{- else }}{{ printf "%.1f" $s.band.low }} to {{ printf "%.1f" $s.band.high }}{{ end }}
-          {{- else }}no stated interval{{ end }}</text>
+          {{- else }}one source{{ end }}</text>
         {{- if $s.sx_low }}
         <line x1="{{ add $SL (mul (div $s.sx_low 100.0) $SW) }}" y1="{{ $y }}"
               x2="{{ add $SL (mul (div $s.sx_high 100.0) $SW) }}" y2="{{ $y }}"

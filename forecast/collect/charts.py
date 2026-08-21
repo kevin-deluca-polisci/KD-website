@@ -110,43 +110,29 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
     table would have shown the average of both, and the same page would have
     carried two different numbers under one name.
 
-    INTERVALS still come from the models, because only a model states one. An
-    80% interval is not averageable: the mean of two intervals is not the
-    interval of the mean. So a band is attached only where the category has a
-    single contributor and that contributor is a model of ours. A category with
-    two models plots as a bare dot, and the page already says what a bare dot
-    means — a point estimate with no stated uncertainty.
+    BARS are the spread between contributing sources, and nothing else. This
+    chart asks one question — how far apart are the methods today — and a bar
+    that answered a different question while looking identical made the chart
+    harder to read rather than richer. A category with one contributor gets no
+    bar, which is the honest report: one source cannot disagree with itself.
+
+    Model intervals are not lost, they have moved. Each model still states its
+    own 80% interval in its JSON and the methods page renders it there, beside
+    the assumptions that produce it, where it can be explained rather than
+    silently compared against something it is not.
     """
     out = []
 
-    # (series, panel) -> (low, high), from whichever model states one.
-    bands: dict[tuple, tuple] = {}
-    fm = derived / "fundamentals_model.json"
-    if fm.exists():
-        m = json.loads(fm.read_text())
-        if m.get("margin_D_80_low") is not None:
-            bands[("fundamentals", "margin")] = (m["margin_D_80_low"],
-                                                 m["margin_D_80_high"])
-    pm = derived / "polling_model.json"
-    if pm.exists():
-        m = json.loads(pm.read_text())
-        if m.get("tide_D_80_low") is not None:
-            bands[("polling", "margin")] = (m["tide_D_80_low"], m["tide_D_80_high"])
-    sp = derived / "seat_projections.json"
-    if sp.exists():
-        m = json.loads(sp.read_text())
-        # Projections are keyed by SOURCE and carry their category. A band is
-        # a property of one model, so it is keyed by category here only to be
-        # matched against a category average — and only used below when that
-        # average has a single contributor, which is the case where the two
-        # mean the same thing.
-        for _sid, p in (m.get("projections") or {}).items():
-            series = p.get("category") or _sid
-            s_, h_ = p.get("senate") or {}, p.get("house") or {}
-            if s_.get("D_total_80pct"):
-                bands[(series, "senate_seats")] = tuple(s_["D_total_80pct"])
-            if h_.get("D_seats_80pct"):
-                bands[(series, "house_seats")] = tuple(h_["D_seats_80pct"])
+    # THE MODEL-INTERVAL LOOKUP THAT USED TO LIVE HERE IS GONE.
+    #
+    # It read each model's own 80% interval out of fundamentals_model.json,
+    # polling_model.json and seat_projections.json so a single-source category
+    # could be drawn with a bar. That bar answered a different question from
+    # every other bar on the chart — see the note in the loop below — so this
+    # panel no longer draws it, and the lookup has no remaining reader.
+    # The intervals themselves are unchanged and still published: the methods
+    # page reads them straight from those files, which is where a reader can
+    # see them next to the assumptions that produce them.
 
     # The Senate probability here is the chance of CONTROL, which needs 51
     # seats — which is why class_model_rows emits prob_D_51_plus and not the
@@ -170,34 +156,34 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
             n = int(r.get("n_sources") or 1)
         except (TypeError, ValueError):
             n = 1
-        # TWO KINDS OF BAR, AND THE PAGE HAS TO SAY WHICH.
+        # ONE KIND OF BAR ON THIS CHART: THE SPREAD BETWEEN SOURCES.
         #
-        # An 80% interval is one model's statement about its own uncertainty.
-        # A source spread is the distance between forecasters who disagree.
-        # They are different claims and they are not comparable — a wide
-        # interval means one model is unsure, a wide spread means several
-        # models are confident about different things.
+        # This panel used to draw two different objects with identical weight,
+        # and they are not comparable. A model's 80% interval says how unsure
+        # one model is. A source spread says how far apart several sources are.
+        # Drawn side by side they invite a reading that is not merely imprecise
+        # but backwards: polling seats carried our model's interval, 208-255,
+        # while polling margin carried the spread between four aggregators,
+        # 5.9-6.4. A reader compares the two rows and concludes polling is
+        # wildly unsure about seats and certain to a quarter-point about the
+        # margin. In fact the same model puts an 80% interval of D+0.6 to
+        # D+10.8 on that margin — forty times the width of the bar that was
+        # drawn beside it. Four aggregators averaging the same polls agree
+        # because they are reading the same data, and that agreement is not
+        # evidence about November.
         #
-        # Both used to be emitted as a bare (low, high) and the template
-        # labelled every bar "80%". That was survivable only while the spread
-        # was confined to professional and market margins, which had one source
-        # each, so no spread was ever drawn. The day Ray Fair joined
-        # fundamentals it stopped being survivable in both directions at once:
-        # the category average became the midpoint of D+10.5 and D+1.8, and
-        # having no spread rule for fundamentals meant the page drew a bare dot
-        # at D+6.1 and said "no stated interval" — presenting the midpoint of
-        # the widest disagreement on the site as though it were a settled
-        # number, with the min and max sitting unused in the same CSV row.
+        # So this chart now answers exactly one question — how much do the
+        # methods disagree today — and every bar on it is the same object.
+        # A model's own uncertainty is a different question and belongs where
+        # it can be explained: the methods page states each model's interval
+        # beside the assumptions that produce it.
         #
-        # So: a spread wherever a category has more than one contributor,
-        # whatever the panel, and a kind travelling with it so the template can
-        # name what the reader is looking at.
+        # `band_kind` still travels with the row. Rows written before this
+        # column existed carry no kind and the template declines to name them,
+        # rather than relabelling old data as something it was not.
         low = high = ""
         kind = ""
-        if n == 1 and (cat, panel) in bands and r["snapshot_date"] == snapshot:
-            low, high = bands[(cat, panel)]
-            kind = "interval"
-        elif n > 1:
+        if n > 1:
             lo_, hi_ = _f(r.get("min")), _f(r.get("max"))
             if lo_ is not None and hi_ is not None:
                 low, high, kind = lo_, hi_, "spread"
