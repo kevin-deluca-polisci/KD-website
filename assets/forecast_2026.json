@@ -1,20 +1,20 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-21T19:50:59.546014+00:00",
+  "generated_at": "2026-08-21T21:59:58.590500+00:00",
   "latest_snapshot": "2026-08-21",
   "snapshot_count": 7,
   "headline": [
     {
       "category": "fundamentals",
-      "margin_D": 10.48,
-      "n_sources": 1,
-      "low": 10.48,
+      "margin_D": 6.13,
+      "n_sources": 2,
+      "low": 1.78,
       "high": 10.48,
       "tier": "open",
-      "display": "single",
-      "sole_source": "class_fundamentals",
-      "as_of": "2026-08-21",
-      "n_carried": 0
+      "display": "thin",
+      "sole_source": "",
+      "as_of": "2026-07-31",
+      "n_carried": 1
     },
     {
       "category": "polling",
@@ -60,8 +60,16 @@
         1.78
       ],
       [
+        "2026-08-19",
+        1.78
+      ],
+      [
+        "2026-08-20",
+        1.78
+      ],
+      [
         "2026-08-21",
-        10.48
+        6.13
       ]
     ],
     "polling": [
@@ -772,7 +780,8 @@
           "majority_at": 218,
           "pvi_source": "cook_pvi"
         },
-        "category": "fundamentals"
+        "category": "fundamentals",
+        "as_of": "2026-08-21"
       },
       "class_polling": {
         "tide_D": 6.5,
@@ -979,7 +988,216 @@
           "majority_at": 218,
           "pvi_source": "cook_pvi"
         },
-        "category": "polling"
+        "category": "polling",
+        "as_of": "2026-08-21"
+      },
+      "fair": {
+        "tide_D": 1.78,
+        "senate": {
+          "n_races": 35,
+          "expected_D_seats_up": 13.22,
+          "D_seats_up_80pct": [
+            10,
+            16
+          ],
+          "expected_D_total": 47.22,
+          "D_total_80pct": [
+            44,
+            50
+          ],
+          "prob_D_50_plus": 0.1346,
+          "prob_D_51_plus": 0.0569
+        },
+        "races": {
+          "AK": {
+            "expected_margin_D": -11.12,
+            "pvi": -6.45,
+            "win_prob_D": 0.0448
+          },
+          "AL": {
+            "expected_margin_D": -27.84,
+            "pvi": -14.81,
+            "win_prob_D": 0.0
+          },
+          "AR": {
+            "expected_margin_D": -28.84,
+            "pvi": -15.31,
+            "win_prob_D": 0.0
+          },
+          "CO": {
+            "expected_margin_D": 13.72,
+            "pvi": 5.97,
+            "win_prob_D": 0.9819
+          },
+          "DE": {
+            "expected_margin_D": 17.8,
+            "pvi": 8.01,
+            "win_prob_D": 0.9967
+          },
+          "FL": {
+            "expected_margin_D": -9.0,
+            "pvi": -5.39,
+            "win_prob_D": 0.0847
+          },
+          "GA": {
+            "expected_margin_D": 0.18,
+            "pvi": -0.8,
+            "win_prob_D": 0.511
+          },
+          "IA": {
+            "expected_margin_D": -10.4,
+            "pvi": -6.09,
+            "win_prob_D": 0.0562
+          },
+          "ID": {
+            "expected_margin_D": -34.3,
+            "pvi": -18.04,
+            "win_prob_D": 0.0
+          },
+          "IL": {
+            "expected_margin_D": 14.46,
+            "pvi": 6.34,
+            "win_prob_D": 0.9864
+          },
+          "KS": {
+            "expected_margin_D": -14.28,
+            "pvi": -8.03,
+            "win_prob_D": 0.0146
+          },
+          "KY": {
+            "expected_margin_D": -28.1,
+            "pvi": -14.94,
+            "win_prob_D": 0.0
+          },
+          "LA": {
+            "expected_margin_D": -19.72,
+            "pvi": -10.75,
+            "win_prob_D": 0.0013
+          },
+          "MA": {
+            "expected_margin_D": 29.76,
+            "pvi": 13.99,
+            "win_prob_D": 1.0
+          },
+          "ME": {
+            "expected_margin_D": 9.42,
+            "pvi": 3.82,
+            "win_prob_D": 0.9248
+          },
+          "MI": {
+            "expected_margin_D": 1.4,
+            "pvi": -0.19,
+            "win_prob_D": 0.5846
+          },
+          "MN": {
+            "expected_margin_D": 6.84,
+            "pvi": 2.53,
+            "win_prob_D": 0.8518
+          },
+          "MS": {
+            "expected_margin_D": -19.78,
+            "pvi": -10.78,
+            "win_prob_D": 0.0013
+          },
+          "MT": {
+            "expected_margin_D": -17.86,
+            "pvi": -9.82,
+            "win_prob_D": 0.0032
+          },
+          "NC": {
+            "expected_margin_D": -1.02,
+            "pvi": -1.4,
+            "win_prob_D": 0.4381
+          },
+          "NE": {
+            "expected_margin_D": -18.76,
+            "pvi": -10.27,
+            "win_prob_D": 0.0021
+          },
+          "NH": {
+            "expected_margin_D": 5.76,
+            "pvi": 1.99,
+            "win_prob_D": 0.8104
+          },
+          "NJ": {
+            "expected_margin_D": 10.32,
+            "pvi": 4.27,
+            "win_prob_D": 0.9424
+          },
+          "NM": {
+            "expected_margin_D": 9.14,
+            "pvi": 3.68,
+            "win_prob_D": 0.9186
+          },
+          "OH": {
+            "expected_margin_D": -8.76,
+            "pvi": -5.27,
+            "win_prob_D": 0.0905
+          },
+          "OK": {
+            "expected_margin_D": -32.9,
+            "pvi": -17.34,
+            "win_prob_D": 0.0
+          },
+          "OR": {
+            "expected_margin_D": 17.08,
+            "pvi": 7.65,
+            "win_prob_D": 0.9954
+          },
+          "RI": {
+            "expected_margin_D": 17.7,
+            "pvi": 7.96,
+            "win_prob_D": 0.9966
+          },
+          "SC": {
+            "expected_margin_D": -14.78,
+            "pvi": -8.28,
+            "win_prob_D": 0.012
+          },
+          "SD": {
+            "expected_margin_D": -27.36,
+            "pvi": -14.57,
+            "win_prob_D": 0.0
+          },
+          "TN": {
+            "expected_margin_D": -26.74,
+            "pvi": -14.26,
+            "win_prob_D": 0.0
+          },
+          "TX": {
+            "expected_margin_D": -10.06,
+            "pvi": -5.92,
+            "win_prob_D": 0.0623
+          },
+          "VA": {
+            "expected_margin_D": 8.76,
+            "pvi": 3.49,
+            "win_prob_D": 0.9095
+          },
+          "WV": {
+            "expected_margin_D": -40.14,
+            "pvi": -20.96,
+            "win_prob_D": 0.0
+          },
+          "WY": {
+            "expected_margin_D": -44.68,
+            "pvi": -23.23,
+            "win_prob_D": 0.0
+          }
+        },
+        "house": {
+          "n_districts": 435,
+          "expected_D_seats": 210.23,
+          "D_seats_80pct": [
+            190,
+            230
+          ],
+          "prob_D_majority": 0.3123,
+          "majority_at": 218,
+          "pvi_source": "cook_pvi"
+        },
+        "category": "fundamentals",
+        "as_of": "2026-07-31"
       }
     },
     "publication": "individual",
@@ -1019,41 +1237,41 @@
       "x_ticks": [
         {
           "v": 0,
-          "x": 19.76,
+          "x": 23.95,
           "label": "EVEN"
         },
         {
-          "v": 10,
-          "x": 59.88,
-          "label": "D+10"
+          "v": 5,
+          "x": 61.98,
+          "label": "D+5"
         },
         {
-          "v": 20,
+          "v": 10,
           "x": 100.0,
-          "label": "D+20"
+          "label": "D+10"
         }
       ],
       "y_ticks": [
         {
           "v": 0,
-          "y": 80.24,
+          "y": 76.05,
           "label": "EVEN"
         },
         {
-          "v": 10,
-          "y": 40.12,
-          "label": "D+10"
+          "v": 5,
+          "y": 38.02,
+          "label": "D+5"
         },
         {
-          "v": 20,
+          "v": 10,
           "y": 0.0,
-          "label": "D+20"
+          "label": "D+10"
         }
       ],
       "ref_y": null,
       "ref_label": "",
       "ref_value": null,
-      "zero_y": 80.24,
+      "zero_y": 76.05,
       "series": [
         {
           "key": "fundamentals",
@@ -1063,62 +1281,61 @@
           "points": [
             {
               "x": 0.0,
-              "y": 86.98,
+              "y": 88.82,
               "date": "2025-12-23",
               "v": -1.68
             },
             {
               "x": 16.67,
-              "y": 74.78,
+              "y": 65.71,
               "date": "2026-02-20",
               "v": 1.36
             },
             {
               "x": 33.33,
-              "y": 74.94,
+              "y": 66.01,
               "date": "2026-04-30",
               "v": 1.32
             },
             {
               "x": 50.0,
-              "y": 73.1,
+              "y": 62.51,
               "date": "2026-07-31",
               "v": 1.78
             },
             {
+              "x": 66.67,
+              "y": 62.51,
+              "date": "2026-08-19",
+              "v": 1.78
+            },
+            {
               "x": 83.33,
-              "y": 38.19,
+              "y": 62.51,
               "date": "2026-08-20",
-              "v": 10.48
+              "v": 1.78
             },
             {
               "x": 100.0,
-              "y": 38.19,
+              "y": 29.43,
               "date": "2026-08-21",
-              "v": 10.48
+              "v": 6.13
             }
           ],
-          "polyline": "0.0,86.98 16.67,74.78 33.33,74.94 50.0,73.1 83.33,38.19 100.0,38.19",
+          "polyline": "0.0,88.82 16.67,65.71 33.33,66.01 50.0,62.51 66.67,62.51 83.33,62.51 100.0,29.43",
           "last": {
             "x": 100.0,
-            "y": 38.19,
+            "y": 29.43,
             "date": "2026-08-21",
-            "v": 10.48
+            "v": 6.13
           },
-          "band": {
-            "y_low": 61.74,
-            "y_high": 14.64,
-            "low": 4.61,
-            "high": 16.35
-          },
+          "band": null,
           "last_date": "2026-08-21",
           "stale": false,
-          "n_sources": 1,
-          "label_y": 38.19,
-          "label_nudged": false,
-          "sx": 61.81,
-          "sx_low": 38.26,
-          "sx_high": 85.36
+          "n_sources": 2,
+          "label_y": 36.980000000000004,
+          "label_nudged": true,
+          "sx": 70.57
         },
         {
           "key": "polling",
@@ -1128,27 +1345,27 @@
           "points": [
             {
               "x": 66.67,
-              "y": 54.23,
+              "y": 26.74,
               "date": "2026-08-19",
               "v": 6.4841
             },
             {
               "x": 83.33,
-              "y": 54.58,
+              "y": 27.4,
               "date": "2026-08-20",
               "v": 6.3968
             },
             {
               "x": 100.0,
-              "y": 55.41,
+              "y": 28.98,
               "date": "2026-08-21",
               "v": 6.1898
             }
           ],
-          "polyline": "66.67,54.23 83.33,54.58 100.0,55.41",
+          "polyline": "66.67,26.74 83.33,27.4 100.0,28.98",
           "last": {
             "x": 100.0,
-            "y": 55.41,
+            "y": 28.98,
             "date": "2026-08-21",
             "v": 6.1898
           },
@@ -1156,9 +1373,9 @@
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 4,
-          "label_y": 55.41,
+          "label_y": 28.98,
           "label_nudged": false,
-          "sx": 44.59
+          "sx": 71.02
         },
         {
           "key": "professional",
@@ -1168,27 +1385,27 @@
           "points": [
             {
               "x": 66.67,
-              "y": 57.25,
+              "y": 32.47,
               "date": "2026-08-19",
               "v": 5.73
             },
             {
               "x": 83.33,
-              "y": 57.45,
+              "y": 32.85,
               "date": "2026-08-20",
               "v": 5.68
             },
             {
               "x": 100.0,
-              "y": 57.45,
+              "y": 32.85,
               "date": "2026-08-21",
               "v": 5.68
             }
           ],
-          "polyline": "66.67,57.25 83.33,57.45 100.0,57.45",
+          "polyline": "66.67,32.47 83.33,32.85 100.0,32.85",
           "last": {
             "x": 100.0,
-            "y": 57.45,
+            "y": 32.85,
             "date": "2026-08-21",
             "v": 5.68
           },
@@ -1196,9 +1413,9 @@
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 63.41,
+          "label_y": 44.980000000000004,
           "label_nudged": true,
-          "sx": 42.55
+          "sx": 67.15
         }
       ]
     },
@@ -1230,59 +1447,49 @@
       ],
       "x_ticks": [
         {
-          "v": 200.0,
-          "x": 4.89,
+          "v": 200,
+          "x": 0.72,
           "label": "200"
         },
         {
-          "v": 225.0,
-          "x": 28.67,
-          "label": "225"
+          "v": 220,
+          "x": 32.01,
+          "label": "220"
         },
         {
-          "v": 250.0,
-          "x": 52.44,
-          "label": "250"
+          "v": 240,
+          "x": 63.3,
+          "label": "240"
         },
         {
-          "v": 275.0,
-          "x": 76.22,
-          "label": "275"
-        },
-        {
-          "v": 300.0,
-          "x": 100.0,
-          "label": "300"
+          "v": 260,
+          "x": 94.59,
+          "label": "260"
         }
       ],
       "y_ticks": [
         {
-          "v": 200.0,
-          "y": 95.11,
+          "v": 200,
+          "y": 99.28,
           "label": "200"
         },
         {
-          "v": 225.0,
-          "y": 71.33,
-          "label": "225"
+          "v": 220,
+          "y": 67.99,
+          "label": "220"
         },
         {
-          "v": 250.0,
-          "y": 47.56,
-          "label": "250"
+          "v": 240,
+          "y": 36.7,
+          "label": "240"
         },
         {
-          "v": 275.0,
-          "y": 23.78,
-          "label": "275"
-        },
-        {
-          "v": 300.0,
-          "y": 0.0,
-          "label": "300"
+          "v": 260,
+          "y": 5.41,
+          "label": "260"
         }
       ],
-      "ref_y": 77.99,
+      "ref_y": 71.12,
       "ref_label": "218 \u2014 a majority",
       "ref_value": 218,
       "zero_y": null,
@@ -1295,38 +1502,31 @@
           "points": [
             {
               "x": 50.0,
-              "y": 47.43,
+              "y": 20.85,
               "date": "2026-08-20",
               "v": 250.13
             },
             {
               "x": 100.0,
-              "y": 47.43,
+              "y": 52.07,
               "date": "2026-08-21",
-              "v": 250.13
+              "v": 230.18
             }
           ],
-          "polyline": "50.0,47.43 100.0,47.43",
+          "polyline": "50.0,20.85 100.0,52.07",
           "last": {
             "x": 100.0,
-            "y": 47.43,
+            "y": 52.07,
             "date": "2026-08-21",
-            "v": 250.13
+            "v": 230.18
           },
-          "band": {
-            "y_low": 73.24,
-            "y_high": 18.07,
-            "low": 223.0,
-            "high": 281.0
-          },
+          "band": null,
           "last_date": "2026-08-21",
           "stale": false,
-          "n_sources": 1,
-          "label_y": 60.22,
-          "label_nudged": true,
-          "sx": 52.57,
-          "sx_low": 26.76,
-          "sx_high": 81.93
+          "n_sources": 2,
+          "label_y": 52.07,
+          "label_nudged": false,
+          "sx": 47.93
         },
         {
           "key": "polling",
@@ -1336,38 +1536,38 @@
           "points": [
             {
               "x": 50.0,
-              "y": 70.02,
+              "y": 58.01,
               "date": "2026-08-20",
               "v": 226.38
             },
             {
               "x": 100.0,
-              "y": 66.49,
+              "y": 52.21,
               "date": "2026-08-21",
               "v": 230.09
             }
           ],
-          "polyline": "50.0,70.02 100.0,66.49",
+          "polyline": "50.0,58.01 100.0,52.21",
           "last": {
             "x": 100.0,
-            "y": 66.49,
+            "y": 52.21,
             "date": "2026-08-21",
             "v": 230.09
           },
           "band": {
-            "y_low": 87.5,
-            "y_high": 42.8,
+            "y_low": 86.76,
+            "y_high": 13.24,
             "low": 208.0,
             "high": 255.0
           },
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 73.22,
+          "label_y": 65.07,
           "label_nudged": true,
-          "sx": 33.51,
-          "sx_low": 12.5,
-          "sx_high": 57.2
+          "sx": 47.79,
+          "sx_low": 13.24,
+          "sx_high": 86.76
         },
         {
           "key": "professional",
@@ -1377,27 +1577,27 @@
           "points": [
             {
               "x": 0.0,
-              "y": 46.8,
+              "y": 19.82,
               "date": "2026-08-19",
               "v": 250.79
             },
             {
               "x": 50.0,
-              "y": 47.08,
+              "y": 20.28,
               "date": "2026-08-20",
               "v": 250.5
             },
             {
               "x": 100.0,
-              "y": 47.22,
+              "y": 20.51,
               "date": "2026-08-21",
               "v": 250.35
             }
           ],
-          "polyline": "0.0,46.8 50.0,47.08 100.0,47.22",
+          "polyline": "0.0,19.82 50.0,20.28 100.0,20.51",
           "last": {
             "x": 100.0,
-            "y": 47.22,
+            "y": 20.51,
             "date": "2026-08-21",
             "v": 250.35
           },
@@ -1405,9 +1605,9 @@
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 47.22,
+          "label_y": 20.51,
           "label_nudged": false,
-          "sx": 52.78
+          "sx": 79.49
         },
         {
           "key": "market",
@@ -1417,25 +1617,25 @@
           "points": [
             {
               "x": 100.0,
-              "y": 66.59,
+              "y": 52.41,
               "date": "2026-08-21",
-              "v": 229.99
+              "v": 229.96
             }
           ],
-          "polyline": "100.0,66.59",
+          "polyline": "100.0,52.41",
           "last": {
             "x": 100.0,
-            "y": 66.59,
+            "y": 52.41,
             "date": "2026-08-21",
-            "v": 229.99
+            "v": 229.96
           },
           "band": null,
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 86.22,
+          "label_y": 78.07,
           "label_nudged": true,
-          "sx": 33.41
+          "sx": 47.59
         }
       ]
     },
@@ -1528,25 +1728,25 @@
             },
             {
               "x": 100.0,
-              "y": 8.48,
+              "y": 61.55,
               "date": "2026-08-21",
-              "v": 0.9491
+              "v": 0.6307
             }
           ],
-          "polyline": "50.0,8.48 100.0,8.48",
+          "polyline": "50.0,8.48 100.0,61.55",
           "last": {
             "x": 100.0,
-            "y": 8.48,
+            "y": 61.55,
             "date": "2026-08-21",
-            "v": 0.9491
+            "v": 0.6307
           },
           "band": null,
           "last_date": "2026-08-21",
           "stale": false,
-          "n_sources": 1,
-          "label_y": 8.48,
+          "n_sources": 2,
+          "label_y": 61.55,
           "label_nudged": false,
-          "sx": 91.52
+          "sx": 38.45
         },
         {
           "key": "polling",
@@ -1642,25 +1842,25 @@
             },
             {
               "x": 100.0,
-              "y": 63.92,
+              "y": 64.28,
               "date": "2026-08-21",
-              "v": 0.6165
+              "v": 0.6143
             }
           ],
-          "polyline": "0.0,20.83 50.0,19.17 100.0,63.92",
+          "polyline": "0.0,20.83 50.0,19.17 100.0,64.28",
           "last": {
             "x": 100.0,
-            "y": 63.92,
+            "y": 64.28,
             "date": "2026-08-21",
-            "v": 0.6165
+            "v": 0.6143
           },
           "band": null,
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 3,
-          "label_y": 63.92,
-          "label_nudged": false,
-          "sx": 36.08
+          "label_y": 74.55,
+          "label_nudged": true,
+          "sx": 35.72
         }
       ]
     },
@@ -1692,39 +1892,59 @@
       ],
       "x_ticks": [
         {
-          "v": 45,
+          "v": 45.0,
           "x": 0.0,
           "label": "45"
         },
         {
-          "v": 50,
-          "x": 41.67,
+          "v": 47.5,
+          "x": 25.0,
+          "label": "48"
+        },
+        {
+          "v": 50.0,
+          "x": 50.0,
           "label": "50"
         },
         {
-          "v": 55,
-          "x": 83.33,
+          "v": 52.5,
+          "x": 75.0,
+          "label": "52"
+        },
+        {
+          "v": 55.0,
+          "x": 100.0,
           "label": "55"
         }
       ],
       "y_ticks": [
         {
-          "v": 45,
+          "v": 45.0,
           "y": 100.0,
           "label": "45"
         },
         {
-          "v": 50,
-          "y": 58.33,
+          "v": 47.5,
+          "y": 75.0,
+          "label": "48"
+        },
+        {
+          "v": 50.0,
+          "y": 50.0,
           "label": "50"
         },
         {
-          "v": 55,
-          "y": 16.67,
+          "v": 52.5,
+          "y": 25.0,
+          "label": "52"
+        },
+        {
+          "v": 55.0,
+          "y": 0.0,
           "label": "55"
         }
       ],
-      "ref_y": 50.0,
+      "ref_y": 40.0,
       "ref_label": "51 \u2014 a majority",
       "ref_value": 51,
       "zero_y": null,
@@ -1737,38 +1957,31 @@
           "points": [
             {
               "x": 50.0,
-              "y": 46.08,
+              "y": 35.3,
               "date": "2026-08-20",
               "v": 51.47
             },
             {
               "x": 100.0,
-              "y": 46.08,
+              "y": 56.55,
               "date": "2026-08-21",
-              "v": 51.47
+              "v": 49.345
             }
           ],
-          "polyline": "50.0,46.08 100.0,46.08",
+          "polyline": "50.0,35.3 100.0,56.55",
           "last": {
             "x": 100.0,
-            "y": 46.08,
+            "y": 56.55,
             "date": "2026-08-21",
-            "v": 51.47
+            "v": 49.345
           },
-          "band": {
-            "y_low": 75.0,
-            "y_high": 16.67,
-            "low": 48.0,
-            "high": 55.0
-          },
+          "band": null,
           "last_date": "2026-08-21",
           "stale": false,
-          "n_sources": 1,
-          "label_y": 46.08,
-          "label_nudged": false,
-          "sx": 53.92,
-          "sx_low": 25.0,
-          "sx_high": 83.33
+          "n_sources": 2,
+          "label_y": 77.3,
+          "label_nudged": true,
+          "sx": 43.45
         },
         {
           "key": "polling",
@@ -1778,38 +1991,38 @@
           "points": [
             {
               "x": 50.0,
-              "y": 66.33,
+              "y": 59.6,
               "date": "2026-08-20",
               "v": 49.04
             },
             {
               "x": 100.0,
-              "y": 63.0,
+              "y": 55.6,
               "date": "2026-08-21",
               "v": 49.44
             }
           ],
-          "polyline": "50.0,66.33 100.0,63.0",
+          "polyline": "50.0,59.6 100.0,55.6",
           "last": {
             "x": 100.0,
-            "y": 63.0,
+            "y": 55.6,
             "date": "2026-08-21",
             "v": 49.44
           },
           "band": {
-            "y_low": 83.33,
-            "y_high": 41.67,
+            "y_low": 80.0,
+            "y_high": 30.0,
             "low": 47.0,
             "high": 52.0
           },
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 85.08,
+          "label_y": 64.3,
           "label_nudged": true,
-          "sx": 37.0,
-          "sx_low": 16.67,
-          "sx_high": 58.33
+          "sx": 44.4,
+          "sx_low": 20.0,
+          "sx_high": 70.0
         },
         {
           "key": "professional",
@@ -1819,27 +2032,27 @@
           "points": [
             {
               "x": 0.0,
-              "y": 46.42,
+              "y": 35.7,
               "date": "2026-08-19",
               "v": 51.43
             },
             {
               "x": 50.0,
-              "y": 45.92,
+              "y": 35.1,
               "date": "2026-08-20",
               "v": 51.49
             },
             {
               "x": 100.0,
-              "y": 46.83,
+              "y": 36.2,
               "date": "2026-08-21",
               "v": 51.38
             }
           ],
-          "polyline": "0.0,46.42 50.0,45.92 100.0,46.83",
+          "polyline": "0.0,35.7 50.0,35.1 100.0,36.2",
           "last": {
             "x": 100.0,
-            "y": 46.83,
+            "y": 36.2,
             "date": "2026-08-21",
             "v": 51.38
           },
@@ -1847,9 +2060,9 @@
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 59.08,
-          "label_nudged": true,
-          "sx": 53.17
+          "label_y": 36.2,
+          "label_nudged": false,
+          "sx": 63.8
         },
         {
           "key": "market",
@@ -1859,15 +2072,15 @@
           "points": [
             {
               "x": 100.0,
-              "y": 59.42,
+              "y": 51.3,
               "date": "2026-08-21",
               "v": 49.87
             }
           ],
-          "polyline": "100.0,59.42",
+          "polyline": "100.0,51.3",
           "last": {
             "x": 100.0,
-            "y": 59.42,
+            "y": 51.3,
             "date": "2026-08-21",
             "v": 49.87
           },
@@ -1875,9 +2088,9 @@
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 72.08,
-          "label_nudged": true,
-          "sx": 40.58
+          "label_y": 51.3,
+          "label_nudged": false,
+          "sx": 48.7
         }
       ]
     },
@@ -1970,25 +2183,25 @@
             },
             {
               "x": 100.0,
-              "y": 27.83,
+              "y": 71.65,
               "date": "2026-08-21",
-              "v": 0.6209
+              "v": 0.3389
             }
           ],
-          "polyline": "50.0,27.83 100.0,27.83",
+          "polyline": "50.0,27.83 100.0,71.65",
           "last": {
             "x": 100.0,
-            "y": 27.83,
+            "y": 71.65,
             "date": "2026-08-21",
-            "v": 0.6209
+            "v": 0.3389
           },
           "band": null,
           "last_date": "2026-08-21",
           "stale": false,
-          "n_sources": 1,
-          "label_y": 40.629999999999995,
-          "label_nudged": true,
-          "sx": 72.17
+          "n_sources": 2,
+          "label_y": 71.65,
+          "label_nudged": false,
+          "sx": 28.35
         },
         {
           "key": "polling",
@@ -2020,8 +2233,8 @@
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 79.2,
-          "label_nudged": false,
+          "label_y": 84.65,
+          "label_nudged": true,
           "sx": 20.8
         },
         {
@@ -2100,8 +2313,8 @@
           "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 3,
-          "label_y": 53.629999999999995,
-          "label_nudged": true,
+          "label_y": 49.46,
+          "label_nudged": false,
           "sx": 50.54
         }
       ]
@@ -4819,64 +5032,6 @@
             ]
           },
           {
-            "race_id": "GOV_OR_2026",
-            "state": "OR",
-            "district": "",
-            "n": 8,
-            "spread": 4.0,
-            "mean": 1.81,
-            "x_lo": 60.0,
-            "x_hi": 100.0,
-            "x_mean": 81.88,
-            "n_distinct": 4,
-            "dots": [
-              {
-                "v": 0.0,
-                "x": 100.0,
-                "n": 1,
-                "label": "Solid D",
-                "forecasters": [
-                  "RealClearPolitics"
-                ],
-                "r": 3.67
-              },
-              {
-                "v": 1.5,
-                "x": 85.0,
-                "n": 5,
-                "label": "Likely D",
-                "forecasters": [
-                  "Cook Political Report",
-                  "Fox News Power Rankings",
-                  "Sabato's Crystal Ball",
-                  "Silver Bulletin",
-                  "VoteHub"
-                ],
-                "r": 5.0
-              },
-              {
-                "v": 3.0,
-                "x": 70.0,
-                "n": 1,
-                "label": "Lean D",
-                "forecasters": [
-                  "Inside Elections"
-                ],
-                "r": 3.67
-              },
-              {
-                "v": 4.0,
-                "x": 60.0,
-                "n": 1,
-                "label": "Tilt D",
-                "forecasters": [
-                  "Race to the WH"
-                ],
-                "r": 3.67
-              }
-            ]
-          },
-          {
             "race_id": "GOV_AZ_2026",
             "state": "AZ",
             "district": "",
@@ -5038,32 +5193,32 @@
             "district": "",
             "n": 8,
             "spread": 3.0,
-            "mean": 8.12,
+            "mean": 8.31,
             "x_lo": 0.0,
             "x_hi": 30.0,
-            "x_mean": 18.75,
+            "x_mean": 16.88,
             "n_distinct": 3,
             "dots": [
               {
                 "v": 7.0,
                 "x": 30.0,
-                "n": 3,
+                "n": 2,
                 "label": "Lean R",
                 "forecasters": [
-                  "Race to the WH",
                   "RealClearPolitics",
                   "VoteHub"
                 ],
-                "r": 4.68
+                "r": 4.12
               },
               {
                 "v": 8.5,
                 "x": 15.0,
-                "n": 4,
+                "n": 5,
                 "label": "Likely R",
                 "forecasters": [
                   "Cook Political Report",
                   "Fox News Power Rankings",
+                  "Race to the WH",
                   "Sabato's Crystal Ball",
                   "Silver Bulletin"
                 ],
@@ -5077,7 +5232,56 @@
                 "forecasters": [
                   "Inside Elections"
                 ],
-                "r": 3.8
+                "r": 3.67
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_OR_2026",
+            "state": "OR",
+            "district": "",
+            "n": 8,
+            "spread": 3.0,
+            "mean": 1.69,
+            "x_lo": 70.0,
+            "x_hi": 100.0,
+            "x_mean": 83.12,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 0.0,
+                "x": 100.0,
+                "n": 1,
+                "label": "Solid D",
+                "forecasters": [
+                  "RealClearPolitics"
+                ],
+                "r": 3.67
+              },
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 5,
+                "label": "Likely D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 2,
+                "label": "Lean D",
+                "forecasters": [
+                  "Inside Elections",
+                  "Race to the WH"
+                ],
+                "r": 4.12
               }
             ]
           },
@@ -5136,31 +5340,31 @@
             "district": "",
             "n": 8,
             "spread": 2.5,
-            "mean": 2.94,
+            "mean": 2.75,
             "x_lo": 60.0,
             "x_hi": 85.0,
-            "x_mean": 70.62,
+            "x_mean": 72.5,
             "n_distinct": 3,
             "dots": [
               {
                 "v": 1.5,
                 "x": 85.0,
-                "n": 1,
+                "n": 2,
                 "label": "Likely D",
                 "forecasters": [
+                  "Race to the WH",
                   "Silver Bulletin"
                 ],
-                "r": 3.58
+                "r": 4.12
               },
               {
                 "v": 3.0,
                 "x": 70.0,
-                "n": 6,
+                "n": 5,
                 "label": "Lean D",
                 "forecasters": [
                   "Cook Political Report",
                   "Fox News Power Rankings",
-                  "Race to the WH",
                   "RealClearPolitics",
                   "Sabato's Crystal Ball",
                   "VoteHub"
@@ -5175,7 +5379,7 @@
                 "forecasters": [
                   "Inside Elections"
                 ],
-                "r": 3.58
+                "r": 3.67
               }
             ]
           },
@@ -5781,33 +5985,33 @@
             "district": "",
             "n": 8,
             "spread": 1.5,
-            "mean": 9.44,
+            "mean": 9.62,
             "x_lo": 0.0,
             "x_hi": 15.0,
-            "x_mean": 5.62,
+            "x_mean": 3.75,
             "n_distinct": 2,
             "dots": [
               {
                 "v": 8.5,
                 "x": 15.0,
-                "n": 3,
+                "n": 2,
                 "label": "Likely R",
                 "forecasters": [
-                  "Race to the WH",
                   "RealClearPolitics",
                   "VoteHub"
                 ],
-                "r": 4.46
+                "r": 3.99
               },
               {
                 "v": 10.0,
                 "x": 0.0,
-                "n": 5,
+                "n": 6,
                 "label": "Solid R",
                 "forecasters": [
                   "Cook Political Report",
                   "Fox News Power Rankings",
                   "Inside Elections",
+                  "Race to the WH",
                   "Sabato's Crystal Ball",
                   "Silver Bulletin"
                 ],
@@ -6446,6 +6650,12 @@
         },
         "markers": [
           {
+            "key": "fundamentals",
+            "label": "Fundamentals",
+            "seats": 49.3,
+            "x": 44.83
+          },
+          {
             "key": "polling",
             "label": "Polling",
             "seats": 49.4,
@@ -6462,12 +6672,6 @@
             "label": "Professional",
             "seats": 51.4,
             "x": 49.71
-          },
-          {
-            "key": "fundamentals",
-            "label": "Fundamentals",
-            "seats": 51.5,
-            "x": 49.93
           }
         ],
         "y_zero": 50.0,
@@ -7224,7 +7428,7 @@
             "key": "market",
             "label": "Markets",
             "seats": 230.0,
-            "x": 43.45
+            "x": 43.39
           },
           {
             "key": "polling",
@@ -7235,8 +7439,8 @@
           {
             "key": "fundamentals",
             "label": "Fundamentals",
-            "seats": 250.1,
-            "x": 81.04
+            "seats": 230.2,
+            "x": 43.8
           },
           {
             "key": "professional",
@@ -7281,25 +7485,19 @@
       {
         "category": "fundamentals",
         "label": "Fundamentals",
-        "house_seats_80": [
-          223,
-          281
-        ],
-        "senate_seats_80": [
-          48,
-          55
-        ],
-        "n_sources": 1,
-        "sole_source": "class_fundamentals",
-        "house_margin": 10.48,
+        "house_seats_80": null,
+        "senate_seats_80": null,
+        "n_sources": 2,
+        "sole_source": "",
+        "house_margin": 6.13,
         "house_margin_withheld": false,
-        "house_seats": 250.13,
+        "house_seats": 230.18,
         "house_seats_withheld": false,
-        "house_prob": 0.9491,
+        "house_prob": 0.6307,
         "house_prob_withheld": false,
-        "senate_seats": 51.47,
+        "senate_seats": 49.345,
         "senate_seats_withheld": false,
-        "senate_prob": 0.6209,
+        "senate_prob": 0.3389,
         "senate_prob_withheld": false
       },
       {
@@ -7347,9 +7545,9 @@
         "sole_source": "kalshi",
         "house_margin": null,
         "house_margin_withheld": false,
-        "house_seats": 229.99,
+        "house_seats": 229.96,
         "house_seats_withheld": false,
-        "house_prob": 0.6165,
+        "house_prob": 0.6143,
         "house_prob_withheld": false,
         "senate_seats": 49.87,
         "senate_seats_withheld": false,
@@ -7364,10 +7562,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": 38.46,
+            "margin": 34.11,
             "prob": 1.0,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 34.48,
@@ -7397,10 +7595,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": 26.5,
-            "prob": 1.0,
+            "margin": 22.15,
+            "prob": 0.9984,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 22.52,
@@ -7422,7 +7620,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.1096
+        "prob_spread": 0.1093
       },
       {
         "state": "RI",
@@ -7430,10 +7628,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": 26.4,
-            "prob": 1.0,
+            "margin": 22.05,
+            "prob": 0.9983,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 22.42,
@@ -7455,7 +7653,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.0425
+        "prob_spread": 0.0422
       },
       {
         "state": "OR",
@@ -7463,10 +7661,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": 25.78,
-            "prob": 1.0,
+            "margin": 21.43,
+            "prob": 0.9977,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 21.8,
@@ -7488,7 +7686,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.0613
+        "prob_spread": 0.0609
       },
       {
         "state": "IL",
@@ -7496,10 +7694,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": 23.16,
-            "prob": 0.9998,
+            "margin": 18.81,
+            "prob": 0.9931,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 19.18,
@@ -7521,7 +7719,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.088
+        "prob_spread": 0.0865
       },
       {
         "state": "CO",
@@ -7529,10 +7727,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": 22.42,
-            "prob": 0.9997,
+            "margin": 18.07,
+            "prob": 0.9908,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 18.44,
@@ -7554,7 +7752,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.0696
+        "prob_spread": 0.0675
       },
       {
         "state": "NJ",
@@ -7562,10 +7760,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": 19.02,
-            "prob": 0.9982,
+            "margin": 14.67,
+            "prob": 0.9703,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 15.04,
@@ -7581,13 +7779,13 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.9647,
+            "prob": 0.9632,
             "withheld": false,
             "n": 2
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.0494
+        "prob_spread": 0.0404
       },
       {
         "state": "ME",
@@ -7595,10 +7793,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": 18.12,
-            "prob": 0.9972,
+            "margin": 13.77,
+            "prob": 0.961,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 14.14,
@@ -7620,7 +7818,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.3347
+        "prob_spread": 0.3221
       },
       {
         "state": "NM",
@@ -7628,10 +7826,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": 17.84,
-            "prob": 0.9968,
+            "margin": 13.49,
+            "prob": 0.9577,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 13.86,
@@ -7653,7 +7851,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.0622
+        "prob_spread": 0.0482
       },
       {
         "state": "VA",
@@ -7661,10 +7859,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": 17.46,
-            "prob": 0.9962,
+            "margin": 13.11,
+            "prob": 0.9528,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 13.48,
@@ -7686,7 +7884,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.0902
+        "prob_spread": 0.0742
       },
       {
         "state": "MN",
@@ -7694,10 +7892,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": 15.54,
-            "prob": 0.9912,
+            "margin": 11.19,
+            "prob": 0.9215,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 11.56,
@@ -7719,7 +7917,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.1042
+        "prob_spread": 0.0742
       },
       {
         "state": "NH",
@@ -7727,10 +7925,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": 14.46,
-            "prob": 0.9864,
+            "margin": 10.11,
+            "prob": 0.8984,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 10.48,
@@ -7752,7 +7950,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.1189
+        "prob_spread": 0.0777
       },
       {
         "state": "MI",
@@ -7760,10 +7958,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": 10.1,
-            "prob": 0.9385,
+            "margin": 5.75,
+            "prob": 0.7615,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 6.12,
@@ -7779,13 +7977,13 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.6225,
+            "prob": 0.6175,
             "withheld": false,
             "n": 2
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.316
+        "prob_spread": 0.2074
       },
       {
         "state": "GA",
@@ -7793,10 +7991,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": 8.88,
-            "prob": 0.9124,
+            "margin": 4.53,
+            "prob": 0.7117,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 4.9,
@@ -7818,7 +8016,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.1396
+        "prob_spread": 0.1983
       },
       {
         "state": "NC",
@@ -7826,10 +8024,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": 7.68,
-            "prob": 0.8795,
+            "margin": 3.33,
+            "prob": 0.6588,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": 3.7,
@@ -7851,7 +8049,7 @@
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.2338
+        "prob_spread": 0.2889
       },
       {
         "state": "OH",
@@ -7859,10 +8057,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -0.06,
-            "prob": 0.4963,
+            "margin": -4.41,
+            "prob": 0.2934,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -4.04,
@@ -7892,10 +8090,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -0.3,
-            "prob": 0.4817,
+            "margin": -4.65,
+            "prob": 0.2832,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -4.28,
@@ -7911,13 +8109,13 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.0825,
+            "prob": 0.09,
             "withheld": false,
             "n": 2
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.4422
+        "prob_spread": 0.2437
       },
       {
         "state": "TX",
@@ -7925,10 +8123,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -1.36,
-            "prob": 0.4178,
+            "margin": -5.71,
+            "prob": 0.2401,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -5.34,
@@ -7944,7 +8142,7 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.4875,
+            "prob": 0.4925,
             "withheld": false,
             "n": 2
           }
@@ -7958,10 +8156,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -1.7,
-            "prob": 0.3976,
+            "margin": -6.05,
+            "prob": 0.2269,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -5.68,
@@ -7991,10 +8189,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -2.42,
-            "prob": 0.3559,
+            "margin": -6.77,
+            "prob": 0.2004,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -6.4,
@@ -8010,13 +8208,13 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.5,
+            "prob": 0.6,
             "withheld": false,
             "n": 1
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.3357
+        "prob_spread": 0.4357
       },
       {
         "state": "KS",
@@ -8024,10 +8222,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -5.58,
-            "prob": 0.1971,
+            "margin": -9.93,
+            "prob": 0.1058,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -9.56,
@@ -8043,7 +8241,7 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.2,
+            "prob": 0.195,
             "withheld": false,
             "n": 2
           }
@@ -8057,10 +8255,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -6.08,
-            "prob": 0.1766,
+            "margin": -10.43,
+            "prob": 0.0943,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -10.06,
@@ -8090,10 +8288,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -9.16,
-            "prob": 0.081,
+            "margin": -13.51,
+            "prob": 0.0421,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -13.14,
@@ -8123,10 +8321,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -10.06,
-            "prob": 0.0623,
+            "margin": -14.41,
+            "prob": 0.0322,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -14.04,
@@ -8156,10 +8354,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -11.02,
-            "prob": 0.0462,
+            "margin": -15.37,
+            "prob": 0.0238,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -15.0,
@@ -8189,10 +8387,10 @@
         "competitive": true,
         "cats": {
           "fundamentals": {
-            "margin": -11.08,
-            "prob": 0.0454,
+            "margin": -15.43,
+            "prob": 0.0234,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -15.06,
@@ -8222,10 +8420,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": -18.04,
-            "prob": 0.0029,
+            "margin": -22.39,
+            "prob": 0.0014,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -22.02,
@@ -8255,10 +8453,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": -18.66,
-            "prob": 0.0022,
+            "margin": -23.01,
+            "prob": 0.0011,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -22.64,
@@ -8274,7 +8472,7 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.0268,
+            "prob": 0.0265,
             "withheld": false,
             "n": 2
           }
@@ -8288,10 +8486,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": -19.14,
-            "prob": 0.0017,
+            "margin": -23.49,
+            "prob": 0.0008,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -23.12,
@@ -8321,10 +8519,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": -19.4,
-            "prob": 0.0015,
+            "margin": -23.75,
+            "prob": 0.0008,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -23.38,
@@ -8340,7 +8538,7 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.0585,
+            "prob": 0.061,
             "withheld": false,
             "n": 2
           }
@@ -8354,10 +8552,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": -20.14,
-            "prob": 0.0011,
+            "margin": -24.49,
+            "prob": 0.0006,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -24.12,
@@ -8373,13 +8571,13 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.0725,
+            "prob": 0.0707,
             "withheld": false,
             "n": 2
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.0724
+        "prob_spread": 0.0706
       },
       {
         "state": "OK",
@@ -8387,10 +8585,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": -24.2,
+            "margin": -28.55,
             "prob": 0.0001,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -28.18,
@@ -8406,13 +8604,13 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.058,
+            "prob": 0.0573,
             "withheld": false,
             "n": 2
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.058
+        "prob_spread": 0.0573
       },
       {
         "state": "ID",
@@ -8420,10 +8618,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": -25.6,
+            "margin": -29.95,
             "prob": 0.0,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -29.58,
@@ -8453,10 +8651,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": -31.44,
+            "margin": -35.79,
             "prob": 0.0,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -35.42,
@@ -8472,13 +8670,13 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.0288,
+            "prob": 0.031,
             "withheld": false,
             "n": 2
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.0288
+        "prob_spread": 0.031
       },
       {
         "state": "WY",
@@ -8486,10 +8684,10 @@
         "competitive": false,
         "cats": {
           "fundamentals": {
-            "margin": -35.98,
+            "margin": -40.33,
             "prob": 0.0,
             "withheld": false,
-            "n": 1
+            "n": 2
           },
           "polling": {
             "margin": -39.96,
@@ -8505,50 +8703,50 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.029,
+            "prob": 0.0287,
             "withheld": false,
             "n": 2
           }
         },
         "n_cats": 4,
-        "prob_spread": 0.029
+        "prob_spread": 0.0287
       }
     ],
     "plot": {
       "rows": [
         {
-          "state": "FL",
-          "race_id": "SEN_FL_2026",
+          "state": "AK",
+          "race_id": "SEN_AK_2026",
           "points": [
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.4817,
-              "x": 48.17
+              "prob": 0.2004,
+              "x": 20.04
             },
             {
               "key": "polling",
               "label": "Polling",
-              "prob": 0.2567,
-              "x": 25.67
+              "prob": 0.1643,
+              "x": 16.43
             },
             {
               "key": "professional",
               "label": "Professional",
-              "prob": 0.0395,
-              "x": 3.95
+              "prob": 0.4749,
+              "x": 47.49
             },
             {
               "key": "market",
               "label": "Markets",
-              "prob": 0.0825,
-              "x": 8.25
+              "prob": 0.6,
+              "x": 60.0
             }
           ],
           "n_cats": 4,
-          "x_lo": 3.95,
-          "x_hi": 48.17,
-          "spread": 44.2
+          "x_lo": 16.43,
+          "x_hi": 60.0,
+          "spread": 43.6
         },
         {
           "state": "TX",
@@ -8557,8 +8755,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.4178,
-              "x": 41.78
+              "prob": 0.2401,
+              "x": 24.01
             },
             {
               "key": "polling",
@@ -8575,8 +8773,8 @@
             {
               "key": "market",
               "label": "Markets",
-              "prob": 0.4875,
-              "x": 48.75
+              "prob": 0.4925,
+              "x": 49.25
             }
           ],
           "n_cats": 4,
@@ -8591,8 +8789,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.4963,
-              "x": 49.63
+              "prob": 0.2934,
+              "x": 29.34
             },
             {
               "key": "polling",
@@ -8619,48 +8817,14 @@
           "spread": 35.4
         },
         {
-          "state": "AK",
-          "race_id": "SEN_AK_2026",
-          "points": [
-            {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.3559,
-              "x": 35.59
-            },
-            {
-              "key": "polling",
-              "label": "Polling",
-              "prob": 0.1643,
-              "x": 16.43
-            },
-            {
-              "key": "professional",
-              "label": "Professional",
-              "prob": 0.4749,
-              "x": 47.49
-            },
-            {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.5,
-              "x": 50.0
-            }
-          ],
-          "n_cats": 4,
-          "x_lo": 16.43,
-          "x_hi": 50.0,
-          "spread": 33.6
-        },
-        {
           "state": "ME",
           "race_id": "SEN_ME_2026",
           "points": [
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.9972,
-              "x": 99.72
+              "prob": 0.961,
+              "x": 96.1
             },
             {
               "key": "polling",
@@ -8683,42 +8847,42 @@
           ],
           "n_cats": 4,
           "x_lo": 66.25,
-          "x_hi": 99.72,
-          "spread": 33.5
+          "x_hi": 98.46,
+          "spread": 32.2
         },
         {
-          "state": "MI",
-          "race_id": "SEN_MI_2026",
+          "state": "NC",
+          "race_id": "SEN_NC_2026",
           "points": [
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.9385,
-              "x": 93.85
+              "prob": 0.6588,
+              "x": 65.88
             },
             {
               "key": "polling",
               "label": "Polling",
-              "prob": 0.8249,
-              "x": 82.49
+              "prob": 0.7139,
+              "x": 71.39
             },
             {
               "key": "professional",
               "label": "Professional",
-              "prob": 0.6877,
-              "x": 68.77
+              "prob": 0.9477,
+              "x": 94.77
             },
             {
               "key": "market",
               "label": "Markets",
-              "prob": 0.6225,
-              "x": 62.25
+              "prob": 0.9075,
+              "x": 90.75
             }
           ],
           "n_cats": 4,
-          "x_lo": 62.25,
-          "x_hi": 93.85,
-          "spread": 31.6
+          "x_lo": 65.88,
+          "x_hi": 94.77,
+          "spread": 28.9
         },
         {
           "state": "IA",
@@ -8727,8 +8891,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.3976,
-              "x": 39.76
+              "prob": 0.2269,
+              "x": 22.69
             },
             {
               "key": "polling",
@@ -8755,38 +8919,106 @@
           "spread": 27.6
         },
         {
-          "state": "NC",
-          "race_id": "SEN_NC_2026",
+          "state": "FL",
+          "race_id": "SEN_FL_2026",
           "points": [
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.8795,
-              "x": 87.95
+              "prob": 0.2832,
+              "x": 28.32
             },
             {
               "key": "polling",
               "label": "Polling",
-              "prob": 0.7139,
-              "x": 71.39
+              "prob": 0.2567,
+              "x": 25.67
             },
             {
               "key": "professional",
               "label": "Professional",
-              "prob": 0.9477,
-              "x": 94.77
+              "prob": 0.0395,
+              "x": 3.95
             },
             {
               "key": "market",
               "label": "Markets",
-              "prob": 0.9075,
-              "x": 90.75
+              "prob": 0.09,
+              "x": 9.0
             }
           ],
           "n_cats": 4,
-          "x_lo": 71.39,
-          "x_hi": 94.77,
-          "spread": 23.4
+          "x_lo": 3.95,
+          "x_hi": 28.32,
+          "spread": 24.4
+        },
+        {
+          "state": "MI",
+          "race_id": "SEN_MI_2026",
+          "points": [
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.7615,
+              "x": 76.15
+            },
+            {
+              "key": "polling",
+              "label": "Polling",
+              "prob": 0.8249,
+              "x": 82.49
+            },
+            {
+              "key": "professional",
+              "label": "Professional",
+              "prob": 0.6877,
+              "x": 68.77
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.6175,
+              "x": 61.75
+            }
+          ],
+          "n_cats": 4,
+          "x_lo": 61.75,
+          "x_hi": 82.49,
+          "spread": 20.7
+        },
+        {
+          "state": "GA",
+          "race_id": "SEN_GA_2026",
+          "points": [
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.7117,
+              "x": 71.17
+            },
+            {
+              "key": "polling",
+              "label": "Polling",
+              "prob": 0.7728,
+              "x": 77.28
+            },
+            {
+              "key": "professional",
+              "label": "Professional",
+              "prob": 0.8624,
+              "x": 86.24
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.91,
+              "x": 91.0
+            }
+          ],
+          "n_cats": 4,
+          "x_lo": 71.17,
+          "x_hi": 91.0,
+          "spread": 19.8
         },
         {
           "state": "MS",
@@ -8795,8 +9027,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.0454,
-              "x": 4.54
+              "prob": 0.0234,
+              "x": 2.34
             },
             {
               "key": "polling",
@@ -8829,8 +9061,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.1766,
-              "x": 17.66
+              "prob": 0.0943,
+              "x": 9.43
             },
             {
               "key": "polling",
@@ -8863,8 +9095,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.0462,
-              "x": 4.62
+              "prob": 0.0238,
+              "x": 2.38
             },
             {
               "key": "polling",
@@ -8897,8 +9129,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.081,
-              "x": 8.1
+              "prob": 0.0421,
+              "x": 4.21
             },
             {
               "key": "polling",
@@ -8925,48 +9157,14 @@
           "spread": 14.5
         },
         {
-          "state": "GA",
-          "race_id": "SEN_GA_2026",
-          "points": [
-            {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.9124,
-              "x": 91.24
-            },
-            {
-              "key": "polling",
-              "label": "Polling",
-              "prob": 0.7728,
-              "x": 77.28
-            },
-            {
-              "key": "professional",
-              "label": "Professional",
-              "prob": 0.8624,
-              "x": 86.24
-            },
-            {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.91,
-              "x": 91.0
-            }
-          ],
-          "n_cats": 4,
-          "x_lo": 77.28,
-          "x_hi": 91.24,
-          "spread": 14.0
-        },
-        {
           "state": "KS",
           "race_id": "SEN_KS_2026",
           "points": [
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.1971,
-              "x": 19.71
+              "prob": 0.1058,
+              "x": 10.58
             },
             {
               "key": "polling",
@@ -8983,8 +9181,8 @@
             {
               "key": "market",
               "label": "Markets",
-              "prob": 0.2,
-              "x": 20.0
+              "prob": 0.195,
+              "x": 19.5
             }
           ],
           "n_cats": 4,
@@ -8993,48 +9191,14 @@
           "spread": 13.0
         },
         {
-          "state": "NH",
-          "race_id": "SEN_NH_2026",
-          "points": [
-            {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.9864,
-              "x": 98.64
-            },
-            {
-              "key": "polling",
-              "label": "Polling",
-              "prob": 0.9452,
-              "x": 94.52
-            },
-            {
-              "key": "professional",
-              "label": "Professional",
-              "prob": 0.8867,
-              "x": 88.67
-            },
-            {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.8675,
-              "x": 86.75
-            }
-          ],
-          "n_cats": 4,
-          "x_lo": 86.75,
-          "x_hi": 98.64,
-          "spread": 11.9
-        },
-        {
           "state": "NE",
           "race_id": "SEN_NE_2026",
           "points": [
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.0623,
-              "x": 6.23
+              "prob": 0.0322,
+              "x": 3.22
             },
             {
               "key": "polling",
@@ -9061,14 +9225,48 @@
           "spread": 11.2
         },
         {
+          "state": "NH",
+          "race_id": "SEN_NH_2026",
+          "points": [
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.8984,
+              "x": 89.84
+            },
+            {
+              "key": "polling",
+              "label": "Polling",
+              "prob": 0.9452,
+              "x": 94.52
+            },
+            {
+              "key": "professional",
+              "label": "Professional",
+              "prob": 0.8867,
+              "x": 88.67
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.8675,
+              "x": 86.75
+            }
+          ],
+          "n_cats": 4,
+          "x_lo": 86.75,
+          "x_hi": 94.52,
+          "spread": 7.8
+        },
+        {
           "state": "MN",
           "race_id": "SEN_MN_2026",
           "points": [
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.9912,
-              "x": 99.12
+              "prob": 0.9215,
+              "x": 92.15
             },
             {
               "key": "polling",
@@ -9091,8 +9289,8 @@
           ],
           "n_cats": 4,
           "x_lo": 88.7,
-          "x_hi": 99.12,
-          "spread": 10.4
+          "x_hi": 96.12,
+          "spread": 7.4
         },
         {
           "state": "VA",
@@ -9101,8 +9299,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.9962,
-              "x": 99.62
+              "prob": 0.9528,
+              "x": 95.28
             },
             {
               "key": "polling",
@@ -9125,8 +9323,8 @@
           ],
           "n_cats": 4,
           "x_lo": 90.6,
-          "x_hi": 99.62,
-          "spread": 9.0
+          "x_hi": 98.02,
+          "spread": 7.4
         },
         {
           "state": "NM",
@@ -9135,8 +9333,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.9968,
-              "x": 99.68
+              "prob": 0.9577,
+              "x": 95.77
             },
             {
               "key": "polling",
@@ -9159,8 +9357,8 @@
           ],
           "n_cats": 4,
           "x_lo": 93.46,
-          "x_hi": 99.68,
-          "spread": 6.2
+          "x_hi": 98.28,
+          "spread": 4.8
         },
         {
           "state": "NJ",
@@ -9169,8 +9367,8 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
-              "prob": 0.9982,
-              "x": 99.82
+              "prob": 0.9703,
+              "x": 97.03
             },
             {
               "key": "polling",
@@ -9187,14 +9385,14 @@
             {
               "key": "market",
               "label": "Markets",
-              "prob": 0.9647,
-              "x": 96.47
+              "prob": 0.9632,
+              "x": 96.32
             }
           ],
           "n_cats": 4,
           "x_lo": 94.88,
-          "x_hi": 99.82,
-          "spread": 4.9
+          "x_hi": 98.92,
+          "spread": 4.0
         }
       ],
       "categories": [
@@ -9232,7 +9430,7 @@
         }
       ],
       "n_rows": 20,
-      "widest": 44.2,
+      "widest": 43.6,
       "median_spread": 18.6
     },
     "categories": [
@@ -9257,7 +9455,7 @@
   },
   "model_index": {
     "kalshi": {
-      "house_seats_D": 229.99,
+      "house_seats_D": 229.96,
       "house_win_prob_D": 0.225,
       "senate_seats_D": 49.87,
       "senate_win_prob_D": 0.4702
@@ -9265,7 +9463,7 @@
     "polymarket": {
       "senate_win_prob_D": 0.505,
       "senate_win_prob_R": 0.0305,
-      "house_win_prob_D": 0.8845,
+      "house_win_prob_D": 0.875,
       "house_win_prob_R": 0.0315
     },
     "grant_williams": {
@@ -9283,7 +9481,7 @@
       "house_income_growth_yoy_latest_month": 0.267
     },
     "predictit": {
-      "senate_win_prob_R": 0.55,
+      "senate_win_prob_R": 0.54,
       "senate_win_prob_D": 0.47,
       "house_win_prob_D": 0.81,
       "house_win_prob_R": 0.2
@@ -9300,6 +9498,13 @@
       "house_win_prob_D": 0.7452,
       "senate_seats_D": 49.44,
       "senate_win_prob_D": 0.2903
+    },
+    "fair": {
+      "house_seats_D": 210.23,
+      "house_win_prob_D": 0.3123,
+      "senate_seats_D": 47.22,
+      "senate_win_prob_D": 0.0569,
+      "house_margin_D": 1.78
     }
   },
   "suppressed_cells": 5225,
