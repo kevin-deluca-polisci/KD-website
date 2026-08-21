@@ -825,11 +825,12 @@ sources:
     name: CNalysis
     category: professional
     method: http
-    enabled: true
+    enabled: false                 # no 2026 product exists yet — see notes
     cadence: daily
     publication: aggregate_only    # free to read; no republication grant
     license: permitted
     robots_checked: 2026-08-21
+    url_checked: 2026-08-21
     declared_inputs: []
     config:
       urls:
@@ -837,46 +838,65 @@ sources:
           url: https://projects.cnalysis.com/26g/house
         - name: senate
           url: https://projects.cnalysis.com/26g/senate
-    notes: |
-      NO PARSER YET, DELIBERATELY. Capture starts today so the bytes accumulate
-      from now; the parser gets written against what is actually stored rather
-      than against a guess at the page structure. That is the whole point of
-      the two-phase design, and the one thing it cannot recover is a day that
-      was never captured.
-
-      parse.py will report "captured but NO PARSER written" every run until
-      one exists. That message is the to-do list.
-
+    notes: >
+      DISABLED 2026-08-21, and the honest reason is that these two URLs were
+      registered without ever being fetched. Both 404. The project index at
+      projects.cnalysis.com lists only the 23-24 cycle; the path pattern is
+      /<cycle>/<office> and there is no 2026 cycle on it. CNalysis has not
+      published a 2026 forecast yet, so there is nothing to capture and a daily
+      attempt would fail every morning — which is worse than being switched
+      off, because an alarm that always fires is one nobody reads.
+      ROUTE BACK IN: re-check the index for a 2026 path (probably /25-26/senate
+      and /25-26/house, by their own convention), point the URLs at whatever is
+      actually there, set enabled: true, and let the bytes accumulate for a day
+      before writing the parser. Worth the trouble: CNalysis is NOT one of the
+      twelve raters already reaching us through Wikipedia, so it would be a
+      genuinely new opinion rather than a second copy of one we hold.
   - id: jhk_forecasts
     name: JHK Forecasts
     category: professional
     method: http
-    enabled: true
+    enabled: false                 # forecasts moved behind a paywall
     cadence: daily
     publication: aggregate_only
     license: permitted
     robots_checked: 2026-08-21
+    url_checked: 2026-08-21
     declared_inputs: []
     config:
       urls:
         - name: home
           url: https://www.jhkforecasts.com/2026-midterms
-    notes: |
-      NO PARSER YET — see cnalysis. Capturing from today.
-
+    notes: >
+      DISABLED 2026-08-21. Two separate problems, either one disqualifying.
+      First the host: the certificate served for www.jhkforecasts.com does not
+      match that name, so a TLS client refuses it before any request is made.
+      Second, and the one that actually settles it, the site's forecast content
+      now routes to a Ghost subscription at jhk-forecasts-plus.ghost.io. Paid
+      sources are out of scope by decision rather than by accident — the brief
+      for this round was free sources only.
+      ROUTE BACK IN: only if JHK publishes a free 2026 page. A subscription
+      would also change the licence question entirely, because paying for
+      access is not permission to redistribute.
   - id: elections_daily
     name: Elections Daily
     category: professional
     method: http
-    enabled: true
+    enabled: false                 # no 2026 ratings published yet
     cadence: daily
     publication: aggregate_only
     license: permitted
     robots_checked: 2026-08-21
+    url_checked: 2026-08-21
     declared_inputs: []
     config:
       urls:
         - name: ratings
           url: https://elections-daily.com/2026-senate-ratings/
-    notes: |
-      NO PARSER YET — see cnalysis. Capturing from today.
+    notes: >
+      DISABLED 2026-08-21. The URL was a guess and it 404s. Their ratings hub
+      at /election-ratings/ still shows the 2024 cycle, with archives back to
+      2020 and nothing for 2026; there is no page to capture.
+      ROUTE BACK IN: watch /election-ratings/ for a 2026 section. Like
+      CNalysis, Elections Daily is not among the twelve raters Wikipedia
+      already gives us, so it would add a real opinion and not a duplicate.
