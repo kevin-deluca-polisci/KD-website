@@ -48,11 +48,15 @@ COLORS = {
     "professional": ("#eda100", "#c98500"),
     "market":       ("#e87ba4", "#d55181"),
 }
+# Labels name the METHOD, not who built it. A chart comparing four ways of
+# forecasting the same number should put them on equal footing; tagging two of
+# them "(class model)" in the legend made the axis look like it was about
+# provenance rather than method.
 LABELS = {
-    "fundamentals": "Fundamentals (class model)",
-    "polling":      "Polling (class model)",
-    "professional": "Professional forecasters",
-    "market":       "Prediction markets",
+    "fundamentals": "Fundamentals",
+    "polling":      "Polling",
+    "professional": "Professional",
+    "market":       "Markets",
 }
 ORDER = ["fundamentals", "polling", "professional", "market"]
 
@@ -156,7 +160,18 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
         return None
     dates = sorted({r["snapshot_date"] for r in rs})
     vals = [_f(r["value"]) for r in rs if _f(r["value"]) is not None]
-    bands = [_f(r[k]) for r in rs for k in ("low", "high") if _f(r.get(k)) is not None]
+    # Only the LAST point's interval widens the axis, because only the last
+    # point's interval is drawn. Letting every historical band into the range
+    # calculation blew the axis out to EVEN..D+20 for data that lived between
+    # D+5 and D+13, squashing the entire story into the middle third of the
+    # plot. Found by rendering 74 simulated days and looking at it.
+    bands = []
+    for key in {r["series"] for r in rs}:
+        pts = sorted((r for r in rs if r["series"] == key), key=lambda r: r["snapshot_date"])
+        for k in ("low", "high"):
+            v = _f(pts[-1].get(k))
+            if v is not None:
+                bands.append(v)
     lo, hi = min(vals + bands), max(vals + bands)
     pad = max((hi - lo) * 0.18, 0.5 if panel == "margin" else 0.04)
     lo, hi = lo - pad, hi + pad
@@ -219,10 +234,40 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
     for s_ in series:
         s_["label_nudged"] = abs(s_["label_y"] - s_["last"]["y"]) > 0.5
 
+    # Above ~20 snapshots a marker per point stops being a marker and becomes a
+    # dot cloud that hides the line it is supposed to annotate. Past that the
+    # line carries the series and only the final point keeps a dot.
+    dense = len(dates) > 20
+
+    # Date ticks: ends always, plus a few interior ones once the axis is long
+    # enough to need them.
+    idxs = [0, len(dates) - 1] if len(dates) < 8 else \
+           sorted({0, len(dates) // 3, 2 * len(dates) // 3, len(dates) - 1})
+    date_ticks = [{"date": dates[i],
+                   "x": round(50.0 if len(dates) == 1 else i / (len(dates) - 1) * 100, 2),
+                   "anchor": "start" if i == 0 else ("end" if i == len(dates) - 1 else "middle")}
+                  for i in idxs]
+
+    # Horizontal strip layout: the same current values laid out along a shared
+    # value axis instead of against time. This is the "where do the methods
+    # stand today" view, and it is the one that reads at a glance — a reader
+    # sees the spread between methods without having to trace three lines.
+    for s_ in series:
+        s_["sx"] = round((s_["last"]["v"] - lo) / (hi - lo) * 100, 2)
+        if s_["band"]:
+            s_["sx_low"] = round((s_["band"]["low"] - lo) / (hi - lo) * 100, 2)
+            s_["sx_high"] = round((s_["band"]["high"] - lo) / (hi - lo) * 100, 2)
+
     return {
         "panel": panel,
         "unit": "pct" if panel == "margin" else "prob",
-        "dates": dates, "n_dates": len(dates),
+        "dates": dates, "n_dates": len(dates), "dense": dense,
+        "date_ticks": date_ticks,
+        "x_ticks": [{"v": t["v"], "x": round((t["v"] - lo) / (hi - lo) * 100, 2),
+                     "label": t["label"]} for t in
+                    [{"v": t, "label": (f"D+{t:.0f}" if t > 0 else
+                       ("EVEN" if abs(t) < 1e-9 else f"R+{abs(t):.0f}"))
+                       if panel == "margin" else f"{t*100:.0f}%"} for t in ticks]],
         "y_ticks": [{"v": t, "y": round(Y(t), 2),
                      "label": (f"D+{t:.0f}" if t > 0 else ("EVEN" if abs(t) < 1e-9
                                else f"R+{abs(t):.0f}")) if panel == "margin"

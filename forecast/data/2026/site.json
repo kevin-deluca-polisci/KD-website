@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-20T21:57:36.625030+00:00",
+  "generated_at": "2026-08-21T02:55:31.933513+00:00",
   "latest_snapshot": "2026-08-20",
   "snapshot_count": 2,
   "headline": [
@@ -4639,6 +4639,46 @@
         "2026-08-20"
       ],
       "n_dates": 2,
+      "dense": false,
+      "date_ticks": [
+        {
+          "date": "2026-08-19",
+          "x": 0.0,
+          "anchor": "start"
+        },
+        {
+          "date": "2026-08-20",
+          "x": 100.0,
+          "anchor": "end"
+        }
+      ],
+      "x_ticks": [
+        {
+          "v": 0,
+          "x": 0.0,
+          "label": "EVEN"
+        },
+        {
+          "v": 5,
+          "x": 25.0,
+          "label": "D+5"
+        },
+        {
+          "v": 10,
+          "x": 50.0,
+          "label": "D+10"
+        },
+        {
+          "v": 15,
+          "x": 75.0,
+          "label": "D+15"
+        },
+        {
+          "v": 20,
+          "x": 100.0,
+          "label": "D+20"
+        }
+      ],
       "y_ticks": [
         {
           "v": 0,
@@ -4671,7 +4711,7 @@
       "series": [
         {
           "key": "fundamentals",
-          "label": "Fundamentals (class model)",
+          "label": "Fundamentals",
           "color": "#4a3aa7",
           "color_dark": "#9085e9",
           "points": [
@@ -4697,11 +4737,14 @@
           },
           "n_sources": 1,
           "label_y": 47.6,
-          "label_nudged": false
+          "label_nudged": false,
+          "sx": 52.4,
+          "sx_low": 23.05,
+          "sx_high": 81.75
         },
         {
           "key": "polling",
-          "label": "Polling (class model)",
+          "label": "Polling",
           "color": "#008300",
           "color_dark": "#199e70",
           "points": [
@@ -4722,11 +4765,12 @@
           "band": null,
           "n_sources": 1,
           "label_y": 79.35,
-          "label_nudged": true
+          "label_nudged": true,
+          "sx": 28.37
         },
         {
           "key": "professional",
-          "label": "Professional forecasters",
+          "label": "Professional",
           "color": "#eda100",
           "color_dark": "#c98500",
           "points": [
@@ -4758,7 +4802,10 @@
           },
           "n_sources": "1",
           "label_y": 71.35,
-          "label_nudged": false
+          "label_nudged": false,
+          "sx": 28.65,
+          "sx_low": 28.65,
+          "sx_high": 28.65
         }
       ]
     },
@@ -4770,6 +4817,31 @@
         "2026-08-20"
       ],
       "n_dates": 2,
+      "dense": false,
+      "date_ticks": [
+        {
+          "date": "2026-08-19",
+          "x": 0.0,
+          "anchor": "start"
+        },
+        {
+          "date": "2026-08-20",
+          "x": 100.0,
+          "anchor": "end"
+        }
+      ],
+      "x_ticks": [
+        {
+          "v": 0.8,
+          "x": 0.0,
+          "label": "80%"
+        },
+        {
+          "v": 0.9,
+          "x": 86.96,
+          "label": "90%"
+        }
+      ],
       "y_ticks": [
         {
           "v": 0.8,
@@ -4787,7 +4859,7 @@
       "series": [
         {
           "key": "professional",
-          "label": "Professional forecasters",
+          "label": "Professional",
           "color": "#eda100",
           "color_dark": "#c98500",
           "points": [
@@ -4808,11 +4880,12 @@
           "band": null,
           "n_sources": "1",
           "label_y": 47.78,
-          "label_nudged": true
+          "label_nudged": true,
+          "sx": 59.65
         },
         {
           "key": "market",
-          "label": "Prediction markets",
+          "label": "Markets",
           "color": "#e87ba4",
           "color_dark": "#d55181",
           "points": [
@@ -4839,7 +4912,8 @@
           "band": null,
           "n_sources": "1",
           "label_y": 34.78,
-          "label_nudged": false
+          "label_nudged": false,
+          "sx": 65.22
         }
       ]
     }

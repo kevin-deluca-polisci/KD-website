@@ -1,0 +1,66 @@
+{{- $d := .d -}}
+<footer><div class="wrap">
+  <p>PLSC 2219 · Yale University · <a href="/">Kevin DeLuca</a></p>
+  <p style="margin-top:6px">Generated {{ $d.generated_at }} from snapshot {{ $d.latest_snapshot }}.
+     Race ratings © their respective forecasters, transcribed from Wikipedia under
+     CC BY-SA 4.0. Official returns via MIT Election Data and Science Lab (CC0).
+     Economic data via FRED.</p>
+</div></footer>
+
+<script>
+/* Two things, both of which must read the VIEWER's clock rather than build time.
+
+   Staleness: if the daily pipeline stops, Hugo stops rebuilding too, so a
+   build-time "days old" would freeze at 0 forever on a page that had not moved
+   in a month. Only the reader's clock keeps counting.
+
+   Days-out: same reason, and it also means the countdown is right for a reader
+   in any timezone without rebuilding. */
+(function () {
+  var el = document.getElementById("snapshot-date");
+  if (!el) return;
+  var snap = new Date(el.getAttribute("data-date") + "T12:00:00Z");
+  var now = Date.now();
+
+  var out = document.getElementById("days-out");
+  if (out) {
+    var d = Math.ceil((new Date("2026-11-03T12:00:00Z") - now) / 86400000);
+    out.textContent = d > 0 ? d : 0;
+  }
+  if (isNaN(snap)) return;
+  var days = Math.floor((now - snap.getTime()) / 86400000);
+  var fresh = document.getElementById("fresh-note");
+  if (fresh) fresh.textContent = days <= 0 ? "Updated today"
+    : days === 1 ? "Updated yesterday" : "Updated " + days + " days ago";
+  if (days >= 2) {
+    var b = document.getElementById("stale-banner"),
+        n = document.getElementById("stale-days");
+    if (n) n.textContent = days;
+    if (b) b.style.display = "block";
+  }
+})();
+
+/* Theme toggle. The button label names the mode you would GET by pressing it,
+   not the mode you are in — the other convention reads as a status display and
+   people click it expecting nothing to happen. */
+(function () {
+  var btn = document.getElementById("themebtn");
+  if (!btn) return;
+  var root = document.documentElement;
+  function current() {
+    var set = root.getAttribute("data-theme");
+    if (set) return set;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function paint() { btn.textContent = current() === "dark" ? "Light" : "Dark"; }
+  paint();
+  btn.addEventListener("click", function () {
+    var next = current() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("fx-theme", next); } catch (e) {}
+    paint();
+  });
+})();
+</script>
+</body>
+</html>

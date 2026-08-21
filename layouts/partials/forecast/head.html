@@ -1,0 +1,134 @@
+{{- $d := .d -}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ .page.Title }} · Election Forecast Tracker</title>
+<meta name="description" content="{{ with .page.Params.description }}{{ . }}{{ else }}{{ .page.Site.Params.description }}{{ end }}">
+<script>
+/* Theme resolution runs BEFORE first paint, inline and synchronous, so the page
+   never renders in the wrong theme and then flips. A deferred script here
+   produces a white flash on every navigation for dark-mode readers. */
+(function(){try{var t=localStorage.getItem("fx-theme");
+if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+</script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+
+  /* ---- tokens. Light is the base; dark redefines the same names. ---- */
+  :root{
+    --bg:#f6f6f4; --surface:#ffffff; --border:#e4e4e0; --border-strong:#d4d4ce;
+    --ink:#141414; --ink-2:#55554f; --ink-3:#84847c;
+    --accent:#0b1e3a; --accent-ink:#ffffff; --link:#1c5fa8;
+    --D:#1c5fa8; --R:#b02a2a;
+    --c-fundamentals:#4a3aa7; --c-polling:#008300;
+    --c-professional:#eda100; --c-market:#e87ba4;
+    --grid:#e6e6e2; --warn-bg:#fff8e6; --warn-line:#d9a520; --warn-ink:#7a5c00;
+    --alert-bg:#fdecea; --alert-line:#b02a2a; --alert-ink:#7a1c1c;
+  }
+  /* Dark values live under BOTH scopes: the media query covers the OS setting,
+     the [data-theme] scope covers the explicit toggle, and the :not() guard
+     lets an explicit light choice beat OS dark. */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#141414; --surface:#1c1c1b; --border:#333330; --border-strong:#45453f;
+      --ink:#f4f4f0; --ink-2:#c3c2b7; --ink-3:#8f8f86;
+      --accent:#0d1b30; --accent-ink:#f4f4f0; --link:#79aef0;
+      --D:#79aef0; --R:#e57373;
+      --c-fundamentals:#9085e9; --c-polling:#199e70;
+      --c-professional:#c98500; --c-market:#d55181;
+      --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
+      --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#141414; --surface:#1c1c1b; --border:#333330; --border-strong:#45453f;
+    --ink:#f4f4f0; --ink-2:#c3c2b7; --ink-3:#8f8f86;
+    --accent:#0d1b30; --accent-ink:#f4f4f0; --link:#79aef0;
+    --D:#79aef0; --R:#e57373;
+    --c-fundamentals:#9085e9; --c-polling:#199e70;
+    --c-professional:#c98500; --c-market:#d55181;
+    --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
+    --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
+  }
+
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       line-height:1.6;color:var(--ink);background:var(--bg);
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+  a{color:var(--link)}
+
+  /* ---- masthead ---- */
+  .top{background:var(--accent);color:var(--accent-ink);font-size:.86em;padding:11px 0}
+  .top a{color:#a8c8f0;text-decoration:none}
+  .top a:hover{text-decoration:underline}
+  .masthead{padding:30px 0 0}
+  .masthead h1{font-size:2.1em;line-height:1.15;letter-spacing:-.015em;margin-bottom:6px}
+  .masthead .tagline{color:var(--ink-2);max-width:68ch}
+  .themebtn{float:right;font-size:.8em;padding:5px 12px;border:1px solid var(--border-strong);
+            border-radius:99px;background:var(--surface);color:var(--ink-2);cursor:pointer}
+  .themebtn:hover{color:var(--ink)}
+
+  /* ---- metadata strip ---- */
+  .strip{display:flex;flex-wrap:wrap;gap:26px;padding:16px 0 18px;
+         border-bottom:1px solid var(--border);font-size:.85em;color:var(--ink-3)}
+  .strip b{color:var(--ink);font-weight:650}
+
+  /* ---- nav ---- */
+  nav.pages{display:flex;gap:4px;padding:14px 0 22px;flex-wrap:wrap}
+  nav.pages a{padding:7px 15px;border-radius:7px;text-decoration:none;
+              color:var(--ink-2);font-weight:550;font-size:.94em}
+  nav.pages a:hover{background:var(--surface);color:var(--ink)}
+  nav.pages a.on{background:var(--accent);color:var(--accent-ink)}
+
+  /* ---- cards ---- */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:11px;
+        padding:26px 28px;margin-bottom:22px}
+  .card h2{font-size:1.22em;letter-spacing:-.01em;margin-bottom:6px}
+  .card h3{font-size:.78em;text-transform:uppercase;letter-spacing:.07em;
+           color:var(--ink-3);margin:22px 0 10px;font-weight:650}
+  .sub{color:var(--ink-2);margin-bottom:20px;max-width:74ch;font-size:.95em}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+
+  .badge{display:inline-block;font-size:.66em;letter-spacing:.06em;text-transform:uppercase;
+         background:var(--accent);color:var(--accent-ink);border-radius:3px;
+         padding:3px 8px;margin-bottom:12px;font-weight:650}
+  .badge.grey{background:var(--ink-3)}
+  .big{font-size:2.4em;font-weight:700;line-height:1.05;margin:2px 0;letter-spacing:-.02em}
+  .D{color:var(--D)} .R{color:var(--R)}
+  .muted{color:var(--ink-2);font-size:.9em}
+
+  table{width:100%;border-collapse:collapse;font-size:.9em;margin-top:8px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border)}
+  th{font-weight:650;color:var(--ink-2);border-bottom:2px solid var(--border-strong);font-size:.88em}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+
+  .note{background:var(--warn-bg);border-left:3px solid var(--warn-line);
+        padding:14px 16px;margin:18px 0;font-size:.92em;border-radius:0 6px 6px 0}
+  .note strong{color:var(--warn-ink)}
+  .stale{display:none;background:var(--alert-bg);border-left:3px solid var(--alert-line);
+         padding:13px 16px;margin:0 0 20px;font-size:.92em;border-radius:0 6px 6px 0}
+  .stale strong{color:var(--alert-ink)}
+
+  details{margin-top:14px}
+  summary{cursor:pointer;font-weight:600;color:var(--link);font-size:.92em}
+  footer{padding:30px 0 50px;color:var(--ink-3);font-size:.85em}
+
+  /* ---- charts ---- */
+  .viz svg{width:100%;height:auto;display:block;overflow:visible}
+  .viz .gridline{stroke:var(--grid);stroke-width:1}
+  .viz .baseline{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:3 3}
+  .viz .tick{fill:var(--ink-3);font-size:11px}
+  .viz .dlabel{font-size:11.5px;font-weight:650}
+  .viz .rowlab{font-size:13px;font-weight:600;fill:var(--ink)}
+  .viz .rowsub{font-size:11px;fill:var(--ink-3)}
+  .viz .rowval{font-size:13px;font-weight:700;fill:var(--ink)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:.85em;color:var(--ink-2)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .swatch{width:11px;height:11px;border-radius:2px;display:inline-block}
+  .thin-note{font-size:.85em;color:var(--ink-3);margin-top:12px;font-style:italic}
+  .bar{display:inline-block;height:9px;border-radius:2px;vertical-align:middle}
+</style>
+</head>
+<body>

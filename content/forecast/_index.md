@@ -1,4 +1,4 @@
 ---
-title: "2026 Election Forecast Archive"
-description: "A live archive of 2026 midterm forecasts, and the models built by PLSC 2219."
+title: "Election Forecast Tracker"
+description: "A live tracker of 2026 midterm forecasts: fundamentals, polling, professional forecasters and prediction markets, collected daily."
 ---

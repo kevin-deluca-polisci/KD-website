@@ -1,0 +1,34 @@
+{{- $d := .d -}}
+{{- $cur := .page.RelPermalink -}}
+<header class="top"><div class="wrap">
+  <a href="/">← kevinmdeluca.com</a> &nbsp;·&nbsp; PLSC 2219 · Yale University
+</div></header>
+
+<div class="wrap masthead">
+  <button class="themebtn" id="themebtn" type="button" aria-live="polite">Dark</button>
+  <h1>Election Forecast Tracker</h1>
+  <p class="tagline">Four ways of forecasting the 2026 midterms, collected every
+     day and shown side by side. The display is the disagreement between methods,
+     not another trend line.</p>
+
+  <div class="strip">
+    <span>Election day <b>3 Nov 2026</b></span>
+    <span><b id="days-out">—</b> days out</span>
+    <span>Snapshot <b id="snapshot-date" data-date="{{ $d.latest_snapshot }}">{{ $d.latest_snapshot }}</b></span>
+    <span><b>{{ $d.snapshot_count }}</b> snapshot{{ if ne $d.snapshot_count 1 }}s{{ end }} collected</span>
+    <span id="fresh-note"></span>
+  </div>
+
+  <nav class="pages">
+    <a href="/forecast/"         class="{{ if eq $cur "/forecast/" }}on{{ end }}">Tracker</a>
+    <a href="/forecast/races/"   class="{{ if eq $cur "/forecast/races/" }}on{{ end }}">Races</a>
+    <a href="/forecast/methods/" class="{{ if eq $cur "/forecast/methods/" }}on{{ end }}">Methods</a>
+    <a href="/forecast/archive/" class="{{ if eq $cur "/forecast/archive/" }}on{{ end }}">Archive</a>
+  </nav>
+
+  <div class="stale" id="stale-banner">
+    <strong>This page has not updated in <span id="stale-days"></span> days.</strong>
+    The daily collection may have stopped. Everything below is still the snapshot
+    named above, not today's.
+  </div>
+</div>

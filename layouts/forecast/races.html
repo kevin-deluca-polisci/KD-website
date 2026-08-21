@@ -1,0 +1,58 @@
+{{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
+{{- $p := $d.polling_model -}}
+{{ partial "forecast/head.html" (dict "page" . "d" $d) }}
+{{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
+
+<div class="wrap">
+  {{- with $p }}
+  <div class="card">
+    <h2>Senate, race by race</h2>
+    <p class="sub">Expected margin is the election-day national tide plus twice the
+       state's partisan lean. The lean is our own reconstruction from official
+       returns, not a licensed index, so these numbers are ours to publish.
+       Nothing here knows who the candidates are, which is exactly why it
+       disagrees with the professionals where a party has an unusually strong
+       recruit.</p>
+    <table>
+      <tr><th>State</th><th class="num">Expected margin</th><th class="num">P(D)</th>
+          <th class="num">State lean</th><th></th></tr>
+      {{- range .races }}
+      <tr>
+        <td><strong>{{ .state }}</strong></td>
+        <td class="num {{ if gt .expected_margin_D 0.0 }}D{{ else }}R{{ end }}">
+          {{ if gt .expected_margin_D 0.0 }}D+{{ printf "%.1f" .expected_margin_D }}{{ else }}R+{{ printf "%.1f" (mul .expected_margin_D -1) }}{{ end }}
+        </td>
+        {{- $pd := mul .win_prob_D 100 }}
+        <td class="num">
+          {{- if ge $pd 99.5 }}&gt;99%{{ else if lt $pd 0.5 }}&lt;1%{{ else }}{{ printf "%.0f%%" $pd }}{{ end -}}
+        </td>
+        <td class="num muted">
+          {{ if gt .pvi 0.0 }}D+{{ printf "%.1f" .pvi }}{{ else }}R+{{ printf "%.1f" (mul .pvi -1) }}{{ end }}
+        </td>
+        <td style="width:120px">
+          <span class="bar" style="width:{{ math.Round (mul .win_prob_D 100) }}px;background:var(--D)"></span>
+        </td>
+      </tr>
+      {{- end }}
+    </table>
+  </div>
+  {{- end }}
+
+  <div class="card">
+    <h2>Why there is no House table here</h2>
+    <p class="sub">The House model exists and runs daily. It is not published, and
+       the reason is arithmetic rather than caution.</p>
+    <p class="muted">District forecasts are built from a licensed partisan index.
+       Given the national tide, which we do publish, that index is exactly
+       recoverable from any district forecast:</p>
+    <p style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+              background:var(--bg);border:1px solid var(--border);border-radius:7px;
+              padding:12px 14px;margin:14px 0">PVI = (district margin − national tide) ÷ 2</p>
+    <p class="muted">So publishing 435 district margins would republish the index
+       itself. The district run writes to a gitignored directory and stays there.
+       This becomes publishable the day we hold a district-level presidential
+       baseline we are allowed to redistribute, which is a licensing question
+       rather than a modelling one.</p>
+  </div>
+</div>
+{{ partial "forecast/foot.html" (dict "page" . "d" $d) }}

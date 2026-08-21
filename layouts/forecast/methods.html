@@ -1,0 +1,112 @@
+{{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
+{{- $p := $d.polling_model -}}
+{{- $f := $d.fundamentals_model -}}
+{{ partial "forecast/head.html" (dict "page" . "d" $d) }}
+{{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
+
+<div class="wrap">
+  {{- with $f }}
+  <div class="card">
+    <h2>The fundamentals model</h2>
+    <p class="sub">Presidential approval, real income growth, and how many seats
+       the president's party is defending. No polls, no markets, no candidate
+       quality. Fit on all 20 midterms from 1946 to 2022 and scored by
+       leave-one-election-out error, because with n = 20 an in-sample R² means
+       very little.</p>
+    {{- with .coefficients }}
+    <p style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;
+              background:var(--bg);border:1px solid var(--border);border-radius:7px;
+              padding:12px 14px;overflow-x:auto">R two-party House vote =
+       {{ printf "%.2f" .intercept }}
+       + {{ printf "%.3f" .approval }} × approval
+       + {{ printf "%.3f" .income_growth }} × real income growth
+       + {{ printf "%.3f" (index . "seats_before") }} × seats held going in</p>
+    {{- end }}
+    <div class="muted">Leave-one-out RMSE {{ printf "%.2f" .loeo_rmse }} points ·
+       in-sample R² {{ printf "%.2f" .r2 }}</div>
+    {{- with .inputs }}
+    <h3>Inputs today</h3>
+    <table>
+      <tr><th>Input</th><th class="num">Value</th><th>Source</th></tr>
+      <tr><td>Presidential approval</td><td class="num">{{ .approval }}%</td>
+          <td class="muted">hand-set, not yet a live feed</td></tr>
+      <tr><td>Real income growth</td><td class="num">{{ .income_growth }}%</td>
+          <td class="muted">FRED, year to date</td></tr>
+      <tr><td>Seats held going in</td><td class="num">{{ index . "seats_before" }}</td>
+          <td class="muted">current chamber</td></tr>
+    </table>
+    {{- end }}
+    {{- with .sensitivity }}
+    <h3>Sensitivity to approval</h3>
+    <table>
+      <tr><th class="num">Approval</th><th class="num">Predicted D margin</th></tr>
+      {{- range . }}
+      <tr><td class="num">{{ .approval }}%</td>
+          <td class="num">D+{{ printf "%.1f" .margin_D }}</td></tr>
+      {{- end }}
+    </table>
+    {{- end }}
+  </div>
+  {{- end }}
+
+  {{- with $p }}
+  <div class="card">
+    <h2>The polling model</h2>
+    <p class="sub">The generic ballot as a national tide, shrunk toward even
+       because early leads overstate the eventual result, then carried to each
+       state by its partisan lean.</p>
+    <table>
+      <tr><th>Step</th><th class="num">Value</th></tr>
+      <tr><td>Generic ballot average</td><td class="num">D+{{ printf "%.2f" .generic_ballot }}</td></tr>
+      <tr><td>Shrinkage λ</td><td class="num">{{ printf "%.3f" .shrink_lambda }}</td></tr>
+      <tr><td>Election-day tide</td><td class="num">D+{{ printf "%.2f" .tide_D }}</td></tr>
+      <tr><td>Race-level σ</td><td class="num">{{ printf "%.2f" .sigma }} pts</td></tr>
+    </table>
+
+    {{- if .sensitivity }}
+    <div class="note">
+      <strong>Read this before quoting a probability.</strong>
+      This model puts the Democrats' chance of reaching 50+ Senate seats at
+      <strong>{{ printf "%.0f%%" (mul .prob_D_50_plus 100) }}</strong>. That rests on a
+      bookkeeping assumption rather than a forecast: how many Democratic seats are
+      <em>not</em> on the ballot. Move it by one seat and the headline moves about
+      twenty points.
+      <table style="max-width:420px;margin-top:10px">
+        <tr><th>Holdover D seats</th><th class="num">P(D reach 50+)</th></tr>
+        {{- range $k, $v := .sensitivity }}
+        <tr><td>{{ $k }}{{ if eq $k (printf "%.0f" $p.holdover_D) }} (used){{ end }}</td>
+            <td class="num">{{ printf "%.0f%%" (mul $v 100) }}</td></tr>
+        {{- end }}
+      </table>
+      <p style="margin-top:10px">No modelling choice in this file matters that much.
+         That is the lesson, not a footnote.</p>
+    </div>
+    {{- end }}
+  </div>
+  {{- end }}
+
+  <div class="card">
+    <h2>The choices that move the answer</h2>
+    <p class="sub">Every number above that is a judgment rather than a measurement,
+       stated rather than buried.</p>
+    <table>
+      <tr><th>Choice</th><th>What we did</th><th>Why it is arguable</th></tr>
+      <tr><td>Generic-ballot shrinkage</td>
+          <td>λ decays from 1.0 at Election Day toward 0.5 far out{{ with $p }}; λ={{ printf "%.2f" .shrink_lambda }} today{{ end }}</td>
+          <td class="muted">A stylised reading of Bafumi–Erikson–Wlezien, not a re-estimation. We hold no historical generic-ballot series to fit.</td></tr>
+      <tr><td>Race-level uncertainty</td>
+          <td>{{ with $p }}σ={{ printf "%.1f" .sigma }} points{{ end }}, regressed from official Senate returns against prior-cycle lean</td>
+          <td class="muted">One cycle, n≈30. Cannot yet separate a national polling miss from state-level noise.</td></tr>
+      <tr><td>Seat baseline</td>
+          <td>{{ with $p }}{{ printf "%.0f" .holdover_D }}{{ end }} Democratic holdovers</td>
+          <td class="muted">Bookkeeping, not forecast, and worth about twenty points of headline probability per seat.</td></tr>
+      <tr><td>No bias correction</td>
+          <td>None applied</td>
+          <td class="muted">Generic-ballot bias is conditional on presidential approval rather than constant, so a fixed adjustment fits the last cycle and calls it a law.</td></tr>
+      <tr><td>Approval input</td>
+          <td>Hand-set</td>
+          <td class="muted">The last input not pulled from a live feed. Trackers disagree, and the model is sensitive to it.</td></tr>
+    </table>
+  </div>
+</div>
+{{ partial "forecast/foot.html" (dict "page" . "d" $d) }}
