@@ -40,7 +40,7 @@ import math
 from pathlib import Path
 
 TIMELINE_FIELDS = ["snapshot_date", "series", "panel", "unit",
-                   "value", "low", "high", "n_sources", "label"]
+                   "value", "low", "high", "band_kind", "n_sources", "label"]
 
 # The panels the site knows how to draw, and the ONLY panels timeline.csv is
 # allowed to keep. Anything else is a leftover from a previous shape of the
@@ -170,18 +170,42 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
             n = int(r.get("n_sources") or 1)
         except (TypeError, ValueError):
             n = 1
+        # TWO KINDS OF BAR, AND THE PAGE HAS TO SAY WHICH.
+        #
+        # An 80% interval is one model's statement about its own uncertainty.
+        # A source spread is the distance between forecasters who disagree.
+        # They are different claims and they are not comparable — a wide
+        # interval means one model is unsure, a wide spread means several
+        # models are confident about different things.
+        #
+        # Both used to be emitted as a bare (low, high) and the template
+        # labelled every bar "80%". That was survivable only while the spread
+        # was confined to professional and market margins, which had one source
+        # each, so no spread was ever drawn. The day Ray Fair joined
+        # fundamentals it stopped being survivable in both directions at once:
+        # the category average became the midpoint of D+10.5 and D+1.8, and
+        # having no spread rule for fundamentals meant the page drew a bare dot
+        # at D+6.1 and said "no stated interval" — presenting the midpoint of
+        # the widest disagreement on the site as though it were a settled
+        # number, with the min and max sitting unused in the same CSV row.
+        #
+        # So: a spread wherever a category has more than one contributor,
+        # whatever the panel, and a kind travelling with it so the template can
+        # name what the reader is looking at.
         low = high = ""
+        kind = ""
         if n == 1 and (cat, panel) in bands and r["snapshot_date"] == snapshot:
             low, high = bands[(cat, panel)]
-        elif panel == "margin" and cat in ("professional", "market"):
-            # Not an 80% interval — the spread across contributing sources.
-            # Kept because it is the only dispersion those categories offer.
-            low, high = _f(r.get("min")) or "", _f(r.get("max")) or ""
+            kind = "interval"
+        elif n > 1:
+            lo_, hi_ = _f(r.get("min")), _f(r.get("max"))
+            if lo_ is not None and hi_ is not None:
+                low, high, kind = lo_, hi_, "spread"
         out.append(dict(
             snapshot_date=r["snapshot_date"], series=cat, panel=panel,
             unit=("prob" if panel.endswith("prob")
                   else "pct" if panel == "margin" else "seats"),
-            value=round(v, 4), low=low, high=high,
+            value=round(v, 4), low=low, high=high, band_kind=kind,
             n_sources=n, label=LABELS[cat]))
     return out
 
@@ -293,7 +317,14 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
                 and abs(_f(last["high"]) - _f(last["low"])) > 1e-9):
             band = {"y_low": round(Y(_f(last["low"])), 2),
                     "y_high": round(Y(_f(last["high"])), 2),
-                    "low": _f(last["low"]), "high": _f(last["high"])}
+                    "low": _f(last["low"]), "high": _f(last["high"]),
+                    # "interval" = one model's own 80%. "spread" = the distance
+                    # between disagreeing sources. Defaulting to "interval"
+                    # would relabel every historical row written before this
+                    # column existed as something it is not, so an unlabelled
+                    # band says so and the template declines to name it.
+                    "kind": last.get("band_kind") or "unlabelled",
+                    "n": int(last.get("n_sources") or 1)}
         # A series can STOP. It happened the day a second professional
         # forecaster came online: the category then held one open source and
         # one gated one, which is below the disclosure floor, so the average
