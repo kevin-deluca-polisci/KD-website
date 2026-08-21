@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-21T05:01:45.922582+00:00",
+  "generated_at": "2026-08-21T05:39:45.606143+00:00",
   "latest_snapshot": "2026-08-20",
   "snapshot_count": 2,
   "headline": [
@@ -569,7 +569,8 @@
             281
           ],
           "prob_D_majority": 0.9491,
-          "majority_at": 218
+          "majority_at": 218,
+          "pvi_source": "cook_pvi"
         }
       },
       "polling": {
@@ -774,12 +775,13 @@
             250
           ],
           "prob_D_majority": 0.6763,
-          "majority_at": 218
+          "majority_at": 218,
+          "pvi_source": "cook_pvi"
         }
       }
     },
     "publication": "individual",
-    "note": "House figures are chamber aggregates only. District margins are built from a licensed index and never leave model_private/; a seat count is a sum over 435 districts and cannot be inverted back to any of them."
+    "note": "District margins are our own forecast; the district index they are built from is never published. Given the national tide the index is recoverable by division, so that is a licensing position rather than a technical one."
   },
   "charts": {
     "margin": {
@@ -1117,18 +1119,24 @@
               "y": 45.28,
               "date": "2026-08-19",
               "v": 250.79
+            },
+            {
+              "x": 100.0,
+              "y": 45.28,
+              "date": "2026-08-20",
+              "v": 250.79
             }
           ],
-          "polyline": "0.0,45.28",
+          "polyline": "0.0,45.28 100.0,45.28",
           "last": {
-            "x": 0.0,
+            "x": 100.0,
             "y": 45.28,
-            "date": "2026-08-19",
+            "date": "2026-08-20",
             "v": 250.79
           },
           "band": null,
-          "last_date": "2026-08-19",
-          "stale": true,
+          "last_date": "2026-08-20",
+          "stale": false,
           "n_sources": "1",
           "label_y": 45.28,
           "label_nudged": false,
@@ -1287,18 +1295,24 @@
               "y": 32.85,
               "date": "2026-08-19",
               "v": 0.8686
+            },
+            {
+              "x": 100.0,
+              "y": 32.85,
+              "date": "2026-08-20",
+              "v": 0.8686
             }
           ],
-          "polyline": "0.0,32.85",
+          "polyline": "0.0,32.85 100.0,32.85",
           "last": {
-            "x": 0.0,
+            "x": 100.0,
             "y": 32.85,
-            "date": "2026-08-19",
+            "date": "2026-08-20",
             "v": 0.8686
           },
           "band": null,
-          "last_date": "2026-08-19",
-          "stale": true,
+          "last_date": "2026-08-20",
+          "stale": false,
           "n_sources": "1",
           "label_y": 44.25,
           "label_nudged": true,
@@ -1485,18 +1499,24 @@
               "y": 42.85,
               "date": "2026-08-19",
               "v": 51.43
+            },
+            {
+              "x": 100.0,
+              "y": 42.85,
+              "date": "2026-08-20",
+              "v": 51.43
             }
           ],
-          "polyline": "0.0,42.85",
+          "polyline": "0.0,42.85 100.0,42.85",
           "last": {
-            "x": 0.0,
+            "x": 100.0,
             "y": 42.85,
-            "date": "2026-08-19",
+            "date": "2026-08-20",
             "v": 51.43
           },
           "band": null,
-          "last_date": "2026-08-19",
-          "stale": true,
+          "last_date": "2026-08-20",
+          "stale": false,
           "n_sources": "1",
           "label_y": 55.54,
           "label_nudged": true,
@@ -1635,18 +1655,24 @@
               "y": 13.35,
               "date": "2026-08-19",
               "v": 0.6203
+            },
+            {
+              "x": 100.0,
+              "y": 13.35,
+              "date": "2026-08-20",
+              "v": 0.6203
             }
           ],
-          "polyline": "0.0,13.35",
+          "polyline": "0.0,13.35 100.0,13.35",
           "last": {
-            "x": 0.0,
+            "x": 100.0,
             "y": 13.35,
-            "date": "2026-08-19",
+            "date": "2026-08-20",
             "v": 0.6203
           },
           "band": null,
-          "last_date": "2026-08-19",
-          "stale": true,
+          "last_date": "2026-08-20",
+          "stale": false,
           "n_sources": "1",
           "label_y": 26.240000000000002,
           "label_nudged": true,
@@ -4287,480 +4313,2426 @@
             ]
           }
         ]
+      },
+      "governor": {
+        "chamber": "governor",
+        "n_seats": 36,
+        "n_contested": 25,
+        "n_unanimous": 11,
+        "n_shown": 24,
+        "n_raters": 8,
+        "raters": [
+          "Cook Political Report",
+          "Fox News Power Rankings",
+          "Inside Elections",
+          "Race to the WH",
+          "RealClearPolitics",
+          "Sabato's Crystal Ball",
+          "Silver Bulletin",
+          "VoteHub"
+        ],
+        "ticks": [
+          {
+            "v": 0.0,
+            "x": 100.0,
+            "label": "Safe D"
+          },
+          {
+            "v": 3.0,
+            "x": 70.0,
+            "label": "Lean D"
+          },
+          {
+            "v": 5.0,
+            "x": 50.0,
+            "label": "Toss-up"
+          },
+          {
+            "v": 7.0,
+            "x": 30.0,
+            "label": "Lean R"
+          },
+          {
+            "v": 10.0,
+            "x": 0.0,
+            "label": "Safe R"
+          }
+        ],
+        "seats": [
+          {
+            "race_id": "GOV_AK_2026",
+            "state": "AK",
+            "district": "",
+            "n": 8,
+            "spread": 5.5,
+            "mean": 6.31,
+            "x_lo": 15.0,
+            "x_hi": 70.0,
+            "x_mean": 36.88,
+            "n_distinct": 4,
+            "dots": [
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 1,
+                "label": "Lean D",
+                "forecasters": [
+                  "Silver Bulletin"
+                ],
+                "r": 3.99
+              },
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 3,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 7.0,
+                "x": 30.0,
+                "n": 1,
+                "label": "Lean R",
+                "forecasters": [
+                  "Fox News Power Rankings"
+                ],
+                "r": 3.99
+              },
+              {
+                "v": 8.5,
+                "x": 15.0,
+                "n": 3,
+                "label": "Likely R",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Inside Elections",
+                  "Sabato's Crystal Ball"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_OR_2026",
+            "state": "OR",
+            "district": "",
+            "n": 8,
+            "spread": 4.0,
+            "mean": 1.81,
+            "x_lo": 60.0,
+            "x_hi": 100.0,
+            "x_mean": 81.88,
+            "n_distinct": 4,
+            "dots": [
+              {
+                "v": 0.0,
+                "x": 100.0,
+                "n": 1,
+                "label": "Solid D",
+                "forecasters": [
+                  "RealClearPolitics"
+                ],
+                "r": 3.67
+              },
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 5,
+                "label": "Likely D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 1,
+                "label": "Lean D",
+                "forecasters": [
+                  "Inside Elections"
+                ],
+                "r": 3.67
+              },
+              {
+                "v": 4.0,
+                "x": 60.0,
+                "n": 1,
+                "label": "Tilt D",
+                "forecasters": [
+                  "Race to the WH"
+                ],
+                "r": 3.67
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_AZ_2026",
+            "state": "AZ",
+            "district": "",
+            "n": 8,
+            "spread": 3.5,
+            "mean": 2.88,
+            "x_lo": 50.0,
+            "x_hi": 85.0,
+            "x_mean": 71.25,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 2,
+                "label": "Likely D",
+                "forecasters": [
+                  "Silver Bulletin",
+                  "VoteHub"
+                ],
+                "r": 4.12
+              },
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 5,
+                "label": "Lean D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 1,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Inside Elections"
+                ],
+                "r": 3.67
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_IA_2026",
+            "state": "IA",
+            "district": "",
+            "n": 8,
+            "spread": 3.5,
+            "mean": 3.81,
+            "x_lo": 50.0,
+            "x_hi": 85.0,
+            "x_mean": 61.88,
+            "n_distinct": 4,
+            "dots": [
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 1,
+                "label": "Likely D",
+                "forecasters": [
+                  "Silver Bulletin"
+                ],
+                "r": 3.99
+              },
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 2,
+                "label": "Lean D",
+                "forecasters": [
+                  "Fox News Power Rankings",
+                  "Race to the WH"
+                ],
+                "r": 4.56
+              },
+              {
+                "v": 4.0,
+                "x": 60.0,
+                "n": 2,
+                "label": "Tilt D",
+                "forecasters": [
+                  "Inside Elections",
+                  "VoteHub"
+                ],
+                "r": 4.56
+              },
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 3,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Cook Political Report",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_FL_2026",
+            "state": "FL",
+            "district": "",
+            "n": 8,
+            "spread": 3.0,
+            "mean": 8.69,
+            "x_lo": 0.0,
+            "x_hi": 30.0,
+            "x_mean": 13.12,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 7.0,
+                "x": 30.0,
+                "n": 2,
+                "label": "Lean R",
+                "forecasters": [
+                  "Race to the WH",
+                  "VoteHub"
+                ],
+                "r": 4.56
+              },
+              {
+                "v": 8.5,
+                "x": 15.0,
+                "n": 3,
+                "label": "Likely R",
+                "forecasters": [
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 10.0,
+                "x": 0.0,
+                "n": 3,
+                "label": "Solid R",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_NH_2026",
+            "state": "NH",
+            "district": "",
+            "n": 8,
+            "spread": 3.0,
+            "mean": 8.12,
+            "x_lo": 0.0,
+            "x_hi": 30.0,
+            "x_mean": 18.75,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 7.0,
+                "x": 30.0,
+                "n": 3,
+                "label": "Lean R",
+                "forecasters": [
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "VoteHub"
+                ],
+                "r": 4.68
+              },
+              {
+                "v": 8.5,
+                "x": 15.0,
+                "n": 4,
+                "label": "Likely R",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 10.0,
+                "x": 0.0,
+                "n": 1,
+                "label": "Solid R",
+                "forecasters": [
+                  "Inside Elections"
+                ],
+                "r": 3.8
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_TX_2026",
+            "state": "TX",
+            "district": "",
+            "n": 8,
+            "spread": 3.0,
+            "mean": 8.5,
+            "x_lo": 0.0,
+            "x_hi": 30.0,
+            "x_mean": 15.0,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 7.0,
+                "x": 30.0,
+                "n": 2,
+                "label": "Lean R",
+                "forecasters": [
+                  "Race to the WH",
+                  "VoteHub"
+                ],
+                "r": 4.3
+              },
+              {
+                "v": 8.5,
+                "x": 15.0,
+                "n": 4,
+                "label": "Likely R",
+                "forecasters": [
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "RealClearPolitics",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 10.0,
+                "x": 0.0,
+                "n": 2,
+                "label": "Solid R",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Sabato's Crystal Ball"
+                ],
+                "r": 4.3
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_MI_2026",
+            "state": "MI",
+            "district": "",
+            "n": 8,
+            "spread": 2.5,
+            "mean": 2.94,
+            "x_lo": 60.0,
+            "x_hi": 85.0,
+            "x_mean": 70.62,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 1,
+                "label": "Likely D",
+                "forecasters": [
+                  "Silver Bulletin"
+                ],
+                "r": 3.58
+              },
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 6,
+                "label": "Lean D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 4.0,
+                "x": 60.0,
+                "n": 1,
+                "label": "Tilt D",
+                "forecasters": [
+                  "Inside Elections"
+                ],
+                "r": 3.58
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_GA_2026",
+            "state": "GA",
+            "district": "",
+            "n": 8,
+            "spread": 2.0,
+            "mean": 4.62,
+            "x_lo": 50.0,
+            "x_hi": 70.0,
+            "x_mean": 53.75,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 1,
+                "label": "Lean D",
+                "forecasters": [
+                  "Silver Bulletin"
+                ],
+                "r": 3.58
+              },
+              {
+                "v": 4.0,
+                "x": 60.0,
+                "n": 1,
+                "label": "Tilt D",
+                "forecasters": [
+                  "VoteHub"
+                ],
+                "r": 3.58
+              },
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 6,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_KS_2026",
+            "state": "KS",
+            "district": "",
+            "n": 8,
+            "spread": 2.0,
+            "mean": 6.5,
+            "x_lo": 30.0,
+            "x_hi": 50.0,
+            "x_mean": 35.0,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 1,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Silver Bulletin"
+                ],
+                "r": 3.67
+              },
+              {
+                "v": 6.0,
+                "x": 40.0,
+                "n": 2,
+                "label": "Tilt R",
+                "forecasters": [
+                  "Inside Elections",
+                  "Race to the WH"
+                ],
+                "r": 4.12
+              },
+              {
+                "v": 7.0,
+                "x": 30.0,
+                "n": 5,
+                "label": "Lean R",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_NV_2026",
+            "state": "NV",
+            "district": "",
+            "n": 8,
+            "spread": 2.0,
+            "mean": 6.0,
+            "x_lo": 30.0,
+            "x_hi": 50.0,
+            "x_mean": 40.0,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 3,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "RealClearPolitics"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 6.0,
+                "x": 40.0,
+                "n": 2,
+                "label": "Tilt R",
+                "forecasters": [
+                  "Inside Elections",
+                  "VoteHub"
+                ],
+                "r": 4.56
+              },
+              {
+                "v": 7.0,
+                "x": 30.0,
+                "n": 3,
+                "label": "Lean R",
+                "forecasters": [
+                  "Race to the WH",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_OH_2026",
+            "state": "OH",
+            "district": "",
+            "n": 8,
+            "spread": 2.0,
+            "mean": 5.5,
+            "x_lo": 30.0,
+            "x_hi": 50.0,
+            "x_mean": 45.0,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 6,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "Silver Bulletin",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 7.0,
+                "x": 30.0,
+                "n": 2,
+                "label": "Lean R",
+                "forecasters": [
+                  "Inside Elections",
+                  "Sabato's Crystal Ball"
+                ],
+                "r": 3.99
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_WI_2026",
+            "state": "WI",
+            "district": "",
+            "n": 8,
+            "spread": 2.0,
+            "mean": 4.62,
+            "x_lo": 50.0,
+            "x_hi": 70.0,
+            "x_mean": 53.75,
+            "n_distinct": 3,
+            "dots": [
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 1,
+                "label": "Lean D",
+                "forecasters": [
+                  "Sabato's Crystal Ball"
+                ],
+                "r": 3.58
+              },
+              {
+                "v": 4.0,
+                "x": 60.0,
+                "n": 1,
+                "label": "Tilt D",
+                "forecasters": [
+                  "VoteHub"
+                ],
+                "r": 3.58
+              },
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 6,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_AL_2026",
+            "state": "AL",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 9.62,
+            "x_lo": 0.0,
+            "x_hi": 15.0,
+            "x_mean": 3.75,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 8.5,
+                "x": 15.0,
+                "n": 2,
+                "label": "Likely R",
+                "forecasters": [
+                  "Race to the WH",
+                  "VoteHub"
+                ],
+                "r": 3.99
+              },
+              {
+                "v": 10.0,
+                "x": 0.0,
+                "n": 6,
+                "label": "Solid R",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_CO_2026",
+            "state": "CO",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 0.19,
+            "x_lo": 85.0,
+            "x_hi": 100.0,
+            "x_mean": 98.12,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 0.0,
+                "x": 100.0,
+                "n": 7,
+                "label": "Solid D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 1,
+                "label": "Likely D",
+                "forecasters": [
+                  "Race to the WH"
+                ],
+                "r": 3.51
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_ME_2026",
+            "state": "ME",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 0.94,
+            "x_lo": 85.0,
+            "x_hi": 100.0,
+            "x_mean": 90.62,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 0.0,
+                "x": 100.0,
+                "n": 3,
+                "label": "Solid D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Silver Bulletin"
+                ],
+                "r": 4.46
+              },
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 5,
+                "label": "Likely D",
+                "forecasters": [
+                  "Inside Elections",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_MN_2026",
+            "state": "MN",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 0.56,
+            "x_lo": 85.0,
+            "x_hi": 100.0,
+            "x_mean": 94.38,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 0.0,
+                "x": 100.0,
+                "n": 5,
+                "label": "Solid D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 3,
+                "label": "Likely D",
+                "forecasters": [
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "VoteHub"
+                ],
+                "r": 4.46
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_NE_2026",
+            "state": "NE",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 9.81,
+            "x_lo": 0.0,
+            "x_hi": 15.0,
+            "x_mean": 1.88,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 8.5,
+                "x": 15.0,
+                "n": 1,
+                "label": "Likely R",
+                "forecasters": [
+                  "VoteHub"
+                ],
+                "r": 3.51
+              },
+              {
+                "v": 10.0,
+                "x": 0.0,
+                "n": 7,
+                "label": "Solid R",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_NM_2026",
+            "state": "NM",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 0.75,
+            "x_lo": 85.0,
+            "x_hi": 100.0,
+            "x_mean": 92.5,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 0.0,
+                "x": 100.0,
+                "n": 4,
+                "label": "Solid D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 4,
+                "label": "Likely D",
+                "forecasters": [
+                  "Inside Elections",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_NY_2026",
+            "state": "NY",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 0.38,
+            "x_lo": 85.0,
+            "x_hi": 100.0,
+            "x_mean": 96.25,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 0.0,
+                "x": 100.0,
+                "n": 6,
+                "label": "Solid D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 2,
+                "label": "Likely D",
+                "forecasters": [
+                  "Inside Elections",
+                  "Race to the WH"
+                ],
+                "r": 3.99
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_PA_2026",
+            "state": "PA",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 0.38,
+            "x_lo": 85.0,
+            "x_hi": 100.0,
+            "x_mean": 96.25,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 0.0,
+                "x": 100.0,
+                "n": 6,
+                "label": "Solid D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 2,
+                "label": "Likely D",
+                "forecasters": [
+                  "Sabato's Crystal Ball",
+                  "VoteHub"
+                ],
+                "r": 3.99
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_RI_2026",
+            "state": "RI",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 0.19,
+            "x_lo": 85.0,
+            "x_hi": 100.0,
+            "x_mean": 98.12,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 0.0,
+                "x": 100.0,
+                "n": 7,
+                "label": "Solid D",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 1.5,
+                "x": 85.0,
+                "n": 1,
+                "label": "Likely D",
+                "forecasters": [
+                  "Race to the WH"
+                ],
+                "r": 3.51
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_SC_2026",
+            "state": "SC",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 9.44,
+            "x_lo": 0.0,
+            "x_hi": 15.0,
+            "x_mean": 5.62,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 8.5,
+                "x": 15.0,
+                "n": 3,
+                "label": "Likely R",
+                "forecasters": [
+                  "Race to the WH",
+                  "RealClearPolitics",
+                  "VoteHub"
+                ],
+                "r": 4.46
+              },
+              {
+                "v": 10.0,
+                "x": 0.0,
+                "n": 5,
+                "label": "Solid R",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin"
+                ],
+                "r": 5.0
+              }
+            ]
+          },
+          {
+            "race_id": "GOV_SD_2026",
+            "state": "SD",
+            "district": "",
+            "n": 8,
+            "spread": 1.5,
+            "mean": 9.81,
+            "x_lo": 0.0,
+            "x_hi": 15.0,
+            "x_mean": 1.88,
+            "n_distinct": 2,
+            "dots": [
+              {
+                "v": 8.5,
+                "x": 15.0,
+                "n": 1,
+                "label": "Likely R",
+                "forecasters": [
+                  "Race to the WH"
+                ],
+                "r": 3.51
+              },
+              {
+                "v": 10.0,
+                "x": 0.0,
+                "n": 7,
+                "label": "Solid R",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "RealClearPolitics",
+                  "Sabato's Crystal Ball",
+                  "Silver Bulletin",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              }
+            ]
+          }
+        ]
       }
     },
-    "ladder": {
-      "clip": 20.0,
-      "holdover_D": 34,
-      "holdover_R": 31,
-      "n_up": 35,
-      "hold_D_x": [
-        0,
-        8.0
-      ],
-      "hold_R_x": [
-        92.0,
-        100
-      ],
-      "slot_w": 2.4,
-      "seat_ticks": [
-        {
-          "seat_no": 39,
-          "x": 18.8
-        },
-        {
-          "seat_no": 44,
-          "x": 30.8
-        },
-        {
-          "seat_no": 49,
-          "x": 42.8
-        },
-        {
-          "seat_no": 54,
-          "x": 54.8
-        },
-        {
-          "seat_no": 59,
-          "x": 66.8
-        },
-        {
-          "seat_no": 64,
-          "x": 78.8
-        }
-      ],
-      "seats": [
-        {
-          "state": "MA",
-          "margin": 33.65,
-          "win_prob_D": 1.0,
-          "seat_no": 35,
-          "x": 9.2,
-          "y": 0.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "D"
-        },
-        {
-          "state": "DE",
-          "margin": 21.69,
-          "win_prob_D": 0.9995,
-          "seat_no": 36,
-          "x": 11.6,
-          "y": 0.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "D"
-        },
-        {
-          "state": "RI",
-          "margin": 21.59,
-          "win_prob_D": 0.9995,
-          "seat_no": 37,
-          "x": 14.0,
-          "y": 0.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "D"
-        },
-        {
-          "state": "OR",
-          "margin": 20.97,
-          "win_prob_D": 0.9993,
-          "seat_no": 38,
-          "x": 16.4,
-          "y": 0.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "D"
-        },
-        {
-          "state": "IL",
-          "margin": 18.35,
-          "win_prob_D": 0.9975,
-          "seat_no": 39,
-          "x": 18.8,
-          "y": 4.12,
-          "clipped": false,
-          "competitive": false,
-          "lead": "D"
-        },
-        {
-          "state": "CO",
-          "margin": 17.61,
-          "win_prob_D": 0.9964,
-          "seat_no": 40,
-          "x": 21.2,
-          "y": 5.98,
-          "clipped": false,
-          "competitive": false,
-          "lead": "D"
-        },
-        {
-          "state": "NJ",
-          "margin": 14.21,
-          "win_prob_D": 0.985,
-          "seat_no": 41,
-          "x": 23.6,
-          "y": 14.48,
-          "clipped": false,
-          "competitive": true,
-          "lead": "D"
-        },
-        {
-          "state": "ME",
-          "margin": 13.31,
-          "win_prob_D": 0.979,
-          "seat_no": 42,
-          "x": 26.0,
-          "y": 16.73,
-          "clipped": false,
-          "competitive": true,
-          "lead": "D"
-        },
-        {
-          "state": "NM",
-          "margin": 13.03,
-          "win_prob_D": 0.9767,
-          "seat_no": 43,
-          "x": 28.4,
-          "y": 17.43,
-          "clipped": false,
-          "competitive": true,
-          "lead": "D"
-        },
-        {
-          "state": "VA",
-          "margin": 12.65,
-          "win_prob_D": 0.9733,
-          "seat_no": 44,
-          "x": 30.8,
-          "y": 18.37,
-          "clipped": false,
-          "competitive": true,
-          "lead": "D"
-        },
-        {
-          "state": "MN",
-          "margin": 10.73,
-          "win_prob_D": 0.9494,
-          "seat_no": 45,
-          "x": 33.2,
-          "y": 23.18,
-          "clipped": false,
-          "competitive": true,
-          "lead": "D"
-        },
-        {
-          "state": "NH",
-          "margin": 9.65,
-          "win_prob_D": 0.9298,
-          "seat_no": 46,
-          "x": 35.6,
-          "y": 25.87,
-          "clipped": false,
-          "competitive": true,
-          "lead": "D"
-        },
-        {
-          "state": "MI",
-          "margin": 5.29,
-          "win_prob_D": 0.7905,
-          "seat_no": 47,
-          "x": 38.0,
-          "y": 36.77,
-          "clipped": false,
-          "competitive": true,
-          "lead": "D"
-        },
-        {
-          "state": "GA",
-          "margin": 4.07,
-          "win_prob_D": 0.733,
-          "seat_no": 48,
-          "x": 40.4,
-          "y": 39.83,
-          "clipped": false,
-          "competitive": true,
-          "lead": "D"
-        },
-        {
-          "state": "NC",
-          "margin": 2.87,
-          "win_prob_D": 0.6696,
-          "seat_no": 49,
-          "x": 42.8,
-          "y": 42.83,
-          "clipped": false,
-          "competitive": true,
-          "lead": "D"
-        },
-        {
+    "ladders": {
+      "senate": {
+        "chamber": "senate",
+        "clip": 20.0,
+        "total": 100,
+        "n_races": 35,
+        "n_drawn": 35,
+        "hidden_left": 34,
+        "hidden_right": 31,
+        "left_label": "34 D seats not on the ballot",
+        "right_label": "31 R seats not on the ballot",
+        "hold_D_x": [
+          0,
+          8.0
+        ],
+        "hold_R_x": [
+          92.0,
+          100
+        ],
+        "slot_w": 2.4,
+        "seat_ticks": [
+          {
+            "seat_no": 39,
+            "x": 18.8
+          },
+          {
+            "seat_no": 44,
+            "x": 30.8
+          },
+          {
+            "seat_no": 49,
+            "x": 42.8
+          },
+          {
+            "seat_no": 54,
+            "x": 54.8
+          },
+          {
+            "seat_no": 59,
+            "x": 66.8
+          },
+          {
+            "seat_no": 64,
+            "x": 78.8
+          }
+        ],
+        "seats": [
+          {
+            "label": "MA",
+            "state": "MA",
+            "district": "",
+            "margin": 33.65,
+            "win_prob_D": 1.0,
+            "seat_no": 35,
+            "x": 9.2,
+            "y": 0.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "D"
+          },
+          {
+            "label": "DE",
+            "state": "DE",
+            "district": "",
+            "margin": 21.69,
+            "win_prob_D": 0.9995,
+            "seat_no": 36,
+            "x": 11.6,
+            "y": 0.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "D"
+          },
+          {
+            "label": "RI",
+            "state": "RI",
+            "district": "",
+            "margin": 21.59,
+            "win_prob_D": 0.9995,
+            "seat_no": 37,
+            "x": 14.0,
+            "y": 0.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "D"
+          },
+          {
+            "label": "OR",
+            "state": "OR",
+            "district": "",
+            "margin": 20.97,
+            "win_prob_D": 0.9993,
+            "seat_no": 38,
+            "x": 16.4,
+            "y": 0.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "D"
+          },
+          {
+            "label": "IL",
+            "state": "IL",
+            "district": "",
+            "margin": 18.35,
+            "win_prob_D": 0.9975,
+            "seat_no": 39,
+            "x": 18.8,
+            "y": 4.12,
+            "clipped": false,
+            "competitive": false,
+            "lead": "D"
+          },
+          {
+            "label": "CO",
+            "state": "CO",
+            "district": "",
+            "margin": 17.61,
+            "win_prob_D": 0.9964,
+            "seat_no": 40,
+            "x": 21.2,
+            "y": 5.98,
+            "clipped": false,
+            "competitive": false,
+            "lead": "D"
+          },
+          {
+            "label": "NJ",
+            "state": "NJ",
+            "district": "",
+            "margin": 14.21,
+            "win_prob_D": 0.985,
+            "seat_no": 41,
+            "x": 23.6,
+            "y": 14.48,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "ME",
+            "state": "ME",
+            "district": "",
+            "margin": 13.31,
+            "win_prob_D": 0.979,
+            "seat_no": 42,
+            "x": 26.0,
+            "y": 16.73,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "NM",
+            "state": "NM",
+            "district": "",
+            "margin": 13.03,
+            "win_prob_D": 0.9767,
+            "seat_no": 43,
+            "x": 28.4,
+            "y": 17.43,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "VA",
+            "state": "VA",
+            "district": "",
+            "margin": 12.65,
+            "win_prob_D": 0.9733,
+            "seat_no": 44,
+            "x": 30.8,
+            "y": 18.37,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "MN",
+            "state": "MN",
+            "district": "",
+            "margin": 10.73,
+            "win_prob_D": 0.9494,
+            "seat_no": 45,
+            "x": 33.2,
+            "y": 23.18,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "NH",
+            "state": "NH",
+            "district": "",
+            "margin": 9.65,
+            "win_prob_D": 0.9298,
+            "seat_no": 46,
+            "x": 35.6,
+            "y": 25.87,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "MI",
+            "state": "MI",
+            "district": "",
+            "margin": 5.29,
+            "win_prob_D": 0.7905,
+            "seat_no": 47,
+            "x": 38.0,
+            "y": 36.77,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "GA",
+            "state": "GA",
+            "district": "",
+            "margin": 4.07,
+            "win_prob_D": 0.733,
+            "seat_no": 48,
+            "x": 40.4,
+            "y": 39.83,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "NC",
+            "state": "NC",
+            "district": "",
+            "margin": 2.87,
+            "win_prob_D": 0.6696,
+            "seat_no": 49,
+            "x": 42.8,
+            "y": 42.83,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "OH",
+            "state": "OH",
+            "district": "",
+            "margin": -4.87,
+            "win_prob_D": 0.2288,
+            "seat_no": 50,
+            "x": 45.2,
+            "y": 62.17,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R",
+            "threshold": 50
+          },
+          {
+            "label": "FL",
+            "state": "FL",
+            "district": "",
+            "margin": -5.11,
+            "win_prob_D": 0.2178,
+            "seat_no": 51,
+            "x": 47.6,
+            "y": 62.77,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R",
+            "threshold": 51
+          },
+          {
+            "label": "TX",
+            "state": "TX",
+            "district": "",
+            "margin": -6.17,
+            "win_prob_D": 0.1733,
+            "seat_no": 52,
+            "x": 50.0,
+            "y": 65.42,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "IA",
+            "state": "IA",
+            "district": "",
+            "margin": -6.51,
+            "win_prob_D": 0.1603,
+            "seat_no": 53,
+            "x": 52.4,
+            "y": 66.28,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "AK",
+            "state": "AK",
+            "district": "",
+            "margin": -7.23,
+            "win_prob_D": 0.135,
+            "seat_no": 54,
+            "x": 54.8,
+            "y": 68.08,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "KS",
+            "state": "KS",
+            "district": "",
+            "margin": -10.39,
+            "win_prob_D": 0.0564,
+            "seat_no": 55,
+            "x": 57.2,
+            "y": 75.98,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "SC",
+            "state": "SC",
+            "district": "",
+            "margin": -10.89,
+            "win_prob_D": 0.0483,
+            "seat_no": 56,
+            "x": 59.6,
+            "y": 77.22,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "MT",
+            "state": "MT",
+            "district": "",
+            "margin": -13.97,
+            "win_prob_D": 0.0165,
+            "seat_no": 57,
+            "x": 62.0,
+            "y": 84.92,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "NE",
+            "state": "NE",
+            "district": "",
+            "margin": -14.87,
+            "win_prob_D": 0.0116,
+            "seat_no": 58,
+            "x": 64.4,
+            "y": 87.17,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "LA",
+            "state": "LA",
+            "district": "",
+            "margin": -15.83,
+            "win_prob_D": 0.0078,
+            "seat_no": 59,
+            "x": 66.8,
+            "y": 89.57,
+            "clipped": false,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "MS",
+            "state": "MS",
+            "district": "",
+            "margin": -15.89,
+            "win_prob_D": 0.0076,
+            "seat_no": 60,
+            "x": 69.2,
+            "y": 89.72,
+            "clipped": false,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "TN",
+            "state": "TN",
+            "district": "",
+            "margin": -22.85,
+            "win_prob_D": 0.0002,
+            "seat_no": 61,
+            "x": 71.6,
+            "y": 100.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "SD",
+            "state": "SD",
+            "district": "",
+            "margin": -23.47,
+            "win_prob_D": 0.0002,
+            "seat_no": 62,
+            "x": 74.0,
+            "y": 100.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "AL",
+            "state": "AL",
+            "district": "",
+            "margin": -23.95,
+            "win_prob_D": 0.0001,
+            "seat_no": 63,
+            "x": 76.4,
+            "y": 100.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "KY",
+            "state": "KY",
+            "district": "",
+            "margin": -24.21,
+            "win_prob_D": 0.0001,
+            "seat_no": 64,
+            "x": 78.8,
+            "y": 100.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "AR",
+            "state": "AR",
+            "district": "",
+            "margin": -24.95,
+            "win_prob_D": 0.0001,
+            "seat_no": 65,
+            "x": 81.2,
+            "y": 100.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "OK",
+            "state": "OK",
+            "district": "",
+            "margin": -29.01,
+            "win_prob_D": 0.0,
+            "seat_no": 66,
+            "x": 83.6,
+            "y": 100.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "ID",
+            "state": "ID",
+            "district": "",
+            "margin": -30.41,
+            "win_prob_D": 0.0,
+            "seat_no": 67,
+            "x": 86.0,
+            "y": 100.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "WV",
+            "state": "WV",
+            "district": "",
+            "margin": -36.25,
+            "win_prob_D": 0.0,
+            "seat_no": 68,
+            "x": 88.4,
+            "y": 100.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "R"
+          },
+          {
+            "label": "WY",
+            "state": "WY",
+            "district": "",
+            "margin": -40.79,
+            "win_prob_D": 0.0,
+            "seat_no": 69,
+            "x": 90.8,
+            "y": 100.0,
+            "clipped": true,
+            "competitive": false,
+            "lead": "R"
+          }
+        ],
+        "thresholds": [
+          {
+            "seat_no": 50,
+            "ordinal": "50th",
+            "label": "OH",
+            "state": "OH",
+            "district": "",
+            "margin": -4.87,
+            "win_prob_D": 0.2288,
+            "swing_needed": 4.87,
+            "x": 46.4,
+            "note": "a tie, broken by the vice-president"
+          },
+          {
+            "seat_no": 51,
+            "ordinal": "51st",
+            "label": "FL",
+            "state": "FL",
+            "district": "",
+            "margin": -5.11,
+            "win_prob_D": 0.2178,
+            "swing_needed": 5.11,
+            "x": 48.8,
+            "note": "an outright majority"
+          }
+        ],
+        "tipping": {
+          "seat_no": 50,
+          "ordinal": "50th",
+          "label": "OH",
           "state": "OH",
+          "district": "",
           "margin": -4.87,
           "win_prob_D": 0.2288,
-          "seat_no": 50,
-          "x": 45.2,
-          "y": 62.17,
-          "clipped": false,
-          "competitive": true,
-          "lead": "R",
-          "threshold": 50
+          "swing_needed": 4.87,
+          "x": 46.4,
+          "note": "a tie, broken by the vice-president"
         },
-        {
+        "expected": {
+          "seats": 49.0,
+          "x": 44.1
+        },
+        "y_zero": 50.0,
+        "y_ticks": [
+          {
+            "v": -20.0,
+            "y": 100.0,
+            "label": "R+20+"
+          },
+          {
+            "v": -10.0,
+            "y": 75.0,
+            "label": "R+10"
+          },
+          {
+            "v": 0,
+            "y": 50.0,
+            "label": "EVEN"
+          },
+          {
+            "v": 10.0,
+            "y": 25.0,
+            "label": "D+10"
+          },
+          {
+            "v": 20.0,
+            "y": 0.0,
+            "label": "D+20+"
+          }
+        ]
+      },
+      "house": {
+        "chamber": "house",
+        "clip": 10.0,
+        "total": 435,
+        "n_races": 435,
+        "n_drawn": 45,
+        "hidden_left": 199,
+        "hidden_right": 191,
+        "left_label": "safe Democratic seats",
+        "right_label": "safe Republican seats",
+        "hold_D_x": [
+          0,
+          8.0
+        ],
+        "hold_R_x": [
+          92.0,
+          100
+        ],
+        "slot_w": 1.867,
+        "seat_ticks": [
+          {
+            "seat_no": 204,
+            "x": 16.4
+          },
+          {
+            "seat_no": 209,
+            "x": 25.73
+          },
+          {
+            "seat_no": 214,
+            "x": 35.07
+          },
+          {
+            "seat_no": 219,
+            "x": 44.4
+          },
+          {
+            "seat_no": 224,
+            "x": 53.73
+          },
+          {
+            "seat_no": 229,
+            "x": 63.07
+          },
+          {
+            "seat_no": 234,
+            "x": 72.4
+          },
+          {
+            "seat_no": 239,
+            "x": 81.73
+          }
+        ],
+        "seats": [
+          {
+            "label": "NV-03",
+            "state": "NV",
+            "district": "03",
+            "margin": 7.67,
+            "win_prob_D": 0.8792,
+            "seat_no": 200,
+            "x": 8.93,
+            "y": 11.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "NY-17",
+            "state": "NY",
+            "district": "17",
+            "margin": 7.67,
+            "win_prob_D": 0.8792,
+            "seat_no": 201,
+            "x": 10.8,
+            "y": 11.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "NY-19",
+            "state": "NY",
+            "district": "19",
+            "margin": 7.67,
+            "win_prob_D": 0.8792,
+            "seat_no": 202,
+            "x": 12.67,
+            "y": 11.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "PA-01",
+            "state": "PA",
+            "district": "01",
+            "margin": 7.67,
+            "win_prob_D": 0.8792,
+            "seat_no": 203,
+            "x": 14.53,
+            "y": 11.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "AZ-06",
+            "state": "AZ",
+            "district": "06",
+            "margin": 5.67,
+            "win_prob_D": 0.8067,
+            "seat_no": 204,
+            "x": 16.4,
+            "y": 21.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "CO-08",
+            "state": "CO",
+            "district": "08",
+            "margin": 5.67,
+            "win_prob_D": 0.8067,
+            "seat_no": 205,
+            "x": 18.27,
+            "y": 21.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "MI-07",
+            "state": "MI",
+            "district": "07",
+            "margin": 5.67,
+            "win_prob_D": 0.8067,
+            "seat_no": 206,
+            "x": 20.13,
+            "y": 21.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "NJ-07",
+            "state": "NJ",
+            "district": "07",
+            "margin": 5.67,
+            "win_prob_D": 0.8067,
+            "seat_no": 207,
+            "x": 22.0,
+            "y": 21.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "NM-02",
+            "state": "NM",
+            "district": "02",
+            "margin": 5.67,
+            "win_prob_D": 0.8067,
+            "seat_no": 208,
+            "x": 23.87,
+            "y": 21.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "NY-03",
+            "state": "NY",
+            "district": "03",
+            "margin": 5.67,
+            "win_prob_D": 0.8067,
+            "seat_no": 209,
+            "x": 25.73,
+            "y": 21.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "VA-02",
+            "state": "VA",
+            "district": "02",
+            "margin": 5.67,
+            "win_prob_D": 0.8067,
+            "seat_no": 210,
+            "x": 27.6,
+            "y": 21.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "AZ-01",
+            "state": "AZ",
+            "district": "01",
+            "margin": 3.67,
+            "win_prob_D": 0.7124,
+            "seat_no": 211,
+            "x": 29.47,
+            "y": 31.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "MI-08",
+            "state": "MI",
+            "district": "08",
+            "margin": 3.67,
+            "win_prob_D": 0.7124,
+            "seat_no": 212,
+            "x": 31.33,
+            "y": 31.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "OH-01",
+            "state": "OH",
+            "district": "01",
+            "margin": 3.67,
+            "win_prob_D": 0.7124,
+            "seat_no": 213,
+            "x": 33.2,
+            "y": 31.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "PA-07",
+            "state": "PA",
+            "district": "07",
+            "margin": 3.67,
+            "win_prob_D": 0.7124,
+            "seat_no": 214,
+            "x": 35.07,
+            "y": 31.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "IA-03",
+            "state": "IA",
+            "district": "03",
+            "margin": 1.67,
+            "win_prob_D": 0.6006,
+            "seat_no": 215,
+            "x": 36.93,
+            "y": 41.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "WA-03",
+            "state": "WA",
+            "district": "03",
+            "margin": 1.67,
+            "win_prob_D": 0.6006,
+            "seat_no": 216,
+            "x": 38.8,
+            "y": 41.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "WI-01",
+            "state": "WI",
+            "district": "01",
+            "margin": 1.67,
+            "win_prob_D": 0.6006,
+            "seat_no": 217,
+            "x": 40.67,
+            "y": 41.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "D"
+          },
+          {
+            "label": "FL-25",
+            "state": "FL",
+            "district": "25",
+            "margin": -0.33,
+            "win_prob_D": 0.4799,
+            "seat_no": 218,
+            "x": 42.53,
+            "y": 51.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R",
+            "threshold": 218
+          },
+          {
+            "label": "MI-04",
+            "state": "MI",
+            "district": "04",
+            "margin": -0.33,
+            "win_prob_D": 0.4799,
+            "seat_no": 219,
+            "x": 44.4,
+            "y": 51.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "MI-10",
+            "state": "MI",
+            "district": "10",
+            "margin": -0.33,
+            "win_prob_D": 0.4799,
+            "seat_no": 220,
+            "x": 46.27,
+            "y": 51.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "PA-10",
+            "state": "PA",
+            "district": "10",
+            "margin": -0.33,
+            "win_prob_D": 0.4799,
+            "seat_no": 221,
+            "x": 48.13,
+            "y": 51.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "TX-28",
+            "state": "TX",
+            "district": "28",
+            "margin": -0.33,
+            "win_prob_D": 0.4799,
+            "seat_no": 222,
+            "x": 50.0,
+            "y": 51.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "TX-34",
+            "state": "TX",
+            "district": "34",
+            "margin": -0.33,
+            "win_prob_D": 0.4799,
+            "seat_no": 223,
+            "x": 51.87,
+            "y": 51.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "VA-01",
+            "state": "VA",
+            "district": "01",
+            "margin": -0.33,
+            "win_prob_D": 0.4799,
+            "seat_no": 224,
+            "x": 53.73,
+            "y": 51.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "WI-03",
+            "state": "WI",
+            "district": "03",
+            "margin": -0.33,
+            "win_prob_D": 0.4799,
+            "seat_no": 225,
+            "x": 55.6,
+            "y": 51.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "FL-14",
+            "state": "FL",
+            "district": "14",
+            "margin": -2.33,
+            "win_prob_D": 0.361,
+            "seat_no": 226,
+            "x": 57.47,
+            "y": 61.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "FL-22",
+            "state": "FL",
+            "district": "22",
+            "margin": -2.33,
+            "win_prob_D": 0.361,
+            "seat_no": 227,
+            "x": 59.33,
+            "y": 61.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "IA-01",
+            "state": "IA",
+            "district": "01",
+            "margin": -2.33,
+            "win_prob_D": 0.361,
+            "seat_no": 228,
+            "x": 61.2,
+            "y": 61.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "IA-02",
+            "state": "IA",
+            "district": "02",
+            "margin": -2.33,
+            "win_prob_D": 0.361,
+            "seat_no": 229,
+            "x": 63.07,
+            "y": 61.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "ME-02",
+            "state": "ME",
+            "district": "02",
+            "margin": -2.33,
+            "win_prob_D": 0.361,
+            "seat_no": 230,
+            "x": 64.93,
+            "y": 61.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "NY-01",
+            "state": "NY",
+            "district": "01",
+            "margin": -2.33,
+            "win_prob_D": 0.361,
+            "seat_no": 231,
+            "x": 66.8,
+            "y": 61.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "OH-10",
+            "state": "OH",
+            "district": "10",
+            "margin": -2.33,
+            "win_prob_D": 0.361,
+            "seat_no": 232,
+            "x": 68.67,
+            "y": 61.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "PA-08",
+            "state": "PA",
+            "district": "08",
+            "margin": -2.33,
+            "win_prob_D": 0.361,
+            "seat_no": 233,
+            "x": 70.53,
+            "y": 61.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "TX-35",
+            "state": "TX",
+            "district": "35",
+            "margin": -2.33,
+            "win_prob_D": 0.361,
+            "seat_no": 234,
+            "x": 72.4,
+            "y": 61.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "CO-03",
+            "state": "CO",
+            "district": "03",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 235,
+            "x": 74.27,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "CO-05",
+            "state": "CO",
+            "district": "05",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 236,
+            "x": 76.13,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "FL-04",
+            "state": "FL",
+            "district": "04",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 237,
+            "x": 78.0,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "FL-07",
+            "state": "FL",
+            "district": "07",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 238,
+            "x": 79.87,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "MT-01",
+            "state": "MT",
+            "district": "01",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 239,
+            "x": 81.73,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "NJ-02",
+            "state": "NJ",
+            "district": "02",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 240,
+            "x": 83.6,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "NC-01",
+            "state": "NC",
+            "district": "01",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 241,
+            "x": 85.47,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "NC-11",
+            "state": "NC",
+            "district": "11",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 242,
+            "x": 87.33,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "OH-07",
+            "state": "OH",
+            "district": "07",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 243,
+            "x": 89.2,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          },
+          {
+            "label": "OH-09",
+            "state": "OH",
+            "district": "09",
+            "margin": -4.33,
+            "win_prob_D": 0.2543,
+            "seat_no": 244,
+            "x": 91.07,
+            "y": 71.65,
+            "clipped": false,
+            "competitive": true,
+            "lead": "R"
+          }
+        ],
+        "thresholds": [
+          {
+            "seat_no": 218,
+            "ordinal": "218th",
+            "label": "FL-25",
+            "state": "FL",
+            "district": "25",
+            "margin": -0.33,
+            "win_prob_D": 0.4799,
+            "swing_needed": 0.33,
+            "x": 43.47,
+            "note": "a majority"
+          }
+        ],
+        "tipping": {
+          "seat_no": 218,
+          "ordinal": "218th",
+          "label": "FL-25",
           "state": "FL",
-          "margin": -5.11,
-          "win_prob_D": 0.2178,
-          "seat_no": 51,
-          "x": 47.6,
-          "y": 62.77,
-          "clipped": false,
-          "competitive": true,
-          "lead": "R",
-          "threshold": 51
+          "district": "25",
+          "margin": -0.33,
+          "win_prob_D": 0.4799,
+          "swing_needed": 0.33,
+          "x": 43.47,
+          "note": "a majority"
         },
-        {
-          "state": "TX",
-          "margin": -6.17,
-          "win_prob_D": 0.1733,
-          "seat_no": 52,
-          "x": 50.0,
-          "y": 65.42,
-          "clipped": false,
-          "competitive": true,
-          "lead": "R"
+        "expected": {
+          "seats": 226.4,
+          "x": 59.11
         },
-        {
-          "state": "IA",
-          "margin": -6.51,
-          "win_prob_D": 0.1603,
-          "seat_no": 53,
-          "x": 52.4,
-          "y": 66.28,
-          "clipped": false,
-          "competitive": true,
-          "lead": "R"
-        },
-        {
-          "state": "AK",
-          "margin": -7.23,
-          "win_prob_D": 0.135,
-          "seat_no": 54,
-          "x": 54.8,
-          "y": 68.08,
-          "clipped": false,
-          "competitive": true,
-          "lead": "R"
-        },
-        {
-          "state": "KS",
-          "margin": -10.39,
-          "win_prob_D": 0.0564,
-          "seat_no": 55,
-          "x": 57.2,
-          "y": 75.98,
-          "clipped": false,
-          "competitive": true,
-          "lead": "R"
-        },
-        {
-          "state": "SC",
-          "margin": -10.89,
-          "win_prob_D": 0.0483,
-          "seat_no": 56,
-          "x": 59.6,
-          "y": 77.22,
-          "clipped": false,
-          "competitive": true,
-          "lead": "R"
-        },
-        {
-          "state": "MT",
-          "margin": -13.97,
-          "win_prob_D": 0.0165,
-          "seat_no": 57,
-          "x": 62.0,
-          "y": 84.92,
-          "clipped": false,
-          "competitive": true,
-          "lead": "R"
-        },
-        {
-          "state": "NE",
-          "margin": -14.87,
-          "win_prob_D": 0.0116,
-          "seat_no": 58,
-          "x": 64.4,
-          "y": 87.17,
-          "clipped": false,
-          "competitive": true,
-          "lead": "R"
-        },
-        {
-          "state": "LA",
-          "margin": -15.83,
-          "win_prob_D": 0.0078,
-          "seat_no": 59,
-          "x": 66.8,
-          "y": 89.57,
-          "clipped": false,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "MS",
-          "margin": -15.89,
-          "win_prob_D": 0.0076,
-          "seat_no": 60,
-          "x": 69.2,
-          "y": 89.72,
-          "clipped": false,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "TN",
-          "margin": -22.85,
-          "win_prob_D": 0.0002,
-          "seat_no": 61,
-          "x": 71.6,
-          "y": 100.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "SD",
-          "margin": -23.47,
-          "win_prob_D": 0.0002,
-          "seat_no": 62,
-          "x": 74.0,
-          "y": 100.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "AL",
-          "margin": -23.95,
-          "win_prob_D": 0.0001,
-          "seat_no": 63,
-          "x": 76.4,
-          "y": 100.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "KY",
-          "margin": -24.21,
-          "win_prob_D": 0.0001,
-          "seat_no": 64,
-          "x": 78.8,
-          "y": 100.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "AR",
-          "margin": -24.95,
-          "win_prob_D": 0.0001,
-          "seat_no": 65,
-          "x": 81.2,
-          "y": 100.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "OK",
-          "margin": -29.01,
-          "win_prob_D": 0.0,
-          "seat_no": 66,
-          "x": 83.6,
-          "y": 100.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "ID",
-          "margin": -30.41,
-          "win_prob_D": 0.0,
-          "seat_no": 67,
-          "x": 86.0,
-          "y": 100.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "WV",
-          "margin": -36.25,
-          "win_prob_D": 0.0,
-          "seat_no": 68,
-          "x": 88.4,
-          "y": 100.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "R"
-        },
-        {
-          "state": "WY",
-          "margin": -40.79,
-          "win_prob_D": 0.0,
-          "seat_no": 69,
-          "x": 90.8,
-          "y": 100.0,
-          "clipped": true,
-          "competitive": false,
-          "lead": "R"
-        }
-      ],
-      "y_zero": 50.0,
-      "y_ticks": [
-        {
-          "v": -20,
-          "y": 100.0,
-          "label": "R+20+"
-        },
-        {
-          "v": -10,
-          "y": 75.0,
-          "label": "R+10"
-        },
-        {
-          "v": 0,
-          "y": 50.0,
-          "label": "EVEN"
-        },
-        {
-          "v": 10,
-          "y": 25.0,
-          "label": "D+10"
-        },
-        {
-          "v": 20,
-          "y": 0.0,
-          "label": "D+20+"
-        }
-      ],
-      "tipping_50": {
-        "state": "OH",
-        "margin": -4.87,
-        "win_prob_D": 0.2288,
-        "swing_needed": 4.87,
-        "x": 46.4
-      },
-      "tipping_51": {
-        "state": "FL",
-        "margin": -5.11,
-        "win_prob_D": 0.2178,
-        "swing_needed": 5.11,
-        "x": 48.8
-      },
-      "prob_D_50_plus": 0.3907
+        "y_zero": 50.0,
+        "y_ticks": [
+          {
+            "v": -10.0,
+            "y": 100.0,
+            "label": "R+10+"
+          },
+          {
+            "v": -5.0,
+            "y": 75.0,
+            "label": "R+5"
+          },
+          {
+            "v": 0,
+            "y": 50.0,
+            "label": "EVEN"
+          },
+          {
+            "v": 5.0,
+            "y": 25.0,
+            "label": "D+5"
+          },
+          {
+            "v": 10.0,
+            "y": 0.0,
+            "label": "D+10+"
+          }
+        ]
+      }
     }
   },
   "spread": {
@@ -4813,18 +6785,18 @@
         "ours": false,
         "house_margin": 5.73,
         "house_margin_withheld": false,
-        "house_seats": null,
+        "house_seats": 250.79,
         "house_seats_80": null,
-        "house_prob": null,
-        "senate_seats": null,
+        "house_prob": 0.8686,
+        "senate_seats": 51.43,
         "senate_seats_80": null,
-        "senate_prob": null,
+        "senate_prob": 0.6203,
         "n_sources": 1,
         "sole_source": "grant_williams",
-        "house_seats_withheld": true,
-        "house_prob_withheld": true,
-        "senate_seats_withheld": true,
-        "senate_prob_withheld": true
+        "house_seats_withheld": false,
+        "house_prob_withheld": false,
+        "senate_seats_withheld": false,
+        "senate_prob_withheld": false
       },
       {
         "category": "market",
@@ -4865,14 +6837,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 24.29,
+            "prob": 0.9991,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0
+        "n_cats": 3,
+        "prob_spread": 0.0009
       },
       {
         "state": "DE",
@@ -4892,14 +6864,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 13.26,
+            "prob": 0.8939,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0005
+        "n_cats": 3,
+        "prob_spread": 0.1061
       },
       {
         "state": "RI",
@@ -4919,14 +6891,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 23.56,
+            "prob": 0.9758,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0005
+        "n_cats": 3,
+        "prob_spread": 0.0242
       },
       {
         "state": "OR",
@@ -4946,14 +6918,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 17.25,
+            "prob": 0.9408,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0007
+        "n_cats": 3,
+        "prob_spread": 0.0592
       },
       {
         "state": "IL",
@@ -4973,14 +6945,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 14.56,
+            "prob": 0.9148,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0023
+        "n_cats": 3,
+        "prob_spread": 0.085
       },
       {
         "state": "CO",
@@ -5000,14 +6972,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 16.23,
+            "prob": 0.9316,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0033
+        "n_cats": 3,
+        "prob_spread": 0.0681
       },
       {
         "state": "NJ",
@@ -5027,14 +6999,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 18.43,
+            "prob": 0.95,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0132
+        "n_cats": 3,
+        "prob_spread": 0.0482
       },
       {
         "state": "ME",
@@ -5054,14 +7026,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 3.44,
+            "prob": 0.7672,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0182
+        "n_cats": 3,
+        "prob_spread": 0.23
       },
       {
         "state": "NM",
@@ -5081,14 +7053,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 16.51,
+            "prob": 0.9369,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0201
+        "n_cats": 3,
+        "prob_spread": 0.0599
       },
       {
         "state": "VA",
@@ -5108,14 +7080,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 14.44,
+            "prob": 0.9092,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0229
+        "n_cats": 3,
+        "prob_spread": 0.087
       },
       {
         "state": "MN",
@@ -5135,14 +7107,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 9.51,
+            "prob": 0.8232,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0418
+        "n_cats": 3,
+        "prob_spread": 0.168
       },
       {
         "state": "NH",
@@ -5162,14 +7134,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 6.14,
+            "prob": 0.8938,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0567
+        "n_cats": 3,
+        "prob_spread": 0.0926
       },
       {
         "state": "MI",
@@ -5189,14 +7161,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 0.72,
+            "prob": 0.5569,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.148
+        "n_cats": 3,
+        "prob_spread": 0.3816
       },
       {
         "state": "GA",
@@ -5216,13 +7188,13 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 11.39,
+            "prob": 0.8664,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
+        "n_cats": 3,
         "prob_spread": 0.1794
       },
       {
@@ -5243,14 +7215,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 8.32,
+            "prob": 0.9497,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.2099
+        "n_cats": 3,
+        "prob_spread": 0.2801
       },
       {
         "state": "OH",
@@ -5270,14 +7242,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 1.55,
+            "prob": 0.6346,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.2675
+        "n_cats": 3,
+        "prob_spread": 0.4058
       },
       {
         "state": "FL",
@@ -5297,14 +7269,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -5.84,
+            "prob": 0.1067,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.2639
+        "n_cats": 3,
+        "prob_spread": 0.375
       },
       {
         "state": "TX",
@@ -5324,14 +7296,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": 1.52,
+            "prob": 0.6298,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.2445
+        "n_cats": 3,
+        "prob_spread": 0.4565
       },
       {
         "state": "IA",
@@ -5351,14 +7323,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -0.19,
+            "prob": 0.4835,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.2373
+        "n_cats": 3,
+        "prob_spread": 0.3232
       },
       {
         "state": "AK",
@@ -5378,14 +7350,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -0.16,
+            "prob": 0.486,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.2209
+        "n_cats": 3,
+        "prob_spread": 0.351
       },
       {
         "state": "KS",
@@ -5405,14 +7377,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -8.69,
+            "prob": 0.2072,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.1407
+        "n_cats": 3,
+        "prob_spread": 0.1508
       },
       {
         "state": "SC",
@@ -5432,14 +7404,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -6.69,
+            "prob": 0.2563,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.1283
+        "n_cats": 3,
+        "prob_spread": 0.208
       },
       {
         "state": "MT",
@@ -5459,14 +7431,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -10.56,
+            "prob": 0.1587,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0645
+        "n_cats": 3,
+        "prob_spread": 0.1422
       },
       {
         "state": "NE",
@@ -5486,10 +7458,10 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
+            "margin": -12.73,
             "prob": 0.1224,
-            "withheld": true,
-            "n": null
+            "withheld": false,
+            "n": 1
           }
         },
         "n_cats": 3,
@@ -5513,14 +7485,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -10.4,
+            "prob": 0.167,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0384
+        "n_cats": 3,
+        "prob_spread": 0.1592
       },
       {
         "state": "MS",
@@ -5540,14 +7512,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -8.58,
+            "prob": 0.2031,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0378
+        "n_cats": 3,
+        "prob_spread": 0.1955
       },
       {
         "state": "TN",
@@ -5567,14 +7539,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -13.53,
+            "prob": 0.1101,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0027
+        "n_cats": 3,
+        "prob_spread": 0.1099
       },
       {
         "state": "SD",
@@ -5594,14 +7566,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -16.49,
+            "prob": 0.0697,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.002
+        "n_cats": 3,
+        "prob_spread": 0.0695
       },
       {
         "state": "AL",
@@ -5621,14 +7593,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -13.78,
+            "prob": 0.103,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0016
+        "n_cats": 3,
+        "prob_spread": 0.1029
       },
       {
         "state": "KY",
@@ -5648,14 +7620,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -9.57,
+            "prob": 0.1824,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0014
+        "n_cats": 3,
+        "prob_spread": 0.1823
       },
       {
         "state": "AR",
@@ -5675,14 +7647,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -15.5,
+            "prob": 0.0805,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.001
+        "n_cats": 3,
+        "prob_spread": 0.0804
       },
       {
         "state": "OK",
@@ -5702,14 +7674,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -18.56,
+            "prob": 0.0566,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0001
+        "n_cats": 3,
+        "prob_spread": 0.0566
       },
       {
         "state": "ID",
@@ -5729,14 +7701,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -20.52,
+            "prob": 0.0415,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0
+        "n_cats": 3,
+        "prob_spread": 0.0415
       },
       {
         "state": "WV",
@@ -5756,14 +7728,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -26.54,
+            "prob": 0.0193,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0
+        "n_cats": 3,
+        "prob_spread": 0.0193
       },
       {
         "state": "WY",
@@ -5783,14 +7755,14 @@
             "n": 1
           },
           "professional": {
-            "margin": null,
-            "prob": null,
-            "withheld": true,
-            "n": null
+            "margin": -38.55,
+            "prob": 0.0046,
+            "withheld": false,
+            "n": 1
           }
         },
-        "n_cats": 2,
-        "prob_spread": 0.0
+        "n_cats": 3,
+        "prob_spread": 0.0046
       }
     ],
     "categories": [
@@ -5814,6 +7786,1558 @@
       "market"
     ]
   },
+  "governors": {
+    "n_races": 36,
+    "n_rated": 36,
+    "n_market": 25,
+    "races": [
+      {
+        "race_id": "GOV_GA_2026",
+        "state": "GA",
+        "n_raters": 8,
+        "mean_rating": 4.62,
+        "spread": 2.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Tilt D"
+          }
+        ],
+        "market_prob_D": 0.595,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_WI_2026",
+        "state": "WI",
+        "n_raters": 8,
+        "mean_rating": 4.62,
+        "spread": 2.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Tilt D"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_OH_2026",
+        "state": "OH",
+        "n_raters": 8,
+        "mean_rating": 5.5,
+        "spread": 2.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Toss-up"
+          }
+        ],
+        "market_prob_D": 0.48,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_NV_2026",
+        "state": "NV",
+        "n_raters": 8,
+        "mean_rating": 6.0,
+        "spread": 2.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Tilt R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Tilt R"
+          }
+        ],
+        "market_prob_D": 0.435,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_IA_2026",
+        "state": "IA",
+        "n_raters": 8,
+        "mean_rating": 3.81,
+        "spread": 3.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Tilt D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Tilt D"
+          }
+        ],
+        "market_prob_D": 0.775,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_AK_2026",
+        "state": "AK",
+        "n_raters": 8,
+        "mean_rating": 6.31,
+        "spread": 5.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Toss-up"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_KS_2026",
+        "state": "KS",
+        "n_raters": 8,
+        "mean_rating": 6.5,
+        "spread": 2.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Tilt R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Tilt R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Lean R"
+          }
+        ],
+        "market_prob_D": 0.345,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_MI_2026",
+        "state": "MI",
+        "n_raters": 8,
+        "mean_rating": 2.94,
+        "spread": 2.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Tilt D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Lean D"
+          }
+        ],
+        "market_prob_D": 0.4402,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_AZ_2026",
+        "state": "AZ",
+        "n_raters": 8,
+        "mean_rating": 2.88,
+        "spread": 3.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely D"
+          }
+        ],
+        "market_prob_D": 0.875,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_NH_2026",
+        "state": "NH",
+        "n_raters": 8,
+        "mean_rating": 8.12,
+        "spread": 3.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Lean R"
+          }
+        ],
+        "market_prob_D": 0.1665,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_OR_2026",
+        "state": "OR",
+        "n_raters": 8,
+        "mean_rating": 1.81,
+        "spread": 4.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Tilt D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely D"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_TX_2026",
+        "state": "TX",
+        "n_raters": 8,
+        "mean_rating": 8.5,
+        "spread": 3.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Lean R"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_FL_2026",
+        "state": "FL",
+        "n_raters": 8,
+        "mean_rating": 8.69,
+        "spread": 3.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Lean R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Lean R"
+          }
+        ],
+        "market_prob_D": 0.175,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_ME_2026",
+        "state": "ME",
+        "n_raters": 8,
+        "mean_rating": 0.94,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely D"
+          }
+        ],
+        "market_prob_D": 0.9595,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_NM_2026",
+        "state": "NM",
+        "n_raters": 8,
+        "mean_rating": 0.75,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely D"
+          }
+        ],
+        "market_prob_D": 0.915,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_MN_2026",
+        "state": "MN",
+        "n_raters": 8,
+        "mean_rating": 0.56,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely D"
+          }
+        ],
+        "market_prob_D": 0.945,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_SC_2026",
+        "state": "SC",
+        "n_raters": 8,
+        "mean_rating": 9.44,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely R"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_AL_2026",
+        "state": "AL",
+        "n_raters": 8,
+        "mean_rating": 9.62,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely R"
+          }
+        ],
+        "market_prob_D": 0.0505,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_NY_2026",
+        "state": "NY",
+        "n_raters": 8,
+        "mean_rating": 0.38,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.945,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_PA_2026",
+        "state": "PA",
+        "n_raters": 8,
+        "mean_rating": 0.38,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely D"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_CO_2026",
+        "state": "CO",
+        "n_raters": 8,
+        "mean_rating": 0.19,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.96,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_RI_2026",
+        "state": "RI",
+        "n_raters": 8,
+        "mean_rating": 0.19,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_NE_2026",
+        "state": "NE",
+        "n_raters": 8,
+        "mean_rating": 9.81,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely R"
+          }
+        ],
+        "market_prob_D": 0.085,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_SD_2026",
+        "state": "SD",
+        "n_raters": 8,
+        "mean_rating": 9.81,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid R"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_VT_2026",
+        "state": "VT",
+        "n_raters": 8,
+        "mean_rating": 9.81,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Likely R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid R"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_AR_2026",
+        "state": "AR",
+        "n_raters": 8,
+        "mean_rating": 10.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid R"
+          }
+        ],
+        "market_prob_D": 0.0075,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_CA_2026",
+        "state": "CA",
+        "n_raters": 8,
+        "mean_rating": 0.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.0439,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_CT_2026",
+        "state": "CT",
+        "n_raters": 8,
+        "mean_rating": 0.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.966,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_HI_2026",
+        "state": "HI",
+        "n_raters": 8,
+        "mean_rating": 0.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.971,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_ID_2026",
+        "state": "ID",
+        "n_raters": 8,
+        "mean_rating": 10.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid R"
+          }
+        ],
+        "market_prob_D": 0.0215,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_IL_2026",
+        "state": "IL",
+        "n_raters": 8,
+        "mean_rating": 0.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.955,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_MA_2026",
+        "state": "MA",
+        "n_raters": 8,
+        "mean_rating": 0.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.96,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_MD_2026",
+        "state": "MD",
+        "n_raters": 8,
+        "mean_rating": 0.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.962,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_OK_2026",
+        "state": "OK",
+        "n_raters": 8,
+        "mean_rating": 10.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid R"
+          }
+        ],
+        "market_prob_D": 0.045,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_TN_2026",
+        "state": "TN",
+        "n_raters": 7,
+        "mean_rating": 10.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid R"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      },
+      {
+        "race_id": "GOV_WY_2026",
+        "state": "WY",
+        "n_raters": 8,
+        "mean_rating": 10.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe R"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid R"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid R"
+          }
+        ],
+        "market_prob_D": null,
+        "market_withheld": false
+      }
+    ],
+    "note": "No class model for governors. A national tide carried through partisan lean is a poor description of gubernatorial races, so this panel shows only what others measure."
+  },
   "model_index": {
     "polymarket": {
       "senate_win_prob_D": 0.505,
@@ -5836,7 +9360,7 @@
       "house_income_growth_yoy_latest_month": 0.267
     }
   },
-  "suppressed_cells": 513,
+  "suppressed_cells": 5227,
   "display_note": "A row with display='single' has ONE contributing source and is not a category average. Render it named, never as a consensus.",
   "disclosure_note": "Category averages only for sources whose terms do not permit per-forecaster republication during the cycle. Averages containing any such source are shown only with at least 3 contributors. Full per-forecaster data will be released as a documented archive after the election."
 }

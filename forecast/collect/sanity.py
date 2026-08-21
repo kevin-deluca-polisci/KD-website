@@ -262,14 +262,40 @@ def check_privacy(c: Checks, cycle: int) -> None:
         return
     d = json.loads(p.read_text())
 
-    # A `pvi` field in the Senate table is fine: that is OUR statewide
-    # reconstruction from CC0 returns, published deliberately. What must never
-    # ship is a DISTRICT-level row, because given the national tide a district
-    # margin yields the licensed index exactly: PVI = (margin - tide) / 2.
-    districts = [r for r in (d.get("polling_model") or {}).get("races", [])
-                 if r.get("chamber") == "house" or r.get("district")]
-    c.ok(not districts, "no district-level rows in the published payload",
-         f"{len(districts)} found — district margins reveal the licensed index")
+    # A statewide `pvi` is fine: that is OUR reconstruction from CC0 returns,
+    # published deliberately. What must never ship is a DISTRICT-level index —
+    # the licensed object itself, as opposed to our forecast derived from it.
+    #
+    # This check used to forbid district ROWS entirely, on the reasoning that a
+    # district margin plus the national tide yields the index by division. The
+    # arithmetic is still true; the policy changed on 2026-08-21 to publish our
+    # district margins while never publishing the index. So the check moved to
+    # what the policy now actually forbids, and it walks the WHOLE payload
+    # rather than one table — the previous version only looked inside
+    # polling_model.races, so a district index reaching the page by any other
+    # route would have sailed past it.
+    def walk(node, path="$"):
+        if isinstance(node, dict):
+            if node.get("district") and any(
+                    k in node for k in ("pvi", "pvi_prior", "district_pvi")):
+                yield path
+            for k, v in node.items():
+                yield from walk(v, f"{path}.{k}")
+        elif isinstance(node, list):
+            for i, v in enumerate(node):
+                yield from walk(v, f"{path}[{i}]")
+
+    leaks = list(walk(d))
+    c.ok(not leaks, "no district-level partisan index in the published payload",
+         f"{len(leaks)} found, e.g. {leaks[0] if leaks else ''}")
+
+    # And the district margins we DO publish must still look like forecasts.
+    dist = ((d.get("charts") or {}).get("ladders") or {}).get("house") or {}
+    bad = [s for s in dist.get("seats", [])
+           if not (-100.0 <= s.get("margin", 0) <= 100.0)
+           or not (0.0 <= s.get("win_prob_D", 0) <= 1.0)]
+    c.ok(not bad, "published district margins are in range",
+         f"{len(bad)} out of range")
 
 
 def main(argv=None) -> int:

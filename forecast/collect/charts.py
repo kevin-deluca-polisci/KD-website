@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 from pathlib import Path
 
 TIMELINE_FIELDS = ["snapshot_date", "series", "panel", "unit",
@@ -398,94 +399,155 @@ LADDER_CLIP = 20.0
 LADDER_CAP = 8.0        # display units given to each block of holdover seats
 
 
-def build_ladder(polling: dict | None) -> dict | None:
-    """Seats ordered from most-Democratic to most-Republican, with the seats
-    that decide control marked.
+def build_ladder(races: list[dict] | None, *, chamber: str,
+                 fixed_left: int = 0, fixed_right: int = 0,
+                 total: int = 100, thresholds: tuple = (),
+                 expected: float | None = None,
+                 max_drawn: int = 45,
+                 left_label: str = "", right_label: str = "") -> dict | None:
+    """Seats ordered most-Democratic to most-Republican, majority line marked.
 
-    This is deliberately the DETERMINISTIC picture — every race to its expected
-    winner — and not a simulation. The point it makes is structural: control
-    does not turn on the average race, it turns on one specific race in the
-    middle of the order, and naming that race is more useful to a reader than
-    another probability. The probabilistic answer lives beside it as a number.
+    Deliberately the DETERMINISTIC picture — every race to its expected winner
+    — and not a simulation. The point it makes is structural: control does not
+    turn on the average race, it turns on one specific race in the middle of
+    the order. The probabilistic answer sits beside it as a number.
 
-    Two thresholds, not one. Fifty seats is a tie, and a tie is broken by the
-    vice-president, who is a Republican this cycle — so fifty is the line at
-    which Democrats stop losing and fifty-one is the line at which they start
-    winning. Charts that draw only the fifty-line quietly assume a friendly
-    vice-president.
+    Two axes worth of compression, both forced by the same problem: a chamber
+    has far more safe seats than interesting ones, and drawn to scale the
+    interesting ones vanish.
+
+      x  Seats outside the drawn window are collapsed into a fixed cap at each
+         end, marked with an axis break. For the Senate that cap is the seats
+         not on the ballot; for the House it is the safe seats, of which there
+         are hundreds. Without it, 435 districts across 640 pixels gives each
+         bar one and a half pixels and no room for a single label.
+
+      y  Margins are clipped at +/-LADDER_CLIP. The question "how safe is
+         Wyoming" has no bearing on where the majority lands, and drawing it at
+         true length squashes every race that does. Clipped bars carry a notch
+         so the chart never implies R+41 and R+23 are the same number.
+
+    `thresholds` is a tuple of (seat_number, label). The Senate passes two —
+    fifty is a tie, fifty-one is a majority, and a tie is broken by a
+    vice-president who is a Republican this cycle. A chart drawing only the
+    fifty-line quietly assumes a friendly one.
     """
-    if not polling or not polling.get("races"):
+    if not races:
         return None
-    hold_D = polling.get("holdover_D")
-    if hold_D is None:
+    ordered = sorted(races, key=lambda r: -r["expected_margin_D"])
+    n = len(ordered)
+    if fixed_left + n + fixed_right != total:
         return None
 
-    up = sorted(polling["races"], key=lambda r: -r["expected_margin_D"])
-    n_up = len(up)
-    hold_R = 100 - hold_D - n_up
-    if hold_R < 0:
-        return None
+    # Which slice to draw at full width. Centred on the tightest thresholds we
+    # were given, so the window always contains the seat that decides control
+    # even when the expected result is nowhere near it.
+    focus = [s for s, _ in thresholds] or [total // 2 + 1]
+    lo_seat, hi_seat = min(focus), max(focus)
+    if expected is not None:
+        lo_seat, hi_seat = min(lo_seat, int(expected)), max(hi_seat, int(expected) + 1)
+    span = max_drawn - (hi_seat - lo_seat)
+    first = max(1, lo_seat - fixed_left - span // 2)          # 1-based index into `ordered`
+    last = min(n, first + max_drawn - 1)
+    first = max(1, last - max_drawn + 1)
+    drawn = ordered[first - 1:last]
+
+    hidden_left = fixed_left + (first - 1)
+    hidden_right = fixed_right + (n - last)
+
+    # Clip to the DRAWN window rather than to a fixed cap. The Senate's drawn
+    # window is the whole ballot and spans D+34 to R+41, so it wants the cap;
+    # the House's forty-five districts around the majority line all sit inside
+    # eight points, and drawing them against a twenty-point axis left the chart
+    # four fifths empty with every bar a stub. Rounded up to a multiple of five
+    # so the gridlines stay readable.
+    widest = max((abs(r["expected_margin_D"]) for r in drawn), default=LADDER_CLIP)
+    clip = min(LADDER_CLIP, max(5.0, 5.0 * math.ceil(widest / 5.0)))
 
     inner = 100.0 - 2 * LADDER_CAP
-    slot = inner / n_up
+    slot = inner / max(1, len(drawn))
 
     def X(k: float) -> float:
-        """k counts contested seats from the left, 0 = the block boundary."""
+        """k counts DRAWN seats from the left cap, 0 = the cap boundary."""
         return LADDER_CAP + k * slot
 
+    def seat_x(seat_no: float) -> float:
+        return X(seat_no - hidden_left)
+
     seats, tipping = [], {}
-    for k, r in enumerate(up, start=1):
+    thresh_at = {s: lab for s, lab in thresholds}
+    for k, r in enumerate(drawn, start=1):
         m = r["expected_margin_D"]
-        seat_no = hold_D + k             # Democratic seat count if they win this one
-        clipped = abs(m) > LADDER_CLIP
+        seat_no = hidden_left + k        # D seat count if they win this one
         row = {
-            "state": r["state"], "margin": round(m, 2),
-            "win_prob_D": r["win_prob_D"], "seat_no": seat_no,
+            "label": r.get("label") or r.get("state", ""),
+            "state": r.get("state", ""), "district": r.get("district", ""),
+            "margin": round(m, 2), "win_prob_D": r["win_prob_D"],
+            "seat_no": seat_no,
             "x": round(X(k - 0.5), 2),   # centred in its own slot
-            "y": round(_ladder_y(m), 2),
-            "clipped": clipped,
+            "y": round(_ladder_y(m, clip), 2),
+            "clipped": abs(m) > clip,
             "competitive": bool(r.get("competitive")),
             "lead": "D" if m > 0 else "R",
         }
-        if seat_no in (50, 51):
+        if seat_no in thresh_at:
             row["threshold"] = seat_no
-            tipping[seat_no] = {"state": r["state"], "margin": round(m, 2),
-                                "win_prob_D": r["win_prob_D"],
-                                # How far a uniform national move would have to
-                                # carry this one race to put it on the other
-                                # side. Zero if it is already there.
-                                "swing_needed": round(max(0.0, -m), 2),
-                                # The threshold line sits at the RIGHT edge of
-                                # this seat's slot: winning it is what takes the
-                                # count to fifty.
-                                "x": round(X(k), 2)}
+            tipping[seat_no] = {
+                "seat_no": seat_no, "ordinal": _ordinal(seat_no),
+                "label": row["label"],
+                "state": row["state"], "district": row["district"],
+                "margin": row["margin"], "win_prob_D": r["win_prob_D"],
+                # How far a uniform national move would carry this one race to
+                # the other side. Zero if it is already there.
+                "swing_needed": round(max(0.0, -m), 2),
+                # The line sits at the RIGHT edge of this seat's slot: winning
+                # it is what takes the count to the threshold.
+                "x": round(X(k), 2),
+                "note": thresh_at[seat_no],
+            }
         seats.append(row)
 
-    ticks = [t for t in (-20, -10, 0, 10, 20)]
+    step = 5 if len(drawn) <= 45 else 10
+    ticks = [-clip, -clip / 2, 0, clip / 2, clip]
     return {
-        "clip": LADDER_CLIP,
-        "holdover_D": hold_D, "holdover_R": hold_R, "n_up": n_up,
+        "chamber": chamber, "clip": clip, "total": total,
+        "n_races": n, "n_drawn": len(drawn),
+        "hidden_left": hidden_left, "hidden_right": hidden_right,
+        "left_label": left_label, "right_label": right_label,
         "hold_D_x": [0, LADDER_CAP], "hold_R_x": [100 - LADDER_CAP, 100],
         "slot_w": round(slot, 3),
         # Seat-number ticks, so the compressed ends never leave a reader
         # guessing where they are on the chamber.
-        "seat_ticks": [{"seat_no": s, "x": round(X(s - hold_D - 0.5), 2)}
-                       for s in range(hold_D + 5, hold_D + n_up, 5)],
+        "seat_ticks": [{"seat_no": s, "x": round(seat_x(s - 0.5), 2)}
+                       for s in range(hidden_left + step, hidden_left + len(drawn), step)],
         "seats": seats,
-        "y_zero": round(_ladder_y(0.0), 2),
-        "y_ticks": [{"v": t, "y": round(_ladder_y(t), 2),
-                     "label": ("EVEN" if t == 0 else
-                               (f"D+{t}" if t > 0 else f"R+{abs(t)}")) +
-                              ("+" if abs(t) == LADDER_CLIP else "")}
-                    for t in ticks],
-        "tipping_50": tipping.get(50), "tipping_51": tipping.get(51),
-        "prob_D_50_plus": polling.get("prob_D_50_plus"),
+        "thresholds": [tipping[s] for s, _ in thresholds if s in tipping],
+        "tipping": tipping.get(min((s for s, _ in thresholds), default=0)),
+        # Where the simulation actually lands, as its own line. The ladder is
+        # the deterministic order; this is the answer the model gives when it
+        # is allowed to be uncertain, and the gap between the two is worth
+        # seeing on one chart.
+        "expected": (None if expected is None or not (hidden_left < expected <= hidden_left + len(drawn))
+                     else {"seats": round(expected, 1), "x": round(seat_x(expected), 2)}),
+        "y_zero": round(_ladder_y(0.0, clip), 2),
+        "y_ticks": [{"v": v, "y": round(_ladder_y(v, clip), 2),
+                     "label": ("EVEN" if v == 0 else
+                               (f"D+{v:g}" if v > 0 else f"R+{abs(v):g}")) +
+                              ("+" if abs(v) == clip else "")}
+                    for v in ticks],
     }
 
 
-def _ladder_y(m: float) -> float:
-    m = max(-LADDER_CLIP, min(LADDER_CLIP, m))
-    return 50 - (m / LADDER_CLIP) * 50
+def _ordinal(n: int) -> str:
+    """51 -> '51st'. The naive suffix table gives '51th', which shipped."""
+    if 10 <= n % 100 <= 20:
+        return f"{n}th"
+    return f"{n}{ {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th') }"
+
+
+def _ladder_y(m: float, clip: float = LADDER_CLIP) -> float:
+    m = max(-clip, min(clip, m))
+    return 50 - (m / clip) * 50
 
 
 # --------------------------------------------------------------------------
@@ -623,5 +685,5 @@ def build(derived: Path, snapshot: str) -> dict:
     out = {p: build_panel(rows, p) for p in PANELS}
     out["views"] = VIEWS
     out["ratings"] = {c: build_ratings_spread(derived, snapshot, c)
-                      for c in ("senate", "house")}
+                      for c in ("senate", "house", "governor")}
     return out

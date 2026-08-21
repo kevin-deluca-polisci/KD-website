@@ -31,18 +31,18 @@ WHAT IS PUBLISHABLE HERE, AND THE ONE PLACE IT GETS SUBTLE
 The Senate run is publishable in full: our state lean is reconstructed from
 MEDSL's CC0 returns, so it encodes nobody's proprietary index.
 
-The House run is built from Cook's district PVI, and a published district
-margin gives that index back exactly as PVI = (margin - tide) / 2. So district
-rows stay private, and this module never returns them.
+The House run publishes district MARGINS and never the district INDEX. Those
+are different objects and only the second is someone else's dataset — but be
+honest about the gap between them: given the national tide, PVI =
+(margin - tide) / 2 exactly, so anyone who wants the index can divide. This is
+therefore a licensing judgment about republishing a derived forecast, taken
+deliberately on 2026-08-21, and not a mathematical safeguard. An earlier
+version of this file claimed the second; it was wrong to.
 
-The AGGREGATES are a different question and the answer is that they are safe.
-An expected seat count is a sum over 435 districts; a chamber probability is a
-tail of that sum. Neither is invertible — 435 unknowns, one number, published
-at one tide per day. Nothing about any individual district's lean can be
-recovered from "the model expects 243 seats". The rule that matters is the one
-enforced in code below: this module returns counts and probabilities from the
-House run and NEVER a per-district anything, so there is no path from what it
-writes to what Cook sells.
+What the whitelist below still does is real, and it is why it is a whitelist
+rather than a blacklist: a field added to house_forecast() later cannot reach
+the published tier until someone puts it on the list, which forces the question
+to be asked once per field rather than never.
 """
 from __future__ import annotations
 
@@ -62,7 +62,7 @@ DATA = REPO / "forecast" / "data"
 # than a blacklist so that a field added to house_forecast() later has to be
 # considered before it can be published rather than after.
 HOUSE_PUBLIC_FIELDS = ("n_districts", "expected_D_seats", "D_seats_80pct",
-                       "prob_D_218_plus")
+                       "prob_D_218_plus", "pvi_source", "districts")
 HOUSE_MAJORITY = 218
 
 
@@ -100,7 +100,9 @@ def project(tide: float, pvi: dict, states: list, rows: list,
             "D_seats_80pct": house["D_seats_80pct"],
             "prob_D_majority": house["prob_D_218_plus"],
             "majority_at": HOUSE_MAJORITY,
+            "pvi_source": house.get("pvi_source"),
         }
+        out["districts"] = house.get("districts") or []
     return out
 
 
@@ -165,10 +167,10 @@ def main(argv=None) -> int:
         "majority_at": {"house": HOUSE_MAJORITY, "senate_tie": 50, "senate_majority": 51},
         "projections": projections,
         "publication": "individual",
-        "note": ("House figures are chamber aggregates only. District margins "
-                 "are built from a licensed index and never leave "
-                 "model_private/; a seat count is a sum over 435 districts and "
-                 "cannot be inverted back to any of them."),
+        "note": ("District margins are our own forecast; the district index "
+                 "they are built from is never published. Given the national "
+                 "tide the index is recoverable by division, so that is a "
+                 "licensing position rather than a technical one."),
     }
     p = d / "seat_projections.json"
     p.write_text(json.dumps(out, indent=2))

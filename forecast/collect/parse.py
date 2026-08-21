@@ -255,7 +255,27 @@ def main(argv=None) -> int:
         rows, problems = parse_date(a.cycle, d, registry, only)
         all_problems += [f"{d}  {p}" for p in problems]
         if rows:
-            write_parsed(a.cycle, d, rows, only)
+            # Rows are bucketed by their OWN date, not by the capture date.
+            # A parser may backdate — Race to the WH publishes a trend running
+            # back to February — and those observations belong in February's
+            # file. Writing them all into today's would compress six months of
+            # movement into a single overnight jump.
+            buckets: dict[str, list] = {}
+            for r in rows:
+                buckets.setdefault(r.snapshot_date, []).append(r)
+            for asof, group in sorted(buckets.items()):
+                # A backdated bucket carries only the sources that backfilled.
+                # Writing it without a merge key would replace that date's whole
+                # file, deleting every other source already parsed for it — the
+                # exact failure write_parsed's docstring warns about, arriving
+                # by a route it did not anticipate.
+                key = only if asof == d else {r.source_id for r in group}
+                write_parsed(a.cycle, asof, group, key)
+            if len(buckets) > 1:
+                back = sorted(k for k in buckets if k != d)
+                print(f"  {d}  backfilled {len(rows) - len(buckets.get(d, [])):5d} "
+                      f"rows into {len(back)} earlier date(s): "
+                      f"{back[0]} .. {back[-1]}")
             by_src: dict[str, int] = {}
             for r in rows:
                 by_src[r.source_id] = by_src.get(r.source_id, 0) + 1

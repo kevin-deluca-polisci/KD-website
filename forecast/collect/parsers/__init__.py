@@ -270,8 +270,26 @@ class Context:
         kw.setdefault("chamber", "national")
         kw.setdefault("state", "")
         kw.setdefault("district", "")
+
+        # A row may be dated EARLIER than the capture it came from.
+        #
+        # Some sources publish their own history: Race to the WH ships a trend
+        # sheet running back to February, Wikipedia keeps every revision. Those
+        # observations are not statements about today, and filing them under
+        # today's date would say the professional average moved eight points
+        # overnight when in fact six months of it arrived at once.
+        #
+        # Backdating only. A parser may not date a row into the future, and it
+        # may not date one after the capture it was read from — the raw bytes
+        # are the evidence, and evidence cannot post-date what it proves.
+        asof = kw.pop("snapshot_date", None) or self.snapshot_date
+        if asof > self.snapshot_date:
+            raise ValueError(
+                f"parser dated a row {asof} from a {self.snapshot_date} "
+                f"capture; rows may be backdated, never forward-dated")
+
         r = Row(
-            snapshot_date=self.snapshot_date,
+            snapshot_date=asof,
             source_id=self.source_id,
             category=self.category,
             publication=tier,

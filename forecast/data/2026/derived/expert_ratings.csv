@@ -2102,6 +2102,293 @@ snapshot_date,source_id,race_id,chamber,state,district,value
 2026-08-19,wikipedia,SEN_WY_2026,senate,WY,,fiftyplusone:Safe R
 2026-08-19,wikipedia,SEN_WY_2026,senate,WY,,split_ticket:Safe R
 2026-08-19,wikipedia,SEN_WY_2026,senate,WY,,silver_bulletin:Solid R
+2026-08-19,wikipedia,GOV_AL_2026,governor,AL,,cook:Solid R
+2026-08-19,wikipedia,GOV_AL_2026,governor,AL,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_AL_2026,governor,AL,,sabato:Safe R
+2026-08-19,wikipedia,GOV_AL_2026,governor,AL,,race_to_the_wh:Likely R
+2026-08-19,wikipedia,GOV_AL_2026,governor,AL,,rcp:Solid R
+2026-08-19,wikipedia,GOV_AL_2026,governor,AL,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_AL_2026,governor,AL,,votehub:Likely R
+2026-08-19,wikipedia,GOV_AL_2026,governor,AL,,silver_bulletin:Solid R
+2026-08-19,wikipedia,GOV_AK_2026,governor,AK,,cook:Likely R
+2026-08-19,wikipedia,GOV_AK_2026,governor,AK,,inside_elections:Likely R
+2026-08-19,wikipedia,GOV_AK_2026,governor,AK,,sabato:Likely R
+2026-08-19,wikipedia,GOV_AK_2026,governor,AK,,race_to_the_wh:Toss-up
+2026-08-19,wikipedia,GOV_AK_2026,governor,AK,,rcp:Toss-up
+2026-08-19,wikipedia,GOV_AK_2026,governor,AK,,fox_power_rankings:Lean R
+2026-08-19,wikipedia,GOV_AK_2026,governor,AK,,votehub:Toss-up
+2026-08-19,wikipedia,GOV_AK_2026,governor,AK,,silver_bulletin:Lean D
+2026-08-19,wikipedia,GOV_AZ_2026,governor,AZ,,cook:Lean D
+2026-08-19,wikipedia,GOV_AZ_2026,governor,AZ,,inside_elections:Toss-up
+2026-08-19,wikipedia,GOV_AZ_2026,governor,AZ,,sabato:Lean D
+2026-08-19,wikipedia,GOV_AZ_2026,governor,AZ,,race_to_the_wh:Lean D
+2026-08-19,wikipedia,GOV_AZ_2026,governor,AZ,,rcp:Lean D
+2026-08-19,wikipedia,GOV_AZ_2026,governor,AZ,,fox_power_rankings:Lean D
+2026-08-19,wikipedia,GOV_AZ_2026,governor,AZ,,votehub:Likely D
+2026-08-19,wikipedia,GOV_AZ_2026,governor,AZ,,silver_bulletin:Likely D
+2026-08-19,wikipedia,GOV_AR_2026,governor,AR,,cook:Solid R
+2026-08-19,wikipedia,GOV_AR_2026,governor,AR,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_AR_2026,governor,AR,,sabato:Safe R
+2026-08-19,wikipedia,GOV_AR_2026,governor,AR,,race_to_the_wh:Safe R
+2026-08-19,wikipedia,GOV_AR_2026,governor,AR,,rcp:Solid R
+2026-08-19,wikipedia,GOV_AR_2026,governor,AR,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_AR_2026,governor,AR,,votehub:Solid R
+2026-08-19,wikipedia,GOV_AR_2026,governor,AR,,silver_bulletin:Solid R
+2026-08-19,wikipedia,GOV_CA_2026,governor,CA,,cook:Solid D
+2026-08-19,wikipedia,GOV_CA_2026,governor,CA,,inside_elections:Solid D
+2026-08-19,wikipedia,GOV_CA_2026,governor,CA,,sabato:Safe D
+2026-08-19,wikipedia,GOV_CA_2026,governor,CA,,race_to_the_wh:Safe D
+2026-08-19,wikipedia,GOV_CA_2026,governor,CA,,rcp:Solid D
+2026-08-19,wikipedia,GOV_CA_2026,governor,CA,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_CA_2026,governor,CA,,votehub:Solid D
+2026-08-19,wikipedia,GOV_CA_2026,governor,CA,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_CO_2026,governor,CO,,cook:Solid D
+2026-08-19,wikipedia,GOV_CO_2026,governor,CO,,inside_elections:Solid D
+2026-08-19,wikipedia,GOV_CO_2026,governor,CO,,sabato:Safe D
+2026-08-19,wikipedia,GOV_CO_2026,governor,CO,,race_to_the_wh:Likely D
+2026-08-19,wikipedia,GOV_CO_2026,governor,CO,,rcp:Solid D
+2026-08-19,wikipedia,GOV_CO_2026,governor,CO,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_CO_2026,governor,CO,,votehub:Solid D
+2026-08-19,wikipedia,GOV_CO_2026,governor,CO,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_CT_2026,governor,CT,,cook:Solid D
+2026-08-19,wikipedia,GOV_CT_2026,governor,CT,,inside_elections:Solid D
+2026-08-19,wikipedia,GOV_CT_2026,governor,CT,,sabato:Safe D
+2026-08-19,wikipedia,GOV_CT_2026,governor,CT,,race_to_the_wh:Safe D
+2026-08-19,wikipedia,GOV_CT_2026,governor,CT,,rcp:Solid D
+2026-08-19,wikipedia,GOV_CT_2026,governor,CT,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_CT_2026,governor,CT,,votehub:Solid D
+2026-08-19,wikipedia,GOV_CT_2026,governor,CT,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_FL_2026,governor,FL,,cook:Solid R
+2026-08-19,wikipedia,GOV_FL_2026,governor,FL,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_FL_2026,governor,FL,,sabato:Likely R
+2026-08-19,wikipedia,GOV_FL_2026,governor,FL,,race_to_the_wh:Lean R
+2026-08-19,wikipedia,GOV_FL_2026,governor,FL,,rcp:Likely R
+2026-08-19,wikipedia,GOV_FL_2026,governor,FL,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_FL_2026,governor,FL,,votehub:Lean R
+2026-08-19,wikipedia,GOV_FL_2026,governor,FL,,silver_bulletin:Likely R
+2026-08-19,wikipedia,GOV_GA_2026,governor,GA,,cook:Toss-up
+2026-08-19,wikipedia,GOV_GA_2026,governor,GA,,inside_elections:Toss-up
+2026-08-19,wikipedia,GOV_GA_2026,governor,GA,,sabato:Toss-up
+2026-08-19,wikipedia,GOV_GA_2026,governor,GA,,race_to_the_wh:Toss-up
+2026-08-19,wikipedia,GOV_GA_2026,governor,GA,,rcp:Toss-up
+2026-08-19,wikipedia,GOV_GA_2026,governor,GA,,fox_power_rankings:Toss-up
+2026-08-19,wikipedia,GOV_GA_2026,governor,GA,,votehub:Tilt D
+2026-08-19,wikipedia,GOV_GA_2026,governor,GA,,silver_bulletin:Lean D
+2026-08-19,wikipedia,GOV_HI_2026,governor,HI,,cook:Solid D
+2026-08-19,wikipedia,GOV_HI_2026,governor,HI,,inside_elections:Solid D
+2026-08-19,wikipedia,GOV_HI_2026,governor,HI,,sabato:Safe D
+2026-08-19,wikipedia,GOV_HI_2026,governor,HI,,race_to_the_wh:Safe D
+2026-08-19,wikipedia,GOV_HI_2026,governor,HI,,rcp:Solid D
+2026-08-19,wikipedia,GOV_HI_2026,governor,HI,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_HI_2026,governor,HI,,votehub:Solid D
+2026-08-19,wikipedia,GOV_HI_2026,governor,HI,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_ID_2026,governor,ID,,cook:Solid R
+2026-08-19,wikipedia,GOV_ID_2026,governor,ID,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_ID_2026,governor,ID,,sabato:Safe R
+2026-08-19,wikipedia,GOV_ID_2026,governor,ID,,race_to_the_wh:Safe R
+2026-08-19,wikipedia,GOV_ID_2026,governor,ID,,rcp:Solid R
+2026-08-19,wikipedia,GOV_ID_2026,governor,ID,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_ID_2026,governor,ID,,votehub:Solid R
+2026-08-19,wikipedia,GOV_ID_2026,governor,ID,,silver_bulletin:Solid R
+2026-08-19,wikipedia,GOV_IL_2026,governor,IL,,cook:Solid D
+2026-08-19,wikipedia,GOV_IL_2026,governor,IL,,inside_elections:Solid D
+2026-08-19,wikipedia,GOV_IL_2026,governor,IL,,sabato:Safe D
+2026-08-19,wikipedia,GOV_IL_2026,governor,IL,,race_to_the_wh:Safe D
+2026-08-19,wikipedia,GOV_IL_2026,governor,IL,,rcp:Solid D
+2026-08-19,wikipedia,GOV_IL_2026,governor,IL,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_IL_2026,governor,IL,,votehub:Solid D
+2026-08-19,wikipedia,GOV_IL_2026,governor,IL,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_IA_2026,governor,IA,,cook:Toss-up
+2026-08-19,wikipedia,GOV_IA_2026,governor,IA,,inside_elections:Tilt D
+2026-08-19,wikipedia,GOV_IA_2026,governor,IA,,sabato:Toss-up
+2026-08-19,wikipedia,GOV_IA_2026,governor,IA,,race_to_the_wh:Lean D
+2026-08-19,wikipedia,GOV_IA_2026,governor,IA,,rcp:Toss-up
+2026-08-19,wikipedia,GOV_IA_2026,governor,IA,,fox_power_rankings:Lean D
+2026-08-19,wikipedia,GOV_IA_2026,governor,IA,,votehub:Tilt D
+2026-08-19,wikipedia,GOV_IA_2026,governor,IA,,silver_bulletin:Likely D
+2026-08-19,wikipedia,GOV_KS_2026,governor,KS,,cook:Lean R
+2026-08-19,wikipedia,GOV_KS_2026,governor,KS,,inside_elections:Tilt R
+2026-08-19,wikipedia,GOV_KS_2026,governor,KS,,sabato:Lean R
+2026-08-19,wikipedia,GOV_KS_2026,governor,KS,,race_to_the_wh:Tilt R
+2026-08-19,wikipedia,GOV_KS_2026,governor,KS,,rcp:Lean R
+2026-08-19,wikipedia,GOV_KS_2026,governor,KS,,fox_power_rankings:Lean R
+2026-08-19,wikipedia,GOV_KS_2026,governor,KS,,votehub:Lean R
+2026-08-19,wikipedia,GOV_KS_2026,governor,KS,,silver_bulletin:Toss-up
+2026-08-19,wikipedia,GOV_ME_2026,governor,ME,,cook:Solid D
+2026-08-19,wikipedia,GOV_ME_2026,governor,ME,,inside_elections:Likely D
+2026-08-19,wikipedia,GOV_ME_2026,governor,ME,,sabato:Likely D
+2026-08-19,wikipedia,GOV_ME_2026,governor,ME,,race_to_the_wh:Likely D
+2026-08-19,wikipedia,GOV_ME_2026,governor,ME,,rcp:Likely D
+2026-08-19,wikipedia,GOV_ME_2026,governor,ME,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_ME_2026,governor,ME,,votehub:Likely D
+2026-08-19,wikipedia,GOV_ME_2026,governor,ME,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_MD_2026,governor,MD,,cook:Solid D
+2026-08-19,wikipedia,GOV_MD_2026,governor,MD,,inside_elections:Solid D
+2026-08-19,wikipedia,GOV_MD_2026,governor,MD,,sabato:Safe D
+2026-08-19,wikipedia,GOV_MD_2026,governor,MD,,race_to_the_wh:Safe D
+2026-08-19,wikipedia,GOV_MD_2026,governor,MD,,rcp:Solid D
+2026-08-19,wikipedia,GOV_MD_2026,governor,MD,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_MD_2026,governor,MD,,votehub:Solid D
+2026-08-19,wikipedia,GOV_MD_2026,governor,MD,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_MA_2026,governor,MA,,cook:Solid D
+2026-08-19,wikipedia,GOV_MA_2026,governor,MA,,inside_elections:Solid D
+2026-08-19,wikipedia,GOV_MA_2026,governor,MA,,sabato:Safe D
+2026-08-19,wikipedia,GOV_MA_2026,governor,MA,,race_to_the_wh:Safe D
+2026-08-19,wikipedia,GOV_MA_2026,governor,MA,,rcp:Solid D
+2026-08-19,wikipedia,GOV_MA_2026,governor,MA,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_MA_2026,governor,MA,,votehub:Solid D
+2026-08-19,wikipedia,GOV_MA_2026,governor,MA,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_MI_2026,governor,MI,,cook:Lean D
+2026-08-19,wikipedia,GOV_MI_2026,governor,MI,,inside_elections:Tilt D
+2026-08-19,wikipedia,GOV_MI_2026,governor,MI,,sabato:Lean D
+2026-08-19,wikipedia,GOV_MI_2026,governor,MI,,race_to_the_wh:Lean D
+2026-08-19,wikipedia,GOV_MI_2026,governor,MI,,rcp:Lean D
+2026-08-19,wikipedia,GOV_MI_2026,governor,MI,,fox_power_rankings:Lean D
+2026-08-19,wikipedia,GOV_MI_2026,governor,MI,,votehub:Lean D
+2026-08-19,wikipedia,GOV_MI_2026,governor,MI,,silver_bulletin:Likely D
+2026-08-19,wikipedia,GOV_MN_2026,governor,MN,,cook:Solid D
+2026-08-19,wikipedia,GOV_MN_2026,governor,MN,,inside_elections:Likely D
+2026-08-19,wikipedia,GOV_MN_2026,governor,MN,,sabato:Safe D
+2026-08-19,wikipedia,GOV_MN_2026,governor,MN,,race_to_the_wh:Safe D
+2026-08-19,wikipedia,GOV_MN_2026,governor,MN,,rcp:Solid D
+2026-08-19,wikipedia,GOV_MN_2026,governor,MN,,fox_power_rankings:Likely D
+2026-08-19,wikipedia,GOV_MN_2026,governor,MN,,votehub:Likely D
+2026-08-19,wikipedia,GOV_MN_2026,governor,MN,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_NE_2026,governor,NE,,cook:Solid R
+2026-08-19,wikipedia,GOV_NE_2026,governor,NE,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_NE_2026,governor,NE,,sabato:Safe R
+2026-08-19,wikipedia,GOV_NE_2026,governor,NE,,race_to_the_wh:Safe R
+2026-08-19,wikipedia,GOV_NE_2026,governor,NE,,rcp:Solid R
+2026-08-19,wikipedia,GOV_NE_2026,governor,NE,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_NE_2026,governor,NE,,votehub:Likely R
+2026-08-19,wikipedia,GOV_NE_2026,governor,NE,,silver_bulletin:Solid R
+2026-08-19,wikipedia,GOV_NV_2026,governor,NV,,cook:Toss-up
+2026-08-19,wikipedia,GOV_NV_2026,governor,NV,,inside_elections:Tilt R
+2026-08-19,wikipedia,GOV_NV_2026,governor,NV,,sabato:Lean R
+2026-08-19,wikipedia,GOV_NV_2026,governor,NV,,race_to_the_wh:Lean R
+2026-08-19,wikipedia,GOV_NV_2026,governor,NV,,rcp:Toss-up
+2026-08-19,wikipedia,GOV_NV_2026,governor,NV,,fox_power_rankings:Toss-up
+2026-08-19,wikipedia,GOV_NV_2026,governor,NV,,votehub:Tilt R
+2026-08-19,wikipedia,GOV_NV_2026,governor,NV,,silver_bulletin:Lean R
+2026-08-19,wikipedia,GOV_NH_2026,governor,NH,,cook:Likely R
+2026-08-19,wikipedia,GOV_NH_2026,governor,NH,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_NH_2026,governor,NH,,sabato:Likely R
+2026-08-19,wikipedia,GOV_NH_2026,governor,NH,,race_to_the_wh:Lean R
+2026-08-19,wikipedia,GOV_NH_2026,governor,NH,,rcp:Lean R
+2026-08-19,wikipedia,GOV_NH_2026,governor,NH,,fox_power_rankings:Likely R
+2026-08-19,wikipedia,GOV_NH_2026,governor,NH,,votehub:Lean R
+2026-08-19,wikipedia,GOV_NH_2026,governor,NH,,silver_bulletin:Likely R
+2026-08-19,wikipedia,GOV_NM_2026,governor,NM,,cook:Solid D
+2026-08-19,wikipedia,GOV_NM_2026,governor,NM,,inside_elections:Likely D
+2026-08-19,wikipedia,GOV_NM_2026,governor,NM,,sabato:Safe D
+2026-08-19,wikipedia,GOV_NM_2026,governor,NM,,race_to_the_wh:Likely D
+2026-08-19,wikipedia,GOV_NM_2026,governor,NM,,rcp:Likely D
+2026-08-19,wikipedia,GOV_NM_2026,governor,NM,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_NM_2026,governor,NM,,votehub:Likely D
+2026-08-19,wikipedia,GOV_NM_2026,governor,NM,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_NY_2026,governor,NY,,cook:Solid D
+2026-08-19,wikipedia,GOV_NY_2026,governor,NY,,inside_elections:Likely D
+2026-08-19,wikipedia,GOV_NY_2026,governor,NY,,sabato:Safe D
+2026-08-19,wikipedia,GOV_NY_2026,governor,NY,,race_to_the_wh:Likely D
+2026-08-19,wikipedia,GOV_NY_2026,governor,NY,,rcp:Solid D
+2026-08-19,wikipedia,GOV_NY_2026,governor,NY,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_NY_2026,governor,NY,,votehub:Solid D
+2026-08-19,wikipedia,GOV_NY_2026,governor,NY,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_OH_2026,governor,OH,,cook:Toss-up
+2026-08-19,wikipedia,GOV_OH_2026,governor,OH,,inside_elections:Lean R
+2026-08-19,wikipedia,GOV_OH_2026,governor,OH,,sabato:Lean R
+2026-08-19,wikipedia,GOV_OH_2026,governor,OH,,race_to_the_wh:Toss-up
+2026-08-19,wikipedia,GOV_OH_2026,governor,OH,,rcp:Toss-up
+2026-08-19,wikipedia,GOV_OH_2026,governor,OH,,fox_power_rankings:Toss-up
+2026-08-19,wikipedia,GOV_OH_2026,governor,OH,,votehub:Toss-up
+2026-08-19,wikipedia,GOV_OH_2026,governor,OH,,silver_bulletin:Toss-up
+2026-08-19,wikipedia,GOV_OK_2026,governor,OK,,cook:Solid R
+2026-08-19,wikipedia,GOV_OK_2026,governor,OK,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_OK_2026,governor,OK,,sabato:Safe R
+2026-08-19,wikipedia,GOV_OK_2026,governor,OK,,race_to_the_wh:Safe R
+2026-08-19,wikipedia,GOV_OK_2026,governor,OK,,rcp:Solid R
+2026-08-19,wikipedia,GOV_OK_2026,governor,OK,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_OK_2026,governor,OK,,votehub:Solid R
+2026-08-19,wikipedia,GOV_OK_2026,governor,OK,,silver_bulletin:Solid R
+2026-08-19,wikipedia,GOV_OR_2026,governor,OR,,cook:Likely D
+2026-08-19,wikipedia,GOV_OR_2026,governor,OR,,inside_elections:Lean D
+2026-08-19,wikipedia,GOV_OR_2026,governor,OR,,sabato:Likely D
+2026-08-19,wikipedia,GOV_OR_2026,governor,OR,,race_to_the_wh:Tilt D
+2026-08-19,wikipedia,GOV_OR_2026,governor,OR,,rcp:Solid D
+2026-08-19,wikipedia,GOV_OR_2026,governor,OR,,fox_power_rankings:Likely D
+2026-08-19,wikipedia,GOV_OR_2026,governor,OR,,votehub:Likely D
+2026-08-19,wikipedia,GOV_OR_2026,governor,OR,,silver_bulletin:Likely D
+2026-08-19,wikipedia,GOV_PA_2026,governor,PA,,cook:Solid D
+2026-08-19,wikipedia,GOV_PA_2026,governor,PA,,inside_elections:Solid D
+2026-08-19,wikipedia,GOV_PA_2026,governor,PA,,sabato:Likely D
+2026-08-19,wikipedia,GOV_PA_2026,governor,PA,,race_to_the_wh:Safe D
+2026-08-19,wikipedia,GOV_PA_2026,governor,PA,,rcp:Solid D
+2026-08-19,wikipedia,GOV_PA_2026,governor,PA,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_PA_2026,governor,PA,,votehub:Likely D
+2026-08-19,wikipedia,GOV_PA_2026,governor,PA,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_RI_2026,governor,RI,,cook:Solid D
+2026-08-19,wikipedia,GOV_RI_2026,governor,RI,,inside_elections:Solid D
+2026-08-19,wikipedia,GOV_RI_2026,governor,RI,,sabato:Safe D
+2026-08-19,wikipedia,GOV_RI_2026,governor,RI,,race_to_the_wh:Likely D
+2026-08-19,wikipedia,GOV_RI_2026,governor,RI,,rcp:Solid D
+2026-08-19,wikipedia,GOV_RI_2026,governor,RI,,fox_power_rankings:Solid D
+2026-08-19,wikipedia,GOV_RI_2026,governor,RI,,votehub:Solid D
+2026-08-19,wikipedia,GOV_RI_2026,governor,RI,,silver_bulletin:Solid D
+2026-08-19,wikipedia,GOV_SC_2026,governor,SC,,cook:Solid R
+2026-08-19,wikipedia,GOV_SC_2026,governor,SC,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_SC_2026,governor,SC,,sabato:Safe R
+2026-08-19,wikipedia,GOV_SC_2026,governor,SC,,race_to_the_wh:Likely R
+2026-08-19,wikipedia,GOV_SC_2026,governor,SC,,rcp:Likely R
+2026-08-19,wikipedia,GOV_SC_2026,governor,SC,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_SC_2026,governor,SC,,votehub:Likely R
+2026-08-19,wikipedia,GOV_SC_2026,governor,SC,,silver_bulletin:Solid R
+2026-08-19,wikipedia,GOV_SD_2026,governor,SD,,cook:Solid R
+2026-08-19,wikipedia,GOV_SD_2026,governor,SD,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_SD_2026,governor,SD,,sabato:Safe R
+2026-08-19,wikipedia,GOV_SD_2026,governor,SD,,race_to_the_wh:Likely R
+2026-08-19,wikipedia,GOV_SD_2026,governor,SD,,rcp:Solid R
+2026-08-19,wikipedia,GOV_SD_2026,governor,SD,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_SD_2026,governor,SD,,votehub:Solid R
+2026-08-19,wikipedia,GOV_SD_2026,governor,SD,,silver_bulletin:Solid R
+2026-08-19,wikipedia,GOV_TN_2026,governor,TN,,cook:Solid R
+2026-08-19,wikipedia,GOV_TN_2026,governor,TN,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_TN_2026,governor,TN,,sabato:Safe R
+2026-08-19,wikipedia,GOV_TN_2026,governor,TN,,race_to_the_wh:Safe R
+2026-08-19,wikipedia,GOV_TN_2026,governor,TN,,rcp:Solid R
+2026-08-19,wikipedia,GOV_TN_2026,governor,TN,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_TN_2026,governor,TN,,votehub:Solid R
+2026-08-19,wikipedia,GOV_TX_2026,governor,TX,,cook:Solid R
+2026-08-19,wikipedia,GOV_TX_2026,governor,TX,,inside_elections:Likely R
+2026-08-19,wikipedia,GOV_TX_2026,governor,TX,,sabato:Safe R
+2026-08-19,wikipedia,GOV_TX_2026,governor,TX,,race_to_the_wh:Lean R
+2026-08-19,wikipedia,GOV_TX_2026,governor,TX,,rcp:Likely R
+2026-08-19,wikipedia,GOV_TX_2026,governor,TX,,fox_power_rankings:Likely R
+2026-08-19,wikipedia,GOV_TX_2026,governor,TX,,votehub:Lean R
+2026-08-19,wikipedia,GOV_TX_2026,governor,TX,,silver_bulletin:Likely R
+2026-08-19,wikipedia,GOV_VT_2026,governor,VT,,cook:Solid R
+2026-08-19,wikipedia,GOV_VT_2026,governor,VT,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_VT_2026,governor,VT,,sabato:Safe R
+2026-08-19,wikipedia,GOV_VT_2026,governor,VT,,race_to_the_wh:Safe R
+2026-08-19,wikipedia,GOV_VT_2026,governor,VT,,rcp:Solid R
+2026-08-19,wikipedia,GOV_VT_2026,governor,VT,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_VT_2026,governor,VT,,votehub:Solid R
+2026-08-19,wikipedia,GOV_VT_2026,governor,VT,,silver_bulletin:Likely R
+2026-08-19,wikipedia,GOV_WI_2026,governor,WI,,cook:Toss-up
+2026-08-19,wikipedia,GOV_WI_2026,governor,WI,,inside_elections:Toss-up
+2026-08-19,wikipedia,GOV_WI_2026,governor,WI,,sabato:Lean D
+2026-08-19,wikipedia,GOV_WI_2026,governor,WI,,race_to_the_wh:Toss-up
+2026-08-19,wikipedia,GOV_WI_2026,governor,WI,,rcp:Toss-up
+2026-08-19,wikipedia,GOV_WI_2026,governor,WI,,fox_power_rankings:Toss-up
+2026-08-19,wikipedia,GOV_WI_2026,governor,WI,,votehub:Tilt D
+2026-08-19,wikipedia,GOV_WI_2026,governor,WI,,silver_bulletin:Toss-up
+2026-08-19,wikipedia,GOV_WY_2026,governor,WY,,cook:Solid R
+2026-08-19,wikipedia,GOV_WY_2026,governor,WY,,inside_elections:Solid R
+2026-08-19,wikipedia,GOV_WY_2026,governor,WY,,sabato:Safe R
+2026-08-19,wikipedia,GOV_WY_2026,governor,WY,,race_to_the_wh:Safe R
+2026-08-19,wikipedia,GOV_WY_2026,governor,WY,,rcp:Solid R
+2026-08-19,wikipedia,GOV_WY_2026,governor,WY,,fox_power_rankings:Solid R
+2026-08-19,wikipedia,GOV_WY_2026,governor,WY,,votehub:Solid R
+2026-08-19,wikipedia,GOV_WY_2026,governor,WY,,silver_bulletin:Solid R
 2026-08-20,wikipedia,HOU_AL_02_2026,house,AL,02,cook:Likely R
 2026-08-20,wikipedia,HOU_AL_02_2026,house,AL,02,inside_elections:Likely R
 2026-08-20,wikipedia,HOU_AL_02_2026,house,AL,02,sabato:Likely R
@@ -4205,3 +4492,290 @@ snapshot_date,source_id,race_id,chamber,state,district,value
 2026-08-20,wikipedia,SEN_WY_2026,senate,WY,,fiftyplusone:Safe R
 2026-08-20,wikipedia,SEN_WY_2026,senate,WY,,split_ticket:Safe R
 2026-08-20,wikipedia,SEN_WY_2026,senate,WY,,silver_bulletin:Solid R
+2026-08-20,wikipedia,GOV_AL_2026,governor,AL,,cook:Solid R
+2026-08-20,wikipedia,GOV_AL_2026,governor,AL,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_AL_2026,governor,AL,,sabato:Safe R
+2026-08-20,wikipedia,GOV_AL_2026,governor,AL,,race_to_the_wh:Likely R
+2026-08-20,wikipedia,GOV_AL_2026,governor,AL,,rcp:Solid R
+2026-08-20,wikipedia,GOV_AL_2026,governor,AL,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_AL_2026,governor,AL,,votehub:Likely R
+2026-08-20,wikipedia,GOV_AL_2026,governor,AL,,silver_bulletin:Solid R
+2026-08-20,wikipedia,GOV_AK_2026,governor,AK,,cook:Likely R
+2026-08-20,wikipedia,GOV_AK_2026,governor,AK,,inside_elections:Likely R
+2026-08-20,wikipedia,GOV_AK_2026,governor,AK,,sabato:Likely R
+2026-08-20,wikipedia,GOV_AK_2026,governor,AK,,race_to_the_wh:Toss-up
+2026-08-20,wikipedia,GOV_AK_2026,governor,AK,,rcp:Toss-up
+2026-08-20,wikipedia,GOV_AK_2026,governor,AK,,fox_power_rankings:Lean R
+2026-08-20,wikipedia,GOV_AK_2026,governor,AK,,votehub:Toss-up
+2026-08-20,wikipedia,GOV_AK_2026,governor,AK,,silver_bulletin:Lean D
+2026-08-20,wikipedia,GOV_AZ_2026,governor,AZ,,cook:Lean D
+2026-08-20,wikipedia,GOV_AZ_2026,governor,AZ,,inside_elections:Toss-up
+2026-08-20,wikipedia,GOV_AZ_2026,governor,AZ,,sabato:Lean D
+2026-08-20,wikipedia,GOV_AZ_2026,governor,AZ,,race_to_the_wh:Lean D
+2026-08-20,wikipedia,GOV_AZ_2026,governor,AZ,,rcp:Lean D
+2026-08-20,wikipedia,GOV_AZ_2026,governor,AZ,,fox_power_rankings:Lean D
+2026-08-20,wikipedia,GOV_AZ_2026,governor,AZ,,votehub:Likely D
+2026-08-20,wikipedia,GOV_AZ_2026,governor,AZ,,silver_bulletin:Likely D
+2026-08-20,wikipedia,GOV_AR_2026,governor,AR,,cook:Solid R
+2026-08-20,wikipedia,GOV_AR_2026,governor,AR,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_AR_2026,governor,AR,,sabato:Safe R
+2026-08-20,wikipedia,GOV_AR_2026,governor,AR,,race_to_the_wh:Safe R
+2026-08-20,wikipedia,GOV_AR_2026,governor,AR,,rcp:Solid R
+2026-08-20,wikipedia,GOV_AR_2026,governor,AR,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_AR_2026,governor,AR,,votehub:Solid R
+2026-08-20,wikipedia,GOV_AR_2026,governor,AR,,silver_bulletin:Solid R
+2026-08-20,wikipedia,GOV_CA_2026,governor,CA,,cook:Solid D
+2026-08-20,wikipedia,GOV_CA_2026,governor,CA,,inside_elections:Solid D
+2026-08-20,wikipedia,GOV_CA_2026,governor,CA,,sabato:Safe D
+2026-08-20,wikipedia,GOV_CA_2026,governor,CA,,race_to_the_wh:Safe D
+2026-08-20,wikipedia,GOV_CA_2026,governor,CA,,rcp:Solid D
+2026-08-20,wikipedia,GOV_CA_2026,governor,CA,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_CA_2026,governor,CA,,votehub:Solid D
+2026-08-20,wikipedia,GOV_CA_2026,governor,CA,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_CO_2026,governor,CO,,cook:Solid D
+2026-08-20,wikipedia,GOV_CO_2026,governor,CO,,inside_elections:Solid D
+2026-08-20,wikipedia,GOV_CO_2026,governor,CO,,sabato:Safe D
+2026-08-20,wikipedia,GOV_CO_2026,governor,CO,,race_to_the_wh:Likely D
+2026-08-20,wikipedia,GOV_CO_2026,governor,CO,,rcp:Solid D
+2026-08-20,wikipedia,GOV_CO_2026,governor,CO,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_CO_2026,governor,CO,,votehub:Solid D
+2026-08-20,wikipedia,GOV_CO_2026,governor,CO,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_CT_2026,governor,CT,,cook:Solid D
+2026-08-20,wikipedia,GOV_CT_2026,governor,CT,,inside_elections:Solid D
+2026-08-20,wikipedia,GOV_CT_2026,governor,CT,,sabato:Safe D
+2026-08-20,wikipedia,GOV_CT_2026,governor,CT,,race_to_the_wh:Safe D
+2026-08-20,wikipedia,GOV_CT_2026,governor,CT,,rcp:Solid D
+2026-08-20,wikipedia,GOV_CT_2026,governor,CT,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_CT_2026,governor,CT,,votehub:Solid D
+2026-08-20,wikipedia,GOV_CT_2026,governor,CT,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_FL_2026,governor,FL,,cook:Solid R
+2026-08-20,wikipedia,GOV_FL_2026,governor,FL,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_FL_2026,governor,FL,,sabato:Likely R
+2026-08-20,wikipedia,GOV_FL_2026,governor,FL,,race_to_the_wh:Lean R
+2026-08-20,wikipedia,GOV_FL_2026,governor,FL,,rcp:Likely R
+2026-08-20,wikipedia,GOV_FL_2026,governor,FL,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_FL_2026,governor,FL,,votehub:Lean R
+2026-08-20,wikipedia,GOV_FL_2026,governor,FL,,silver_bulletin:Likely R
+2026-08-20,wikipedia,GOV_GA_2026,governor,GA,,cook:Toss-up
+2026-08-20,wikipedia,GOV_GA_2026,governor,GA,,inside_elections:Toss-up
+2026-08-20,wikipedia,GOV_GA_2026,governor,GA,,sabato:Toss-up
+2026-08-20,wikipedia,GOV_GA_2026,governor,GA,,race_to_the_wh:Toss-up
+2026-08-20,wikipedia,GOV_GA_2026,governor,GA,,rcp:Toss-up
+2026-08-20,wikipedia,GOV_GA_2026,governor,GA,,fox_power_rankings:Toss-up
+2026-08-20,wikipedia,GOV_GA_2026,governor,GA,,votehub:Tilt D
+2026-08-20,wikipedia,GOV_GA_2026,governor,GA,,silver_bulletin:Lean D
+2026-08-20,wikipedia,GOV_HI_2026,governor,HI,,cook:Solid D
+2026-08-20,wikipedia,GOV_HI_2026,governor,HI,,inside_elections:Solid D
+2026-08-20,wikipedia,GOV_HI_2026,governor,HI,,sabato:Safe D
+2026-08-20,wikipedia,GOV_HI_2026,governor,HI,,race_to_the_wh:Safe D
+2026-08-20,wikipedia,GOV_HI_2026,governor,HI,,rcp:Solid D
+2026-08-20,wikipedia,GOV_HI_2026,governor,HI,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_HI_2026,governor,HI,,votehub:Solid D
+2026-08-20,wikipedia,GOV_HI_2026,governor,HI,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_ID_2026,governor,ID,,cook:Solid R
+2026-08-20,wikipedia,GOV_ID_2026,governor,ID,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_ID_2026,governor,ID,,sabato:Safe R
+2026-08-20,wikipedia,GOV_ID_2026,governor,ID,,race_to_the_wh:Safe R
+2026-08-20,wikipedia,GOV_ID_2026,governor,ID,,rcp:Solid R
+2026-08-20,wikipedia,GOV_ID_2026,governor,ID,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_ID_2026,governor,ID,,votehub:Solid R
+2026-08-20,wikipedia,GOV_ID_2026,governor,ID,,silver_bulletin:Solid R
+2026-08-20,wikipedia,GOV_IL_2026,governor,IL,,cook:Solid D
+2026-08-20,wikipedia,GOV_IL_2026,governor,IL,,inside_elections:Solid D
+2026-08-20,wikipedia,GOV_IL_2026,governor,IL,,sabato:Safe D
+2026-08-20,wikipedia,GOV_IL_2026,governor,IL,,race_to_the_wh:Safe D
+2026-08-20,wikipedia,GOV_IL_2026,governor,IL,,rcp:Solid D
+2026-08-20,wikipedia,GOV_IL_2026,governor,IL,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_IL_2026,governor,IL,,votehub:Solid D
+2026-08-20,wikipedia,GOV_IL_2026,governor,IL,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_IA_2026,governor,IA,,cook:Toss-up
+2026-08-20,wikipedia,GOV_IA_2026,governor,IA,,inside_elections:Tilt D
+2026-08-20,wikipedia,GOV_IA_2026,governor,IA,,sabato:Toss-up
+2026-08-20,wikipedia,GOV_IA_2026,governor,IA,,race_to_the_wh:Lean D
+2026-08-20,wikipedia,GOV_IA_2026,governor,IA,,rcp:Toss-up
+2026-08-20,wikipedia,GOV_IA_2026,governor,IA,,fox_power_rankings:Lean D
+2026-08-20,wikipedia,GOV_IA_2026,governor,IA,,votehub:Tilt D
+2026-08-20,wikipedia,GOV_IA_2026,governor,IA,,silver_bulletin:Likely D
+2026-08-20,wikipedia,GOV_KS_2026,governor,KS,,cook:Lean R
+2026-08-20,wikipedia,GOV_KS_2026,governor,KS,,inside_elections:Tilt R
+2026-08-20,wikipedia,GOV_KS_2026,governor,KS,,sabato:Lean R
+2026-08-20,wikipedia,GOV_KS_2026,governor,KS,,race_to_the_wh:Tilt R
+2026-08-20,wikipedia,GOV_KS_2026,governor,KS,,rcp:Lean R
+2026-08-20,wikipedia,GOV_KS_2026,governor,KS,,fox_power_rankings:Lean R
+2026-08-20,wikipedia,GOV_KS_2026,governor,KS,,votehub:Lean R
+2026-08-20,wikipedia,GOV_KS_2026,governor,KS,,silver_bulletin:Toss-up
+2026-08-20,wikipedia,GOV_ME_2026,governor,ME,,cook:Solid D
+2026-08-20,wikipedia,GOV_ME_2026,governor,ME,,inside_elections:Likely D
+2026-08-20,wikipedia,GOV_ME_2026,governor,ME,,sabato:Likely D
+2026-08-20,wikipedia,GOV_ME_2026,governor,ME,,race_to_the_wh:Likely D
+2026-08-20,wikipedia,GOV_ME_2026,governor,ME,,rcp:Likely D
+2026-08-20,wikipedia,GOV_ME_2026,governor,ME,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_ME_2026,governor,ME,,votehub:Likely D
+2026-08-20,wikipedia,GOV_ME_2026,governor,ME,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_MD_2026,governor,MD,,cook:Solid D
+2026-08-20,wikipedia,GOV_MD_2026,governor,MD,,inside_elections:Solid D
+2026-08-20,wikipedia,GOV_MD_2026,governor,MD,,sabato:Safe D
+2026-08-20,wikipedia,GOV_MD_2026,governor,MD,,race_to_the_wh:Safe D
+2026-08-20,wikipedia,GOV_MD_2026,governor,MD,,rcp:Solid D
+2026-08-20,wikipedia,GOV_MD_2026,governor,MD,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_MD_2026,governor,MD,,votehub:Solid D
+2026-08-20,wikipedia,GOV_MD_2026,governor,MD,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_MA_2026,governor,MA,,cook:Solid D
+2026-08-20,wikipedia,GOV_MA_2026,governor,MA,,inside_elections:Solid D
+2026-08-20,wikipedia,GOV_MA_2026,governor,MA,,sabato:Safe D
+2026-08-20,wikipedia,GOV_MA_2026,governor,MA,,race_to_the_wh:Safe D
+2026-08-20,wikipedia,GOV_MA_2026,governor,MA,,rcp:Solid D
+2026-08-20,wikipedia,GOV_MA_2026,governor,MA,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_MA_2026,governor,MA,,votehub:Solid D
+2026-08-20,wikipedia,GOV_MA_2026,governor,MA,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_MI_2026,governor,MI,,cook:Lean D
+2026-08-20,wikipedia,GOV_MI_2026,governor,MI,,inside_elections:Tilt D
+2026-08-20,wikipedia,GOV_MI_2026,governor,MI,,sabato:Lean D
+2026-08-20,wikipedia,GOV_MI_2026,governor,MI,,race_to_the_wh:Lean D
+2026-08-20,wikipedia,GOV_MI_2026,governor,MI,,rcp:Lean D
+2026-08-20,wikipedia,GOV_MI_2026,governor,MI,,fox_power_rankings:Lean D
+2026-08-20,wikipedia,GOV_MI_2026,governor,MI,,votehub:Lean D
+2026-08-20,wikipedia,GOV_MI_2026,governor,MI,,silver_bulletin:Likely D
+2026-08-20,wikipedia,GOV_MN_2026,governor,MN,,cook:Solid D
+2026-08-20,wikipedia,GOV_MN_2026,governor,MN,,inside_elections:Likely D
+2026-08-20,wikipedia,GOV_MN_2026,governor,MN,,sabato:Safe D
+2026-08-20,wikipedia,GOV_MN_2026,governor,MN,,race_to_the_wh:Safe D
+2026-08-20,wikipedia,GOV_MN_2026,governor,MN,,rcp:Solid D
+2026-08-20,wikipedia,GOV_MN_2026,governor,MN,,fox_power_rankings:Likely D
+2026-08-20,wikipedia,GOV_MN_2026,governor,MN,,votehub:Likely D
+2026-08-20,wikipedia,GOV_MN_2026,governor,MN,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_NE_2026,governor,NE,,cook:Solid R
+2026-08-20,wikipedia,GOV_NE_2026,governor,NE,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_NE_2026,governor,NE,,sabato:Safe R
+2026-08-20,wikipedia,GOV_NE_2026,governor,NE,,race_to_the_wh:Safe R
+2026-08-20,wikipedia,GOV_NE_2026,governor,NE,,rcp:Solid R
+2026-08-20,wikipedia,GOV_NE_2026,governor,NE,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_NE_2026,governor,NE,,votehub:Likely R
+2026-08-20,wikipedia,GOV_NE_2026,governor,NE,,silver_bulletin:Solid R
+2026-08-20,wikipedia,GOV_NV_2026,governor,NV,,cook:Toss-up
+2026-08-20,wikipedia,GOV_NV_2026,governor,NV,,inside_elections:Tilt R
+2026-08-20,wikipedia,GOV_NV_2026,governor,NV,,sabato:Lean R
+2026-08-20,wikipedia,GOV_NV_2026,governor,NV,,race_to_the_wh:Lean R
+2026-08-20,wikipedia,GOV_NV_2026,governor,NV,,rcp:Toss-up
+2026-08-20,wikipedia,GOV_NV_2026,governor,NV,,fox_power_rankings:Toss-up
+2026-08-20,wikipedia,GOV_NV_2026,governor,NV,,votehub:Tilt R
+2026-08-20,wikipedia,GOV_NV_2026,governor,NV,,silver_bulletin:Lean R
+2026-08-20,wikipedia,GOV_NH_2026,governor,NH,,cook:Likely R
+2026-08-20,wikipedia,GOV_NH_2026,governor,NH,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_NH_2026,governor,NH,,sabato:Likely R
+2026-08-20,wikipedia,GOV_NH_2026,governor,NH,,race_to_the_wh:Lean R
+2026-08-20,wikipedia,GOV_NH_2026,governor,NH,,rcp:Lean R
+2026-08-20,wikipedia,GOV_NH_2026,governor,NH,,fox_power_rankings:Likely R
+2026-08-20,wikipedia,GOV_NH_2026,governor,NH,,votehub:Lean R
+2026-08-20,wikipedia,GOV_NH_2026,governor,NH,,silver_bulletin:Likely R
+2026-08-20,wikipedia,GOV_NM_2026,governor,NM,,cook:Solid D
+2026-08-20,wikipedia,GOV_NM_2026,governor,NM,,inside_elections:Likely D
+2026-08-20,wikipedia,GOV_NM_2026,governor,NM,,sabato:Safe D
+2026-08-20,wikipedia,GOV_NM_2026,governor,NM,,race_to_the_wh:Likely D
+2026-08-20,wikipedia,GOV_NM_2026,governor,NM,,rcp:Likely D
+2026-08-20,wikipedia,GOV_NM_2026,governor,NM,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_NM_2026,governor,NM,,votehub:Likely D
+2026-08-20,wikipedia,GOV_NM_2026,governor,NM,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_NY_2026,governor,NY,,cook:Solid D
+2026-08-20,wikipedia,GOV_NY_2026,governor,NY,,inside_elections:Likely D
+2026-08-20,wikipedia,GOV_NY_2026,governor,NY,,sabato:Safe D
+2026-08-20,wikipedia,GOV_NY_2026,governor,NY,,race_to_the_wh:Likely D
+2026-08-20,wikipedia,GOV_NY_2026,governor,NY,,rcp:Solid D
+2026-08-20,wikipedia,GOV_NY_2026,governor,NY,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_NY_2026,governor,NY,,votehub:Solid D
+2026-08-20,wikipedia,GOV_NY_2026,governor,NY,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_OH_2026,governor,OH,,cook:Toss-up
+2026-08-20,wikipedia,GOV_OH_2026,governor,OH,,inside_elections:Lean R
+2026-08-20,wikipedia,GOV_OH_2026,governor,OH,,sabato:Lean R
+2026-08-20,wikipedia,GOV_OH_2026,governor,OH,,race_to_the_wh:Toss-up
+2026-08-20,wikipedia,GOV_OH_2026,governor,OH,,rcp:Toss-up
+2026-08-20,wikipedia,GOV_OH_2026,governor,OH,,fox_power_rankings:Toss-up
+2026-08-20,wikipedia,GOV_OH_2026,governor,OH,,votehub:Toss-up
+2026-08-20,wikipedia,GOV_OH_2026,governor,OH,,silver_bulletin:Toss-up
+2026-08-20,wikipedia,GOV_OK_2026,governor,OK,,cook:Solid R
+2026-08-20,wikipedia,GOV_OK_2026,governor,OK,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_OK_2026,governor,OK,,sabato:Safe R
+2026-08-20,wikipedia,GOV_OK_2026,governor,OK,,race_to_the_wh:Safe R
+2026-08-20,wikipedia,GOV_OK_2026,governor,OK,,rcp:Solid R
+2026-08-20,wikipedia,GOV_OK_2026,governor,OK,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_OK_2026,governor,OK,,votehub:Solid R
+2026-08-20,wikipedia,GOV_OK_2026,governor,OK,,silver_bulletin:Solid R
+2026-08-20,wikipedia,GOV_OR_2026,governor,OR,,cook:Likely D
+2026-08-20,wikipedia,GOV_OR_2026,governor,OR,,inside_elections:Lean D
+2026-08-20,wikipedia,GOV_OR_2026,governor,OR,,sabato:Likely D
+2026-08-20,wikipedia,GOV_OR_2026,governor,OR,,race_to_the_wh:Tilt D
+2026-08-20,wikipedia,GOV_OR_2026,governor,OR,,rcp:Solid D
+2026-08-20,wikipedia,GOV_OR_2026,governor,OR,,fox_power_rankings:Likely D
+2026-08-20,wikipedia,GOV_OR_2026,governor,OR,,votehub:Likely D
+2026-08-20,wikipedia,GOV_OR_2026,governor,OR,,silver_bulletin:Likely D
+2026-08-20,wikipedia,GOV_PA_2026,governor,PA,,cook:Solid D
+2026-08-20,wikipedia,GOV_PA_2026,governor,PA,,inside_elections:Solid D
+2026-08-20,wikipedia,GOV_PA_2026,governor,PA,,sabato:Likely D
+2026-08-20,wikipedia,GOV_PA_2026,governor,PA,,race_to_the_wh:Safe D
+2026-08-20,wikipedia,GOV_PA_2026,governor,PA,,rcp:Solid D
+2026-08-20,wikipedia,GOV_PA_2026,governor,PA,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_PA_2026,governor,PA,,votehub:Likely D
+2026-08-20,wikipedia,GOV_PA_2026,governor,PA,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_RI_2026,governor,RI,,cook:Solid D
+2026-08-20,wikipedia,GOV_RI_2026,governor,RI,,inside_elections:Solid D
+2026-08-20,wikipedia,GOV_RI_2026,governor,RI,,sabato:Safe D
+2026-08-20,wikipedia,GOV_RI_2026,governor,RI,,race_to_the_wh:Likely D
+2026-08-20,wikipedia,GOV_RI_2026,governor,RI,,rcp:Solid D
+2026-08-20,wikipedia,GOV_RI_2026,governor,RI,,fox_power_rankings:Solid D
+2026-08-20,wikipedia,GOV_RI_2026,governor,RI,,votehub:Solid D
+2026-08-20,wikipedia,GOV_RI_2026,governor,RI,,silver_bulletin:Solid D
+2026-08-20,wikipedia,GOV_SC_2026,governor,SC,,cook:Solid R
+2026-08-20,wikipedia,GOV_SC_2026,governor,SC,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_SC_2026,governor,SC,,sabato:Safe R
+2026-08-20,wikipedia,GOV_SC_2026,governor,SC,,race_to_the_wh:Likely R
+2026-08-20,wikipedia,GOV_SC_2026,governor,SC,,rcp:Likely R
+2026-08-20,wikipedia,GOV_SC_2026,governor,SC,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_SC_2026,governor,SC,,votehub:Likely R
+2026-08-20,wikipedia,GOV_SC_2026,governor,SC,,silver_bulletin:Solid R
+2026-08-20,wikipedia,GOV_SD_2026,governor,SD,,cook:Solid R
+2026-08-20,wikipedia,GOV_SD_2026,governor,SD,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_SD_2026,governor,SD,,sabato:Safe R
+2026-08-20,wikipedia,GOV_SD_2026,governor,SD,,race_to_the_wh:Likely R
+2026-08-20,wikipedia,GOV_SD_2026,governor,SD,,rcp:Solid R
+2026-08-20,wikipedia,GOV_SD_2026,governor,SD,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_SD_2026,governor,SD,,votehub:Solid R
+2026-08-20,wikipedia,GOV_SD_2026,governor,SD,,silver_bulletin:Solid R
+2026-08-20,wikipedia,GOV_TN_2026,governor,TN,,cook:Solid R
+2026-08-20,wikipedia,GOV_TN_2026,governor,TN,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_TN_2026,governor,TN,,sabato:Safe R
+2026-08-20,wikipedia,GOV_TN_2026,governor,TN,,race_to_the_wh:Safe R
+2026-08-20,wikipedia,GOV_TN_2026,governor,TN,,rcp:Solid R
+2026-08-20,wikipedia,GOV_TN_2026,governor,TN,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_TN_2026,governor,TN,,votehub:Solid R
+2026-08-20,wikipedia,GOV_TX_2026,governor,TX,,cook:Solid R
+2026-08-20,wikipedia,GOV_TX_2026,governor,TX,,inside_elections:Likely R
+2026-08-20,wikipedia,GOV_TX_2026,governor,TX,,sabato:Safe R
+2026-08-20,wikipedia,GOV_TX_2026,governor,TX,,race_to_the_wh:Lean R
+2026-08-20,wikipedia,GOV_TX_2026,governor,TX,,rcp:Likely R
+2026-08-20,wikipedia,GOV_TX_2026,governor,TX,,fox_power_rankings:Likely R
+2026-08-20,wikipedia,GOV_TX_2026,governor,TX,,votehub:Lean R
+2026-08-20,wikipedia,GOV_TX_2026,governor,TX,,silver_bulletin:Likely R
+2026-08-20,wikipedia,GOV_VT_2026,governor,VT,,cook:Solid R
+2026-08-20,wikipedia,GOV_VT_2026,governor,VT,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_VT_2026,governor,VT,,sabato:Safe R
+2026-08-20,wikipedia,GOV_VT_2026,governor,VT,,race_to_the_wh:Safe R
+2026-08-20,wikipedia,GOV_VT_2026,governor,VT,,rcp:Solid R
+2026-08-20,wikipedia,GOV_VT_2026,governor,VT,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_VT_2026,governor,VT,,votehub:Solid R
+2026-08-20,wikipedia,GOV_VT_2026,governor,VT,,silver_bulletin:Likely R
+2026-08-20,wikipedia,GOV_WI_2026,governor,WI,,cook:Toss-up
+2026-08-20,wikipedia,GOV_WI_2026,governor,WI,,inside_elections:Toss-up
+2026-08-20,wikipedia,GOV_WI_2026,governor,WI,,sabato:Lean D
+2026-08-20,wikipedia,GOV_WI_2026,governor,WI,,race_to_the_wh:Toss-up
+2026-08-20,wikipedia,GOV_WI_2026,governor,WI,,rcp:Toss-up
+2026-08-20,wikipedia,GOV_WI_2026,governor,WI,,fox_power_rankings:Toss-up
+2026-08-20,wikipedia,GOV_WI_2026,governor,WI,,votehub:Tilt D
+2026-08-20,wikipedia,GOV_WI_2026,governor,WI,,silver_bulletin:Toss-up
+2026-08-20,wikipedia,GOV_WY_2026,governor,WY,,cook:Solid R
+2026-08-20,wikipedia,GOV_WY_2026,governor,WY,,inside_elections:Solid R
+2026-08-20,wikipedia,GOV_WY_2026,governor,WY,,sabato:Safe R
+2026-08-20,wikipedia,GOV_WY_2026,governor,WY,,race_to_the_wh:Safe R
+2026-08-20,wikipedia,GOV_WY_2026,governor,WY,,rcp:Solid R
+2026-08-20,wikipedia,GOV_WY_2026,governor,WY,,fox_power_rankings:Solid R
+2026-08-20,wikipedia,GOV_WY_2026,governor,WY,,votehub:Solid R
+2026-08-20,wikipedia,GOV_WY_2026,governor,WY,,silver_bulletin:Solid R

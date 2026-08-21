@@ -29,18 +29,18 @@ WHAT IS PUBLISHABLE AND WHAT IS NOT — READ BEFORE ADDING OUTPUTS
     from MEDSL's CC0 returns by a documented method, so nothing in the output
     encodes anyone's proprietary index.
 
-    The HOUSE run is NOT, and the reason is arithmetic rather than legal
-    caution. District forecasts are built from Cook's district PVI, which is
-    NEVER_PUBLISH. Publishing a district forecast F alongside the national
-    tide M hands anyone Cook's number directly:
+    The HOUSE run publishes district MARGINS but never the district INDEX.
+    That distinction is the whole of the policy, and it is a licensing
+    judgment, not an arithmetic one: given the national tide, PVI =
+    (margin - tide) / 2 exactly, so a published district margin does yield
+    the index to anyone who cares to divide. The call taken on 2026-08-21 is
+    that publishing our own derived forecast is not redistributing someone
+    else's dataset. The `pvi` quantity itself stays in NEVER_PUBLISH and
+    appears in no published file.
 
-        PVI = (F - M) / 2
-
-    That is not a leak that careful wording prevents; it is an exact inverse.
-    So the House run writes to model_private/, which is gitignored, and says
-    so in its own output. It becomes publishable the day we have a district
-    presidential baseline we are allowed to redistribute — a district-level
-    2024/2020 presidential file, not Cook's compilation of one.
+    An earlier version of this docstring said the House run could never be
+    published because the inverse made it impossible. That was a policy
+    dressed up as a theorem. The arithmetic has not changed; the policy has.
 
 THE JUDGMENT CALLS, STATED PLAINLY
     Every number below that is a choice rather than a measurement is a named
@@ -483,19 +483,40 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
     return out
 
 
+# Which district index to use when the archive holds more than one. Cook's own
+# 2026 lines first, then Grant Williams' republication of them, then whatever
+# Wikipedia's ratings table carries. Previously this was "whichever row the
+# parser happened to emit first", which made the House forecast depend on file
+# ordering — the same model could change answer because a source was renamed.
+PVI_PREFERENCE = ("cook_pvi", "grant_williams", "wikipedia")
+
+
 def house_forecast(tide: float, rows: list[dict], sigma_total: float) -> dict:
     """
-    District-level run. PRIVATE OUTPUT — see the module docstring.
+    District-level run.
 
-    Uses whatever district PVI the archive holds, which today means Cook's,
-    and Cook's PVI is exactly recoverable from a published district forecast.
+    ON PUBLICATION. District margins here are OUR forecast, computed from a
+    district partisan index we do not redistribute. The index itself — the
+    `pvi` quantity — stays out of every published file and remains in
+    aggregate.py's NEVER_PUBLISH.
+
+    Be clear-eyed about what that does and does not protect. Publishing a
+    district margin alongside the national tide gives the index back by exact
+    arithmetic, PVI = (margin - tide) / 2, so this is a licensing judgment
+    about republishing a derived forecast rather than a mathematical barrier.
+    That judgment was made deliberately on 2026-08-21; anything written here
+    that implied the arithmetic was a safeguard has been corrected, because a
+    comment claiming a protection the code does not provide is worse than no
+    comment at all.
     """
-    pvi: dict[str, float] = {}
-    source = None
+    by_source: dict[str, dict[str, float]] = {}
     for r in rows:
         if r["quantity"] == "pvi" and r["chamber"] == "house" and r["race_id"]:
-            pvi.setdefault(r["race_id"], float(r["value"]))
-            source = source or r["source_id"]
+            by_source.setdefault(r["source_id"], {}).setdefault(
+                r["race_id"], float(r["value"]))
+    source = next((s for s in PVI_PREFERENCE if by_source.get(s)),
+                  next(iter(by_source), None))
+    pvi = by_source.get(source or "", {})
     if not pvi:
         return {"ok": False, "why": "no district PVI in the archive"}
 
@@ -516,15 +537,20 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float) -> dict:
     wins.sort()
     return {
         "ok": True,
-        "publication": "private",
-        "why_private": (
-            f"district margins are built from {source} PVI, which is "
-            f"NEVER_PUBLISH. Given the national tide, PVI = (margin - tide)/2 "
-            f"exactly, so publishing these would republish that index."),
+        "pvi_source": source,
         "n_districts": len(districts),
         "expected_D_seats": round(statistics.fmean(wins), 2),
         "D_seats_80pct": [wins[int(0.10 * N_SIMS)], wins[int(0.90 * N_SIMS)]],
         "prob_D_218_plus": round(sum(1 for w in wins if w >= 218) / N_SIMS, 4),
+        # Per district: our expected margin and the win probability that
+        # follows from it. The index it was built from is NOT here and never is.
+        "districts": [
+            {"race_id": rid,
+             "state": rid.split("_")[1] if "_" in rid else "",
+             "district": rid.split("_")[2] if rid.count("_") > 2 else "",
+             "expected_margin_D": m,
+             "win_prob_D": round(_norm_cdf(m / sigma_total), 4)}
+            for rid, m in sorted(districts.items(), key=lambda kv: -kv[1])],
     }
 
 
@@ -628,7 +654,8 @@ def main(argv=None) -> int:
             print(f"      expected D seats {h['expected_D_seats']:.1f}  "
                   f"(80% {h['D_seats_80pct'][0]}-{h['D_seats_80pct'][1]})")
             print(f"      P(D >= 218) {h['prob_D_218_plus']:.3f}")
-            print(f"  wrote {hp.relative_to(REPO)}   PRIVATE — {h['why_private']}")
+            print(f"  wrote {hp.relative_to(REPO)}   "
+                  f"(district index: {h.get('pvi_source')})")
     return 0
 
 

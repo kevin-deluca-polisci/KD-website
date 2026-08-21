@@ -93,7 +93,8 @@ from __future__ import annotations
 import json
 import re
 
-from . import Context, LoadedArtifact, RATING_LEVEL as LEVEL, Row, race_id
+from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE,
+               RATING_LEVEL as LEVEL, Row, race_id, state_from_text)
 
 # --------------------------------------------------------------------------
 # Finding the blob
@@ -687,6 +688,14 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         if name.startswith("live__") or _live_payload(art) is not None:
             live_payloads += 1
             title = str(art.meta.get("live_title") or name)
+            kind = trend_kind(title)
+            if kind:
+                # A time series, not a snapshot. Every row is backdated to its
+                # own observation date; see the BACKFILL section at the bottom.
+                got = _parse_trend(art, ctx, kind)
+                (used_books if got else skipped_books).append(f"{title} [trend]")
+                rows.extend(got)
+                continue
             if _AUTHORITATIVE.search(title):
                 used_books.append(title)
             else:
@@ -878,3 +887,145 @@ if __name__ == "__main__":
             if len(sheet) > 6:
                 print(f"       ... {len(sheet) - 6} more rows")
             print()
+
+
+# ==========================================================================
+# BACKFILL — the trend workbooks, which carry their own history.
+#
+# Race to the WH publishes several charts whose x-axis is TIME: the national
+# Senate and House trends, and one sheet per state of Senate margins. Between
+# them they run from September 2025 to yesterday, at roughly four-day
+# intervals. That is six months of a professional forecast that no daily
+# capture could ever recover, sitting inside bytes we already store.
+#
+# These workbooks are deliberately OUTSIDE _AUTHORITATIVE. Read as current
+# values they would be wrong — every row is a past observation, and the last
+# row is yesterday rather than today. They are parsed here instead, and every
+# row they produce is BACKDATED to the observation's own date via the
+# snapshot_date override in Context.row().
+#
+# THE YEAR PROBLEM. Cells read "Jan 1", "Aug 19", "Sep 1" with no year, and
+# the House series begins in September of the PREVIOUS year. There is no way
+# to read a year off a single cell, so the series is walked backwards from its
+# final row — which is dated at or just before the capture — and the year is
+# decremented whenever the calendar goes forwards as we go backwards.
+# ==========================================================================
+
+_TREND_BOOKS = (
+    (re.compile(r"sen.*publish\s*trend.*nat", re.I), "senate_national"),
+    (re.compile(r"house.*national\s+line\s+graph\s+trend", re.I), "house_national"),
+    (re.compile(r"sen.*state\s+trend.*margin", re.I), "senate_state_margin"),
+)
+_MONTHS = {m: i for i, m in enumerate(
+    ["jan", "feb", "mar", "apr", "may", "jun",
+     "jul", "aug", "sep", "oct", "nov", "dec"], start=1)}
+_DATE_CELL = re.compile(r"^\s*([A-Za-z]{3})[a-z]*\.?\s+(\d{1,2})\s*$")
+
+
+def trend_kind(title: str) -> str | None:
+    """Match on a normalised title so the artifact FILENAME works too.
+
+    live_title comes from the capture metadata and reads "26 Sen - Publish
+    State Trend - Margin"; the stored filename for the same workbook is
+    "live__26-Sen---Publish-State-Trend---Margin__796ff7b8". Patterns written
+    against one silently fail against the other, and the fallback path from
+    name to title is exactly where a missing meta file sends you.
+    """
+    flat = re.sub(r"[^a-z0-9]+", " ", (title or "").lower())
+    for pat, kind in _TREND_BOOKS:
+        if pat.search(flat):
+            return kind
+    return None
+
+
+def _trend_dates(cells: list[str], last_date: str) -> list[str | None]:
+    """Month-day cells -> ISO dates, walking backwards from `last_date`."""
+    import datetime as dt
+    end = dt.date.fromisoformat(last_date)
+    parsed = []
+    for c in cells:
+        m = _DATE_CELL.match(_cell(c))
+        parsed.append((_MONTHS.get(m.group(1).lower()), int(m.group(2)))
+                      if m and _MONTHS.get(m.group(1).lower()) else None)
+
+    out: list[str | None] = [None] * len(parsed)
+    year = end.year
+    nxt: tuple[int, int] | None = None
+    for i in range(len(parsed) - 1, -1, -1):
+        md = parsed[i]
+        if md is None:
+            continue
+        if nxt is not None and md > nxt:
+            year -= 1                    # the calendar went forwards: last year
+        nxt = md
+        try:
+            d = dt.date(year, md[0], md[1])
+        except ValueError:               # 29 Feb in a non-leap year, etc.
+            continue
+        if d > end:
+            continue                     # never date a row past its evidence
+        out[i] = d.isoformat()
+    return out
+
+
+def _pct_or_num(cell: str) -> float | None:
+    """'54.2%' -> 54.2, '50.8' -> 50.8, '' -> None. The caller scales."""
+    return _number(_cell(cell).replace("%", ""))
+
+
+def _parse_trend(art: LoadedArtifact, ctx: Context, kind: str) -> list[Row]:
+    payload = _live_payload(art)
+    if payload is None:
+        return []
+    names, sheets = payload
+    rows: list[Row] = []
+    # The final observation is at or before the capture; anchoring on the
+    # capture date itself would push a series one day into the future when the
+    # workbook is refreshed after midnight UTC.
+    last_date = ctx.snapshot_date
+
+    for name, sheet in zip(names, sheets):
+        if not sheet or len(sheet) < 3 or _SHEET_LIST.match(str(name)):
+            continue
+        header = [_cell(c) for c in sheet[0]]
+        body = sheet[1:]
+        dates = _trend_dates([r[0] if r else "" for r in body], last_date)
+
+        if kind == "senate_state_margin":
+            st = state_from_text(str(name))
+            if not st:
+                continue
+            col = next((i for i, h in enumerate(header)
+                        if _SHEET_MARGIN.search(h)), None)
+            if col is None:
+                continue
+            spec = [(race_id("senate", st), "senate", st, "margin_D", col, "pct", 1.0)]
+        elif kind in ("senate_national", "house_national"):
+            rid = NATIONAL_SENATE if kind == "senate_national" else NATIONAL_HOUSE
+            ch = "national"
+            dcol = next((i for i, h in enumerate(header[1:], start=1)
+                         if re.search(r"^dem", h, re.I)), None)
+            if dcol is None:
+                continue
+            if _SHEET_PROB.search(str(name)):
+                spec = [(rid, ch, "", "win_prob_D", dcol, "prob", 0.01)]
+            elif _SHEET_SEATS.search(str(name)):
+                spec = [(rid, ch, "", "seats_D", dcol, "seats", 1.0)]
+            else:
+                continue
+        else:
+            continue
+
+        for r, asof in zip(body, dates):
+            if not asof:
+                continue
+            for rid, ch, st_, qty, col, unit, scale in spec:
+                if col >= len(r):
+                    continue
+                v = _pct_or_num(r[col])
+                if v is None:
+                    continue
+                rows.append(ctx.row(art, snapshot_date=asof, race_id=rid,
+                                    chamber=ch, state=st_, quantity=qty,
+                                    value=round(v * scale, 4), unit=unit))
+    return rows

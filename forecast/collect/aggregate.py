@@ -160,6 +160,8 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             "snapshot_date": date, "category": cat, "race_id": rid,
             "chamber": ch, "state": st, "district": dist,
             "quantity": q, "unit": unit, "n_sources": n, "n_gated": n_gated,
+            # 0 unless this row is the open-only subset of a gated cell.
+            "partial": 0, "n_withheld": 0,
             "mean": round(statistics.fmean(vals), 4),
             "min": round(min(vals), 4), "max": round(max(vals), 4),
             "sd": round(statistics.stdev(vals), 4) if n > 1 else "",
@@ -174,6 +176,32 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
                                          f"gated sources only, because the open "
                                          f"ones are published by name and can be "
                                          f"subtracted back out"})
+            # ...but do not let the whole category go dark.
+            #
+            # If any contributor is open-tier, publish the average of just
+            # those. It reveals nothing: an open source's value is already
+            # published under its own name in by_source_open.csv, so a mean
+            # over open sources is a rearrangement of numbers a reader can
+            # already read. What it avoids is a category vanishing from the
+            # site the day a second forecaster arrives — which is what
+            # happened on 2026-08-20, when the professional line stopped
+            # because Race to the WH came online beside Grant Williams and one
+            # open plus one gated is below the floor.
+            #
+            # Labelled `partial`, with the number withheld, so the page can say
+            # "1 of 2 shown" rather than presenting it as the whole category.
+            open_srcs = [s for s in per_source if tiers.get(s) == "individual"]
+            if open_srcs:
+                ov = [statistics.fmean(per_source[s]) for s in open_srcs]
+                averages.append({
+                    **rec, "tier": "open", "n_sources": len(ov), "n_gated": 0,
+                    "mean": round(statistics.fmean(ov), 4),
+                    "min": round(min(ov), 4), "max": round(max(ov), 4),
+                    "sd": round(statistics.stdev(ov), 4) if len(ov) > 1 else "",
+                    "display": "single" if len(ov) == 1 else "ok",
+                    "sole_source": open_srcs[0] if len(ov) == 1 else "",
+                    "partial": 1, "n_withheld": n_gated,
+                })
         else:
             averages.append(rec)
 

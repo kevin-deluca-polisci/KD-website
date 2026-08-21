@@ -121,11 +121,49 @@ _ARTICLE_HOUSE = re.compile(
     r"\[\[\s*20\d\d United States House of Representatives election"
     r"s?\s+in\s+([A-Za-z .]+?)(?:'s\s+(\d{1,2})\w{0,2}|\s+at-large)"
     r"\s+congressional district", re.I)
+# "special" is optional and load-bearing: Florida and Ohio are special elections
+# this cycle, and without it the two seats that happen to sit at the 50th and
+# 51st positions on the ladder were the two the parser missed.
 _ARTICLE_SENATE = re.compile(
-    r"\[\[\s*20\d\d United States Senate election\s+in\s+([A-Za-z .]+?)\s*[|\]]", re.I)
+    r"\[\[\s*20\d\d United States Senate (?:special )?election"
+    r"\s+in\s+([A-Za-z .]+?)\s*[|\]]", re.I)
+_ARTICLE_GOV = re.compile(
+    r"\[\[\s*20\d\d ([A-Za-z .]+?) gubernatorial (?:special )?election", re.I)
+
+# Which contest a page is about, from its title. The seat cell alone is not
+# always enough — a gubernatorial table names the state and nothing else — and
+# guessing from the cell is how the bug below happened.
+_PAGE_CHAMBER = (
+    ("house of representatives", "house"),
+    ("senate", "senate"),
+    ("gubernatorial", "governor"),
+    ("governor", "governor"),
+)
 
 
-def _seat(cell: str) -> tuple[str, str, str] | None:
+def page_chamber(name: str) -> str | None:
+    n = name.replace("-", " ").lower()
+    for needle, ch in _PAGE_CHAMBER:
+        if needle in n:
+            return ch
+    return None
+
+
+# A cell that is a state and NOTHING else: "Alabama", "AL", "[[...|Alabama]]".
+# Deliberately anchored.
+#
+# THE BUG THIS FIXES. The previous fallback asked "does this cell contain a
+# state name anywhere?" and answered yes for the gubernatorial table's own
+# HEADER, because the "last election" column carries a footnote reading "with
+# the exception of New Hampshire and Vermont". That header was therefore read
+# as the first data row, the eight rater columns became its cells, only three
+# headers survived, and the table was discarded as not-a-ratings-table. Thirty-
+# six governor races went missing without a single error — the same failure
+# mode as the old two-letter matcher, one level up.
+_BARE_STATE = re.compile(r"^[A-Za-z .]{2,24}$")
+
+
+def _seat(cell: str, chamber_hint: str | None = None) -> tuple[str, str, str] | None:
     """-> (chamber, postal, district) or None."""
     m = _USHR.search(cell)
     if m:
@@ -147,12 +185,20 @@ def _seat(cell: str) -> tuple[str, str, str] | None:
         st = state_from_text(m.group(1))
         return ("senate", st, "") if st else None
 
-    # Last resort: a bare state name or postal code in a header cell. Kept for
-    # tables that name the state and nothing else, and deliberately narrow —
-    # race_id refuses non-states outright, and a stray two-letter match used to
-    # abort an entire parse.
-    st = state_from_text(_clean(cell))
-    return ("senate", st, "") if st else None
+    m = _ARTICLE_GOV.search(cell)
+    if m:
+        st = state_from_text(m.group(1))
+        return ("governor", st, "") if st else None
+
+    # Fallback: the cell is a bare state, and the PAGE tells us the contest.
+    # Both conditions, never either alone.
+    if not chamber_hint:
+        return None
+    text = _clean(cell)
+    if not _BARE_STATE.match(text):
+        return None
+    st = state_from_text(text)
+    return (chamber_hint, st, "") if st and chamber_hint != "house" else None
 
 
 def _rating(cell: str) -> tuple[str, float] | None:
@@ -185,7 +231,7 @@ def _pvi(cell: str) -> float | None:
     return -mag if m.group(1).upper() == "R" else mag
 
 
-def _tables(text: str):
+def _tables(text: str, chamber_hint: str | None = None):
     """
     Yield (headers, rows) for every wikitable, cells split one per line.
 
@@ -212,7 +258,7 @@ def _tables(text: str):
             ln = re.sub(r"^\s*(?:<!--.*?-->\s*)+", "", ln)
             if not ln:
                 continue
-            is_seat = ln.startswith("!") and _seat(ln[1:]) is not None
+            is_seat = ln.startswith("!") and _seat(ln[1:], chamber_hint) is not None
 
             if is_seat:
                 if cur:
@@ -251,7 +297,8 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         if not text:
             continue
 
-        for headers, table in _tables(text):
+        hint = page_chamber(name)
+        for headers, table in _tables(text, hint):
             # Which column belongs to which forecaster?
             col_source = {i: sid for i, h in enumerate(headers)
                           if (sid := _forecaster(h))}
@@ -261,7 +308,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             for cells in table:
                 if not cells:
                     continue
-                got = _seat(cells[0])
+                got = _seat(cells[0], hint)
                 if got is None:
                     continue
                 chamber, st, d = got
@@ -269,7 +316,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                     if chamber == "house":
                         rid, dist = race_id("house", st, d), f"{int(d):02d}"
                     else:
-                        rid, dist = race_id("senate", st), ""
+                        rid, dist = race_id(chamber, st), ""
                 except (ValueError, TypeError):
                     continue
 

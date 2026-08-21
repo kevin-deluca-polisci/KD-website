@@ -54,11 +54,12 @@
       <div class="seg" data-dim="chamber">
         <button type="button" data-value="senate" aria-selected="true">Senate</button>
         <button type="button" data-value="house" aria-selected="false">House</button>
+        <button type="button" data-value="governor" aria-selected="false">Governors</button>
       </div>
     </div>
 
     <div data-group="ratings">
-    {{- range $c := (slice "senate" "house") }}
+    {{- range $c := (slice "senate" "house" "governor") }}
     {{- $r := index $rat $c }}
     {{- if $r }}
     <div data-panel data-chamber="{{ $c }}">
@@ -138,7 +139,7 @@
       {{- end }}
     </table>
     <p class="thin-note">Competitive seats only — the model puts every other race
-       outside 1–99%. Full list on the <a href="/forecast/races/">races page</a>.</p>
+       outside 1–99%. Full list on the <a href="/forecast/contests/">contests page</a>.</p>
   </div>
   {{- end }}
   {{- end }}

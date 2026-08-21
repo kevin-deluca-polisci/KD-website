@@ -116,6 +116,132 @@ def _withheld_cells(supp: list[dict], latest: str) -> set:
             if r["snapshot_date"] == latest}
 
 
+def build_ladders(senate: dict | None, proj: dict | None) -> dict:
+    """One ladder per chamber, both off the polling projection.
+
+    The Senate ladder counts from the seats not on the ballot; the House has no
+    such block, so its caps are the safe seats either side of the drawn window.
+    Same function, different bookkeeping — which is the reason build_ladder
+    stopped taking a polling-model dict and started taking a plain list.
+    """
+    out: dict[str, dict | None] = {}
+    if senate and senate.get("races") and senate.get("holdover_D") is not None:
+        hold_D = int(senate["holdover_D"])
+        n_up = len(senate["races"])
+        out["senate"] = charts.build_ladder(
+            senate["races"], chamber="senate",
+            fixed_left=hold_D, fixed_right=100 - hold_D - n_up, total=100,
+            thresholds=((50, "a tie, broken by the vice-president"),
+                        (51, "an outright majority")),
+            expected=senate.get("expected_D_total"),
+            max_drawn=n_up,
+            left_label=f"{hold_D} D seats not on the ballot",
+            right_label=f"{100 - hold_D - n_up} R seats not on the ballot")
+
+    p = ((proj or {}).get("projections") or {}).get("polling") or {}
+    districts = p.get("districts") or []
+    house = p.get("house") or {}
+    if districts and house:
+        rows = [{**d,
+                 "label": f"{d['state']}-{d['district']}" if d.get("district") else d["state"],
+                 "competitive": COMPETITIVE_LO < d["win_prob_D"] < COMPETITIVE_HI}
+                for d in districts]
+        out["house"] = charts.build_ladder(
+            rows, chamber="house", fixed_left=0, fixed_right=0,
+            total=len(rows),
+            thresholds=((house.get("majority_at", 218), "a majority"),),
+            expected=house.get("expected_D_seats"),
+            max_drawn=45,
+            left_label="safe Democratic seats",
+            right_label="safe Republican seats")
+    return out
+
+
+def build_governors(latest: str, avgs: list[dict], supp: list[dict],
+                    ratings: list[dict]) -> dict | None:
+    """Governors: collected and shown, but not modelled and not on the timeline.
+
+    We run no gubernatorial model, and that is a decision rather than a gap.
+    The machinery this site has translates a NATIONAL tide through partisan
+    lean, and governors are the office where that translation is weakest —
+    Kansas, Kentucky, Vermont and Massachusetts have all recently elected
+    governors of the party that loses the state by twenty points. Publishing a
+    tide-plus-lean number for those races would produce confident nonsense.
+
+    So the governors panel carries only what someone else measured: the market
+    price where a market exists, the raters' spread, and the state's 2024
+    presidential margin as a baseline. No line on the tracker, because there is
+    no series of ours to draw.
+    """
+    withheld = _withheld_cells(supp, latest)
+    cells: dict[tuple, dict] = {}
+    for r in avgs:
+        if r["snapshot_date"] != latest or r["chamber"] != "governor":
+            continue
+        try:
+            cells[(r["race_id"], r["quantity"], r["category"])] = {
+                "value": float(r["mean"]), "n": int(r["n_sources"]),
+                "sole_source": r.get("sole_source", "")}
+        except (TypeError, ValueError):
+            continue
+
+    # Ratings, one row per race, reduced to a spread.
+    NUM = {"Safe D": 0.0, "Solid D": 0.0, "Likely D": 1.5, "Lean D": 3.0,
+           "Tilt D": 4.0, "Toss-up": 5.0, "Tossup": 5.0,
+           "Tilt R": 6.0, "Lean R": 7.0, "Likely R": 8.5,
+           "Safe R": 10.0, "Solid R": 10.0}
+    rated: dict[str, dict[str, str]] = defaultdict(dict)
+    state_of: dict[str, str] = {}
+    for r in ratings:
+        if r["snapshot_date"] != latest or r["chamber"] != "governor":
+            continue
+        v = r.get("value", "")
+        if ":" not in v:
+            continue
+        who, label = v.split(":", 1)
+        rated[r["race_id"]][who] = label
+        state_of[r["race_id"]] = r["state"]
+
+    ids = sorted(set(rated) | {rid for rid, _, _ in cells})
+    if not ids:
+        return None
+    races = []
+    for rid in ids:
+        who = rated.get(rid, {})
+        vals = [NUM[v] for v in who.values() if v in NUM]
+        market = cells.get((rid, "win_prob_D", "market"))
+        races.append({
+            "race_id": rid,
+            "state": state_of.get(rid) or (rid.split("_")[1] if "_" in rid else rid),
+            "n_raters": len(vals),
+            "mean_rating": round(sum(vals) / len(vals), 2) if vals else None,
+            "spread": round(max(vals) - min(vals), 1) if len(vals) > 1 else None,
+            "labels": [{"forecaster": charts.rater_name(k), "label": v}
+                       for k, v in sorted(who.items())],
+            "market_prob_D": (market or {}).get("value"),
+            "market_withheld": (rid, "win_prob_D", "market") in withheld,
+        })
+    # Closest first, on whichever signal exists. Ratings if we have them,
+    # otherwise the market price, otherwise alphabetical — sorting on the mean
+    # rating alone put every unrated race at the top as if it were a toss-up.
+    def closeness(r):
+        if r["mean_rating"] is not None:
+            return (0, abs(r["mean_rating"] - 5.0), -(r["spread"] or 0))
+        if r["market_prob_D"] is not None:
+            return (0, abs(r["market_prob_D"] - 0.5) * 10.0, 0)
+        return (1, 0, 0)
+    races.sort(key=lambda r: (*closeness(r), r["state"]))
+    return {
+        "n_races": len(races),
+        "n_rated": sum(1 for r in races if r["n_raters"]),
+        "n_market": sum(1 for r in races if r["market_prob_D"] is not None),
+        "races": races,
+        "note": ("No class model for governors. A national tide carried through "
+                 "partisan lean is a poor description of gubernatorial races, so "
+                 "this panel shows only what others measure."),
+    }
+
+
 def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
                  supp: list[dict], senate: dict | None) -> dict | None:
     """National and per-race, four categories each."""
@@ -320,8 +446,9 @@ def main(argv=None) -> int:
     # count has since grown to 4,206 rows across twelve raters, which is well
     # past what any table was going to carry.
     chart_data = charts.build(d, latest)
-    chart_data["ladder"] = charts.build_ladder(senate)
+    chart_data["ladders"] = build_ladders(senate, proj)
     spread = build_spread(d, latest, proj, avgs, supp, senate)
+    governors = build_governors(latest, avgs, supp, ratings)
     model_index = build_model_index(d, latest)
 
     out = {
@@ -333,9 +460,18 @@ def main(argv=None) -> int:
         "series": {k: sorted(v) for k, v in series.items()},
         "fundamentals_model": model,
         "polling_model": senate,
-        "seat_projections": proj,
+        # Without the district arrays. All 435 of them tripled the size of a
+        # file every visitor downloads, to feed a chart that draws 45 — and the
+        # full set is already published in derived/seat_projections.json for
+        # anyone who wants it.
+        "seat_projections": (None if not proj else {
+            **proj,
+            "projections": {k: {kk: vv for kk, vv in v.items() if kk != "districts"}
+                            for k, v in (proj.get("projections") or {}).items()},
+        }),
         "charts": chart_data,
         "spread": spread,
+        "governors": governors,
         "model_index": model_index,
         "suppressed_cells": len(supp),
         "display_note": (
