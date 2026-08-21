@@ -1,8 +1,8 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-21T06:24:19.028967+00:00",
-  "latest_snapshot": "2026-08-20",
-  "snapshot_count": 2,
+  "generated_at": "2026-08-21T11:29:56.137319+00:00",
+  "latest_snapshot": "2026-08-21",
+  "snapshot_count": 3,
   "headline": [
     {
       "category": "fundamentals",
@@ -17,20 +17,20 @@
     },
     {
       "category": "polling",
-      "margin_D": 6.4726,
+      "margin_D": 6.1898,
       "n_sources": 4,
-      "low": 6.0905,
-      "high": 6.8,
+      "low": 5.9,
+      "high": 6.4,
       "tier": "gated",
       "display": "ok",
       "sole_source": ""
     },
     {
       "category": "professional",
-      "margin_D": 5.73,
+      "margin_D": 5.68,
       "n_sources": 1,
-      "low": 5.73,
-      "high": 5.73,
+      "low": 5.68,
+      "high": 5.68,
       "tier": "open",
       "display": "single",
       "sole_source": "grant_williams"
@@ -40,11 +40,15 @@
     "polling": [
       [
         "2026-08-19",
-        6.4122
+        6.4841
       ],
       [
         "2026-08-20",
-        6.4726
+        6.3968
+      ],
+      [
+        "2026-08-21",
+        6.1898
       ]
     ],
     "professional": [
@@ -54,7 +58,11 @@
       ],
       [
         "2026-08-20",
-        5.73
+        5.68
+      ],
+      [
+        "2026-08-21",
+        5.68
       ]
     ]
   },
@@ -74,7 +82,7 @@
       "income_growth": -0.096,
       "seats_before": 220,
       "income_is_placeholder": false,
-      "income_source": "FRED income_growth_ytd as of 2026-08-20, 6 month(s) of the year in hand",
+      "income_source": "FRED income_growth_ytd as of 2026-08-21, 6 month(s) of the year in hand",
       "approval_source": "hand-set; no live approval feed yet"
     },
     "pres_party_two_party_vote": 44.76,
@@ -105,270 +113,270 @@
     ]
   },
   "polling_model": {
-    "tide_D": 5.674,
-    "generic_ballot": 6.47,
-    "shrink_lambda": 0.877,
+    "tide_D": 5.71,
+    "generic_ballot": 6.5,
+    "shrink_lambda": 0.8785,
     "sigma": 6.55,
-    "expected_D_seats_up": 15.04,
+    "expected_D_seats_up": 15.06,
     "D_seats_up_80pct": [
       12,
       18
     ],
     "holdover_D": 34,
-    "expected_D_total": 49.04,
+    "expected_D_total": 49.06,
     "D_total_80pct": [
       46,
       52
     ],
-    "prob_D_50_plus": 0.3907,
-    "prob_D_51_plus": 0.23,
+    "prob_D_50_plus": 0.3941,
+    "prob_D_51_plus": 0.2331,
     "sensitivity": {
-      "33": 0.23,
-      "34": 0.3907,
-      "35": 0.5941
+      "33": 0.2331,
+      "34": 0.3941,
+      "35": 0.597
     },
     "races": [
       {
         "state": "MA",
-        "expected_margin_D": 33.65,
+        "expected_margin_D": 33.69,
         "pvi": 13.99,
         "win_prob_D": 1.0,
         "competitive": false
       },
       {
         "state": "DE",
-        "expected_margin_D": 21.69,
+        "expected_margin_D": 21.73,
         "pvi": 8.01,
         "win_prob_D": 0.9995,
         "competitive": false
       },
       {
         "state": "RI",
-        "expected_margin_D": 21.59,
+        "expected_margin_D": 21.63,
         "pvi": 7.96,
         "win_prob_D": 0.9995,
         "competitive": false
       },
       {
         "state": "OR",
-        "expected_margin_D": 20.97,
+        "expected_margin_D": 21.01,
         "pvi": 7.65,
         "win_prob_D": 0.9993,
         "competitive": false
       },
       {
         "state": "IL",
-        "expected_margin_D": 18.35,
+        "expected_margin_D": 18.39,
         "pvi": 6.34,
         "win_prob_D": 0.9975,
         "competitive": false
       },
       {
         "state": "CO",
-        "expected_margin_D": 17.61,
+        "expected_margin_D": 17.65,
         "pvi": 5.97,
-        "win_prob_D": 0.9964,
+        "win_prob_D": 0.9965,
         "competitive": false
       },
       {
         "state": "NJ",
-        "expected_margin_D": 14.21,
+        "expected_margin_D": 14.25,
         "pvi": 4.27,
-        "win_prob_D": 0.985,
+        "win_prob_D": 0.9852,
         "competitive": true
       },
       {
         "state": "ME",
-        "expected_margin_D": 13.31,
+        "expected_margin_D": 13.35,
         "pvi": 3.82,
-        "win_prob_D": 0.979,
+        "win_prob_D": 0.9792,
         "competitive": true
       },
       {
         "state": "NM",
-        "expected_margin_D": 13.03,
+        "expected_margin_D": 13.07,
         "pvi": 3.68,
-        "win_prob_D": 0.9767,
+        "win_prob_D": 0.977,
         "competitive": true
       },
       {
         "state": "VA",
-        "expected_margin_D": 12.65,
+        "expected_margin_D": 12.69,
         "pvi": 3.49,
-        "win_prob_D": 0.9733,
+        "win_prob_D": 0.9737,
         "competitive": true
       },
       {
         "state": "MN",
-        "expected_margin_D": 10.73,
+        "expected_margin_D": 10.77,
         "pvi": 2.53,
-        "win_prob_D": 0.9494,
+        "win_prob_D": 0.9499,
         "competitive": true
       },
       {
         "state": "NH",
-        "expected_margin_D": 9.65,
+        "expected_margin_D": 9.69,
         "pvi": 1.99,
-        "win_prob_D": 0.9298,
+        "win_prob_D": 0.9305,
         "competitive": true
       },
       {
         "state": "MI",
-        "expected_margin_D": 5.29,
+        "expected_margin_D": 5.33,
         "pvi": -0.19,
-        "win_prob_D": 0.7905,
+        "win_prob_D": 0.7921,
         "competitive": true
       },
       {
         "state": "GA",
-        "expected_margin_D": 4.07,
+        "expected_margin_D": 4.11,
         "pvi": -0.8,
-        "win_prob_D": 0.733,
+        "win_prob_D": 0.7348,
         "competitive": true
       },
       {
         "state": "NC",
-        "expected_margin_D": 2.87,
+        "expected_margin_D": 2.91,
         "pvi": -1.4,
-        "win_prob_D": 0.6696,
+        "win_prob_D": 0.6716,
         "competitive": true
       },
       {
         "state": "OH",
-        "expected_margin_D": -4.87,
+        "expected_margin_D": -4.83,
         "pvi": -5.27,
-        "win_prob_D": 0.2288,
+        "win_prob_D": 0.2304,
         "competitive": true
       },
       {
         "state": "FL",
-        "expected_margin_D": -5.11,
+        "expected_margin_D": -5.07,
         "pvi": -5.39,
-        "win_prob_D": 0.2178,
+        "win_prob_D": 0.2195,
         "competitive": true
       },
       {
         "state": "TX",
-        "expected_margin_D": -6.17,
+        "expected_margin_D": -6.13,
         "pvi": -5.92,
-        "win_prob_D": 0.1733,
+        "win_prob_D": 0.1747,
         "competitive": true
       },
       {
         "state": "IA",
-        "expected_margin_D": -6.51,
+        "expected_margin_D": -6.47,
         "pvi": -6.09,
-        "win_prob_D": 0.1603,
+        "win_prob_D": 0.1616,
         "competitive": true
       },
       {
         "state": "AK",
-        "expected_margin_D": -7.23,
+        "expected_margin_D": -7.19,
         "pvi": -6.45,
-        "win_prob_D": 0.135,
+        "win_prob_D": 0.1362,
         "competitive": true
       },
       {
         "state": "KS",
-        "expected_margin_D": -10.39,
+        "expected_margin_D": -10.35,
         "pvi": -8.03,
-        "win_prob_D": 0.0564,
+        "win_prob_D": 0.057,
         "competitive": true
       },
       {
         "state": "SC",
-        "expected_margin_D": -10.89,
+        "expected_margin_D": -10.85,
         "pvi": -8.28,
-        "win_prob_D": 0.0483,
+        "win_prob_D": 0.0488,
         "competitive": true
       },
       {
         "state": "MT",
-        "expected_margin_D": -13.97,
+        "expected_margin_D": -13.93,
         "pvi": -9.82,
-        "win_prob_D": 0.0165,
+        "win_prob_D": 0.0167,
         "competitive": true
       },
       {
         "state": "NE",
-        "expected_margin_D": -14.87,
+        "expected_margin_D": -14.83,
         "pvi": -10.27,
-        "win_prob_D": 0.0116,
+        "win_prob_D": 0.0118,
         "competitive": true
       },
       {
         "state": "LA",
-        "expected_margin_D": -15.83,
+        "expected_margin_D": -15.79,
         "pvi": -10.75,
-        "win_prob_D": 0.0078,
+        "win_prob_D": 0.008,
         "competitive": false
       },
       {
         "state": "MS",
-        "expected_margin_D": -15.89,
+        "expected_margin_D": -15.85,
         "pvi": -10.78,
-        "win_prob_D": 0.0076,
+        "win_prob_D": 0.0078,
         "competitive": false
       },
       {
         "state": "TN",
-        "expected_margin_D": -22.85,
+        "expected_margin_D": -22.81,
         "pvi": -14.26,
         "win_prob_D": 0.0002,
         "competitive": false
       },
       {
         "state": "SD",
-        "expected_margin_D": -23.47,
+        "expected_margin_D": -23.43,
         "pvi": -14.57,
         "win_prob_D": 0.0002,
         "competitive": false
       },
       {
         "state": "AL",
-        "expected_margin_D": -23.95,
+        "expected_margin_D": -23.91,
         "pvi": -14.81,
         "win_prob_D": 0.0001,
         "competitive": false
       },
       {
         "state": "KY",
-        "expected_margin_D": -24.21,
+        "expected_margin_D": -24.17,
         "pvi": -14.94,
         "win_prob_D": 0.0001,
         "competitive": false
       },
       {
         "state": "AR",
-        "expected_margin_D": -24.95,
+        "expected_margin_D": -24.91,
         "pvi": -15.31,
         "win_prob_D": 0.0001,
         "competitive": false
       },
       {
         "state": "OK",
-        "expected_margin_D": -29.01,
+        "expected_margin_D": -28.97,
         "pvi": -17.34,
         "win_prob_D": 0.0,
         "competitive": false
       },
       {
         "state": "ID",
-        "expected_margin_D": -30.41,
+        "expected_margin_D": -30.37,
         "pvi": -18.04,
         "win_prob_D": 0.0,
         "competitive": false
       },
       {
         "state": "WV",
-        "expected_margin_D": -36.25,
+        "expected_margin_D": -36.21,
         "pvi": -20.96,
         "win_prob_D": 0.0,
         "competitive": false
       },
       {
         "state": "WY",
-        "expected_margin_D": -40.79,
+        "expected_margin_D": -40.75,
         "pvi": -23.23,
         "win_prob_D": 0.0,
         "competitive": false
@@ -378,7 +386,7 @@
     "competitive_note": "Races where the model puts the Democratic win probability between 1% and 99%. The rest are not close under any assumption this model makes."
   },
   "seat_projections": {
-    "snapshot_date": "2026-08-20",
+    "snapshot_date": "2026-08-21",
     "sigma": 6.55,
     "holdover_D": 34,
     "majority_at": {
@@ -594,207 +602,207 @@
         }
       },
       "polling": {
-        "tide_D": 5.674,
+        "tide_D": 5.71,
         "senate": {
           "n_races": 35,
-          "expected_D_seats_up": 15.04,
+          "expected_D_seats_up": 15.06,
           "D_seats_up_80pct": [
             12,
             18
           ],
-          "expected_D_total": 49.04,
+          "expected_D_total": 49.06,
           "D_total_80pct": [
             46,
             52
           ],
-          "prob_D_50_plus": 0.3907,
-          "prob_D_51_plus": 0.23
+          "prob_D_50_plus": 0.3941,
+          "prob_D_51_plus": 0.2331
         },
         "races": {
           "AK": {
-            "expected_margin_D": -7.23,
+            "expected_margin_D": -7.19,
             "pvi": -6.45,
-            "win_prob_D": 0.135
+            "win_prob_D": 0.1362
           },
           "AL": {
-            "expected_margin_D": -23.95,
+            "expected_margin_D": -23.91,
             "pvi": -14.81,
             "win_prob_D": 0.0001
           },
           "AR": {
-            "expected_margin_D": -24.95,
+            "expected_margin_D": -24.91,
             "pvi": -15.31,
             "win_prob_D": 0.0001
           },
           "CO": {
-            "expected_margin_D": 17.61,
+            "expected_margin_D": 17.65,
             "pvi": 5.97,
-            "win_prob_D": 0.9964
+            "win_prob_D": 0.9965
           },
           "DE": {
-            "expected_margin_D": 21.69,
+            "expected_margin_D": 21.73,
             "pvi": 8.01,
             "win_prob_D": 0.9995
           },
           "FL": {
-            "expected_margin_D": -5.11,
+            "expected_margin_D": -5.07,
             "pvi": -5.39,
-            "win_prob_D": 0.2178
+            "win_prob_D": 0.2195
           },
           "GA": {
-            "expected_margin_D": 4.07,
+            "expected_margin_D": 4.11,
             "pvi": -0.8,
-            "win_prob_D": 0.733
+            "win_prob_D": 0.7348
           },
           "IA": {
-            "expected_margin_D": -6.51,
+            "expected_margin_D": -6.47,
             "pvi": -6.09,
-            "win_prob_D": 0.1603
+            "win_prob_D": 0.1616
           },
           "ID": {
-            "expected_margin_D": -30.41,
+            "expected_margin_D": -30.37,
             "pvi": -18.04,
             "win_prob_D": 0.0
           },
           "IL": {
-            "expected_margin_D": 18.35,
+            "expected_margin_D": 18.39,
             "pvi": 6.34,
             "win_prob_D": 0.9975
           },
           "KS": {
-            "expected_margin_D": -10.39,
+            "expected_margin_D": -10.35,
             "pvi": -8.03,
-            "win_prob_D": 0.0564
+            "win_prob_D": 0.057
           },
           "KY": {
-            "expected_margin_D": -24.21,
+            "expected_margin_D": -24.17,
             "pvi": -14.94,
             "win_prob_D": 0.0001
           },
           "LA": {
-            "expected_margin_D": -15.83,
+            "expected_margin_D": -15.79,
             "pvi": -10.75,
-            "win_prob_D": 0.0078
+            "win_prob_D": 0.008
           },
           "MA": {
-            "expected_margin_D": 33.65,
+            "expected_margin_D": 33.69,
             "pvi": 13.99,
             "win_prob_D": 1.0
           },
           "ME": {
-            "expected_margin_D": 13.31,
+            "expected_margin_D": 13.35,
             "pvi": 3.82,
-            "win_prob_D": 0.979
+            "win_prob_D": 0.9792
           },
           "MI": {
-            "expected_margin_D": 5.29,
+            "expected_margin_D": 5.33,
             "pvi": -0.19,
-            "win_prob_D": 0.7905
+            "win_prob_D": 0.7921
           },
           "MN": {
-            "expected_margin_D": 10.73,
+            "expected_margin_D": 10.77,
             "pvi": 2.53,
-            "win_prob_D": 0.9494
+            "win_prob_D": 0.9499
           },
           "MS": {
-            "expected_margin_D": -15.89,
+            "expected_margin_D": -15.85,
             "pvi": -10.78,
-            "win_prob_D": 0.0076
+            "win_prob_D": 0.0078
           },
           "MT": {
-            "expected_margin_D": -13.97,
+            "expected_margin_D": -13.93,
             "pvi": -9.82,
-            "win_prob_D": 0.0165
+            "win_prob_D": 0.0167
           },
           "NC": {
-            "expected_margin_D": 2.87,
+            "expected_margin_D": 2.91,
             "pvi": -1.4,
-            "win_prob_D": 0.6696
+            "win_prob_D": 0.6716
           },
           "NE": {
-            "expected_margin_D": -14.87,
+            "expected_margin_D": -14.83,
             "pvi": -10.27,
-            "win_prob_D": 0.0116
+            "win_prob_D": 0.0118
           },
           "NH": {
-            "expected_margin_D": 9.65,
+            "expected_margin_D": 9.69,
             "pvi": 1.99,
-            "win_prob_D": 0.9297
+            "win_prob_D": 0.9305
           },
           "NJ": {
-            "expected_margin_D": 14.21,
+            "expected_margin_D": 14.25,
             "pvi": 4.27,
-            "win_prob_D": 0.985
+            "win_prob_D": 0.9852
           },
           "NM": {
-            "expected_margin_D": 13.03,
+            "expected_margin_D": 13.07,
             "pvi": 3.68,
-            "win_prob_D": 0.9767
+            "win_prob_D": 0.977
           },
           "OH": {
-            "expected_margin_D": -4.87,
+            "expected_margin_D": -4.83,
             "pvi": -5.27,
-            "win_prob_D": 0.2288
+            "win_prob_D": 0.2304
           },
           "OK": {
-            "expected_margin_D": -29.01,
+            "expected_margin_D": -28.97,
             "pvi": -17.34,
             "win_prob_D": 0.0
           },
           "OR": {
-            "expected_margin_D": 20.97,
+            "expected_margin_D": 21.01,
             "pvi": 7.65,
             "win_prob_D": 0.9993
           },
           "RI": {
-            "expected_margin_D": 21.59,
+            "expected_margin_D": 21.63,
             "pvi": 7.96,
             "win_prob_D": 0.9995
           },
           "SC": {
-            "expected_margin_D": -10.89,
+            "expected_margin_D": -10.85,
             "pvi": -8.28,
-            "win_prob_D": 0.0483
+            "win_prob_D": 0.0488
           },
           "SD": {
-            "expected_margin_D": -23.47,
+            "expected_margin_D": -23.43,
             "pvi": -14.57,
             "win_prob_D": 0.0002
           },
           "TN": {
-            "expected_margin_D": -22.85,
+            "expected_margin_D": -22.81,
             "pvi": -14.26,
             "win_prob_D": 0.0002
           },
           "TX": {
-            "expected_margin_D": -6.17,
+            "expected_margin_D": -6.13,
             "pvi": -5.92,
-            "win_prob_D": 0.1733
+            "win_prob_D": 0.1747
           },
           "VA": {
-            "expected_margin_D": 12.65,
+            "expected_margin_D": 12.69,
             "pvi": 3.49,
-            "win_prob_D": 0.9733
+            "win_prob_D": 0.9737
           },
           "WV": {
-            "expected_margin_D": -36.25,
+            "expected_margin_D": -36.21,
             "pvi": -20.96,
             "win_prob_D": 0.0
           },
           "WY": {
-            "expected_margin_D": -40.79,
+            "expected_margin_D": -40.75,
             "pvi": -23.23,
             "win_prob_D": 0.0
           }
         },
         "house": {
           "n_districts": 435,
-          "expected_D_seats": 226.38,
+          "expected_D_seats": 226.55,
           "D_seats_80pct": [
             205,
             250
           ],
-          "prob_D_majority": 0.6763,
+          "prob_D_majority": 0.6802,
           "majority_at": 218,
           "pvi_source": "cook_pvi"
         }
@@ -813,9 +821,10 @@
       "total": null,
       "dates": [
         "2026-08-19",
-        "2026-08-20"
+        "2026-08-20",
+        "2026-08-21"
       ],
-      "n_dates": 2,
+      "n_dates": 3,
       "dense": false,
       "date_ticks": [
         {
@@ -824,7 +833,7 @@
           "anchor": "start"
         },
         {
-          "date": "2026-08-20",
+          "date": "2026-08-21",
           "x": 100.0,
           "anchor": "end"
         }
@@ -832,12 +841,12 @@
       "x_ticks": [
         {
           "v": 0,
-          "x": 10.3,
+          "x": 10.13,
           "label": "EVEN"
         },
         {
           "v": 10,
-          "x": 55.15,
+          "x": 55.06,
           "label": "D+10"
         },
         {
@@ -849,12 +858,12 @@
       "y_ticks": [
         {
           "v": 0,
-          "y": 89.7,
+          "y": 89.87,
           "label": "EVEN"
         },
         {
           "v": 10,
-          "y": 44.85,
+          "y": 44.94,
           "label": "D+10"
         },
         {
@@ -866,7 +875,7 @@
       "ref_y": null,
       "ref_label": "",
       "ref_value": null,
-      "zero_y": 89.7,
+      "zero_y": 89.87,
       "series": [
         {
           "key": "fundamentals",
@@ -875,33 +884,39 @@
           "color_dark": "#9085e9",
           "points": [
             {
-              "x": 100.0,
-              "y": 42.7,
+              "x": 50.0,
+              "y": 42.78,
               "date": "2026-08-20",
+              "v": 10.48
+            },
+            {
+              "x": 100.0,
+              "y": 42.78,
+              "date": "2026-08-21",
               "v": 10.48
             }
           ],
-          "polyline": "100.0,42.7",
+          "polyline": "50.0,42.78 100.0,42.78",
           "last": {
             "x": 100.0,
-            "y": 42.7,
-            "date": "2026-08-20",
+            "y": 42.78,
+            "date": "2026-08-21",
             "v": 10.48
           },
           "band": {
-            "y_low": 69.02,
-            "y_high": 16.37,
+            "y_low": 69.16,
+            "y_high": 16.4,
             "low": 4.61,
             "high": 16.35
           },
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 42.7,
+          "label_y": 42.78,
           "label_nudged": false,
-          "sx": 57.3,
-          "sx_low": 30.98,
-          "sx_high": 83.63
+          "sx": 57.22,
+          "sx_low": 30.84,
+          "sx_high": 83.6
         },
         {
           "key": "polling",
@@ -910,33 +925,39 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 100.0,
-              "y": 64.25,
+              "x": 50.0,
+              "y": 64.38,
               "date": "2026-08-20",
               "v": 5.674
+            },
+            {
+              "x": 100.0,
+              "y": 64.21,
+              "date": "2026-08-21",
+              "v": 5.71
             }
           ],
-          "polyline": "100.0,64.25",
+          "polyline": "50.0,64.38 100.0,64.21",
           "last": {
             "x": 100.0,
-            "y": 64.25,
-            "date": "2026-08-20",
-            "v": 5.674
+            "y": 64.21,
+            "date": "2026-08-21",
+            "v": 5.71
           },
           "band": {
-            "y_low": 87.24,
-            "y_high": 41.26,
-            "low": 0.548,
-            "high": 10.801
+            "y_low": 87.25,
+            "y_high": 41.18,
+            "low": 0.584,
+            "high": 10.836
           },
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 72.0,
-          "label_nudged": true,
-          "sx": 35.75,
-          "sx_low": 12.76,
-          "sx_high": 58.74
+          "label_y": 64.21,
+          "label_nudged": false,
+          "sx": 35.79,
+          "sx_low": 12.75,
+          "sx_high": 58.82
         },
         {
           "key": "professional",
@@ -946,31 +967,37 @@
           "points": [
             {
               "x": 0.0,
-              "y": 64.0,
+              "y": 64.12,
               "date": "2026-08-19",
               "v": 5.73
             },
             {
-              "x": 100.0,
-              "y": 64.0,
+              "x": 50.0,
+              "y": 64.35,
               "date": "2026-08-20",
-              "v": 5.73
+              "v": 5.68
+            },
+            {
+              "x": 100.0,
+              "y": 64.35,
+              "date": "2026-08-21",
+              "v": 5.68
             }
           ],
-          "polyline": "0.0,64.0 100.0,64.0",
+          "polyline": "0.0,64.12 50.0,64.35 100.0,64.35",
           "last": {
             "x": 100.0,
-            "y": 64.0,
-            "date": "2026-08-20",
-            "v": 5.73
+            "y": 64.35,
+            "date": "2026-08-21",
+            "v": 5.68
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": "1",
-          "label_y": 64.0,
-          "label_nudged": false,
-          "sx": 36.0
+          "label_y": 72.21,
+          "label_nudged": true,
+          "sx": 35.65
         }
       ]
     },
@@ -983,9 +1010,10 @@
       "total": 435,
       "dates": [
         "2026-08-19",
-        "2026-08-20"
+        "2026-08-20",
+        "2026-08-21"
       ],
-      "n_dates": 2,
+      "n_dates": 3,
       "dense": false,
       "date_ticks": [
         {
@@ -994,7 +1022,7 @@
           "anchor": "start"
         },
         {
-          "date": "2026-08-20",
+          "date": "2026-08-21",
           "x": 100.0,
           "anchor": "end"
         }
@@ -1045,17 +1073,23 @@
           "color_dark": "#9085e9",
           "points": [
             {
-              "x": 100.0,
+              "x": 50.0,
               "y": 45.89,
               "date": "2026-08-20",
               "v": 250.13
+            },
+            {
+              "x": 100.0,
+              "y": 45.89,
+              "date": "2026-08-21",
+              "v": 250.13
             }
           ],
-          "polyline": "100.0,45.89",
+          "polyline": "50.0,45.89 100.0,45.89",
           "last": {
             "x": 100.0,
             "y": 45.89,
-            "date": "2026-08-20",
+            "date": "2026-08-21",
             "v": 250.13
           },
           "band": {
@@ -1064,10 +1098,10 @@
             "low": 223.0,
             "high": 281.0
           },
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 58.28,
+          "label_y": 58.68,
           "label_nudged": true,
           "sx": 54.11,
           "sx_low": 29.15,
@@ -1080,18 +1114,24 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 100.0,
+              "x": 50.0,
               "y": 67.74,
               "date": "2026-08-20",
               "v": 226.38
+            },
+            {
+              "x": 100.0,
+              "y": 67.58,
+              "date": "2026-08-21",
+              "v": 226.55
             }
           ],
-          "polyline": "100.0,67.74",
+          "polyline": "50.0,67.74 100.0,67.58",
           "last": {
             "x": 100.0,
-            "y": 67.74,
-            "date": "2026-08-20",
-            "v": 226.38
+            "y": 67.58,
+            "date": "2026-08-21",
+            "v": 226.55
           },
           "band": {
             "y_low": 87.41,
@@ -1099,12 +1139,12 @@
             "low": 205.0,
             "high": 250.0
           },
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 71.28,
+          "label_y": 71.68,
           "label_nudged": true,
-          "sx": 32.26,
+          "sx": 32.42,
           "sx_low": 12.59,
           "sx_high": 53.99
         },
@@ -1121,26 +1161,32 @@
               "v": 250.79
             },
             {
-              "x": 100.0,
-              "y": 45.28,
+              "x": 50.0,
+              "y": 45.55,
               "date": "2026-08-20",
-              "v": 250.79
+              "v": 250.5
+            },
+            {
+              "x": 100.0,
+              "y": 45.68,
+              "date": "2026-08-21",
+              "v": 250.35
             }
           ],
-          "polyline": "0.0,45.28 100.0,45.28",
+          "polyline": "0.0,45.28 50.0,45.55 100.0,45.68",
           "last": {
             "x": 100.0,
-            "y": 45.28,
-            "date": "2026-08-20",
-            "v": 250.79
+            "y": 45.68,
+            "date": "2026-08-21",
+            "v": 250.35
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": "1",
-          "label_y": 45.28,
+          "label_y": 45.68,
           "label_nudged": false,
-          "sx": 54.72
+          "sx": 54.32
         }
       ]
     },
@@ -1153,9 +1199,10 @@
       "total": null,
       "dates": [
         "2026-08-19",
-        "2026-08-20"
+        "2026-08-20",
+        "2026-08-21"
       ],
-      "n_dates": 2,
+      "n_dates": 3,
       "dense": false,
       "date_ticks": [
         {
@@ -1164,7 +1211,7 @@
           "anchor": "start"
         },
         {
-          "date": "2026-08-20",
+          "date": "2026-08-21",
           "x": 100.0,
           "anchor": "end"
         }
@@ -1235,21 +1282,27 @@
           "color_dark": "#9085e9",
           "points": [
             {
-              "x": 100.0,
+              "x": 50.0,
               "y": 12.72,
               "date": "2026-08-20",
               "v": 0.9491
+            },
+            {
+              "x": 100.0,
+              "y": 12.72,
+              "date": "2026-08-21",
+              "v": 0.9491
             }
           ],
-          "polyline": "100.0,12.72",
+          "polyline": "50.0,12.72 100.0,12.72",
           "last": {
             "x": 100.0,
             "y": 12.72,
-            "date": "2026-08-20",
+            "date": "2026-08-21",
             "v": 0.9491
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
           "label_y": 12.72,
@@ -1263,26 +1316,32 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 100.0,
+              "x": 50.0,
               "y": 80.92,
               "date": "2026-08-20",
               "v": 0.6763
+            },
+            {
+              "x": 100.0,
+              "y": 79.95,
+              "date": "2026-08-21",
+              "v": 0.6802
             }
           ],
-          "polyline": "100.0,80.92",
+          "polyline": "50.0,80.92 100.0,79.95",
           "last": {
             "x": 100.0,
-            "y": 80.92,
-            "date": "2026-08-20",
-            "v": 0.6763
+            "y": 79.95,
+            "date": "2026-08-21",
+            "v": 0.6802
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 80.92,
+          "label_y": 79.95,
           "label_nudged": false,
-          "sx": 19.08
+          "sx": 20.05
         },
         {
           "key": "professional",
@@ -1297,26 +1356,32 @@
               "v": 0.8686
             },
             {
-              "x": 100.0,
-              "y": 32.85,
+              "x": 50.0,
+              "y": 33.1,
               "date": "2026-08-20",
-              "v": 0.8686
+              "v": 0.8676
+            },
+            {
+              "x": 100.0,
+              "y": 33.37,
+              "date": "2026-08-21",
+              "v": 0.8665
             }
           ],
-          "polyline": "0.0,32.85 100.0,32.85",
+          "polyline": "0.0,32.85 50.0,33.1 100.0,33.37",
           "last": {
             "x": 100.0,
-            "y": 32.85,
-            "date": "2026-08-20",
-            "v": 0.8686
+            "y": 33.37,
+            "date": "2026-08-21",
+            "v": 0.8665
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": "1",
-          "label_y": 44.25,
-          "label_nudged": true,
-          "sx": 67.15
+          "label_y": 33.37,
+          "label_nudged": false,
+          "sx": 66.63
         },
         {
           "key": "market",
@@ -1331,26 +1396,32 @@
               "v": 0.875
             },
             {
-              "x": 100.0,
-              "y": 31.25,
+              "x": 50.0,
+              "y": 28.75,
               "date": "2026-08-20",
-              "v": 0.875
+              "v": 0.885
+            },
+            {
+              "x": 100.0,
+              "y": 64.55,
+              "date": "2026-08-21",
+              "v": 0.7418
             }
           ],
-          "polyline": "0.0,31.25 100.0,31.25",
+          "polyline": "0.0,31.25 50.0,28.75 100.0,64.55",
           "last": {
             "x": 100.0,
-            "y": 31.25,
-            "date": "2026-08-20",
-            "v": 0.875
+            "y": 64.55,
+            "date": "2026-08-21",
+            "v": 0.7418
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
-          "n_sources": "1",
-          "label_y": 31.25,
+          "n_sources": "2",
+          "label_y": 64.55,
           "label_nudged": false,
-          "sx": 68.75
+          "sx": 35.45
         }
       ]
     },
@@ -1363,9 +1434,10 @@
       "total": 100,
       "dates": [
         "2026-08-19",
-        "2026-08-20"
+        "2026-08-20",
+        "2026-08-21"
       ],
-      "n_dates": 2,
+      "n_dates": 3,
       "dense": false,
       "date_ticks": [
         {
@@ -1374,7 +1446,7 @@
           "anchor": "start"
         },
         {
-          "date": "2026-08-20",
+          "date": "2026-08-21",
           "x": 100.0,
           "anchor": "end"
         }
@@ -1425,17 +1497,23 @@
           "color_dark": "#9085e9",
           "points": [
             {
-              "x": 100.0,
+              "x": 50.0,
               "y": 42.54,
               "date": "2026-08-20",
               "v": 51.47
+            },
+            {
+              "x": 100.0,
+              "y": 42.54,
+              "date": "2026-08-21",
+              "v": 51.47
             }
           ],
-          "polyline": "100.0,42.54",
+          "polyline": "50.0,42.54 100.0,42.54",
           "last": {
             "x": 100.0,
             "y": 42.54,
-            "date": "2026-08-20",
+            "date": "2026-08-21",
             "v": 51.47
           },
           "band": {
@@ -1444,7 +1522,7 @@
             "low": 48.0,
             "high": 55.0
           },
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
           "label_y": 42.54,
@@ -1460,18 +1538,24 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 100.0,
+              "x": 50.0,
               "y": 61.23,
               "date": "2026-08-20",
               "v": 49.04
+            },
+            {
+              "x": 100.0,
+              "y": 61.08,
+              "date": "2026-08-21",
+              "v": 49.06
             }
           ],
-          "polyline": "100.0,61.23",
+          "polyline": "50.0,61.23 100.0,61.08",
           "last": {
             "x": 100.0,
-            "y": 61.23,
-            "date": "2026-08-20",
-            "v": 49.04
+            "y": 61.08,
+            "date": "2026-08-21",
+            "v": 49.06
           },
           "band": {
             "y_low": 84.62,
@@ -1479,12 +1563,12 @@
             "low": 46.0,
             "high": 52.0
           },
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
           "label_y": 68.53999999999999,
           "label_nudged": true,
-          "sx": 38.77,
+          "sx": 38.92,
           "sx_low": 15.38,
           "sx_high": 61.54
         },
@@ -1501,26 +1585,32 @@
               "v": 51.43
             },
             {
-              "x": 100.0,
-              "y": 42.85,
+              "x": 50.0,
+              "y": 42.38,
               "date": "2026-08-20",
-              "v": 51.43
+              "v": 51.49
+            },
+            {
+              "x": 100.0,
+              "y": 43.23,
+              "date": "2026-08-21",
+              "v": 51.38
             }
           ],
-          "polyline": "0.0,42.85 100.0,42.85",
+          "polyline": "0.0,42.85 50.0,42.38 100.0,43.23",
           "last": {
             "x": 100.0,
-            "y": 42.85,
-            "date": "2026-08-20",
-            "v": 51.43
+            "y": 43.23,
+            "date": "2026-08-21",
+            "v": 51.38
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": "1",
           "label_y": 55.54,
           "label_nudged": true,
-          "sx": 57.15
+          "sx": 56.77
         }
       ]
     },
@@ -1533,9 +1623,10 @@
       "total": null,
       "dates": [
         "2026-08-19",
-        "2026-08-20"
+        "2026-08-20",
+        "2026-08-21"
       ],
-      "n_dates": 2,
+      "n_dates": 3,
       "dense": false,
       "date_ticks": [
         {
@@ -1544,7 +1635,7 @@
           "anchor": "start"
         },
         {
-          "date": "2026-08-20",
+          "date": "2026-08-21",
           "x": 100.0,
           "anchor": "end"
         }
@@ -1552,38 +1643,48 @@
       "x_ticks": [
         {
           "v": 0.2,
-          "x": 7.59,
+          "x": 6.77,
           "label": "20%"
         },
         {
           "v": 0.4,
-          "x": 45.21,
+          "x": 37.85,
           "label": "40%"
         },
         {
           "v": 0.6,
-          "x": 82.83,
+          "x": 68.92,
           "label": "60%"
+        },
+        {
+          "v": 0.8,
+          "x": 100.0,
+          "label": "80%"
         }
       ],
       "y_ticks": [
         {
           "v": 0.2,
-          "y": 92.41,
+          "y": 93.23,
           "label": "20%"
         },
         {
           "v": 0.4,
-          "y": 54.79,
+          "y": 62.15,
           "label": "40%"
         },
         {
           "v": 0.6,
-          "y": 17.17,
+          "y": 31.08,
           "label": "60%"
+        },
+        {
+          "v": 0.8,
+          "y": 0.0,
+          "label": "80%"
         }
       ],
-      "ref_y": 35.98,
+      "ref_y": 46.62,
       "ref_label": "even",
       "ref_value": 0.5,
       "zero_y": null,
@@ -1595,26 +1696,32 @@
           "color_dark": "#9085e9",
           "points": [
             {
-              "x": 100.0,
-              "y": 13.24,
+              "x": 50.0,
+              "y": 27.83,
               "date": "2026-08-20",
+              "v": 0.6209
+            },
+            {
+              "x": 100.0,
+              "y": 27.83,
+              "date": "2026-08-21",
               "v": 0.6209
             }
           ],
-          "polyline": "100.0,13.24",
+          "polyline": "50.0,27.83 100.0,27.83",
           "last": {
             "x": 100.0,
-            "y": 13.24,
-            "date": "2026-08-20",
+            "y": 27.83,
+            "date": "2026-08-21",
             "v": 0.6209
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 13.24,
-          "label_nudged": false,
-          "sx": 86.76
+          "label_y": 40.629999999999995,
+          "label_nudged": true,
+          "sx": 72.17
         },
         {
           "key": "polling",
@@ -1623,26 +1730,32 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 100.0,
-              "y": 86.76,
+              "x": 50.0,
+              "y": 88.57,
               "date": "2026-08-20",
               "v": 0.23
+            },
+            {
+              "x": 100.0,
+              "y": 88.09,
+              "date": "2026-08-21",
+              "v": 0.2331
             }
           ],
-          "polyline": "100.0,86.76",
+          "polyline": "50.0,88.57 100.0,88.09",
           "last": {
             "x": 100.0,
-            "y": 86.76,
-            "date": "2026-08-20",
-            "v": 0.23
+            "y": 88.09,
+            "date": "2026-08-21",
+            "v": 0.2331
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": 1,
-          "label_y": 86.76,
+          "label_y": 88.09,
           "label_nudged": false,
-          "sx": 13.24
+          "sx": 11.91
         },
         {
           "key": "professional",
@@ -1652,31 +1765,37 @@
           "points": [
             {
               "x": 0.0,
-              "y": 13.35,
+              "y": 27.92,
               "date": "2026-08-19",
               "v": 0.6203
             },
             {
-              "x": 100.0,
-              "y": 13.35,
+              "x": 50.0,
+              "y": 25.06,
               "date": "2026-08-20",
-              "v": 0.6203
+              "v": 0.6387
+            },
+            {
+              "x": 100.0,
+              "y": 27.63,
+              "date": "2026-08-21",
+              "v": 0.6222
             }
           ],
-          "polyline": "0.0,13.35 100.0,13.35",
+          "polyline": "0.0,27.92 50.0,25.06 100.0,27.63",
           "last": {
             "x": 100.0,
-            "y": 13.35,
-            "date": "2026-08-20",
-            "v": 0.6203
+            "y": 27.63,
+            "date": "2026-08-21",
+            "v": 0.6222
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
           "n_sources": "1",
-          "label_y": 26.240000000000002,
-          "label_nudged": true,
-          "sx": 86.65
+          "label_y": 27.63,
+          "label_nudged": false,
+          "sx": 72.37
         },
         {
           "key": "market",
@@ -1686,31 +1805,37 @@
           "points": [
             {
               "x": 0.0,
-              "y": 35.04,
+              "y": 45.84,
               "date": "2026-08-19",
               "v": 0.505
             },
             {
-              "x": 100.0,
-              "y": 35.04,
+              "x": 50.0,
+              "y": 45.84,
               "date": "2026-08-20",
               "v": 0.505
+            },
+            {
+              "x": 100.0,
+              "y": 57.4,
+              "date": "2026-08-21",
+              "v": 0.4306
             }
           ],
-          "polyline": "0.0,35.04 100.0,35.04",
+          "polyline": "0.0,45.84 50.0,45.84 100.0,57.4",
           "last": {
             "x": 100.0,
-            "y": 35.04,
-            "date": "2026-08-20",
-            "v": 0.505
+            "y": 57.4,
+            "date": "2026-08-21",
+            "v": 0.4306
           },
           "band": null,
-          "last_date": "2026-08-20",
+          "last_date": "2026-08-21",
           "stale": false,
-          "n_sources": "1",
-          "label_y": 39.24,
-          "label_nudged": true,
-          "sx": 64.96
+          "n_sources": "2",
+          "label_y": 57.4,
+          "label_nudged": false,
+          "sx": 42.6
         }
       ]
     },
@@ -1806,10 +1931,10 @@
             "district": "",
             "n": 12,
             "spread": 4.0,
-            "mean": 2.08,
+            "mean": 2.21,
             "x_lo": 60.0,
             "x_hi": 100.0,
-            "x_mean": 79.17,
+            "x_mean": 77.92,
             "n_distinct": 4,
             "dots": [
               {
@@ -1820,18 +1945,17 @@
                 "forecasters": [
                   "Split Ticket"
                 ],
-                "r": 3.58
+                "r": 3.67
               },
               {
                 "v": 1.5,
                 "x": 85.0,
-                "n": 6,
+                "n": 5,
                 "label": "Likely D",
                 "forecasters": [
                   "Decision Desk HQ",
                   "The Economist",
                   "FiftyPlusOne",
-                  "Race to the WH",
                   "Silver Bulletin",
                   "VoteHub"
                 ],
@@ -1840,15 +1964,16 @@
               {
                 "v": 3.0,
                 "x": 70.0,
-                "n": 4,
+                "n": 5,
                 "label": "Lean D",
                 "forecasters": [
                   "Cook Political Report",
                   "Fox News Power Rankings",
+                  "Race to the WH",
                   "RealClearPolitics",
                   "Sabato's Crystal Ball"
                 ],
-                "r": 4.56
+                "r": 5.0
               },
               {
                 "v": 4.0,
@@ -1858,7 +1983,69 @@
                 "forecasters": [
                   "Inside Elections"
                 ],
-                "r": 3.58
+                "r": 3.67
+              }
+            ]
+          },
+          {
+            "race_id": "SEN_TX_2026",
+            "state": "TX",
+            "district": "",
+            "n": 12,
+            "spread": 4.0,
+            "mean": 5.08,
+            "x_lo": 30.0,
+            "x_hi": 70.0,
+            "x_mean": 49.17,
+            "n_distinct": 4,
+            "dots": [
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 1,
+                "label": "Lean D",
+                "forecasters": [
+                  "Silver Bulletin"
+                ],
+                "r": 3.45
+              },
+              {
+                "v": 4.0,
+                "x": 60.0,
+                "n": 1,
+                "label": "Tilt D",
+                "forecasters": [
+                  "Race to the WH"
+                ],
+                "r": 3.45
+              },
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 8,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Decision Desk HQ",
+                  "The Economist",
+                  "FiftyPlusOne",
+                  "Fox News Power Rankings",
+                  "RealClearPolitics",
+                  "Split Ticket",
+                  "VoteHub"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 7.0,
+                "x": 30.0,
+                "n": 2,
+                "label": "Lean R",
+                "forecasters": [
+                  "Inside Elections",
+                  "Sabato's Crystal Ball"
+                ],
+                "r": 3.8
               }
             ]
           },
@@ -2252,59 +2439,6 @@
             ]
           },
           {
-            "race_id": "SEN_TX_2026",
-            "state": "TX",
-            "district": "",
-            "n": 12,
-            "spread": 3.0,
-            "mean": 5.42,
-            "x_lo": 30.0,
-            "x_hi": 60.0,
-            "x_mean": 45.83,
-            "n_distinct": 3,
-            "dots": [
-              {
-                "v": 4.0,
-                "x": 60.0,
-                "n": 1,
-                "label": "Tilt D",
-                "forecasters": [
-                  "Race to the WH"
-                ],
-                "r": 3.45
-              },
-              {
-                "v": 5.0,
-                "x": 50.0,
-                "n": 8,
-                "label": "Toss-up",
-                "forecasters": [
-                  "Decision Desk HQ",
-                  "The Economist",
-                  "FiftyPlusOne",
-                  "Fox News Power Rankings",
-                  "RealClearPolitics",
-                  "Silver Bulletin",
-                  "Split Ticket",
-                  "VoteHub"
-                ],
-                "r": 5.0
-              },
-              {
-                "v": 7.0,
-                "x": 30.0,
-                "n": 3,
-                "label": "Lean R",
-                "forecasters": [
-                  "Cook Political Report",
-                  "Inside Elections",
-                  "Sabato's Crystal Ball"
-                ],
-                "r": 4.07
-              }
-            ]
-          },
-          {
             "race_id": "SEN_GA_2026",
             "state": "GA",
             "district": "",
@@ -2460,18 +2594,19 @@
             "district": "",
             "n": 12,
             "spread": 2.0,
-            "mean": 5.92,
+            "mean": 5.75,
             "x_lo": 30.0,
             "x_hi": 50.0,
-            "x_mean": 40.83,
+            "x_mean": 42.5,
             "n_distinct": 3,
             "dots": [
               {
                 "v": 5.0,
                 "x": 50.0,
-                "n": 6,
+                "n": 7,
                 "label": "Toss-up",
                 "forecasters": [
+                  "Cook Political Report",
                   "Decision Desk HQ",
                   "FiftyPlusOne",
                   "Fox News Power Rankings",
@@ -2489,21 +2624,20 @@
                 "forecasters": [
                   "Inside Elections"
                 ],
-                "r": 3.58
+                "r": 3.51
               },
               {
                 "v": 7.0,
                 "x": 30.0,
-                "n": 5,
+                "n": 4,
                 "label": "Lean R",
                 "forecasters": [
-                  "Cook Political Report",
                   "The Economist",
                   "Sabato's Crystal Ball",
                   "Split Ticket",
                   "VoteHub"
                 ],
-                "r": 4.79
+                "r": 4.41
               }
             ]
           },
@@ -3651,67 +3785,6 @@
             ]
           },
           {
-            "race_id": "HOU_CA_45_2026",
-            "state": "CA",
-            "district": "45",
-            "n": 11,
-            "spread": 4.0,
-            "mean": 1.18,
-            "x_lo": 60.0,
-            "x_hi": 100.0,
-            "x_mean": 88.18,
-            "n_distinct": 4,
-            "dots": [
-              {
-                "v": 0.0,
-                "x": 100.0,
-                "n": 6,
-                "label": "Safe D",
-                "forecasters": [
-                  "The Economist",
-                  "FiftyPlusOne",
-                  "Race to the WH",
-                  "Silver Bulletin",
-                  "Split Ticket",
-                  "VoteHub"
-                ],
-                "r": 5.0
-              },
-              {
-                "v": 1.5,
-                "x": 85.0,
-                "n": 2,
-                "label": "Likely D",
-                "forecasters": [
-                  "Cook Political Report",
-                  "Decision Desk HQ"
-                ],
-                "r": 3.99
-              },
-              {
-                "v": 3.0,
-                "x": 70.0,
-                "n": 2,
-                "label": "Lean D",
-                "forecasters": [
-                  "Fox News Power Rankings",
-                  "Sabato's Crystal Ball"
-                ],
-                "r": 3.99
-              },
-              {
-                "v": 4.0,
-                "x": 60.0,
-                "n": 1,
-                "label": "Tilt D",
-                "forecasters": [
-                  "Inside Elections"
-                ],
-                "r": 3.58
-              }
-            ]
-          },
-          {
             "race_id": "HOU_FL_22_2026",
             "state": "FL",
             "district": "22",
@@ -4311,6 +4384,67 @@
                 "r": 3.67
               }
             ]
+          },
+          {
+            "race_id": "HOU_PA_08_2026",
+            "state": "PA",
+            "district": "08",
+            "n": 11,
+            "spread": 4.0,
+            "mean": 4.73,
+            "x_lo": 30.0,
+            "x_hi": 70.0,
+            "x_mean": 52.73,
+            "n_distinct": 4,
+            "dots": [
+              {
+                "v": 3.0,
+                "x": 70.0,
+                "n": 2,
+                "label": "Lean D",
+                "forecasters": [
+                  "FiftyPlusOne",
+                  "Silver Bulletin"
+                ],
+                "r": 3.88
+              },
+              {
+                "v": 4.0,
+                "x": 60.0,
+                "n": 1,
+                "label": "Tilt D",
+                "forecasters": [
+                  "VoteHub"
+                ],
+                "r": 3.51
+              },
+              {
+                "v": 5.0,
+                "x": 50.0,
+                "n": 7,
+                "label": "Toss-up",
+                "forecasters": [
+                  "Cook Political Report",
+                  "Decision Desk HQ",
+                  "Fox News Power Rankings",
+                  "Inside Elections",
+                  "Race to the WH",
+                  "Sabato's Crystal Ball",
+                  "Split Ticket"
+                ],
+                "r": 5.0
+              },
+              {
+                "v": 7.0,
+                "x": 30.0,
+                "n": 1,
+                "label": "Lean R",
+                "forecasters": [
+                  "The Economist"
+                ],
+                "r": 3.51
+              }
+            ]
           }
         ]
       }
@@ -4370,7 +4504,7 @@
             "label": "MA",
             "state": "MA",
             "district": "",
-            "margin": 33.65,
+            "margin": 33.69,
             "win_prob_D": 1.0,
             "seat_no": 35,
             "x": 9.2,
@@ -4383,7 +4517,7 @@
             "label": "DE",
             "state": "DE",
             "district": "",
-            "margin": 21.69,
+            "margin": 21.73,
             "win_prob_D": 0.9995,
             "seat_no": 36,
             "x": 11.6,
@@ -4396,7 +4530,7 @@
             "label": "RI",
             "state": "RI",
             "district": "",
-            "margin": 21.59,
+            "margin": 21.63,
             "win_prob_D": 0.9995,
             "seat_no": 37,
             "x": 14.0,
@@ -4409,7 +4543,7 @@
             "label": "OR",
             "state": "OR",
             "district": "",
-            "margin": 20.97,
+            "margin": 21.01,
             "win_prob_D": 0.9993,
             "seat_no": 38,
             "x": 16.4,
@@ -4422,11 +4556,11 @@
             "label": "IL",
             "state": "IL",
             "district": "",
-            "margin": 18.35,
+            "margin": 18.39,
             "win_prob_D": 0.9975,
             "seat_no": 39,
             "x": 18.8,
-            "y": 4.12,
+            "y": 4.02,
             "clipped": false,
             "competitive": false,
             "lead": "D"
@@ -4435,11 +4569,11 @@
             "label": "CO",
             "state": "CO",
             "district": "",
-            "margin": 17.61,
-            "win_prob_D": 0.9964,
+            "margin": 17.65,
+            "win_prob_D": 0.9965,
             "seat_no": 40,
             "x": 21.2,
-            "y": 5.98,
+            "y": 5.88,
             "clipped": false,
             "competitive": false,
             "lead": "D"
@@ -4448,11 +4582,11 @@
             "label": "NJ",
             "state": "NJ",
             "district": "",
-            "margin": 14.21,
-            "win_prob_D": 0.985,
+            "margin": 14.25,
+            "win_prob_D": 0.9852,
             "seat_no": 41,
             "x": 23.6,
-            "y": 14.48,
+            "y": 14.38,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4461,11 +4595,11 @@
             "label": "ME",
             "state": "ME",
             "district": "",
-            "margin": 13.31,
-            "win_prob_D": 0.979,
+            "margin": 13.35,
+            "win_prob_D": 0.9792,
             "seat_no": 42,
             "x": 26.0,
-            "y": 16.73,
+            "y": 16.62,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4474,11 +4608,11 @@
             "label": "NM",
             "state": "NM",
             "district": "",
-            "margin": 13.03,
-            "win_prob_D": 0.9767,
+            "margin": 13.07,
+            "win_prob_D": 0.977,
             "seat_no": 43,
             "x": 28.4,
-            "y": 17.43,
+            "y": 17.33,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4487,11 +4621,11 @@
             "label": "VA",
             "state": "VA",
             "district": "",
-            "margin": 12.65,
-            "win_prob_D": 0.9733,
+            "margin": 12.69,
+            "win_prob_D": 0.9737,
             "seat_no": 44,
             "x": 30.8,
-            "y": 18.37,
+            "y": 18.28,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4500,11 +4634,11 @@
             "label": "MN",
             "state": "MN",
             "district": "",
-            "margin": 10.73,
-            "win_prob_D": 0.9494,
+            "margin": 10.77,
+            "win_prob_D": 0.9499,
             "seat_no": 45,
             "x": 33.2,
-            "y": 23.18,
+            "y": 23.08,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4513,11 +4647,11 @@
             "label": "NH",
             "state": "NH",
             "district": "",
-            "margin": 9.65,
-            "win_prob_D": 0.9298,
+            "margin": 9.69,
+            "win_prob_D": 0.9305,
             "seat_no": 46,
             "x": 35.6,
-            "y": 25.87,
+            "y": 25.78,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4526,11 +4660,11 @@
             "label": "MI",
             "state": "MI",
             "district": "",
-            "margin": 5.29,
-            "win_prob_D": 0.7905,
+            "margin": 5.33,
+            "win_prob_D": 0.7921,
             "seat_no": 47,
             "x": 38.0,
-            "y": 36.77,
+            "y": 36.67,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4539,11 +4673,11 @@
             "label": "GA",
             "state": "GA",
             "district": "",
-            "margin": 4.07,
-            "win_prob_D": 0.733,
+            "margin": 4.11,
+            "win_prob_D": 0.7348,
             "seat_no": 48,
             "x": 40.4,
-            "y": 39.83,
+            "y": 39.73,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4552,11 +4686,11 @@
             "label": "NC",
             "state": "NC",
             "district": "",
-            "margin": 2.87,
-            "win_prob_D": 0.6696,
+            "margin": 2.91,
+            "win_prob_D": 0.6716,
             "seat_no": 49,
             "x": 42.8,
-            "y": 42.83,
+            "y": 42.73,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4565,11 +4699,11 @@
             "label": "OH",
             "state": "OH",
             "district": "",
-            "margin": -4.87,
-            "win_prob_D": 0.2288,
+            "margin": -4.83,
+            "win_prob_D": 0.2304,
             "seat_no": 50,
             "x": 45.2,
-            "y": 62.17,
+            "y": 62.08,
             "clipped": false,
             "competitive": true,
             "lead": "R",
@@ -4579,11 +4713,11 @@
             "label": "FL",
             "state": "FL",
             "district": "",
-            "margin": -5.11,
-            "win_prob_D": 0.2178,
+            "margin": -5.07,
+            "win_prob_D": 0.2195,
             "seat_no": 51,
             "x": 47.6,
-            "y": 62.77,
+            "y": 62.67,
             "clipped": false,
             "competitive": true,
             "lead": "R",
@@ -4593,11 +4727,11 @@
             "label": "TX",
             "state": "TX",
             "district": "",
-            "margin": -6.17,
-            "win_prob_D": 0.1733,
+            "margin": -6.13,
+            "win_prob_D": 0.1747,
             "seat_no": 52,
             "x": 50.0,
-            "y": 65.42,
+            "y": 65.33,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -4606,11 +4740,11 @@
             "label": "IA",
             "state": "IA",
             "district": "",
-            "margin": -6.51,
-            "win_prob_D": 0.1603,
+            "margin": -6.47,
+            "win_prob_D": 0.1616,
             "seat_no": 53,
             "x": 52.4,
-            "y": 66.28,
+            "y": 66.17,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -4619,11 +4753,11 @@
             "label": "AK",
             "state": "AK",
             "district": "",
-            "margin": -7.23,
-            "win_prob_D": 0.135,
+            "margin": -7.19,
+            "win_prob_D": 0.1362,
             "seat_no": 54,
             "x": 54.8,
-            "y": 68.08,
+            "y": 67.97,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -4632,11 +4766,11 @@
             "label": "KS",
             "state": "KS",
             "district": "",
-            "margin": -10.39,
-            "win_prob_D": 0.0564,
+            "margin": -10.35,
+            "win_prob_D": 0.057,
             "seat_no": 55,
             "x": 57.2,
-            "y": 75.98,
+            "y": 75.88,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -4645,11 +4779,11 @@
             "label": "SC",
             "state": "SC",
             "district": "",
-            "margin": -10.89,
-            "win_prob_D": 0.0483,
+            "margin": -10.85,
+            "win_prob_D": 0.0488,
             "seat_no": 56,
             "x": 59.6,
-            "y": 77.22,
+            "y": 77.12,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -4658,11 +4792,11 @@
             "label": "MT",
             "state": "MT",
             "district": "",
-            "margin": -13.97,
-            "win_prob_D": 0.0165,
+            "margin": -13.93,
+            "win_prob_D": 0.0167,
             "seat_no": 57,
             "x": 62.0,
-            "y": 84.92,
+            "y": 84.83,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -4671,11 +4805,11 @@
             "label": "NE",
             "state": "NE",
             "district": "",
-            "margin": -14.87,
-            "win_prob_D": 0.0116,
+            "margin": -14.83,
+            "win_prob_D": 0.0118,
             "seat_no": 58,
             "x": 64.4,
-            "y": 87.17,
+            "y": 87.08,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -4684,11 +4818,11 @@
             "label": "LA",
             "state": "LA",
             "district": "",
-            "margin": -15.83,
-            "win_prob_D": 0.0078,
+            "margin": -15.79,
+            "win_prob_D": 0.008,
             "seat_no": 59,
             "x": 66.8,
-            "y": 89.57,
+            "y": 89.47,
             "clipped": false,
             "competitive": false,
             "lead": "R"
@@ -4697,11 +4831,11 @@
             "label": "MS",
             "state": "MS",
             "district": "",
-            "margin": -15.89,
-            "win_prob_D": 0.0076,
+            "margin": -15.85,
+            "win_prob_D": 0.0078,
             "seat_no": 60,
             "x": 69.2,
-            "y": 89.72,
+            "y": 89.62,
             "clipped": false,
             "competitive": false,
             "lead": "R"
@@ -4710,7 +4844,7 @@
             "label": "TN",
             "state": "TN",
             "district": "",
-            "margin": -22.85,
+            "margin": -22.81,
             "win_prob_D": 0.0002,
             "seat_no": 61,
             "x": 71.6,
@@ -4723,7 +4857,7 @@
             "label": "SD",
             "state": "SD",
             "district": "",
-            "margin": -23.47,
+            "margin": -23.43,
             "win_prob_D": 0.0002,
             "seat_no": 62,
             "x": 74.0,
@@ -4736,7 +4870,7 @@
             "label": "AL",
             "state": "AL",
             "district": "",
-            "margin": -23.95,
+            "margin": -23.91,
             "win_prob_D": 0.0001,
             "seat_no": 63,
             "x": 76.4,
@@ -4749,7 +4883,7 @@
             "label": "KY",
             "state": "KY",
             "district": "",
-            "margin": -24.21,
+            "margin": -24.17,
             "win_prob_D": 0.0001,
             "seat_no": 64,
             "x": 78.8,
@@ -4762,7 +4896,7 @@
             "label": "AR",
             "state": "AR",
             "district": "",
-            "margin": -24.95,
+            "margin": -24.91,
             "win_prob_D": 0.0001,
             "seat_no": 65,
             "x": 81.2,
@@ -4775,7 +4909,7 @@
             "label": "OK",
             "state": "OK",
             "district": "",
-            "margin": -29.01,
+            "margin": -28.97,
             "win_prob_D": 0.0,
             "seat_no": 66,
             "x": 83.6,
@@ -4788,7 +4922,7 @@
             "label": "ID",
             "state": "ID",
             "district": "",
-            "margin": -30.41,
+            "margin": -30.37,
             "win_prob_D": 0.0,
             "seat_no": 67,
             "x": 86.0,
@@ -4801,7 +4935,7 @@
             "label": "WV",
             "state": "WV",
             "district": "",
-            "margin": -36.25,
+            "margin": -36.21,
             "win_prob_D": 0.0,
             "seat_no": 68,
             "x": 88.4,
@@ -4814,7 +4948,7 @@
             "label": "WY",
             "state": "WY",
             "district": "",
-            "margin": -40.79,
+            "margin": -40.75,
             "win_prob_D": 0.0,
             "seat_no": 69,
             "x": 90.8,
@@ -4831,9 +4965,9 @@
             "label": "OH",
             "state": "OH",
             "district": "",
-            "margin": -4.87,
-            "win_prob_D": 0.2288,
-            "swing_needed": 4.87,
+            "margin": -4.83,
+            "win_prob_D": 0.2304,
+            "swing_needed": 4.83,
             "x": 46.4,
             "note": "a tie, broken by the vice-president"
           },
@@ -4843,9 +4977,9 @@
             "label": "FL",
             "state": "FL",
             "district": "",
-            "margin": -5.11,
-            "win_prob_D": 0.2178,
-            "swing_needed": 5.11,
+            "margin": -5.07,
+            "win_prob_D": 0.2195,
+            "swing_needed": 5.07,
             "x": 48.8,
             "note": "an outright majority"
           }
@@ -4856,23 +4990,23 @@
           "label": "OH",
           "state": "OH",
           "district": "",
-          "margin": -4.87,
-          "win_prob_D": 0.2288,
-          "swing_needed": 4.87,
+          "margin": -4.83,
+          "win_prob_D": 0.2304,
+          "swing_needed": 4.83,
           "x": 46.4,
           "note": "a tie, broken by the vice-president"
         },
         "expected": {
-          "seats": 49.0,
-          "x": 44.1
+          "seats": 49.1,
+          "x": 44.14
         },
         "markers": [
           {
             "key": "polling",
             "label": "Polling",
-            "seats": 49.0,
-            "x": 44.1,
-            "label_x": 44.1,
+            "seats": 49.1,
+            "x": 44.14,
+            "label_x": 44.14,
             "row": 0,
             "dy": 31.4
           },
@@ -4880,8 +5014,8 @@
             "key": "professional",
             "label": "Professional",
             "seats": 51.4,
-            "x": 49.83,
-            "label_x": 55.1,
+            "x": 49.71,
+            "label_x": 55.14,
             "row": 1,
             "dy": 47.4
           },
@@ -4890,7 +5024,7 @@
             "label": "Fundamentals",
             "seats": 51.5,
             "x": 49.93,
-            "label_x": 66.1,
+            "label_x": 66.14,
             "row": 0,
             "dy": 31.4
           }
@@ -4986,11 +5120,11 @@
             "label": "MI-08",
             "state": "MI",
             "district": "08",
-            "margin": 3.67,
-            "win_prob_D": 0.7124,
+            "margin": 3.71,
+            "win_prob_D": 0.7144,
             "seat_no": 212,
             "x": 8.93,
-            "y": 31.65,
+            "y": 31.45,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -4999,11 +5133,11 @@
             "label": "OH-01",
             "state": "OH",
             "district": "01",
-            "margin": 3.67,
-            "win_prob_D": 0.7124,
+            "margin": 3.71,
+            "win_prob_D": 0.7144,
             "seat_no": 213,
             "x": 10.8,
-            "y": 31.65,
+            "y": 31.45,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -5012,11 +5146,11 @@
             "label": "PA-07",
             "state": "PA",
             "district": "07",
-            "margin": 3.67,
-            "win_prob_D": 0.7124,
+            "margin": 3.71,
+            "win_prob_D": 0.7144,
             "seat_no": 214,
             "x": 12.67,
-            "y": 31.65,
+            "y": 31.45,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -5025,11 +5159,11 @@
             "label": "IA-03",
             "state": "IA",
             "district": "03",
-            "margin": 1.67,
-            "win_prob_D": 0.6006,
+            "margin": 1.71,
+            "win_prob_D": 0.603,
             "seat_no": 215,
             "x": 14.53,
-            "y": 41.65,
+            "y": 41.45,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -5038,11 +5172,11 @@
             "label": "WA-03",
             "state": "WA",
             "district": "03",
-            "margin": 1.67,
-            "win_prob_D": 0.6006,
+            "margin": 1.71,
+            "win_prob_D": 0.603,
             "seat_no": 216,
             "x": 16.4,
-            "y": 41.65,
+            "y": 41.45,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -5051,11 +5185,11 @@
             "label": "WI-01",
             "state": "WI",
             "district": "01",
-            "margin": 1.67,
-            "win_prob_D": 0.6006,
+            "margin": 1.71,
+            "win_prob_D": 0.603,
             "seat_no": 217,
             "x": 18.27,
-            "y": 41.65,
+            "y": 41.45,
             "clipped": false,
             "competitive": true,
             "lead": "D"
@@ -5064,11 +5198,11 @@
             "label": "FL-25",
             "state": "FL",
             "district": "25",
-            "margin": -0.33,
-            "win_prob_D": 0.4799,
+            "margin": -0.29,
+            "win_prob_D": 0.4823,
             "seat_no": 218,
             "x": 20.13,
-            "y": 51.65,
+            "y": 51.45,
             "clipped": false,
             "competitive": true,
             "lead": "R",
@@ -5078,11 +5212,11 @@
             "label": "MI-04",
             "state": "MI",
             "district": "04",
-            "margin": -0.33,
-            "win_prob_D": 0.4799,
+            "margin": -0.29,
+            "win_prob_D": 0.4823,
             "seat_no": 219,
             "x": 22.0,
-            "y": 51.65,
+            "y": 51.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5091,11 +5225,11 @@
             "label": "MI-10",
             "state": "MI",
             "district": "10",
-            "margin": -0.33,
-            "win_prob_D": 0.4799,
+            "margin": -0.29,
+            "win_prob_D": 0.4823,
             "seat_no": 220,
             "x": 23.87,
-            "y": 51.65,
+            "y": 51.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5104,11 +5238,11 @@
             "label": "PA-10",
             "state": "PA",
             "district": "10",
-            "margin": -0.33,
-            "win_prob_D": 0.4799,
+            "margin": -0.29,
+            "win_prob_D": 0.4823,
             "seat_no": 221,
             "x": 25.73,
-            "y": 51.65,
+            "y": 51.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5117,11 +5251,11 @@
             "label": "TX-28",
             "state": "TX",
             "district": "28",
-            "margin": -0.33,
-            "win_prob_D": 0.4799,
+            "margin": -0.29,
+            "win_prob_D": 0.4823,
             "seat_no": 222,
             "x": 27.6,
-            "y": 51.65,
+            "y": 51.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5130,11 +5264,11 @@
             "label": "TX-34",
             "state": "TX",
             "district": "34",
-            "margin": -0.33,
-            "win_prob_D": 0.4799,
+            "margin": -0.29,
+            "win_prob_D": 0.4823,
             "seat_no": 223,
             "x": 29.47,
-            "y": 51.65,
+            "y": 51.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5143,11 +5277,11 @@
             "label": "VA-01",
             "state": "VA",
             "district": "01",
-            "margin": -0.33,
-            "win_prob_D": 0.4799,
+            "margin": -0.29,
+            "win_prob_D": 0.4823,
             "seat_no": 224,
             "x": 31.33,
-            "y": 51.65,
+            "y": 51.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5156,11 +5290,11 @@
             "label": "WI-03",
             "state": "WI",
             "district": "03",
-            "margin": -0.33,
-            "win_prob_D": 0.4799,
+            "margin": -0.29,
+            "win_prob_D": 0.4823,
             "seat_no": 225,
             "x": 33.2,
-            "y": 51.65,
+            "y": 51.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5169,11 +5303,11 @@
             "label": "FL-14",
             "state": "FL",
             "district": "14",
-            "margin": -2.33,
-            "win_prob_D": 0.361,
+            "margin": -2.29,
+            "win_prob_D": 0.3633,
             "seat_no": 226,
             "x": 35.07,
-            "y": 61.65,
+            "y": 61.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5182,11 +5316,11 @@
             "label": "FL-22",
             "state": "FL",
             "district": "22",
-            "margin": -2.33,
-            "win_prob_D": 0.361,
+            "margin": -2.29,
+            "win_prob_D": 0.3633,
             "seat_no": 227,
             "x": 36.93,
-            "y": 61.65,
+            "y": 61.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5195,11 +5329,11 @@
             "label": "IA-01",
             "state": "IA",
             "district": "01",
-            "margin": -2.33,
-            "win_prob_D": 0.361,
+            "margin": -2.29,
+            "win_prob_D": 0.3633,
             "seat_no": 228,
             "x": 38.8,
-            "y": 61.65,
+            "y": 61.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5208,11 +5342,11 @@
             "label": "IA-02",
             "state": "IA",
             "district": "02",
-            "margin": -2.33,
-            "win_prob_D": 0.361,
+            "margin": -2.29,
+            "win_prob_D": 0.3633,
             "seat_no": 229,
             "x": 40.67,
-            "y": 61.65,
+            "y": 61.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5221,11 +5355,11 @@
             "label": "ME-02",
             "state": "ME",
             "district": "02",
-            "margin": -2.33,
-            "win_prob_D": 0.361,
+            "margin": -2.29,
+            "win_prob_D": 0.3633,
             "seat_no": 230,
             "x": 42.53,
-            "y": 61.65,
+            "y": 61.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5234,11 +5368,11 @@
             "label": "NY-01",
             "state": "NY",
             "district": "01",
-            "margin": -2.33,
-            "win_prob_D": 0.361,
+            "margin": -2.29,
+            "win_prob_D": 0.3633,
             "seat_no": 231,
             "x": 44.4,
-            "y": 61.65,
+            "y": 61.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5247,11 +5381,11 @@
             "label": "OH-10",
             "state": "OH",
             "district": "10",
-            "margin": -2.33,
-            "win_prob_D": 0.361,
+            "margin": -2.29,
+            "win_prob_D": 0.3633,
             "seat_no": 232,
             "x": 46.27,
-            "y": 61.65,
+            "y": 61.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5260,11 +5394,11 @@
             "label": "PA-08",
             "state": "PA",
             "district": "08",
-            "margin": -2.33,
-            "win_prob_D": 0.361,
+            "margin": -2.29,
+            "win_prob_D": 0.3633,
             "seat_no": 233,
             "x": 48.13,
-            "y": 61.65,
+            "y": 61.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5273,11 +5407,11 @@
             "label": "TX-35",
             "state": "TX",
             "district": "35",
-            "margin": -2.33,
-            "win_prob_D": 0.361,
+            "margin": -2.29,
+            "win_prob_D": 0.3633,
             "seat_no": 234,
             "x": 50.0,
-            "y": 61.65,
+            "y": 61.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5286,11 +5420,11 @@
             "label": "CO-03",
             "state": "CO",
             "district": "03",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 235,
             "x": 51.87,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5299,11 +5433,11 @@
             "label": "CO-05",
             "state": "CO",
             "district": "05",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 236,
             "x": 53.73,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5312,11 +5446,11 @@
             "label": "FL-04",
             "state": "FL",
             "district": "04",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 237,
             "x": 55.6,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5325,11 +5459,11 @@
             "label": "FL-07",
             "state": "FL",
             "district": "07",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 238,
             "x": 57.47,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5338,11 +5472,11 @@
             "label": "MT-01",
             "state": "MT",
             "district": "01",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 239,
             "x": 59.33,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5351,11 +5485,11 @@
             "label": "NJ-02",
             "state": "NJ",
             "district": "02",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 240,
             "x": 61.2,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5364,11 +5498,11 @@
             "label": "NC-01",
             "state": "NC",
             "district": "01",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 241,
             "x": 63.07,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5377,11 +5511,11 @@
             "label": "NC-11",
             "state": "NC",
             "district": "11",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 242,
             "x": 64.93,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5390,11 +5524,11 @@
             "label": "OH-07",
             "state": "OH",
             "district": "07",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 243,
             "x": 66.8,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5403,11 +5537,11 @@
             "label": "OH-09",
             "state": "OH",
             "district": "09",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 244,
             "x": 68.67,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5416,11 +5550,11 @@
             "label": "OH-15",
             "state": "OH",
             "district": "15",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 245,
             "x": 70.53,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5429,11 +5563,11 @@
             "label": "WA-05",
             "state": "WA",
             "district": "05",
-            "margin": -4.33,
-            "win_prob_D": 0.2543,
+            "margin": -4.29,
+            "win_prob_D": 0.2562,
             "seat_no": 246,
             "x": 72.4,
-            "y": 71.65,
+            "y": 71.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5442,11 +5576,11 @@
             "label": "AK-01",
             "state": "AK",
             "district": "01",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 247,
             "x": 74.27,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5455,11 +5589,11 @@
             "label": "CA-40",
             "state": "CA",
             "district": "40",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 248,
             "x": 76.13,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5468,11 +5602,11 @@
             "label": "FL-13",
             "state": "FL",
             "district": "13",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 249,
             "x": 78.0,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5481,11 +5615,11 @@
             "label": "FL-16",
             "state": "FL",
             "district": "16",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 250,
             "x": 79.87,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5494,11 +5628,11 @@
             "label": "FL-27",
             "state": "FL",
             "district": "27",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 251,
             "x": 81.73,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5507,11 +5641,11 @@
             "label": "MN-01",
             "state": "MN",
             "district": "01",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 252,
             "x": 83.6,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5520,11 +5654,11 @@
             "label": "MO-02",
             "state": "MO",
             "district": "02",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 253,
             "x": 85.47,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5533,11 +5667,11 @@
             "label": "NE-01",
             "state": "NE",
             "district": "01",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 254,
             "x": 87.33,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5546,11 +5680,11 @@
             "label": "NY-02",
             "state": "NY",
             "district": "02",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 255,
             "x": 89.2,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5559,11 +5693,11 @@
             "label": "NC-03",
             "state": "NC",
             "district": "03",
-            "margin": -6.33,
-            "win_prob_D": 0.1669,
+            "margin": -6.29,
+            "win_prob_D": 0.1685,
             "seat_no": 256,
             "x": 91.07,
-            "y": 81.65,
+            "y": 81.45,
             "clipped": false,
             "competitive": true,
             "lead": "R"
@@ -5576,9 +5710,9 @@
             "label": "FL-25",
             "state": "FL",
             "district": "25",
-            "margin": -0.33,
-            "win_prob_D": 0.4799,
-            "swing_needed": 0.33,
+            "margin": -0.29,
+            "win_prob_D": 0.4823,
+            "swing_needed": 0.29,
             "x": 21.07,
             "note": "a majority"
           }
@@ -5589,23 +5723,23 @@
           "label": "FL-25",
           "state": "FL",
           "district": "25",
-          "margin": -0.33,
-          "win_prob_D": 0.4799,
-          "swing_needed": 0.33,
+          "margin": -0.29,
+          "win_prob_D": 0.4823,
+          "swing_needed": 0.29,
           "x": 21.07,
           "note": "a majority"
         },
         "expected": {
-          "seats": 226.4,
-          "x": 36.71
+          "seats": 226.6,
+          "x": 37.03
         },
         "markers": [
           {
             "key": "polling",
             "label": "Polling",
-            "seats": 226.4,
-            "x": 36.71,
-            "label_x": 36.71,
+            "seats": 226.6,
+            "x": 37.03,
+            "label_x": 37.03,
             "row": 0,
             "dy": 45.4
           },
@@ -5621,8 +5755,8 @@
           {
             "key": "professional",
             "label": "Professional",
-            "seats": 250.8,
-            "x": 82.27,
+            "seats": 250.3,
+            "x": 81.45,
             "label_x": 92.04,
             "row": 0,
             "dy": 45.4
@@ -5686,20 +5820,20 @@
         "category": "polling",
         "label": "Polling",
         "ours": true,
-        "house_margin": 5.674,
+        "house_margin": 5.71,
         "house_margin_withheld": false,
-        "house_seats": 226.38,
+        "house_seats": 226.55,
         "house_seats_80": [
           205,
           250
         ],
-        "house_prob": 0.6763,
-        "senate_seats": 49.04,
+        "house_prob": 0.6802,
+        "senate_seats": 49.06,
         "senate_seats_80": [
           46,
           52
         ],
-        "senate_prob": 0.23,
+        "senate_prob": 0.2331,
         "n_sources": 4,
         "sole_source": ""
       },
@@ -5707,14 +5841,14 @@
         "category": "professional",
         "label": "Professional",
         "ours": false,
-        "house_margin": 5.73,
+        "house_margin": 5.68,
         "house_margin_withheld": false,
-        "house_seats": 250.79,
+        "house_seats": 250.35,
         "house_seats_80": null,
-        "house_prob": 0.8686,
-        "senate_seats": 51.43,
+        "house_prob": 0.8665,
+        "senate_seats": 51.38,
         "senate_seats_80": null,
-        "senate_prob": 0.6203,
+        "senate_prob": 0.6222,
         "n_sources": 1,
         "sole_source": "grant_williams",
         "house_seats_withheld": false,
@@ -5730,12 +5864,12 @@
         "house_margin_withheld": false,
         "house_seats": null,
         "house_seats_80": null,
-        "house_prob": 0.875,
+        "house_prob": 0.7418,
         "senate_seats": null,
         "senate_seats_80": null,
-        "senate_prob": 0.505,
-        "n_sources": 1,
-        "sole_source": "polymarket",
+        "senate_prob": 0.4306,
+        "n_sources": 2,
+        "sole_source": "",
         "house_seats_withheld": false,
         "house_prob_withheld": false,
         "senate_seats_withheld": false,
@@ -5755,20 +5889,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 33.65,
+            "margin": 33.69,
             "prob": 1.0,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 24.29,
-            "prob": 0.9991,
+            "margin": 24.08,
+            "prob": 0.9989,
             "withheld": false,
             "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.5989,
+            "withheld": false,
+            "n": 2
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0009
+        "n_cats": 4,
+        "prob_spread": 0.4011
       },
       {
         "state": "DE",
@@ -5782,20 +5922,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 21.69,
+            "margin": 21.73,
             "prob": 0.9995,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 13.26,
-            "prob": 0.8939,
+            "margin": 13.05,
+            "prob": 0.8904,
             "withheld": false,
             "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.727,
+            "withheld": false,
+            "n": 2
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1061
+        "n_cats": 4,
+        "prob_spread": 0.273
       },
       {
         "state": "RI",
@@ -5809,20 +5955,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 21.59,
+            "margin": 21.63,
             "prob": 0.9995,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 23.56,
-            "prob": 0.9758,
+            "margin": 23.36,
+            "prob": 0.9747,
             "withheld": false,
             "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.7255,
+            "withheld": false,
+            "n": 2
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0242
+        "n_cats": 4,
+        "prob_spread": 0.2745
       },
       {
         "state": "OR",
@@ -5836,20 +5988,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 20.97,
+            "margin": 21.01,
             "prob": 0.9993,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 17.25,
-            "prob": 0.9408,
+            "margin": 17.04,
+            "prob": 0.9387,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.96,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0592
+        "n_cats": 4,
+        "prob_spread": 0.0613
       },
       {
         "state": "IL",
@@ -5863,20 +6021,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 18.35,
+            "margin": 18.39,
             "prob": 0.9975,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 14.56,
-            "prob": 0.9148,
+            "margin": 14.35,
+            "prob": 0.9118,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.97,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.085
+        "n_cats": 4,
+        "prob_spread": 0.088
       },
       {
         "state": "CO",
@@ -5890,20 +6054,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 17.61,
-            "prob": 0.9964,
+            "margin": 17.65,
+            "prob": 0.9965,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 16.23,
-            "prob": 0.9316,
+            "margin": 16.02,
+            "prob": 0.9301,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.91,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0681
+        "n_cats": 4,
+        "prob_spread": 0.0897
       },
       {
         "state": "NJ",
@@ -5917,20 +6087,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 14.21,
-            "prob": 0.985,
+            "margin": 14.25,
+            "prob": 0.9852,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 18.43,
-            "prob": 0.95,
+            "margin": 18.22,
+            "prob": 0.9488,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.96,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0482
+        "n_cats": 4,
+        "prob_spread": 0.0494
       },
       {
         "state": "ME",
@@ -5944,20 +6120,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 13.31,
-            "prob": 0.979,
+            "margin": 13.35,
+            "prob": 0.9792,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 3.44,
-            "prob": 0.7672,
+            "margin": 3.25,
+            "prob": 0.7569,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.63,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.23
+        "n_cats": 4,
+        "prob_spread": 0.3672
       },
       {
         "state": "NM",
@@ -5971,20 +6153,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 13.03,
-            "prob": 0.9767,
+            "margin": 13.07,
+            "prob": 0.977,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 16.51,
-            "prob": 0.9369,
+            "margin": 16.3,
+            "prob": 0.9346,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.95,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0599
+        "n_cats": 4,
+        "prob_spread": 0.0622
       },
       {
         "state": "VA",
@@ -5998,20 +6186,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 12.65,
-            "prob": 0.9733,
+            "margin": 12.69,
+            "prob": 0.9737,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 14.44,
-            "prob": 0.9092,
+            "margin": 14.23,
+            "prob": 0.906,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.96,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.087
+        "n_cats": 4,
+        "prob_spread": 0.0902
       },
       {
         "state": "MN",
@@ -6025,20 +6219,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 10.73,
-            "prob": 0.9494,
+            "margin": 10.77,
+            "prob": 0.9499,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 9.51,
-            "prob": 0.8232,
+            "margin": 5.97,
+            "prob": 0.887,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.84,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.168
+        "n_cats": 4,
+        "prob_spread": 0.1512
       },
       {
         "state": "NH",
@@ -6052,20 +6252,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 9.65,
-            "prob": 0.9297,
+            "margin": 9.69,
+            "prob": 0.9305,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 6.14,
-            "prob": 0.8938,
+            "margin": 5.93,
+            "prob": 0.8867,
             "withheld": false,
             "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.6554,
+            "withheld": false,
+            "n": 2
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0926
+        "n_cats": 4,
+        "prob_spread": 0.331
       },
       {
         "state": "MI",
@@ -6079,20 +6285,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 5.29,
-            "prob": 0.7905,
+            "margin": 5.33,
+            "prob": 0.7921,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 0.72,
-            "prob": 0.5569,
+            "margin": 2.3,
+            "prob": 0.6877,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.61,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.3816
+        "n_cats": 4,
+        "prob_spread": 0.3285
       },
       {
         "state": "GA",
@@ -6106,20 +6318,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 4.07,
-            "prob": 0.733,
+            "margin": 4.11,
+            "prob": 0.7348,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 11.39,
-            "prob": 0.8664,
+            "margin": 11.19,
+            "prob": 0.8624,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.9,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1794
+        "n_cats": 4,
+        "prob_spread": 0.1776
       },
       {
         "state": "NC",
@@ -6133,20 +6351,26 @@
             "n": 1
           },
           "polling": {
-            "margin": 2.87,
-            "prob": 0.6696,
+            "margin": 2.91,
+            "prob": 0.6716,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 8.32,
-            "prob": 0.9497,
+            "margin": 8.17,
+            "prob": 0.9477,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.9,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.2801
+        "n_cats": 4,
+        "prob_spread": 0.2761
       },
       {
         "state": "OH",
@@ -6160,20 +6384,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -4.87,
-            "prob": 0.2288,
+            "margin": -4.83,
+            "prob": 0.2304,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 1.55,
-            "prob": 0.6346,
+            "margin": 1.41,
+            "prob": 0.6225,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.52,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.4058
+        "n_cats": 4,
+        "prob_spread": 0.3921
       },
       {
         "state": "FL",
@@ -6187,20 +6417,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -5.11,
-            "prob": 0.2178,
+            "margin": -5.07,
+            "prob": 0.2195,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -5.84,
-            "prob": 0.1067,
+            "margin": -8.9,
+            "prob": 0.0395,
             "withheld": false,
             "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.1227,
+            "withheld": false,
+            "n": 2
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.375
+        "n_cats": 4,
+        "prob_spread": 0.4422
       },
       {
         "state": "TX",
@@ -6214,20 +6450,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -6.17,
-            "prob": 0.1733,
+            "margin": -6.13,
+            "prob": 0.1747,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": 1.52,
-            "prob": 0.6298,
+            "margin": 1.42,
+            "prob": 0.6204,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.47,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.4565
+        "n_cats": 4,
+        "prob_spread": 0.4457
       },
       {
         "state": "IA",
@@ -6241,20 +6483,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -6.51,
-            "prob": 0.1603,
+            "margin": -6.47,
+            "prob": 0.1616,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -0.19,
-            "prob": 0.4835,
+            "margin": -0.35,
+            "prob": 0.469,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.45,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.3232
+        "n_cats": 4,
+        "prob_spread": 0.3074
       },
       {
         "state": "AK",
@@ -6268,20 +6516,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -7.23,
-            "prob": 0.135,
+            "margin": -7.19,
+            "prob": 0.1362,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -0.16,
-            "prob": 0.486,
+            "margin": -0.27,
+            "prob": 0.4749,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.58,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.351
+        "n_cats": 4,
+        "prob_spread": 0.4438
       },
       {
         "state": "KS",
@@ -6295,20 +6549,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -10.39,
-            "prob": 0.0564,
+            "margin": -10.35,
+            "prob": 0.057,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -8.69,
-            "prob": 0.2072,
+            "margin": -8.89,
+            "prob": 0.2026,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.23,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1508
+        "n_cats": 4,
+        "prob_spread": 0.173
       },
       {
         "state": "SC",
@@ -6322,20 +6582,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -10.89,
-            "prob": 0.0483,
+            "margin": -10.85,
+            "prob": 0.0488,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -6.69,
-            "prob": 0.2563,
+            "margin": -6.89,
+            "prob": 0.2486,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.1,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.208
+        "n_cats": 4,
+        "prob_spread": 0.1998
       },
       {
         "state": "MT",
@@ -6349,20 +6615,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -13.97,
-            "prob": 0.0165,
+            "margin": -13.93,
+            "prob": 0.0167,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -10.56,
-            "prob": 0.1587,
+            "margin": -10.77,
+            "prob": 0.1541,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.01,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1422
+        "n_cats": 4,
+        "prob_spread": 0.1441
       },
       {
         "state": "NE",
@@ -6376,20 +6648,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -14.87,
-            "prob": 0.0116,
+            "margin": -14.83,
+            "prob": 0.0118,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -12.73,
-            "prob": 0.1224,
+            "margin": -12.94,
+            "prob": 0.1182,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.01,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1108
+        "n_cats": 4,
+        "prob_spread": 0.1082
       },
       {
         "state": "LA",
@@ -6403,20 +6681,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -15.83,
-            "prob": 0.0078,
+            "margin": -15.79,
+            "prob": 0.008,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -10.4,
-            "prob": 0.167,
+            "margin": -10.61,
+            "prob": 0.1614,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.05,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1592
+        "n_cats": 4,
+        "prob_spread": 0.1534
       },
       {
         "state": "MS",
@@ -6430,20 +6714,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -15.89,
-            "prob": 0.0076,
+            "margin": -15.85,
+            "prob": 0.0078,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -8.58,
-            "prob": 0.2031,
+            "margin": -8.79,
+            "prob": 0.1968,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.08,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1955
+        "n_cats": 4,
+        "prob_spread": 0.189
       },
       {
         "state": "TN",
@@ -6457,20 +6747,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -22.85,
+            "margin": -22.81,
             "prob": 0.0002,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -13.53,
-            "prob": 0.1101,
+            "margin": -13.74,
+            "prob": 0.1067,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.05,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1099
+        "n_cats": 4,
+        "prob_spread": 0.1065
       },
       {
         "state": "SD",
@@ -6484,20 +6780,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -23.47,
+            "margin": -23.43,
             "prob": 0.0002,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -16.49,
-            "prob": 0.0697,
+            "margin": -16.7,
+            "prob": 0.0678,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.02,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0695
+        "n_cats": 4,
+        "prob_spread": 0.0676
       },
       {
         "state": "AL",
@@ -6511,20 +6813,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -23.95,
+            "margin": -23.91,
             "prob": 0.0001,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -13.78,
-            "prob": 0.103,
+            "margin": -13.99,
+            "prob": 0.0995,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.02,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1029
+        "n_cats": 4,
+        "prob_spread": 0.0994
       },
       {
         "state": "KY",
@@ -6538,20 +6846,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -24.21,
+            "margin": -24.17,
             "prob": 0.0001,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -9.57,
-            "prob": 0.1824,
+            "margin": -9.78,
+            "prob": 0.1787,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.07,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.1823
+        "n_cats": 4,
+        "prob_spread": 0.1786
       },
       {
         "state": "AR",
@@ -6565,20 +6879,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -24.95,
+            "margin": -24.91,
             "prob": 0.0001,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -15.5,
-            "prob": 0.0805,
+            "margin": -9.26,
+            "prob": 0.0382,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.09,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0804
+        "n_cats": 4,
+        "prob_spread": 0.0899
       },
       {
         "state": "OK",
@@ -6592,20 +6912,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -29.01,
+            "margin": -28.97,
             "prob": 0.0,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -18.56,
-            "prob": 0.0566,
+            "margin": -18.77,
+            "prob": 0.0546,
             "withheld": false,
             "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.1649,
+            "withheld": false,
+            "n": 2
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0566
+        "n_cats": 4,
+        "prob_spread": 0.1649
       },
       {
         "state": "ID",
@@ -6619,20 +6945,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -30.41,
+            "margin": -30.37,
             "prob": 0.0,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -20.52,
-            "prob": 0.0415,
+            "margin": -20.73,
+            "prob": 0.0404,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.04,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0415
+        "n_cats": 4,
+        "prob_spread": 0.0404
       },
       {
         "state": "WV",
@@ -6646,20 +6978,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -36.25,
+            "margin": -36.21,
             "prob": 0.0,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -26.54,
-            "prob": 0.0193,
+            "margin": -26.75,
+            "prob": 0.0187,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.04,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0193
+        "n_cats": 4,
+        "prob_spread": 0.04
       },
       {
         "state": "WY",
@@ -6673,20 +7011,26 @@
             "n": 1
           },
           "polling": {
-            "margin": -40.79,
+            "margin": -40.75,
             "prob": 0.0,
             "withheld": false,
             "n": 1
           },
           "professional": {
-            "margin": -38.55,
-            "prob": 0.0046,
+            "margin": -38.75,
+            "prob": 0.0044,
+            "withheld": false,
+            "n": 1
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.03,
             "withheld": false,
             "n": 1
           }
         },
-        "n_cats": 3,
-        "prob_spread": 0.0046
+        "n_cats": 4,
+        "prob_spread": 0.03
       }
     ],
     "categories": [
@@ -6704,17 +7048,16 @@
     "categories_per_race": [
       "fundamentals",
       "polling",
-      "professional"
-    ],
-    "categories_missing_per_race": [
+      "professional",
       "market"
-    ]
+    ],
+    "categories_missing_per_race": []
   },
   "governors": {
     "n_races": 36,
     "n_rated": 36,
-    "n_market": 25,
-    "n_close": 8,
+    "n_market": 36,
+    "n_close": 11,
     "races": [
       {
         "race_id": "GOV_GA_2026",
@@ -6756,7 +7099,7 @@
             "label": "Tilt D"
           }
         ],
-        "market_prob_D": 0.595,
+        "market_prob_D": 0.5925,
         "market_withheld": false,
         "close": true
       },
@@ -6800,7 +7143,7 @@
             "label": "Tilt D"
           }
         ],
-        "market_prob_D": null,
+        "market_prob_D": 0.7725,
         "market_withheld": false,
         "close": true
       },
@@ -6844,7 +7187,7 @@
             "label": "Toss-up"
           }
         ],
-        "market_prob_D": 0.48,
+        "market_prob_D": 0.495,
         "market_withheld": false,
         "close": true
       },
@@ -6888,51 +7231,7 @@
             "label": "Tilt R"
           }
         ],
-        "market_prob_D": 0.435,
-        "market_withheld": false,
-        "close": true
-      },
-      {
-        "race_id": "GOV_IA_2026",
-        "state": "IA",
-        "n_raters": 8,
-        "mean_rating": 3.81,
-        "spread": 3.5,
-        "labels": [
-          {
-            "forecaster": "Cook Political Report",
-            "label": "Toss-up"
-          },
-          {
-            "forecaster": "Fox News Power Rankings",
-            "label": "Lean D"
-          },
-          {
-            "forecaster": "Inside Elections",
-            "label": "Tilt D"
-          },
-          {
-            "forecaster": "Race to the WH",
-            "label": "Lean D"
-          },
-          {
-            "forecaster": "RealClearPolitics",
-            "label": "Toss-up"
-          },
-          {
-            "forecaster": "Sabato's Crystal Ball",
-            "label": "Toss-up"
-          },
-          {
-            "forecaster": "Silver Bulletin",
-            "label": "Likely D"
-          },
-          {
-            "forecaster": "VoteHub",
-            "label": "Tilt D"
-          }
-        ],
-        "market_prob_D": 0.775,
+        "market_prob_D": 0.4075,
         "market_withheld": false,
         "close": true
       },
@@ -6976,7 +7275,51 @@
             "label": "Toss-up"
           }
         ],
-        "market_prob_D": null,
+        "market_prob_D": 0.1286,
+        "market_withheld": false,
+        "close": true
+      },
+      {
+        "race_id": "GOV_IA_2026",
+        "state": "IA",
+        "n_raters": 8,
+        "mean_rating": 3.56,
+        "spread": 3.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Tilt D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Lean D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Toss-up"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Tilt D"
+          }
+        ],
+        "market_prob_D": 0.7075,
         "market_withheld": false,
         "close": true
       },
@@ -7020,7 +7363,7 @@
             "label": "Lean R"
           }
         ],
-        "market_prob_D": 0.345,
+        "market_prob_D": 0.265,
         "market_withheld": false,
         "close": true
       },
@@ -7064,7 +7407,139 @@
             "label": "Lean D"
           }
         ],
-        "market_prob_D": 0.4402,
+        "market_prob_D": 0.6289,
+        "market_withheld": false,
+        "close": true
+      },
+      {
+        "race_id": "GOV_MN_2026",
+        "state": "MN",
+        "n_raters": 8,
+        "mean_rating": 0.56,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Likely D"
+          }
+        ],
+        "market_prob_D": 0.6271,
+        "market_withheld": false,
+        "close": true
+      },
+      {
+        "race_id": "GOV_RI_2026",
+        "state": "RI",
+        "n_raters": 8,
+        "mean_rating": 0.19,
+        "spread": 1.5,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Likely D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.641,
+        "market_withheld": false,
+        "close": true
+      },
+      {
+        "race_id": "GOV_CT_2026",
+        "state": "CT",
+        "n_raters": 8,
+        "mean_rating": 0.0,
+        "spread": 0.0,
+        "labels": [
+          {
+            "forecaster": "Cook Political Report",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Fox News Power Rankings",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Inside Elections",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Race to the WH",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "RealClearPolitics",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "Sabato's Crystal Ball",
+            "label": "Safe D"
+          },
+          {
+            "forecaster": "Silver Bulletin",
+            "label": "Solid D"
+          },
+          {
+            "forecaster": "VoteHub",
+            "label": "Solid D"
+          }
+        ],
+        "market_prob_D": 0.7972,
         "market_withheld": false,
         "close": true
       }
@@ -7073,24 +7548,30 @@
   },
   "model_index": {
     "polymarket": {
-      "senate_win_prob_D": 0.505,
-      "senate_win_prob_R": 0.495,
-      "house_win_prob_D": 0.875,
-      "house_win_prob_R": 0.125
+      "senate_win_prob_D": 0.0,
+      "senate_win_prob_R": 0.039,
+      "house_win_prob_D": 0.005,
+      "house_win_prob_R": 0.033
     },
     "grant_williams": {
-      "house_margin_D": 5.73,
-      "house_win_prob_D": 0.8686,
-      "house_seats_D": 250.79,
-      "senate_margin_D": 6.42,
-      "senate_win_prob_D": 0.6203,
-      "senate_seats_D": 51.43
+      "house_margin_D": 5.68,
+      "house_win_prob_D": 0.8665,
+      "house_seats_D": 250.35,
+      "senate_margin_D": 6.21,
+      "senate_win_prob_D": 0.6222,
+      "senate_seats_D": 51.38
     },
     "fred": {
       "house_income_growth_last_full_year": 1.105,
       "house_income_growth_ytd": -0.096,
       "house_income_ytd_months": 6.0,
       "house_income_growth_yoy_latest_month": 0.267
+    },
+    "predictit": {
+      "senate_win_prob_R": 0.54,
+      "senate_win_prob_D": 0.47,
+      "house_win_prob_D": 0.81,
+      "house_win_prob_R": 0.19
     }
   },
   "suppressed_cells": 5225,
