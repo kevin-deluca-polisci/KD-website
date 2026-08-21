@@ -333,11 +333,15 @@
       <table>
         <tr><th>Market</th><th>What it is</th><th class="num">Today</th></tr>
         <tr><td><a href="https://polymarket.com/">Polymarket</a></td>
-            <td class="muted">Real-money markets on chamber control and individual races.</td>
-            <td class="num">{{ with index $mi "polymarket" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ with .house_win_prob_D }}<br>{{ printf "%.0f%%" (mul . 100) }} D House{{ end }}{{ else }}—{{ end }}</td></tr>
+            <td class="muted">Real-money markets on chamber control and individual
+                races, plus a national popular-vote margin ladder that resolves
+                both tails — the best-resolved margin market of the three.</td>
+            <td class="num">{{ with index $mi "polymarket" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ with .house_win_prob_D }}<br>{{ printf "%.0f%%" (mul . 100) }} D House{{ end }}{{ with .house_margin_D }}<br>D+{{ printf "%.1f" . }} margin{{ end }}{{ else }}—{{ end }}</td></tr>
         <tr><td><a href="https://kalshi.com/">Kalshi</a></td>
-            <td class="muted">CFTC-regulated US event exchange running the same contracts.</td>
-            <td class="num">{{ with index $mi "kalshi" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ else }}—{{ end }}</td></tr>
+            <td class="muted">CFTC-regulated US event exchange running the same
+                contracts, and the only one quoting a ladder over seat counts —
+                which is where the market seat projection comes from.</td>
+            <td class="num">{{ with index $mi "kalshi" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ with .house_seats_D }}<br>{{ printf "%.0f" . }} D House seats{{ end }}{{ with .senate_seats_D }}<br>{{ printf "%.0f" . }} D Senate seats{{ end }}{{ with .house_margin_D }}<br>D+{{ printf "%.1f" . }} margin{{ end }}{{ else }}—{{ end }}</td></tr>
         <tr><td><a href="https://www.predictit.org/">PredictIt</a></td>
             <td class="muted">Real-money exchange with an $850 position cap and the
                 longest academic record of the three — the market economists have
@@ -358,11 +362,57 @@
         ({{ printf "%.0f%%" (mul . 100) }}), not the 50-plus one
         ({{ printf "%.0f%%" (mul $p.prob_D_50_plus 100) }}){{ end }}{{ end }}.
       </div>
-      <p class="thin-note">No exchange lists a seat-count market for 2026 that
-         resolves to a single number — PredictIt runs one in buckets ("192 or
-         fewer"), which is not a seat count and is deliberately not parsed as
-         one — so the markets series is absent from the seat-count view on the
-         tracker.</p>
+      <h3>Reading a ladder</h3>
+      <p class="muted">Some of these contracts are not a price but a
+         <em>ladder</em>: a row of markets, each paying out if the final number
+         lands in one bucket. Kalshi runs one over Democratic seat counts
+         (“218–221”, “Above 249”), and Kalshi and Polymarket both run one over
+         the national House popular-vote margin (“Democrats, 8 to 10%”). A
+         ladder is a probability distribution rather than a single number, which
+         is more than any other source on this site provides, and it is where
+         the market seat count and the market vote margin come from. Without it
+         the markets column would hold chamber-control probabilities and nothing
+         else — a control price does not imply a seat count, and it certainly
+         does not imply a vote share.</p>
+      <p class="muted">Two conventions turn a ladder into a number, and both are
+         choices rather than arithmetic. Prices are bid/ask midpoints across a
+         dozen contracts, each carrying its own spread, so they do not sum to
+         one; everything is normalised by their sum rather than trusted as a
+         distribution. And an open-ended bucket has no honest representative
+         value — “Above 249” is a claim about everything up to 435 — so it is
+         read as one more bucket of its neighbours’ width. That understates the
+         tails on purpose. The alternative, using the chamber maximum, would
+         have “Above 249” imply an average of 342 seats.</p>
+
+      <div class="note">
+        <strong>Kalshi’s Republican bucket is coarse, and this is what it costs.</strong>
+        On the margin ladder Kalshi resolves the Democratic side in two-point
+        steps but collapses every Republican outcome into a single “Republicans
+        win” contract — one bucket holding about 9% of the mass and spanning the
+        entire other half of the line. A value has to be assumed for it. On the
+        2026-08-21 book:
+        <table style="margin-top:10px">
+          <tr><th>Assume that bucket sits at</th><th class="num">Implied margin</th></tr>
+          <tr><td class="muted">R+1 — one neighbour’s width, what we use</td><td class="num">D+7.83</td></tr>
+          <tr><td class="muted">R+2</td><td class="num">D+7.74</td></tr>
+          <tr><td class="muted">R+3</td><td class="num">D+7.65</td></tr>
+          <tr><td class="muted">R+5</td><td class="num">D+7.47</td></tr>
+          <tr><td class="muted">R+8 — a Republican wave</td><td class="num">D+7.19</td></tr>
+        </table>
+        <p style="margin:10px 0 0">Polymarket resolves both tails — Republicans
+           0–2, 2–4, 4–6 and 6%+ — so it needs no such assumption, and on the
+           same day it read <strong>D+7.58</strong>. That lands between the R+2
+           and R+3 rows, which says the convention overstates the Democratic
+           margin by roughly a quarter of a point. Both exchanges are collected
+           partly so that this can be checked rather than asserted: the
+           better-resolved market is a standing measurement of how much the
+           coarser one’s missing tail is worth.</p>
+      </div>
+
+      <p class="thin-note">PredictIt also runs a seat-count market in buckets
+         (“192 or fewer”), but its ladder is too coarse to read as a
+         distribution and is deliberately not parsed as one. Its contribution
+         here is chamber and per-race probabilities.</p>
     </div>
   </section>
 

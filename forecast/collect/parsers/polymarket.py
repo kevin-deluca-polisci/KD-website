@@ -43,7 +43,7 @@ silently and produced numbers that looked reasonable:
 from __future__ import annotations
 import json, re
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
-               is_state, race_id, state_from_text)
+               is_state, margin_ladder_expectation, race_id, state_from_text)
 
 # NO re.I on the state group. Under IGNORECASE "[A-Z]{2}" matches any two
 # letters, which is how "Balance of power in the Senate" once filed every
@@ -157,6 +157,84 @@ def _target(blob: str, q: str):
     return None
 
 
+# --------------------------------------------------------------------------
+# The national House popular-vote margin ladder.
+#
+# Polymarket's "2026 Midterms: House Popular Vote Margin of Victory" quotes
+# thirteen Yes/No markets covering the line in 2-point steps, and unlike
+# Kalshi's version it resolves BOTH tails — Republicans 0-2, 2-4, 4-6 and 6%+
+# rather than one undifferentiated "Republicans win". That makes it the better
+# instrument for an expectation, and it is why both are collected: they answer
+# the same question with different resolution, and the gap between them is
+# itself worth watching.
+#
+# Each market is a Yes/No on one bucket, so the bucket is in the QUESTION
+# rather than in an outcome label, and the probability is the price of Yes.
+# The event as a whole is the distribution.
+#
+# This is the only market-implied national vote share that exists anywhere, so
+# it fills the empty Markets cell on the margin comparison. It emits a margin
+# and NOTHING else: the mass above zero here is P(D wins the popular vote),
+# which is a different event from winning the chamber, and win_prob_D on this
+# race already means the chamber.
+# --------------------------------------------------------------------------
+
+_PV_EVENT = re.compile(r"popular\s+vote\s+margin|margin\s+of\s+victory", re.I)
+_PV_BETWEEN = re.compile(
+    r"\b(democratic|republican)\b.{0,120}?between\s+(\d+(?:\.\d+)?)\s*%?\s*and\s+"
+    r"(\d+(?:\.\d+)?)\s*%", re.I | re.S)
+_PV_ORMORE = re.compile(
+    r"\b(democratic|republican)\b.{0,120}?by\s+(\d+(?:\.\d+)?)\s*%\s*or\s+more",
+    re.I | re.S)
+
+
+def _pv_bucket(q: str):
+    """A popular-vote question -> (lo, hi) in points of DEMOCRATIC margin.
+
+    Signed, so a Republican bucket comes back negative and the whole ladder
+    lives on one number line. Matching on the question text rather than on a
+    group label because these are Yes/No markets whose bucket is only stated
+    in the question.
+    """
+    if (m := _PV_BETWEEN.search(q)):
+        party, a, b = m.group(1).lower(), float(m.group(2)), float(m.group(3))
+        lo, hi = min(a, b), max(a, b)
+        return (lo, hi) if party.startswith("d") else (-hi, -lo)
+    if (m := _PV_ORMORE.search(q)):
+        party, a = m.group(1).lower(), float(m.group(2))
+        return (a, None) if party.startswith("d") else (None, -a)
+    return None
+
+
+def _pv_rows(ev: dict, title: str, art, ctx) -> list:
+    """One margin_D row, if this event is the popular-vote margin ladder."""
+    if not _PV_EVENT.search(title):
+        return []
+    buckets = []
+    for m in ev.get("markets", []) or []:
+        q = str(m.get("question") or m.get("groupItemTitle") or "")
+        b = _pv_bucket(q)
+        if b is None:
+            continue
+        prices, outs = _prices(m), _outcomes(m)
+        if not prices:
+            continue
+        yes = next((prices[i] for i, o in enumerate(outs)
+                    if _YES.match(o) and i < len(prices)), prices[0])
+        if yes is None or not (0.0 <= yes <= 1.0):
+            continue
+        buckets.append((b, yes))
+    if len(buckets) < 3:
+        # Two priced buckets is a fragment, not a distribution.
+        return []
+    exp = margin_ladder_expectation(buckets)
+    if exp is None:
+        return []
+    return [ctx.row(art, race_id=NATIONAL_HOUSE, chamber="national", state="",
+                    district="", quantity="margin_D", value=round(exp, 4),
+                    unit="margin")]
+
+
 def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     if not artifacts:
         raise ValueError("no Polymarket artifacts stored for this date")
@@ -170,6 +248,11 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                 continue
             seen_events += 1
             title = str(ev.get("title") or ev.get("question") or "")
+            # The margin ladder is read across markets, so it cannot go through
+            # the per-market loop below. Handled first and the event is done.
+            if (pv := _pv_rows(ev, title, art, ctx)):
+                rows.extend(pv)
+                continue
             # Accumulate per EVENT, then emit. A candidate-winner event lists
             # one market per candidate, so a party's chance is the SUM over
             # its candidates, not any one of them and not their mean — two

@@ -11,7 +11,7 @@ removed in Q1 2026. Do not coerce to int.
 from __future__ import annotations
 import re
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
-               is_state, race_id, state_from_text)
+               is_state, margin_ladder_expectation, race_id, state_from_text)
 
 # Kalshi ticker conventions are not documented and shift. These patterns are a
 # best effort; --inspect the first real capture and tighten them.
@@ -182,6 +182,103 @@ def _seat_stats(buckets: list, threshold: int, total: int):
     return num / den, maj / den
 
 
+# --------------------------------------------------------------------------
+# The national House popular-vote margin ladder.
+#
+# KXHOUSEPOPVOTEMARGIN quotes the same shape as the seat ladders, but over vote
+# share instead of seats: "Democrats, 8 to 10%", "Democrats, 16% and above",
+# "Republicans win". It is the only market-implied NATIONAL MARGIN that exists
+# anywhere, and it fills the one empty cell in the four-way comparison — until
+# now the markets column had probabilities and seat counts and no vote share,
+# because chamber-control markets do not imply one.
+#
+# WHY THIS NEEDS ITS OWN STATS FUNCTION. _seat_stats() counts discrete seats: a
+# bucket "246-249" holds four outcomes and its span is hi - lo + 1. A margin is
+# continuous, so "8 to 10%" spans 2 points and not 3, and using the seat
+# arithmetic here would inflate every bucket's width by one point and drag the
+# expectation toward whichever tail is wider.
+#
+# THE REPUBLICAN BUCKET IS COARSE, AND THAT IS WORTH STATING. Kalshi resolves
+# the Democratic side in 2-point steps but collapses every Republican outcome
+# into one "Republicans win" market. That bucket is open-ended over the whole
+# R half of the line, so a value has to be assumed for it. Measured on the live
+# book at 9% mass: the neighbour-width convention puts the answer at D+7.83,
+# assuming R+3 gives D+7.65, and an implausible R+8 still only gives D+7.19.
+# The whole sensitivity is under two thirds of a point and the plausible part
+# of it under two tenths, so the same convention the seat ladders use is good
+# enough — but it is an assumption and the methods page should say so.
+# Polymarket resolves both tails and is the better instrument where both quote.
+# --------------------------------------------------------------------------
+
+_MARGIN_SERIES = {"KXHOUSEPOPVOTEMARGIN": NATIONAL_HOUSE}
+
+_M_RANGE = re.compile(
+    r"(democrat|republican)\w*,?\s*(\d+(?:\.\d+)?)\s*(?:to|[-–])\s*(\d+(?:\.\d+)?)\s*%",
+    re.I)
+_M_OPEN = re.compile(
+    r"(democrat|republican)\w*,?\s*(\d+(?:\.\d+)?)\s*%?\s*(?:and above|or more|\+)",
+    re.I)
+_M_WIN = re.compile(r"(democrat|republican)\w*\s+win", re.I)
+
+
+def _margin_bucket(label: str):
+    """A bucket label -> (lo, hi) in points of DEMOCRATIC margin, signed.
+
+    'Democrats, 8 to 10%'      -> (8.0, 10.0)
+    'Democrats, 16% and above' -> (16.0, None)
+    'Republicans, 2 to 4%'     -> (-4.0, -2.0)
+    'Republicans win'          -> (None, 0.0)
+    """
+    if not label:
+        return None
+    if (m := _M_RANGE.search(label)):
+        party, a, b = m.group(1).lower(), float(m.group(2)), float(m.group(3))
+        lo, hi = min(a, b), max(a, b)
+        return (lo, hi) if party.startswith("d") else (-hi, -lo)
+    if (m := _M_OPEN.search(label)):
+        party, a = m.group(1).lower(), float(m.group(2))
+        return (a, None) if party.startswith("d") else (None, -a)
+    if (m := _M_WIN.search(label)):
+        # No threshold named: this side simply wins. One open half-line.
+        return (0.0, None) if m.group(1).lower().startswith("d") else (None, 0.0)
+    return None
+
+
+def _margin_rows(markets: list, art, ctx) -> list:
+    """One margin_D row for the chamber, from the priced margin ladder."""
+    by_race: dict[str, list] = {}
+    for m in markets:
+        ticker = str(m.get("ticker", ""))
+        series = _series_of(ticker)
+        rid = _MARGIN_SERIES.get(series)
+        if rid is None:
+            continue
+        # Same cycle guard the seat ladders use: these series carry more than
+        # one Congress at a time and a 2028 bucket must not price a 2026 row.
+        if not _CYCLE_EVENT.search(str(m.get("event_ticker") or ticker)):
+            continue
+        b = _margin_bucket(str(m.get("yes_sub_title")
+                                or m.get("subtitle") or m.get("title") or ""))
+        p = _price(m)
+        if b is None or p is None:
+            continue
+        by_race.setdefault(rid, []).append((b, p))
+
+    out = []
+    for rid, buckets in by_race.items():
+        if len(buckets) < 3:
+            # Two priced buckets is not a distribution, it is a fragment, and
+            # an expectation taken over it would be confidently wrong.
+            continue
+        exp = margin_ladder_expectation(buckets)
+        if exp is None:
+            continue
+        out.append(ctx.row(art, race_id=rid, chamber="national", state="",
+                           district="", quantity="margin_D",
+                           value=round(exp, 4), unit="margin"))
+    return out
+
+
 def _seat_rows(markets: list, art, ctx) -> list:
     """One seats_D and one win_prob_D per chamber, from the priced ladder."""
     out = []
@@ -319,7 +416,10 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         # Seat ladders first: they are read as a distribution across markets,
         # not one market at a time, so they cannot go through the per-market
         # loop below.
-        got = _seat_rows(markets, art, ctx)
+        # Ladders first: both kinds are read as a distribution ACROSS markets,
+        # not one market at a time, so neither can go through the per-market
+        # loop below.
+        got = _seat_rows(markets, art, ctx) or _margin_rows(markets, art, ctx)
         if got:
             rows.extend(got)
             rows_by_series[series] += len(got)

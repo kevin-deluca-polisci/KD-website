@@ -79,7 +79,7 @@ sources:
       # They are ALSO in series_always below, and that is the entry that does the
       # work: adding them here changed nothing, because Kalshi's series index
       # does not list them at all. See series_always.
-      series_include: "^(HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KX[DR]HOUSESEATS|KX[DR]SENATESEATS|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
+      series_include: "^(HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KX[DR]HOUSESEATS|KX[DR]SENATESEATS|KXHOUSEPOPVOTEMARGIN|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
       series_exclude: "^(PRESPARTY|KXPRES)"
       series_category: Politics
       page_limit: 200
@@ -103,6 +103,13 @@ sources:
         - KXDSENATESEATS
         - KXRHOUSESEATS
         - KXRSENATESEATS
+        # The national House popular-vote margin ladder, and the ONLY
+        # market-implied national vote share that exists anywhere — the Markets
+        # column on the margin comparison was empty because chamber-control
+        # prices do not imply one. Verified 2026-08-21 that the series index
+        # does not list it either: it returns 30 tickers matching POPVOTE or
+        # MARGIN and every one of them is a 2024 leftover.
+        - KXHOUSEPOPVOTEMARGIN
     notes: >
       Prices are fixed-point STRINGS ("0.4200") since the integer-cent fields
       were removed in Q1 2026 — do not coerce to int in the parser.
@@ -144,6 +151,19 @@ sources:
       gamma_base: https://gamma-api.polymarket.com
       slugs:
         - balance-of-power-2026-midterms
+        # The national House popular-vote margin ladder — thirteen Yes/No
+        # markets covering the line in 2-point steps. Better resolved than
+        # Kalshi's equivalent, which collapses every Republican outcome into a
+        # single bucket: this one runs R 0-2, 2-4, 4-6 and 6%+, so neither tail
+        # has to be assumed. Both are collected because they answer the same
+        # question at different resolution and the gap is worth watching; on
+        # 2026-08-21 they read D+7.58 and D+7.83.
+        #
+        # The event also carries an "any other outcome" market priced at 0.455,
+        # which is not a bucket and would wreck the expectation. The parser
+        # matches on party-and-threshold in the question text, so it is skipped
+        # rather than filtered by name.
+        - 2026-midterms-house-popular-vote-margin-of-victory-224
       # ONE snapshot of the active-event list, not one per search term. The
       # first real run fetched the same unfiltered 4.5 MB response three times
       # because the "search terms" were never actually sent as a query — 13.6 MB
