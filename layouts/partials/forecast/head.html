@@ -132,6 +132,52 @@ document.documentElement.className+=" js";})();
   .card.prose p:last-child{margin-bottom:0}
   .card.prose table{margin-bottom:16px}
 
+
+  /* ---- the ladder's diverging scale ----
+     Two hues and a near-neutral midpoint, not a rainbow: the hue takes the
+     short path from blue to red so the middle passes through purple, and
+     chroma is pulled down there so a toss-up reads as a MIX of the two ends
+     rather than as a third party. Vividness is certainty — a safe seat is
+     saturated, a coin flip is muted — so the band of purple through the
+     middle of the chart is exactly the set of seats that decide control.
+     Steps computed in OKLCH; the midpoint is the lowest-contrast step against
+     its own surface in both themes (4.2:1 light, 4.5:1 dark) and every step
+     clears 3:1. Poles separate by dE ~19 under simulated protanopia. */
+  .lad-0{fill:#1c5fa8}
+  .lad-1{fill:#5265a9}
+  .lad-2{fill:#716ca5}
+  .lad-3{fill:#84719f}
+  .lad-4{fill:#907198}
+  .lad-5{fill:#9a6b8e}
+  .lad-6{fill:#a35d7c}
+  .lad-7{fill:#ab485d}
+  .lad-8{fill:#b02a2a}
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      .lad-0{fill:#79aef0}
+      .lad-1{fill:#879ad6}
+      .lad-2{fill:#8d8bbc}
+      .lad-3{fill:#8f80a8}
+      .lad-4{fill:#937a9b}
+      .lad-5{fill:#9d7695}
+      .lad-6{fill:#af7590}
+      .lad-7{fill:#c97387}
+      .lad-8{fill:#e57373}
+    }
+  }
+  :root[data-theme="dark"]{
+    .lad-0{fill:#79aef0}
+    .lad-1{fill:#879ad6}
+    .lad-2{fill:#8d8bbc}
+    .lad-3{fill:#8f80a8}
+    .lad-4{fill:#937a9b}
+    .lad-5{fill:#9d7695}
+    .lad-6{fill:#af7590}
+    .lad-7{fill:#c97387}
+    .lad-8{fill:#e57373}
+  }
+
   .note{background:var(--warn-bg);border-left:3px solid var(--warn-line);
         padding:14px 16px;margin:18px 0;font-size:.92em;border-radius:0 6px 6px 0}
   .note strong{color:var(--warn-ink)}

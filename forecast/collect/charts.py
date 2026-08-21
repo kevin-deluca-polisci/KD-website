@@ -412,6 +412,45 @@ LADDER_CLIP = 20.0
 LADDER_CAP = 8.0        # display units given to each block of holdover seats
 
 
+# The ladder's diverging scale, as a step index rather than a colour: the hexes
+# live in the stylesheet so the two themes can differ, and this file stays out
+# of the business of knowing what blue looks like.
+#
+# WHY A RAMP AND NOT TWO COLOURS. The bars were solid party blue and solid party
+# red at a flat opacity, with a second, binary opacity for "competitive". That
+# spent the whole colour channel re-encoding which side of the EVEN line the bar
+# was already on, and said nothing about the thing the chart is for — how SURE
+# any of it is. The ramp encodes certainty: a safe seat is vivid, a toss-up is a
+# muted purple, and the run of purple through the middle of the chart is the
+# set of seats that decide control.
+#
+# It is a diverging scale in the strict sense — two hues and a near-neutral
+# midpoint — and not a rainbow. The hue takes the short path from blue to red,
+# so the middle passes through purple, and chroma is pulled down there (0.068 in
+# light mode, against 0.13-0.17 at the poles) so the midpoint reads as a mix of
+# the two ends rather than as a third category. Lightness moves the same way in
+# both themes in PERCEPTUAL terms: the midpoint is the lowest-contrast step
+# against its own surface either way, 4.2:1 light and 4.5:1 dark, while the
+# poles sit at 5.7-7.4:1. Every step clears 3:1.
+#
+# The poles separate under simulated colour-vision deficiency by dE 19.9
+# (protanopia, light) and 17.8 (deuteranopia, dark), well past the 8 target —
+# and blue against red is the pair that survives CVD best. Direction and bar
+# length carry the same information anyway, so colour here reinforces rather
+# than carries.
+LADDER_SHADES = 9
+
+
+def _shade(win_prob_D: float) -> int:
+    """Certainty -> ramp index. 0 is safest D, 8 is safest R, 4 is even."""
+    try:
+        p = float(win_prob_D)
+    except (TypeError, ValueError):
+        return LADDER_SHADES // 2
+    p = max(0.0, min(1.0, p))
+    return int(round((1.0 - p) * (LADDER_SHADES - 1)))
+
+
 def build_ladder(races: list[dict] | None, *, chamber: str,
                  fixed_left: int = 0, fixed_right: int = 0,
                  total: int = 100, thresholds: tuple = (),
@@ -507,6 +546,10 @@ def build_ladder(races: list[dict] | None, *, chamber: str,
             "clipped": abs(m) > clip,
             "competitive": bool(r.get("competitive")),
             "lead": "D" if m > 0 else "R",
+            # Where this seat sits on the diverging ramp: 0 = safest
+            # Democratic, 8 = safest Republican, 4 = a coin flip. See
+            # LADDER_SHADES for why the scale is built the way it is.
+            "shade": _shade(r["win_prob_D"]),
         }
         if seat_no in thresh_at:
             row["threshold"] = seat_no

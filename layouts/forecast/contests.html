@@ -81,8 +81,15 @@
               y="{{ if gt .margin 0.0 }}{{ $y }}{{ else }}{{ $zy }}{{ end }}"
               width="{{ $bw }}"
               height="{{ if gt .margin 0.0 }}{{ sub $zy $y }}{{ else }}{{ sub $y $zy }}{{ end }}"
-              fill="{{ if eq .lead "D" }}var(--D){{ else }}var(--R){{ end }}"
-              opacity="{{ if .competitive }}1{{ else }}.34{{ end }}">
+              {{/* Colour is CERTAINTY, not just side. `shade` is a step on a
+                   diverging blue-purple-red ramp computed in charts.py from
+                   the win probability: vivid at the safe ends, muted purple
+                   at a coin flip. The bar's direction and length already say
+                   which party and by how much, so this adds the one thing
+                   they cannot — how sure any of it is — instead of spending
+                   the colour channel restating them. Replaces a flat party
+                   fill plus a binary opacity for "competitive". */}}
+              class="lad-{{ .shade }}">
           <title>{{ .label }} — expected {{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}, P(D) {{ printf "%.0f%%" (mul .win_prob_D 100) }}. Democratic seat number {{ .seat_no }}.</title>
         </rect>
         {{- if .clipped }}
@@ -139,6 +146,19 @@
 
       {{/* The key to the dashed lines above, with each method's number stated
            rather than left on a hover. Four short labels fit one row. */}}
+      {{/* A key for the ramp. Without it a reader has to infer that purple
+           means "close" — which most will, from every election map they have
+           ever seen, but inferring is not the same as being told. */}}
+      <div class="legend" style="margin-top:14px">
+        <span>Bar colour is certainty:</span>
+        <span style="display:inline-flex;align-items:center;gap:0">
+          {{- range $i := (seq 0 8) }}
+          <span class="swatch" style="border-radius:0;width:15px;height:11px"><svg viewBox="0 0 1 1" style="width:15px;height:11px;display:block"><rect width="1" height="1" class="lad-{{ $i }}"/></svg></span>
+          {{- end }}
+        </span>
+        <span>safe D · toss-up · safe R</span>
+      </div>
+
       {{- if .markers }}
       <div class="legend">
         {{- range .markers }}
