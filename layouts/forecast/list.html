@@ -238,7 +238,7 @@
   </div>
 
   <div class="card">
-    <h2>The class models</h2>
+    <h2>The models on this site</h2>
     <p class="sub">Built in PLSC 2219 from public-domain inputs and published in
        full. <a href="/forecast/methods/">Every choice inside them is here</a>.</p>
     <div class="cards">
@@ -267,7 +267,13 @@
            each state by partisan lean. Not a projection of November — that is
            the point, because it leaves room to watch whether polling drifts
            toward the fundamentals line over the autumn{{ with .election_day_tide_D }};
-           shrinking it by λ={{ printf "%.2f" $.shrink_lambda }} would give
+           {{/* $p, not $. Inside `with .election_day_tide_D` the dot is a
+                float, and `$` in a section template is the PAGE, not the data
+                dict — so `$.shrink_lambda` asked a *hugolib.pageState for a
+                field it has never had and failed the whole build. The polling
+                model is bound to $p above; a variable reaches it from any
+                nesting depth, which is exactly why it was bound. */}}
+           shrinking it by λ={{ printf "%.2f" $p.shrink_lambda }} would give
            D+{{ printf "%.1f" . }}{{ end }}.</p>
         <p class="muted"><a href="/forecast/contests/">Race by race →</a></p>
       </div>

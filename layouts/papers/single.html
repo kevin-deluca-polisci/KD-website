@@ -12,7 +12,11 @@
     {{ with $p.plain_answer }}<p class="plain-a">{{ . }}</p>
     {{ else }}<p class="plain-a todo">[Short answer to go here — four sentences, no jargon.]</p>{{ end }}
   </section>
-  <h2 class="paper-title">{{ .Title }}</h2>
+  {{/* $.Title, not .Title. Inside `with $p.plain_question` the dot IS the
+       plain-language question — a string — so `.Title` asked a string for a
+       field and failed the build. The `else` branch below is fine as written,
+       because there the dot is still the page. */}}
+  <h2 class="paper-title">{{ $.Title }}</h2>
   {{ else }}
   <h1 class="paper-title">{{ .Title }}</h1>
   {{ end }}
