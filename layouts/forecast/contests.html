@@ -1,17 +1,19 @@
-{{/* CONTESTS — Senate, House and governors, one chamber at a time.
+{{/* CONTESTS — the two chambers the course forecasts, one at a time.
 
      The two ladders share a component because they are the same picture: seats
      ordered most-Democratic to most-Republican, with the seat that decides
      control marked. Only the bookkeeping differs — the Senate's compressed
      ends are the seats not on the ballot, the House's are the safe seats.
 
-     Governors have no ladder and no timeline, because we run no gubernatorial
-     model. See build_governors() in publish.py for why that is a decision and
-     not an omission. */}}
+     Governors are collected daily and archived in full, but they are not here.
+     We run no gubernatorial model — a national tide carried through partisan
+     lean describes those races badly — and a card of their own on the page
+     that carries our forecasts implied one. What we do have for them is other
+     people's ordinal ratings, so they appear as a third chamber in "Where the
+     raters disagree" on the comparisons page, beside the Senate and House. */}}
 {{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
 {{- $p := $d.polling_model -}}
 {{- $lad := $d.charts.ladders -}}
-{{- $gov := $d.governors -}}
 {{- $proj := $d.seat_projections -}}
 {{ partial "forecast/head.html" (dict "page" . "d" $d) }}
 {{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
@@ -94,28 +96,17 @@
               style="font-size:{{ if gt (len .label) 4 }}8.5{{ else }}10{{ end }}px;{{ if .threshold }}font-weight:700;fill:var(--ink){{ else if .competitive }}font-weight:600;fill:var(--ink-2){{ else }}fill:var(--ink-3){{ end }}">{{ .label }}</text>
         {{- end }}
 
-        <!-- where each METHOD lands on the same seat axis -->
+        {{/* Where each METHOD lands on the same seat axis. The mark only —
+             the names are in the legend under the chart. Printing them here
+             needed de-collision, leader lines and alternating rows, and on
+             the House still collided with the district labels below. */}}
         {{- range .markers }}
         {{- $xm := add $L (mul (div .x 100.0) $W) }}
-        {{- $xl := add $L (mul (div .label_x 100.0) $W) }}
-        {{/* `dy` is computed in charts.py from the deepest rotated seat label,
-             because the Senate's two-character states and the House's
-             five-character districts hang below the axis by very different
-             amounts. This used to be a literal 30/46 tuned on the Senate, and
-             the House printed its method labels through its district names. */}}
-        {{- $ly := add $B .dy }}
-        {{- $col := printf "var(--c-%s)" .key }}
-        <line x1="{{ $xm }}" y1="{{ sub $T 2 }}" x2="{{ $xm }}" y2="{{ sub $ly 9 }}"
-              stroke="{{ $col }}" stroke-width="1.6" stroke-dasharray="2 3"/>
-        {{- if ne .x .label_x }}
-        <line x1="{{ $xm }}" y1="{{ sub $ly 9 }}" x2="{{ $xl }}" y2="{{ sub $ly 5 }}"
-              stroke="{{ $col }}" stroke-width="1" opacity=".5"/>
-        {{- end }}
-        <g>
-          <text class="dlabel" x="{{ $xl }}" y="{{ $ly }}" text-anchor="middle"
-                fill="{{ $col }}">{{ .label }}</text>
+        <line x1="{{ $xm }}" y1="{{ sub $T 2 }}" x2="{{ $xm }}" y2="{{ add $B 4 }}"
+              stroke="{{ printf "var(--c-%s)" .key }}" stroke-width="1.6"
+              stroke-dasharray="2 3">
           <title>{{ .label }}: {{ printf "%.1f" .seats }} Democratic seats</title>
-        </g>
+        </line>
         {{- end }}
 
         <!-- the majority line(s) -->
@@ -145,6 +136,18 @@
         <text class="tick" x="{{ add $L (div $W 2) }}" y="{{ add $B $foot }}" text-anchor="middle"
               style="fill:var(--ink-2)">Democratic seat count</text>
       </svg>
+
+      {{/* The key to the dashed lines above, with each method's number stated
+           rather than left on a hover. Four short labels fit one row. */}}
+      {{- if .markers }}
+      <div class="legend">
+        {{- range .markers }}
+        <span><span class="swatch {{ .key }}"></span>
+          {{ .label }} <b style="color:var(--ink)">{{ printf "%.1f" .seats }}</b></span>
+        {{- end }}
+        <span><span class="swatch ink"></span>the seat that decides control</span>
+      </div>
+      {{- end }}
 
       <table style="max-width:560px;margin-top:18px">
         <tr><th>Threshold</th><th>Seat</th><th class="num">Expected margin</th><th class="num">P(D)</th></tr>
@@ -178,43 +181,54 @@
     </div>
     {{- end }}
 
+    {{/* Senate race by race, as two columns rather than one long table.
+         Ordered by distance from even within each side, so the closest race
+         on each side is the first thing read and the two of them sit next to
+         each other. A single margin-ordered list put them at opposite ends. */}}
     {{- if eq $ck "senate" }}
     {{- with $p }}
-    <div class="card">
-      <h2>Senate, race by race</h2>
-      <p class="sub">The {{ .n_competitive }} races the model does not consider
-         settled. Expected margin is the election-day national tide plus twice the
-         state's partisan lean; nothing here knows who the candidates are.</p>
-      <table>
-        <tr><th>State</th><th class="num">Expected margin</th><th class="num">P(D)</th>
-            <th class="num">State lean</th><th></th></tr>
-        {{- range .races }}
-        {{- if .competitive }}
-        <tr>
-          <td><strong>{{ .state }}</strong>{{ if eq .state "NE" }} <span class="muted">*</span>{{ end }}</td>
-          <td class="num {{ if gt .expected_margin_D 0.0 }}D{{ else }}R{{ end }}">
-            {{ if gt .expected_margin_D 0.0 }}D+{{ printf "%.1f" .expected_margin_D }}{{ else }}R+{{ printf "%.1f" (mul .expected_margin_D -1) }}{{ end }}</td>
-          {{- $pd := mul .win_prob_D 100 }}
-          <td class="num">{{ if ge $pd 99.5 }}&gt;99%{{ else if lt $pd 0.5 }}&lt;1%{{ else }}{{ printf "%.0f%%" $pd }}{{ end }}</td>
-          <td class="num muted">
-            {{ if gt .pvi 0.0 }}D+{{ printf "%.1f" .pvi }}{{ else }}R+{{ printf "%.1f" (mul .pvi -1) }}{{ end }}</td>
-          <td style="width:120px">
-            <span class="bar" style="width:{{ math.Round (mul .win_prob_D 100) }}px;background:var(--D)"></span></td>
-        </tr>
-        {{- end }}
-        {{- end }}
-      </table>
-      <p class="thin-note">{{ .competitive_note }}</p>
-      {{- $ne := where .races "state" "NE" }}
-      {{- if and $ne (index $ne 0).competitive }}
-      <div class="note">
-        <strong>* Nebraska has no Democrat on the ballot.</strong>
-        Dan Osborn is running as an independent, which a two-party model cannot
-        represent: the number above is what a generic Democrat would do in
-        Nebraska, not the race being held. Left in rather than dropped.
+    <div class="cards">
+      {{- range $side := (slice
+            (dict "key" "lean_D" "rows" .lean_D "title" "Democratic-leaning"
+                  "cls" "D" "note" "Seats the model has the Democrats winning, closest first.")
+            (dict "key" "lean_R" "rows" .lean_R "title" "Republican-leaning"
+                  "cls" "R" "note" "Seats the model has the Republicans winning, closest first.")) }}
+      {{- if $side.rows }}
+      <div class="card">
+        <h2 class="{{ $side.cls }}">{{ $side.title }}</h2>
+        <p class="sub">{{ len $side.rows }} of the {{ $p.n_competitive }} unsettled
+           races. {{ $side.note }}</p>
+        <table class="full">
+          <tr><th>State</th><th class="num">Margin</th><th class="num">P(D)</th>
+              <th class="num">Lean</th></tr>
+          {{- range $side.rows }}
+          <tr>
+            <td><strong>{{ .state }}</strong>{{ if eq .state "NE" }} <span class="muted">*</span>{{ end }}</td>
+            <td class="num {{ if gt .expected_margin_D 0.0 }}D{{ else }}R{{ end }}">
+              {{ if gt .expected_margin_D 0.0 }}D+{{ printf "%.1f" .expected_margin_D }}{{ else }}R+{{ printf "%.1f" (mul .expected_margin_D -1) }}{{ end }}</td>
+            {{- $pd := mul .win_prob_D 100 }}
+            <td class="num">{{ if ge $pd 99.5 }}&gt;99%{{ else if lt $pd 0.5 }}&lt;1%{{ else }}{{ printf "%.0f%%" $pd }}{{ end }}</td>
+            <td class="num muted">
+              {{ if gt .pvi 0.0 }}D+{{ printf "%.1f" .pvi }}{{ else }}R+{{ printf "%.1f" (mul .pvi -1) }}{{ end }}</td>
+          </tr>
+          {{- end }}
+        </table>
       </div>
       {{- end }}
+      {{- end }}
     </div>
+    <p class="thin-note">{{ .competitive_note }} Expected margin is the
+       election-day national tide plus twice the state's partisan lean; nothing
+       here knows who the candidates are.</p>
+    {{- $ne := where .races "state" "NE" }}
+    {{- if and $ne (index $ne 0).competitive }}
+    <div class="note">
+      <strong>* Nebraska has no Democrat on the ballot.</strong>
+      Dan Osborn is running as an independent, which a two-party model cannot
+      represent: the number above is what a generic Democrat would do in
+      Nebraska, not the race being held. Left in rather than dropped.
+    </div>
+    {{- end }}
     {{- end }}
     {{- end }}
 
@@ -247,46 +261,6 @@
   {{- end }}
 
   </div>
-
-  <!-- ========================== GOVERNORS ==========================
-       Outside the chamber toggle, and deliberately small. The course is about
-       congressional elections; governors are collected and archived in full,
-       and only the races that are actually close are drawn. -->
-  {{- with $gov }}
-  {{- if .races }}
-  <div class="card">
-    <h2>Governors worth watching</h2>
-    <p class="sub">{{ .n_close }} of {{ .n_races }} gubernatorial races are close
-       — a consensus rating between Lean D and Lean R, or a market price between
-       20% and 80%. The rest are collected and archived but not drawn. There is
-       no class model here: a national tide carried through partisan lean
-       describes these races badly, and governors are not the focus of the
-       course.</p>
-    <table>
-      <tr><th>State</th><th class="num">Market P(D)</th><th class="num">Raters</th>
-          <th>Consensus</th><th class="num">Spread</th></tr>
-      {{- range .races }}
-      <tr>
-        <td><strong>{{ .state }}</strong></td>
-        <td class="num">{{ with .market_prob_D }}{{ printf "%.0f%%" (mul . 100) }}
-          {{- else }}{{ if .market_withheld }}<span class="muted">withheld</span>{{ else }}—{{ end }}{{ end }}</td>
-        <td class="num muted">{{ .n_raters }}</td>
-        <td>
-          {{- with .mean_rating }}
-          {{- if lt . 2.0 }}Safe D{{ else if lt . 4.0 }}Likely D{{ else if lt . 4.75 }}Lean D
-          {{- else if le . 5.25 }}Toss-up{{ else if lt . 6.5 }}Lean R
-          {{- else if lt . 8.5 }}Likely R{{ else }}Safe R{{ end }}
-          {{- else }}—{{ end }}</td>
-        <td class="num">{{ with .spread }}{{ printf "%.1f" . }}{{ else }}—{{ end }}</td>
-      </tr>
-      {{- end }}
-    </table>
-    <p class="thin-note">Consensus is the mean of the raters' ordinal calls read
-       back onto the same scale — a summary of where they sit, not a forecast of
-       ours.</p>
-  </div>
-  {{- end }}
-  {{- end }}
 
 </div>
 {{ partial "forecast/foot.html" (dict "page" . "d" $d) }}

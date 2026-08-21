@@ -123,6 +123,15 @@ document.documentElement.className+=" js";})();
      there is prose to hold. */
   td.wrap,th.wrap{white-space:normal;min-width:16ch}
 
+  /* Prose cards. The global reset zeroes every margin, which is right for the
+     chart pages — they are labels and tables, not paragraphs — but leaves the
+     one text-heavy page running its paragraphs together into a wall. Opt in
+     per card rather than styling `p` globally, which would also override
+     .sub's own spacing everywhere else. */
+  .card.prose p{margin-bottom:14px;max-width:74ch}
+  .card.prose p:last-child{margin-bottom:0}
+  .card.prose table{margin-bottom:16px}
+
   .note{background:var(--warn-bg);border-left:3px solid var(--warn-line);
         padding:14px 16px;margin:18px 0;font-size:.92em;border-radius:0 6px 6px 0}
   .note strong{color:var(--warn-ink)}
@@ -146,6 +155,19 @@ document.documentElement.className+=" js";})();
   .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:.85em;color:var(--ink-2)}
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .swatch{width:11px;height:11px;border-radius:2px;display:inline-block}
+  /* Category colours as CLASSES, not as an interpolated inline style.
+     `style="background:{{ printf "var(--c-%s)" .key }}"` renders as the
+     literal string ZgotmplZ: Go's html/template refuses to place a value it
+     did not author into a CSS context, and a swatch silently loses its
+     colour while the page still builds. Attributes like SVG `fill` and
+     `stroke` are not CSS contexts and interpolate fine, which is why the
+     charts kept their colours and only the legends went blank. */
+  .swatch.fundamentals{background:var(--c-fundamentals)}
+  .swatch.polling{background:var(--c-polling)}
+  .swatch.professional{background:var(--c-professional)}
+  .swatch.market{background:var(--c-market)}
+  .swatch.ink{background:var(--ink)}
+  .swatch.range{background:var(--ink-3);opacity:.4}
   .thin-note{font-size:.85em;color:var(--ink-3);margin-top:12px;font-style:italic}
   .bar{display:inline-block;height:9px;border-radius:2px;vertical-align:middle}
 

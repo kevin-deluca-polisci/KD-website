@@ -1,0 +1,177 @@
+{{/* ABOUT — what this is, who made it, and what is deliberately not here.
+
+     The pages either side of this one show numbers. This one exists so that a
+     reader who wants to know where the numbers came from, what is withheld and
+     why, and how the thing was built does not have to reconstruct it from
+     footnotes scattered across four other pages.
+
+     The withheld-cell count is read from the payload rather than typed here.
+     Anything on this page that could go stale should come from the data, and
+     anything that cannot be derived honestly should be a link instead of a
+     number. */}}
+{{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
+{{ partial "forecast/head.html" (dict "page" . "d" $d) }}
+{{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
+
+<div class="wrap">
+
+  <div class="card prose">
+    <h2>What this is</h2>
+    <p class="sub">A daily archive of other people's 2026 midterm forecasts, plus
+       two models built in the open as course material.</p>
+    <p>PLSC 2219 is a Yale undergraduate course on midterm elections and
+       forecasting. Students build models across the term. This site is the
+       shared evidence base they build against: every day it captures what each
+       published forecast said, stores the raw bytes unchanged, and re-derives
+       the tables and charts from that store.</p>
+    <p>The display is the <em>disagreement between methods</em>, not another
+       trend line. There are already good single-number forecasts, and adding a
+       thirteenth would teach nobody anything. What is harder to find, and what a
+       class can actually learn from, is a like-for-like view of how far apart
+       four different ways of forecasting the same election are on the same day —
+       and how that distance moves as the election gets closer.</p>
+    <p class="thin-note">Nothing here is advice about how to bet, and the class
+       models are teaching artefacts rather than a serious attempt to beat the
+       professionals.</p>
+  </div>
+
+  <div class="card prose">
+    <h2>What is in each category</h2>
+    <p class="sub">Four categories, each a family of forecasts that share a way of
+       knowing. A forecast is filed by <em>how</em> it reaches its answer, not by
+       who published it.</p>
+    <table>
+      <tr><th>Category</th><th class="wrap">What its members have in common</th>
+          <th class="wrap">What it cannot see</th></tr>
+      <tr><td><strong>Fundamentals</strong></td>
+          <td class="wrap muted">Predicts from conditions rather than opinion: the
+              economy, presidential approval, how many seats each party is
+              defending. Fit on past midterms.</td>
+          <td class="wrap muted">Candidates, scandals, and everything that has
+              happened since the last election it was fit on.</td></tr>
+      <tr><td><strong>Polling</strong></td>
+          <td class="wrap muted">Starts from what people tell pollsters, then
+              averages, weights, or corrects for how early it is.</td>
+          <td class="wrap muted">Whether the polls are wrong in the same
+              direction as last time. Poll averages inherit poll errors.</td></tr>
+      <tr><td><strong>Professional</strong></td>
+          <td class="wrap muted">Published statistical forecasts combining most of
+              the above plus candidate quality, fundraising and local
+              knowledge.</td>
+          <td class="wrap muted">Its own method, usually. Most are documented in
+              outline and none are reproducible from the outside.</td></tr>
+      <tr><td><strong>Markets</strong></td>
+          <td class="wrap muted">Prices from people betting money — an aggregate
+              of everyone else's models plus whatever traders think they
+              know.</td>
+          <td class="wrap muted">The difference between a price and a
+              probability: thin volume, fees, and a last trade that may be
+              hours old.</td></tr>
+    </table>
+    <p class="thin-note">Expert ratings — “Lean R”, “Toss-up” — are collected but
+       kept out of all four averages. They are ordinal, and choosing which number
+       to turn “Lean R” into is a modelling decision we would rather argue about
+       in class than bury in a script. They get their own
+       <a href="/forecast/comparisons/">graphic</a> instead.</p>
+  </div>
+
+  <div class="card prose">
+    <h2>What is not published, and why</h2>
+    <p class="sub">Some of what this archive collects cannot be shown during the
+       cycle. The restriction is in the code, not in a policy document.</p>
+    {{- if gt $d.suppressed_cells 0 }}
+    <p><strong>{{ $d.suppressed_cells }}</strong> cells are withheld in today's
+       snapshot.</p>
+    {{- end }}
+    <p>Every source carries a publication tier taken from its licence. Sources
+       that permit it are published by name. Sources that do not are used only
+       inside a category average, and that average is published only when it has
+       at least three such contributors — otherwise a reader who knows two of the
+       numbers could recover the third by subtraction. A handful of inputs are
+       held privately for the whole cycle and never published in any form.</p>
+    <p>The point is not secrecy. It is that a forecaster who publishes for their
+       own audience has not agreed to have their live numbers mirrored somewhere
+       else during the election. The full per-forecaster archive is released,
+       documented and citable, after the votes are counted.</p>
+    <p class="thin-note">The rule is enforced in
+       <code>forecast/collect/aggregate.py</code>, which audits its own output
+       and refuses to write anything if the audit fails. A rule you have to
+       remember is a rule you will forget at 11pm in late October.</p>
+  </div>
+
+  <div class="card prose">
+    <h2>How it is built</h2>
+    <p class="sub">Two phases that never touch each other's job.</p>
+    <table>
+      <tr><th>Phase</th><th class="wrap">What it does</th></tr>
+      <tr><td><strong>Capture</strong></td>
+          <td class="wrap muted">Fetches each source once a day and stores the
+              bytes exactly as received. It never parses. A parser bug is then
+              always recoverable, because the original is still on disk.</td></tr>
+      <tr><td><strong>Parse</strong></td>
+          <td class="wrap muted">Reads the store and never fetches. Re-running it
+              on a two-year-old snapshot gives the same rows it gave then.</td></tr>
+      <tr><td><strong>Model</strong></td>
+          <td class="wrap muted">The two class models, run from public inputs
+              only.</td></tr>
+      <tr><td><strong>Aggregate</strong></td>
+          <td class="wrap muted">The privacy boundary. Everything upstream is
+              private; everything it writes is public.</td></tr>
+      <tr><td><strong>Publish</strong></td>
+          <td class="wrap muted">Lays out the charts and writes the single JSON
+              file this site is built from.</td></tr>
+    </table>
+    {{/* No source COUNT here. model_index holds only the sources that publish
+         a national number AND permit being named, which is a much smaller set
+         than the registry — printing len as "sources registered this cycle"
+         said 3 when the answer was 23. The methods page lists them properly. */}}
+    <p class="thin-note">Every source, with its link, its licence and what we are
+       allowed to do with it, is listed on the
+       <a href="/forecast/methods/">methods page</a>. The code is in the
+       repository.</p>
+  </div>
+
+  <div class="card prose">
+    <h2>Use of AI</h2>
+    <p class="sub">Stated plainly, because a site about where numbers come from
+       should say where its own code came from.</p>
+    <p>The data collection pipeline and this website were built with substantial
+       help from <strong>Claude Opus 5</strong>, Anthropic's language model, used
+       as a programming assistant under my direction. That covers the capture and
+       parsing code, the aggregation and disclosure logic, the charts, and the
+       page templates. Design decisions, the choice of sources, the modelling
+       choices, and the editorial framing are mine.</p>
+    <p>No forecast on this site is produced by a language model. Every number is
+       either transcribed from a named source by a deterministic parser, or
+       computed by the two class models, whose code is in the repository and
+       whose assumptions are listed on the
+       <a href="/forecast/methods/">methods page</a>. The model does not decide
+       what a race is worth, and it never sees a number that is not already in
+       the archive.</p>
+    <p class="thin-note">Errors are mine regardless of what wrote the line. If
+       something here looks wrong, it probably is — please tell me.</p>
+  </div>
+
+  <div class="card prose">
+    <h2>Credits and reuse</h2>
+    <table>
+      <tr><td><strong>Course</strong></td>
+          <td class="wrap muted">PLSC 2219, Midterm Elections and Forecasting,
+              Yale University</td></tr>
+      <tr><td><strong>Instructor</strong></td>
+          <td class="wrap muted"><a href="/">Kevin DeLuca</a>, Department of
+              Political Science</td></tr>
+      <tr><td><strong>Race ratings</strong></td>
+          <td class="wrap muted">© their respective forecasters, transcribed from
+              Wikipedia under CC BY-SA 4.0</td></tr>
+      <tr><td><strong>Official returns</strong></td>
+          <td class="wrap muted">MIT Election Data and Science Lab (CC0)</td></tr>
+      <tr><td><strong>Economic data</strong></td>
+          <td class="wrap muted">Federal Reserve Bank of St. Louis (FRED)</td></tr>
+    </table>
+    <p class="thin-note">Student forecasts are not published. Only the prize
+       winner's predictions are made public, at the end of the cycle.</p>
+  </div>
+
+</div>
+{{ partial "forecast/foot.html" (dict "page" . "d" $d) }}

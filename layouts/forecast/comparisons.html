@@ -5,6 +5,11 @@
      benchmark; it was only ever that forecast because its licence permits
      republication, which is a fact about paperwork and not about accuracy.
 
+     Order of the cards is an argument: the country, then the races where the
+     methods disagree, then the raters who disagree about the same races. The
+     ratings panel used to sit second, which put twenty rows of other people's
+     ordinal calls in front of the card this page exists for.
+
      Prose is deliberately thin here. The reasoning that used to sit on the page
      lives in publish.py and charts.py, next to the code it explains. */}}
 {{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
@@ -46,32 +51,110 @@
   </div>
   {{- end }}
 
+  <!-- ============ per race, as a range rather than a table ============ -->
+  {{- with $s.plot }}
+  <div class="card">
+    <h2>Senate, race by race</h2>
+    <p class="sub">One line per seat. The band runs from the lowest Democratic
+       win probability any method gives it to the highest; each mark is one
+       method. Widest disagreement first.
+       {{- $miss := $s.categories_missing_per_race }}
+       {{- if $miss }} No per-race number yet from
+       {{ range $i, $c := $miss }}{{ if $i }}, {{ end }}{{ index $s.labels $c }}{{ end }}.{{ end }}</p>
+
+    {{- $RH := 26.0 }}{{ $L := 54.0 }}{{ $W := 512.0 }}{{ $T := 30.0 }}
+    {{- $H := mul $RH (len .rows) }}
+    <div class="tscroll">
+    <svg viewBox="0 0 720 {{ add $H (add $T 26) }}" role="img"
+         aria-label="Democratic win probability for each competitive Senate seat, as a range across methods">
+      {{- range .ticks }}
+      {{- $x := add $L (mul (div .x 100.0) $W) }}
+      <line class="{{ if eq (printf "%v" .x) "50" }}baseline{{ else }}gridline{{ end }}"
+            x1="{{ $x }}" y1="{{ sub $T 14 }}" x2="{{ $x }}" y2="{{ add $T $H }}"/>
+      <text class="tick" x="{{ $x }}" y="{{ sub $T 20 }}" text-anchor="middle">{{ .label }}</text>
+      {{- end }}
+      {{/* Right-anchored over its own column. Left-anchored just past the
+           plot, it sat on top of the 100% tick label. */}}
+      <text class="tick" x="{{ add (add $L $W) 46 }}" y="{{ sub $T 20 }}"
+            text-anchor="end" style="fill:var(--ink-3)">SPREAD</text>
+
+      {{- $lx := $L }}{{ $wd := $W }}
+      {{- range $i, $row := .rows }}
+      {{- $y := add $T (add (mul $RH $i) (div $RH 2)) }}
+      {{- $xlo := add $lx (mul (div $row.x_lo 100.0) $wd) }}
+      {{- $xhi := add $lx (mul (div $row.x_hi 100.0) $wd) }}
+      <g>
+        <title>{{ $row.state }} — {{ $row.n_cats }} methods, {{ printf "%.0f" $row.spread }} points apart</title>
+        <text class="rowlab" x="{{ sub $lx 12 }}" y="{{ add $y 4 }}" text-anchor="end"
+              style="font-size:12px">{{ $row.state }}</text>
+        <rect x="{{ $xlo }}" y="{{ sub $y 6 }}" width="{{ sub $xhi $xlo }}" height="12"
+              fill="var(--ink-3)" opacity=".16"/>
+        <line x1="{{ $xlo }}" y1="{{ sub $y 8 }}" x2="{{ $xlo }}" y2="{{ add $y 8 }}"
+              stroke="var(--ink-3)" stroke-width="1.3"/>
+        <line x1="{{ $xhi }}" y1="{{ sub $y 8 }}" x2="{{ $xhi }}" y2="{{ add $y 8 }}"
+              stroke="var(--ink-3)" stroke-width="1.3"/>
+        {{- range $row.points }}
+        {{- partial "forecast/glyph.html" (dict "x" (add $lx (mul (div .x 100.0) $wd)) "y" $y
+                                  "key" .key "fill" (printf "var(--c-%s)" .key)) }}
+        {{- end }}
+        <text class="rowval" x="{{ add (add $lx $wd) 46 }}" y="{{ add $y 4 }}"
+              text-anchor="end"
+              style="font-size:12px">{{ printf "%.0f" $row.spread }}</text>
+      </g>
+      {{- end }}
+    </svg>
+    </div>
+
+    <div class="legend">
+      {{- range .categories }}
+      <span><svg viewBox="0 0 14 14" style="width:13px;height:13px">
+        {{- partial "forecast/glyph.html" (dict "x" 7.0 "y" 7.0 "key" .
+                                   "fill" (printf "var(--c-%s)" .)) }}
+      </svg>{{ index $s.labels . }}</span>
+      {{- end }}
+      <span><span class="swatch range"></span>range across methods</span>
+    </div>
+    <p class="thin-note">Competitive seats only — the model puts every other race
+       outside 1–99%. Widest disagreement today is {{ printf "%.0f" .widest }}
+       points; the median seat is {{ printf "%.0f" .median_spread }} apart. Full
+       list on the <a href="/forecast/contests/">contests page</a>.</p>
+  </div>
+  {{- end }}
+
   <!-- ============ ratings spread ============ -->
   <div class="card">
     <h2>Where the raters disagree</h2>
     <div class="segs" data-toggle-group="ratings">
-      <span class="seglabel">Chamber</span>
+      <span class="seglabel">Contest</span>
       <div class="seg" data-dim="chamber">
         <button type="button" data-value="senate" aria-selected="true">Senate</button>
         <button type="button" data-value="house" aria-selected="false">House</button>
+        <button type="button" data-value="governor" aria-selected="false">Governor</button>
       </div>
     </div>
 
     <div data-group="ratings">
-    {{- range $c := (slice "senate" "house") }}
+    {{- range $c := (slice "senate" "house" "governor") }}
     {{- $r := index $rat $c }}
     {{- if $r }}
+    {{- $noun := cond (eq $c "governor") "races" "seats" }}
     <div data-panel data-chamber="{{ $c }}">
-      <p class="sub">Each row is one seat; each dot is a rating, sized by how many
-         raters gave it. Sorted widest disagreement first.
-         {{ $r.n_shown }} of {{ $r.n_contested }} seats where the {{ $r.n_raters }}
-         raters do not all agree{{ if gt $r.n_unanimous 0 }}; {{ $r.n_unanimous }}
-         more are unanimous{{ end }}.</p>
+      <p class="sub">Each row is one {{ if eq $c "governor" }}race{{ else }}seat{{ end }};
+         each dot is a rating, sized by how many raters gave it. Sorted widest
+         disagreement first. {{ $r.n_shown }} of {{ $r.n_contested }} {{ $noun }}
+         where the {{ $r.n_raters }} raters do not all
+         agree{{ if gt $r.n_unanimous 0 }}; {{ $r.n_unanimous }}
+         more are unanimous{{ end }}.
+         {{- if eq $c "governor" }} We publish no gubernatorial forecast of our
+         own — a national tide carried through partisan lean describes these
+         races badly — so what other people call them is all this page claims
+         to know.{{ end }}</p>
 
       {{- $RH := 25.0 }}{{ $L := 62.0 }}{{ $W := 520.0 }}{{ $T := 34.0 }}
       {{- $H := mul $RH (len $r.seats) }}
+      <div class="tscroll">
       <svg viewBox="0 0 720 {{ add $H (add $T 20) }}" role="img"
-           aria-label="Race ratings by seat, sorted by disagreement">
+           aria-label="Race ratings by {{ if eq $c "governor" }}race{{ else }}seat{{ end }}, sorted by disagreement">
         {{- range $r.ticks }}
         {{- $x := add $L (mul (div .x 100.0) $W) }}
         <line class="gridline" x1="{{ $x }}" y1="{{ sub $T 16 }}" x2="{{ $x }}" y2="{{ add $T $H }}"/>
@@ -96,6 +179,7 @@
               style="font-size:11.5px;fill:var(--ink-3);font-weight:600">{{ $seat.n_distinct }} different call{{ if ne $seat.n_distinct 1 }}s{{ end }}</text>
         {{- end }}
       </svg>
+      </div>
       <div class="legend">
         <span>Raters: {{ delimit $r.raters ", " }}</span>
       </div>
@@ -107,53 +191,20 @@
     </div>
   </div>
 
-  <!-- ============ per race ============ -->
-  {{- with $s }}
-  {{- if .races }}
   <div class="card">
-    <h2>Senate, race by race</h2>
-    <p class="sub">Democratic win probability from each category.
-       {{ $miss := .categories_missing_per_race }}
-       {{- if $miss }}No per-race number yet from
-       {{ range $i, $c := $miss }}{{ if $i }}, {{ end }}{{ index $s.labels $c }}{{ end }}.{{ end }}</p>
-    <table>
-      <tr><th>State</th>
-          {{- range .categories }}<th class="num">{{ index $s.labels . }}</th>{{ end }}
-          <th class="num">Spread</th></tr>
-      {{- range .races }}
-      {{- if .competitive }}
-      <tr>
-        <td><strong>{{ .state }}</strong></td>
-        {{- $row := . }}
-        {{- range $s.categories }}
-        {{- $c := index $row.cats . }}
-        <td class="num">
-          {{- if $c }}{{ with $c.prob }}{{ printf "%.0f%%" (mul . 100) }}
-            {{- else }}{{ if $c.withheld }}<span class="muted">withheld</span>{{ else }}—{{ end }}{{ end }}
-          {{- else }}<span class="muted">—</span>{{ end }}</td>
-        {{- end }}
-        <td class="num">{{ with .prob_spread }}{{ printf "%.0f" (mul . 100) }} pts{{ else }}—{{ end }}</td>
-      </tr>
-      {{- end }}
-      {{- end }}
-    </table>
-    <p class="thin-note">Competitive seats only — the model puts every other race
-       outside 1–99%. Full list on the <a href="/forecast/contests/">contests page</a>.</p>
-  </div>
-  {{- end }}
-  {{- end }}
-
-  <div class="card">
-    <h2>What is in each category</h2>
+    {{/* A pointer, not a second copy. The full explanation of what each
+         category means now lives on the about page, which is where a reader
+         who wants it will look; repeating it under the same heading on two
+         pages guarantees the two drift apart. */}}
+    <h2>Where these numbers come from</h2>
     <p class="sub">Every contributing model, with links and its current figure
        where the licence permits, is on the
-       <a href="/forecast/methods/">methods page</a>.</p>
+       <a href="/forecast/methods/">methods page</a>. What each category means,
+       and why some numbers are withheld, is on the
+       <a href="/forecast/about/">about page</a>.</p>
     {{- if gt $d.suppressed_cells 0 }}
     <p class="muted"><strong>{{ $d.suppressed_cells }}</strong> cells are withheld
-       today. Category averages containing a source that does not permit
-       per-forecaster republication are published only with at least three such
-       contributors, so no individual forecast can be recovered by subtraction.
-       The full archive is released after the election.</p>
+       today.</p>
     {{- end }}
   </div>
 

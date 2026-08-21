@@ -537,10 +537,8 @@ def build_ladder(races: list[dict] | None, *, chamber: str,
     maxlab = max((len(s["label"]) for s in seats), default=2)
     fs = 8.5 if maxlab > 4 else 10.0
     label_drop = round(7 + maxlab * fs * 0.62, 1)
-    marks = _ladder_markers(markers or {}, seat_x, hidden_left, len(drawn),
-                            label_drop)
-    marker_drop = max((m["dy"] for m in marks), default=label_drop)
-    axis_dy = round(marker_drop + 20, 1)     # the seat-count numbers
+    marks = _ladder_markers(markers or {}, seat_x, hidden_left, len(drawn))
+    axis_dy = round(label_drop + 16, 1)      # the seat-count numbers
     foot_dy = round(axis_dy + 20, 1)         # the cap labels and axis title
 
     return {
@@ -581,43 +579,26 @@ def build_ladder(races: list[dict] | None, *, chamber: str,
     }
 
 
-def _ladder_markers(markers: dict, seat_x, hidden_left: int, n_drawn: int,
-                    label_drop: float) -> list[dict]:
+def _ladder_markers(markers: dict, seat_x, hidden_left: int,
+                    n_drawn: int) -> list[dict]:
+    """Each method's seat count as a position on the ladder's own axis.
+
+    Position only. The names used to be printed on the plot beside their
+    marks, which needed de-collision, leader lines and alternating rows, and
+    on the House still ran into the district labels underneath — a lot of
+    machinery to answer "which line is which". The names now sit in a legend
+    below the chart, where four short labels take one row and read in order.
+    Each entry carries its seat count so the legend can state the number
+    outright rather than making a reader hover for it.
+    """
     out = []
     for key in ORDER:
         v = markers.get(key)
         if v is None or not (hidden_left < v <= hidden_left + n_drawn):
             continue
         out.append({"key": key, "label": LABELS.get(key, key),
-                    "seats": round(v, 1), "x": round(seat_x(v), 2),
-                    "label_x": round(seat_x(v), 2)})
+                    "seats": round(v, 1), "x": round(seat_x(v), 2)})
     out.sort(key=lambda m: m["x"])
-
-    # Nudge labels apart horizontally, then alternate rows for what is left.
-    # Both are needed: two methods a seat apart need the horizontal shove, and
-    # four methods within a few seats overflow one row however far they are
-    # shoved. The MARK never moves — only the label and its leader line.
-    GAP = 11.0                      # display units, ~= 70px at 640px wide
-    for i in range(1, len(out)):
-        if out[i]["label_x"] - out[i - 1]["label_x"] < GAP:
-            out[i]["label_x"] = round(out[i - 1]["label_x"] + GAP, 2)
-    # Keep the rightmost label inside the plot; a label pushed past 100 prints
-    # over the right-hand cap, which is where "Professional" ended up on the
-    # House ladder. Walk back leftwards from the edge if the shove overran.
-    over = out[-1]["label_x"] - 96.0 if out else 0.0
-    if over > 0:
-        for m in reversed(out):
-            m["label_x"] = round(m["label_x"] - over, 2)
-            over = max(0.0, 4.0 - m["label_x"])   # stop at the left edge too
-            if not over:
-                break
-
-    for i, m in enumerate(out):
-        m["row"] = i % 2
-        # Absolute px below the axis, clearing the rotated seat labels. The
-        # template used to carry these as literals, which meant the House and
-        # the Senate shared one set of offsets tuned for two-character states.
-        m["dy"] = round(label_drop + (12.0 if i % 2 == 0 else 28.0), 1)
     return out
 
 
@@ -767,9 +748,12 @@ def build(derived: Path, snapshot: str) -> dict:
     rows = update_timeline(derived, snapshot)
     out = {p: build_panel(rows, p) for p in PANELS}
     out["views"] = VIEWS
-    # Congressional only. Governors are collected and archived, and a handful
-    # of close ones are listed on the contests page, but they are not part of
-    # the course's subject and a third tab on this chart said otherwise.
+    # Governors ride along here and nowhere else. They are not modelled — a
+    # national tide carried through partisan lean describes them badly — so
+    # there is no forecast of ours to put beside them. What there IS is a
+    # dozen raters' ordinal calls, which is exactly what this chart draws, and
+    # a third tab costs nothing while a card of its own on the contests page
+    # implied a gubernatorial forecast the course does not make.
     out["ratings"] = {c: build_ratings_spread(derived, snapshot, c)
-                      for c in ("senate", "house")}
+                      for c in ("senate", "house", "governor")}
     return out

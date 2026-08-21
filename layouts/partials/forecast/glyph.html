@@ -1,0 +1,19 @@
+{{/* One mark per method category, as a SHAPE and not only a colour.
+
+     The comparison charts put four categories on one line. Colour alone
+     separates them on screen and nowhere else: printed, screenshotted into a
+     slide, or read by the ~8% of men with red-green colour deficiency, four
+     hues collapse toward two. Shape survives all of that, and the legend uses
+     the same partial as the chart so the two can never drift apart.
+
+     Expects: x, y (centre, in viewBox units), key (category), fill. */}}
+{{- $x := .x }}{{ $y := .y }}{{ $k := .key }}{{ $f := .fill }}
+{{- if eq $k "polling" -}}
+<circle cx="{{ $x }}" cy="{{ $y }}" r="4.2" fill="{{ $f }}"/>
+{{- else if eq $k "professional" -}}
+<rect x="{{ sub $x 3.8 }}" y="{{ sub $y 3.8 }}" width="7.6" height="7.6" fill="{{ $f }}"/>
+{{- else if eq $k "market" -}}
+<path d="M {{ $x }} {{ sub $y 4.8 }} L {{ add $x 4.8 }} {{ add $y 3.9 }} L {{ sub $x 4.8 }} {{ add $y 3.9 }} Z" fill="{{ $f }}"/>
+{{- else -}}
+<path d="M {{ $x }} {{ sub $y 5.2 }} L {{ add $x 5.2 }} {{ $y }} L {{ $x }} {{ add $y 5.2 }} L {{ sub $x 5.2 }} {{ $y }} Z" fill="{{ $f }}"/>
+{{- end -}}
