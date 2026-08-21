@@ -79,6 +79,7 @@
             margin-top: 40px;
         }
     </style>
+    {{ partial "analytics.html" . }}
 </head>
 <body>
     <header>
@@ -89,8 +90,17 @@
         </nav>
     </header>
     
+    {{/* Hugo only applies this shell to templates that use {{ define }}.
+         Every older section template here is a standalone document and is
+         unaffected — which is precisely how the analytics tag came to be
+         pasted into eight files and missing from four. New sections (papers,
+         and the Measuring the Press series when it lands) define "main" and
+         inherit one head, one nav and one analytics tag by construction.
+
+         The fallback to .Content keeps this working for any template that
+         adopts the shell without defining a block. */}}
     <main>
-        {{ .Content }}
+        {{ block "main" . }}{{ .Content }}{{ end }}
     </main>
     
     <footer>

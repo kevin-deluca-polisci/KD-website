@@ -1,0 +1,76 @@
+{{ define "main" }}
+{{ $p := .Params }}
+<article class="paper">
+
+  {{/* The plain-language question goes ABOVE the title when it exists.
+       It is the heading a non-specialist would actually type into a search
+       box or an assistant, and burying it under the academic title wastes
+       the one thing on this page a journalist can use. */}}
+  {{ with $p.plain_question }}
+  <section class="plain-q">
+    <h1>{{ . }}</h1>
+    {{ with $p.plain_answer }}<p class="plain-a">{{ . }}</p>
+    {{ else }}<p class="plain-a todo">[Short answer to go here — four sentences, no jargon.]</p>{{ end }}
+  </section>
+  <h2 class="paper-title">{{ .Title }}</h2>
+  {{ else }}
+  <h1 class="paper-title">{{ .Title }}</h1>
+  {{ end }}
+
+  <p class="paper-meta">
+    {{ with $p.coauthors }}{{ . }} · {{ end }}
+    {{ if eq $p.status "published" }}
+      <em>{{ $p.journal }}</em>{{ with $p.volume }}, {{ . }}{{ end }}{{ with $p.issue }}({{ . }}){{ end }}{{ with $p.pages }}: {{ . }}{{ end }}, {{ $p.year }}
+    {{ else }}
+      {{ $p.status_label | default "Working Paper" }}
+    {{ end }}
+  </p>
+
+  {{ with $p.note }}<p class="paper-note">{{ . }}</p>{{ end }}
+
+  <p class="paper-links">
+    {{ with $p.doi }}<a href="{{ . }}">Published version</a>{{ end }}
+    {{ with $p.pdf_url }}<a href="{{ . }}">PDF</a>{{ end }}
+    {{ with $p.preprint_url }}<a href="{{ . }}">Preprint</a>{{ end }}
+  </p>
+
+  {{/* Abstract as body text, never as a link. Retrievers read HTML far more
+       reliably than linked PDFs, so an abstract that only exists inside the
+       PDF is effectively invisible to them. */}}
+  {{ with $p.abstract }}
+  <h3>Abstract</h3>
+  <p class="abstract">{{ . }}</p>
+  {{ else }}
+  <p class="abstract todo">[Abstract to be added.]</p>
+  {{ end }}
+
+  {{ .Content }}
+
+  {{ with $p.keywords }}
+  <p class="paper-keywords">{{ range . }}<span class="kw">{{ . }}</span>{{ end }}</p>
+  {{ end }}
+
+  <p class="paper-back"><a href="/papers/">← All papers</a></p>
+</article>
+
+{{/* JSON-LD. Cheap to emit and it is what structured extractors actually
+     parse, so the abstract, authorship and DOI arrive as fields rather than
+     as prose a model has to infer them from. */}}
+<script type="application/ld+json">
+{{- $ld := dict
+      "@context" "https://schema.org"
+      "@type" "ScholarlyArticle"
+      "headline" .Title
+      "name" .Title
+      "url" (.Permalink)
+      "author" (slice (dict "@type" "Person" "name" "Kevin DeLuca"
+                            "affiliation" (dict "@type" "Organization" "name" "Yale University")))
+-}}
+{{- with $p.abstract }}{{ $ld = merge $ld (dict "abstract" .) }}{{ end -}}
+{{- with $p.year }}{{ $ld = merge $ld (dict "datePublished" (printf "%d" .)) }}{{ end -}}
+{{- with $p.journal }}{{ $ld = merge $ld (dict "isPartOf" (dict "@type" "Periodical" "name" .)) }}{{ end -}}
+{{- with $p.doi }}{{ $ld = merge $ld (dict "sameAs" .) }}{{ end -}}
+{{- with $p.keywords }}{{ $ld = merge $ld (dict "keywords" (delimit . ", ")) }}{{ end -}}
+{{ $ld | jsonify (dict "indent" "  ") | safeJS }}
+</script>
+{{ end }}

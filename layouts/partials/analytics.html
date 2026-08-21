@@ -1,0 +1,72 @@
+{{/*
+  Analytics — single source of truth for the whole site.
+
+  This exists because the tag was previously pasted into eight separate
+  templates and missing from four others, so blog posts and the entire
+  forecast section went untracked and nobody could tell by looking. Any new
+  template that includes this partial is tracked by default; that is the whole
+  point of it being a partial.
+
+  Swapping providers is a change to THIS FILE ONLY. Set params.analytics.provider
+  in config.toml to "ga4", "goatcounter", "plausible", or "" to disable.
+
+  A local `hugo server` run emits nothing, so development traffic never lands
+  in the numbers.
+*/}}
+
+{{- if hugo.IsProduction -}}
+{{- $a := .Site.Params.analytics -}}
+{{- if $a -}}
+{{- $provider := $a.provider | default "" -}}
+
+{{- if eq $provider "ga4" -}}
+{{- with $a.ga4_id }}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ . }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', {{ . }});
+</script>
+{{- end }}
+
+{{- else if eq $provider "goatcounter" -}}
+{{- with $a.goatcounter_code }}
+<script data-goatcounter="https://{{ . }}.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+{{- end }}
+
+{{- else if eq $provider "plausible" -}}
+{{- with $a.plausible_domain }}
+<script defer data-domain="{{ . }}" src="https://plausible.io/js/script.outbound-links.js"></script>
+{{- end }}
+{{- end }}
+
+{{/*
+  Provider-neutral event helper.
+
+  Templates and page scripts call kdTrack('csv_download', {file: '...'}) without
+  knowing or caring which service is behind it. If analytics is disabled, or the
+  script is blocked by an ad blocker, this is a no-op rather than a TypeError
+  that takes the rest of the page's JavaScript down with it — worth the few
+  lines, because the download button shares a script block with the charts.
+*/}}
+<script>
+window.kdTrack = function (name, props) {
+  props = props || {};
+  try {
+    if (typeof gtag === "function") { gtag("event", name, props); return; }
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({
+        path:  name + (props.file ? "/" + props.file : ""),
+        title: name,
+        event: true
+      });
+      return;
+    }
+    if (typeof plausible === "function") { plausible(name, { props: props }); }
+  } catch (e) { /* analytics must never break the page */ }
+};
+</script>
+{{- end -}}
+{{- end -}}

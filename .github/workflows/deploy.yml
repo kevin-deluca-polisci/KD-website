@@ -1,31 +1,90 @@
 name: Deploy to GitHub Pages
 
+# WHY THERE ARE TWO TRIGGERS.
+#
+# `on: push` alone looks sufficient and is not. The daily forecast run commits
+# the new numbers and pushes them to main using the workflow's built-in
+# GITHUB_TOKEN, and GitHub deliberately does not start new workflow runs from
+# events created by that token — the rule exists so workflows cannot trigger
+# each other in a loop. So every day the push landed, main held current data,
+# and this workflow never ran. The site went on serving whatever tree the last
+# HUMAN push had built.
+#
+# That is a nasty failure because nothing anywhere reports it. The capture
+# workflow succeeds, the commit is real, the archive is genuinely up to date,
+# and the only symptom is that the published page shows older numbers than the
+# repository does. On 2026-08-21 the committed data was generated at 18:33 and
+# the live site was still serving the 12:16 build.
+#
+# `workflow_run` is the documented way out. It fires on the COMPLETION of
+# another workflow rather than on the push that workflow made, so the token
+# restriction does not apply.
+#
+# THE WORKFLOW NAME BELOW IS MATCHED AS A LITERAL STRING against
+# forecast-capture.yml's `name:` field. Renaming that workflow silently stops
+# the daily deploy and produces exactly the symptom described above, with no
+# error anywhere. Change both or neither.
 on:
   push:
     branches: ["main"]
+  workflow_run:
+    workflows: ["Forecast capture (daily)"]
+    types: [completed]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# A human push landing during the daily run would otherwise queue two builds of
+# the same tree. Let the newer one win — a half-finished Pages deploy is not
+# worth preserving.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   build:
+    # Never publish the output of a failed capture. When the sanity gate trips,
+    # the capture workflow fails BEFORE it commits, so there is nothing new on
+    # main and yesterday's page should stay up. Deploying anyway would be
+    # harmless today and actively wrong the day the gate catches something.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     env:
       HUGO_VERSION: 0.123.0
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+        with:
+          # EXPLICIT, AND NOT OPTIONAL ON THE workflow_run PATH. For a
+          # workflow_run event, the default checkout ref is the commit that the
+          # UPSTREAM workflow started from — for a scheduled 11:00 run, that is
+          # main as it stood at 11:00, which is precisely the state before the
+          # bot committed the new numbers. Checking out the branch by name gets
+          # the commit we are here to publish. Without this the deploy would run
+          # on time, succeed, and rebuild yesterday's data.
+          ref: main
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: ${{ env.HUGO_VERSION }}
-      
+
+      - name: What are we about to publish
+        # One line in the log naming the commit and the data timestamp, so a
+        # stale page can be diagnosed from the run history instead of by
+        # comparing the live site against the repo by hand.
+        run: |
+          git log -1 --format='commit  %h  %ad  %s' --date=iso
+          python3 -c "import json;d=json.load(open('forecast/data/2026/site.json'));print('data    generated_at', d['generated_at'], '· latest', d['latest_snapshot'])" || true
+
       - name: Build
         run: hugo --minify
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:

@@ -11,6 +11,15 @@ title = "Kevin DeLuca"
   author = "Kevin DeLuca"
   description = "Assistant Professor of Political Science at Yale University"
 
+  # Analytics. Provider is swappable here without touching any template:
+  # "ga4" | "goatcounter" | "plausible" | "" to switch it off entirely.
+  # See layouts/partials/analytics.html.
+  [params.analytics]
+    provider          = "ga4"
+    ga4_id            = "G-YJY2BZ0STQ"
+    # goatcounter_code = "kevinmdeluca"        # -> kevinmdeluca.goatcounter.com
+    # plausible_domain = "kevinmdeluca.com"
+
 [menu]
   [[menu.main]]
     identifier = "home"
@@ -27,7 +36,7 @@ title = "Kevin DeLuca"
   [[menu.main]]
     identifier = "research"
     name = "Research"
-    url = "/research/"
+    url = "/papers/"
     weight = 3
 
   [[menu.main]]

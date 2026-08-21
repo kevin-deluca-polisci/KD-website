@@ -67,13 +67,7 @@
         }
         .open-new-tab:hover { text-decoration: underline; }
     </style>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YJY2BZ0STQ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-YJY2BZ0STQ');
-    </script>
+    {{ partial "analytics.html" . }}
 </head>
 <body>
     <header>

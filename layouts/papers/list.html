@@ -1,0 +1,52 @@
+{{ define "main" }}
+{{/* Index over the paper pages themselves rather than over data/*.csv.
+     The homepage and the old research page disagreed on a publication year
+     because each carried its own copy of the metadata; reading the pages
+     means there is only one copy to be wrong. */}}
+<h1>Papers</h1>
+
+{{ $all := where .Site.RegularPages "Section" "papers" }}
+
+{{ range $group := slice
+     (dict "key" "published" "label" "Published")
+     (dict "key" "rr"        "label" "Under review")
+     (dict "key" "working"   "label" "Working papers") }}
+  {{ $set := where $all "Params.status" $group.key }}
+  {{ with $set }}
+  <h2 class="section-head">{{ $group.label }}</h2>
+  <ul class="paper-list">
+    {{ range sort . "Params.weight" "asc" }}
+    <li>
+      <a class="pl-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <span class="pl-meta">
+        {{ with .Params.coauthors }}{{ . }} {{ end }}
+        {{ if eq .Params.status "published" }}<em>{{ .Params.journal }}</em>, {{ .Params.year }}
+        {{ else }}{{ .Params.status_label }}{{ end }}
+      </span>
+      {{ with .Params.plain_question }}<span class="pl-q">{{ . }}</span>{{ end }}
+    </li>
+    {{ end }}
+  </ul>
+  {{ end }}
+{{ end }}
+
+{{/* Papers with no draft and no DOI get a line here but no page of their own:
+     a page with nothing to link and no abstract is a thin result that dilutes
+     the ones that do have something to say. */}}
+{{/* index, not dot-notation: the file is working-papers.csv and a hyphen is
+     not a legal identifier in a Go template field lookup. */}}
+{{ with index .Site.Data "working-papers" }}
+{{ $inprog := where . "Status" "In Progress" }}
+{{ with $inprog }}
+<h2 class="section-head">In progress</h2>
+<ul class="paper-list muted">
+  {{ range . }}
+  <li><span class="pl-title">{{ .Title }}</span>
+      <span class="pl-meta">{{ with .Authors }}{{ . }}{{ end }}</span></li>
+  {{ end }}
+</ul>
+{{ end }}
+{{ end }}
+
+{{ .Content }}
+{{ end }}
