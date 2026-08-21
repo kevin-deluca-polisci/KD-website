@@ -144,39 +144,98 @@
     </div>
   </div>
 
-  {{- with $ch.margin }}
+  <!-- ===================== WHERE THEY STAND TODAY =====================
+       Seats rather than margin, because seats are the quantity every method
+       can answer and the one that carries an interval. The margin strip stays
+       for the House, where it is the generic ballot and worth seeing, but it
+       is the second row rather than the whole card. -->
   <div class="card">
-    <h2>The national House margin today</h2>
-    <p class="sub">A bar is an 80% interval; a bare dot is a point estimate with no
-       stated uncertainty. Markets are absent because they quote probabilities,
-       not margins.</p>
-    {{- $SL := 150.0 }}{{ $SW := 470.0 }}{{ $SH := add 30 (mul 42 (len .series)) }}
-    <svg viewBox="0 0 720 {{ add $SH 16 }}" role="img"
-         aria-label="Current national House margin by method, with intervals">
-      {{- range .x_ticks }}
-      <line class="gridline" x1="{{ add $SL (mul (div .x 100.0) $SW) }}" y1="18"
-            x2="{{ add $SL (mul (div .x 100.0) $SW) }}" y2="{{ $SH }}"/>
-      <text class="tick" x="{{ add $SL (mul (div .x 100.0) $SW) }}" y="12"
-            text-anchor="middle">{{ .label }}</text>
+    <h2>Where the methods stand today</h2>
+    <div class="segs" data-toggle-group="today">
+      <span class="seglabel">Chamber</span>
+      <div class="seg" data-dim="chamber">
+        <button type="button" data-value="house" aria-selected="true">House</button>
+        <button type="button" data-value="senate" aria-selected="false">Senate</button>
+      </div>
+    </div>
+
+    <div data-group="today">
+    {{- range $ck := (slice "house" "senate") }}
+    <div data-panel data-chamber="{{ $ck }}">
+      {{- $pan := index $ch (printf "%s_seats" $ck) }}
+      {{- with $pan }}
+      <p class="sub">{{ .label }}, of {{ .total }}. A bar is an 80% interval; a
+         bare dot is a point estimate with no stated uncertainty, which is
+         itself worth noticing.</p>
+      {{- $SL := 132.0 }}{{ $SW := 470.0 }}{{ $SH := add 34 (mul 44 (len .series)) }}
+      <svg viewBox="0 0 720 {{ add $SH 18 }}" role="img"
+           aria-label="Current {{ $ck }} seat forecasts by method, with intervals">
+        {{- range .x_ticks }}
+        <line class="gridline" x1="{{ add $SL (mul (div .x 100.0) $SW) }}" y1="20"
+              x2="{{ add $SL (mul (div .x 100.0) $SW) }}" y2="{{ $SH }}"/>
+        <text class="tick" x="{{ add $SL (mul (div .x 100.0) $SW) }}" y="13"
+              text-anchor="middle">{{ .label }}</text>
+        {{- end }}
+        {{- range $i, $s := .series }}
+        {{- $y := add 46 (mul 44 $i) }}
+        {{- $col := printf "var(--c-%s)" $s.key }}
+        <text class="rowlab" x="0" y="{{ add $y 3 }}">{{ $s.label }}</text>
+        <text class="rowsub" x="0" y="{{ add $y 18 }}">
+          {{- if $s.stale }}as of {{ $s.last_date }}
+          {{- else if $s.band }}80% {{ printf "%.0f" $s.band.low }}–{{ printf "%.0f" $s.band.high }}
+          {{- else }}no stated interval{{ end }}</text>
+        {{- if $s.sx_low }}
+        <line x1="{{ add $SL (mul (div $s.sx_low 100.0) $SW) }}" y1="{{ $y }}"
+              x2="{{ add $SL (mul (div $s.sx_high 100.0) $SW) }}" y2="{{ $y }}"
+              stroke="{{ $col }}" stroke-width="7" opacity="0.3" stroke-linecap="round"/>
+        {{- end }}
+        <circle cx="{{ add $SL (mul (div $s.sx 100.0) $SW) }}" cy="{{ $y }}" r="6"
+                fill="{{ $col }}" stroke="var(--surface)" stroke-width="2"
+                {{ if $s.stale }}opacity=".55"{{ end }}/>
+        <text class="rowval" x="700" y="{{ add $y 4 }}" text-anchor="end">{{ printf "%.0f" $s.last.v }}</text>
+        {{- end }}
+      </svg>
       {{- end }}
-      {{- range $i, $s := .series }}
-      {{- $y := add 42 (mul 42 $i) }}
-      {{- $col := printf "var(--c-%s)" $s.key }}
-      <text class="rowlab" x="0" y="{{ add $y 3 }}">{{ $s.label }}</text>
-      <text class="rowsub" x="0" y="{{ add $y 18 }}">{{ if $s.stale }}as of {{ $s.last_date }}{{ else }}{{ $s.n_sources }} source{{ if ne (printf "%v" $s.n_sources) "1" }}s{{ end }}{{ end }}</text>
-      {{- if $s.sx_low }}
-      <line x1="{{ add $SL (mul (div $s.sx_low 100.0) $SW) }}" y1="{{ $y }}"
-            x2="{{ add $SL (mul (div $s.sx_high 100.0) $SW) }}" y2="{{ $y }}"
-            stroke="{{ $col }}" stroke-width="7" opacity="0.3" stroke-linecap="round"/>
+
+      {{- if eq $ck "house" }}
+      {{- with $ch.margin }}
+      <h3>National House margin</h3>
+      {{- $SL := 132.0 }}{{ $SW := 470.0 }}{{ $SH := add 34 (mul 44 (len .series)) }}
+      <svg viewBox="0 0 720 {{ add $SH 18 }}" role="img"
+           aria-label="Current national House margin by method, with intervals">
+        {{- range .x_ticks }}
+        <line class="gridline" x1="{{ add $SL (mul (div .x 100.0) $SW) }}" y1="20"
+              x2="{{ add $SL (mul (div .x 100.0) $SW) }}" y2="{{ $SH }}"/>
+        <text class="tick" x="{{ add $SL (mul (div .x 100.0) $SW) }}" y="13"
+              text-anchor="middle">{{ .label }}</text>
+        {{- end }}
+        {{- range $i, $s := .series }}
+        {{- $y := add 46 (mul 44 $i) }}
+        {{- $col := printf "var(--c-%s)" $s.key }}
+        <text class="rowlab" x="0" y="{{ add $y 3 }}">{{ $s.label }}</text>
+        <text class="rowsub" x="0" y="{{ add $y 18 }}">
+          {{- if $s.stale }}as of {{ $s.last_date }}
+          {{- else if $s.band }}80% {{ printf "%.1f" $s.band.low }} to {{ printf "%.1f" $s.band.high }}
+          {{- else }}no stated interval{{ end }}</text>
+        {{- if $s.sx_low }}
+        <line x1="{{ add $SL (mul (div $s.sx_low 100.0) $SW) }}" y1="{{ $y }}"
+              x2="{{ add $SL (mul (div $s.sx_high 100.0) $SW) }}" y2="{{ $y }}"
+              stroke="{{ $col }}" stroke-width="7" opacity="0.3" stroke-linecap="round"/>
+        {{- end }}
+        <circle cx="{{ add $SL (mul (div $s.sx 100.0) $SW) }}" cy="{{ $y }}" r="6"
+                fill="{{ $col }}" stroke="var(--surface)" stroke-width="2"
+                {{ if $s.stale }}opacity=".55"{{ end }}/>
+        <text class="rowval" x="700" y="{{ add $y 4 }}" text-anchor="end">D+{{ printf "%.1f" $s.last.v }}</text>
+        {{- end }}
+      </svg>
+      <p class="thin-note">Markets are absent from this row: they quote
+         probabilities, not margins.</p>
       {{- end }}
-      <circle cx="{{ add $SL (mul (div $s.sx 100.0) $SW) }}" cy="{{ $y }}" r="6"
-              fill="{{ $col }}" stroke="var(--surface)" stroke-width="2"
-              {{ if $s.stale }}opacity=".55"{{ end }}/>
-      <text class="rowval" x="700" y="{{ add $y 4 }}" text-anchor="end">D+{{ printf "%.1f" $s.last.v }}</text>
       {{- end }}
-    </svg>
+    </div>
+    {{- end }}
+    </div>
   </div>
-  {{- end }}
 
   <div class="card">
     <h2>The class models</h2>

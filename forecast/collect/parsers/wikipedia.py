@@ -29,9 +29,9 @@ from __future__ import annotations
 
 import re
 
-from . import (Context, LoadedArtifact, RATING_LEVEL as LEVEL, Row,
-               TOSSUP_LABELS as TOSSUP, STATE_NAMES, is_state, race_id,
-               state_from_text)
+from . import (Context, LoadedArtifact, NATIONAL_HOUSE,
+               RATING_LEVEL as LEVEL, Row, TOSSUP_LABELS as TOSSUP,
+               STATE_NAMES, is_state, race_id, state_from_text)
 
 # Header cell -> our source id.
 #
@@ -297,6 +297,10 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         if not text:
             continue
 
+        # The generic-ballot aggregate table lives on the same page as the
+        # ratings and is a different shape and a different category.
+        rows.extend(_generic_ballot(text, art, ctx))
+
         hint = page_chamber(name)
         for headers, table in _tables(text, hint):
             # Which column belongs to which forecaster?
@@ -353,4 +357,114 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             f"read {len(artifacts)} artifact(s), found {seen_tables} ratings "
             f"table(s), but extracted no rows — the template markup has changed. "
             f"Expected {{{{ushr|XX|N}}}} seats and {{{{USRaceRating|Level|Party}}}} cells.")
+    return rows
+
+
+# ==========================================================================
+# GENERIC-BALLOT AGGREGATE TABLE
+#
+# The House article carries a table headed "Source of poll aggregation" listing
+# each major aggregator's current generic-ballot average — Decision Desk HQ,
+# FiftyPlusOne, RealClearPolitics, Silver Bulletin, VoteHub, Race to the WH —
+# with Republican share, Democratic share and margin. It is the only place in
+# the archive where the polling category has more than one contributor.
+#
+# ATTRIBUTION AND LICENCE. Each row is filed under the AGGREGATOR's source id,
+# not under "wikipedia", so six averages count as six contributors rather than
+# one. It carries that aggregator's own publication tier, not Wikipedia's:
+# Silver Bulletin's average is aggregate_only whether we read it from Silver
+# Bulletin or from a Wikipedia table about Silver Bulletin. The point of the
+# attribution is to make the CATEGORY AVERAGE publishable by having enough
+# contributors, not to publish anybody's number by name.
+# ==========================================================================
+
+# Row label -> (source id, publication tier). Tiers mirror the registry; a
+# forecaster we may not republish stays un-republishable by this route too.
+_AGG_SOURCES = [
+    ("DECISION DESK", ("ddhq", "aggregate_only")),
+    ("FIFTYPLUSONE", ("fiftyplusone", "private")),
+    ("FIFTY PLUS ONE", ("fiftyplusone", "private")),
+    ("REALCLEARPOLI", ("rcp", "aggregate_only")),
+    ("SILVER BULLETIN", ("silver_bulletin", "aggregate_only")),
+    ("VOTEHUB", ("votehub", "private")),
+    ("RACE TO THE WH", ("race_to_the_wh", "aggregate_only")),
+    ("SPLIT TICKET", ("split_ticket", "private")),
+    ("ECONOMIST", ("economist", "aggregate_only")),
+]
+# The literal wikitext reads "Source of poll<br>aggregation". Neither \s+ nor
+# \W+ bridges that gap — \s+ because <br> is not whitespace, \W+ because the
+# "b" and "r" inside the tag are word characters. A bounded any-character gap
+# is the thing that actually works, and a header test that never fires means a
+# table that is never found and no error to say so.
+_AGG_HEADER = re.compile(r"source\b.{0,24}?\bpoll.{0,24}?aggregation", re.I | re.S)
+_PCT = re.compile(r"(-?\d+(?:\.\d+)?)\s*%")
+_MARGIN_TEXT = re.compile(r"(democrat|republican)[a-z]*\s*\+\s*(\d+(?:\.\d+)?)", re.I)
+
+
+def _agg_source(cell: str) -> tuple[str, str] | None:
+    h = _clean(_expand_links(cell)).upper()
+    for needle, got in _AGG_SOURCES:
+        if needle in h:
+            return got
+    return None
+
+
+def _generic_ballot(text: str, art: LoadedArtifact, ctx: Context) -> list[Row]:
+    rows: list[Row] = []
+    for block in re.split(r"\n\{\|", text)[1:]:
+        block = block.split("\n|}")[0]
+        if not _AGG_HEADER.search(block):
+            continue
+        # Column order is read from the header rather than assumed: the table
+        # lists Republicans BEFORE Democrats, which is the opposite of every
+        # other table in this file and exactly the sort of thing that silently
+        # flips a sign.
+        # A header cell carries its own styling before the pipe —
+        # `!style="width:100px;" |Republicans` — so the column name is not at
+        # the start of the string and an anchored match finds nothing. Take
+        # what follows the last pipe, then match.
+        head = [_clean(l[1:].rsplit("|", 1)[-1]) for l in block.splitlines()
+                if l.startswith("!")]
+        def col(pat):
+            return next((i for i, h in enumerate(head)
+                         if re.search(pat, h, re.I)), None)
+        col_r, col_d, col_m = col(r"republican"), col(r"democrat"), col(r"^margin")
+        if col_d is None or col_r is None:
+            continue
+
+        for chunk in re.split(r"\n\|-", block)[1:]:
+            cells = [c[1:].strip() for c in chunk.splitlines() if c.startswith("|")]
+            if len(cells) <= max(col_d, col_r):
+                continue
+            got = _agg_source(cells[0])
+            if got is None:
+                continue                  # the "Average" row, and anything new
+            sid, tier = got
+
+            def pct(i):
+                m = _PCT.search(_clean(cells[i])) if i is not None and i < len(cells) else None
+                return float(m.group(1)) if m else None
+
+            d_share, r_share = pct(col_d), pct(col_r)
+            margin = None
+            if col_m is not None and col_m < len(cells):
+                mm = _MARGIN_TEXT.search(_clean(cells[col_m]))
+                if mm:
+                    margin = float(mm.group(2))
+                    if mm.group(1).lower().startswith("republic"):
+                        margin = -margin
+            if margin is None and d_share is not None and r_share is not None:
+                margin = round(d_share - r_share, 2)
+            if margin is None:
+                continue
+
+            # margin_D only. The two vote SHARES are in the table and would be
+            # interesting — the gap between them is the undecided share, which
+            # differs by a factor of two across aggregators — but they are not
+            # a registered quantity, and inventing one here would put a column
+            # into the archive that nothing else knows how to average.
+            rows.append(ctx.row(art, source_id=sid, publication=tier,
+                                category="polling", race_id=NATIONAL_HOUSE,
+                                chamber="national", quantity="margin_D",
+                                value=round(margin, 3), unit="pct"))
     return rows

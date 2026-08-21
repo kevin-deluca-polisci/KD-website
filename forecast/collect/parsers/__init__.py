@@ -288,10 +288,39 @@ class Context:
                 f"parser dated a row {asof} from a {self.snapshot_date} "
                 f"capture; rows may be backdated, never forward-dated")
 
+        # ATTRIBUTION OVERRIDE — one capture, several forecasters.
+        #
+        # Wikipedia's House article carries a table of generic-ballot averages
+        # from six DIFFERENT aggregators. Filed under source_id="wikipedia"
+        # they collapse to one contributor, because the aggregator counts
+        # sources by id — six independent averages would have counted as one,
+        # and the category would have stayed below the disclosure floor while
+        # appearing to have six opinions in it.
+        #
+        # So a parser may attribute a row to the forecaster it actually came
+        # from. Two conditions, and the second is the important one:
+        #
+        #   - it must also declare the CATEGORY, because a source read off
+        #     another source's page is rarely in the reading source's category;
+        #   - it must also declare the PUBLICATION tier, and that tier is
+        #     checked against the same restrict-only rule as any other. A row
+        #     attributed to a gated forecaster must carry that forecaster's
+        #     gate. Attribution is not a route around a licence: reading Silver
+        #     Bulletin's number off Wikipedia does not make it republishable,
+        #     it just means we know whose number it is.
+        attributed = kw.pop("source_id", None)
+        category = kw.pop("category", None) or self.category
+        if attributed and attributed != self.source_id:
+            if publication is None:
+                raise ValueError(
+                    f"row attributed to {attributed!r} without an explicit "
+                    f"publication tier; attribution must carry the attributed "
+                    f"source's licence, not the reading source's")
+
         r = Row(
             snapshot_date=asof,
-            source_id=self.source_id,
-            category=self.category,
+            source_id=attributed or self.source_id,
+            category=category,
             publication=tier,
             captured_at=art.meta.get("fetched_at", ""),
             raw_sha256=art.sha256,

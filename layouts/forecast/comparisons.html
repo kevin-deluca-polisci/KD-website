@@ -54,12 +54,11 @@
       <div class="seg" data-dim="chamber">
         <button type="button" data-value="senate" aria-selected="true">Senate</button>
         <button type="button" data-value="house" aria-selected="false">House</button>
-        <button type="button" data-value="governor" aria-selected="false">Governors</button>
       </div>
     </div>
 
     <div data-group="ratings">
-    {{- range $c := (slice "senate" "house" "governor") }}
+    {{- range $c := (slice "senate" "house") }}
     {{- $r := index $rat $c }}
     {{- if $r }}
     <div data-panel data-chamber="{{ $c }}">

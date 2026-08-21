@@ -52,6 +52,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-19,market,NATL_HOUSE_2026,national,,,win_prob_R,prob,1,0,0,0,0.125,0.125,0.125,,open,single,polymarket
 2026-08-19,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0.505,0.505,0.505,,open,single,polymarket
 2026-08-19,market,NATL_SENATE_2026,national,,,win_prob_R,prob,1,0,0,0,0.495,0.495,0.495,,open,single,polymarket
+2026-08-19,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,6.4122,6.1365,6.8,0.3457,gated,ok,
 2026-08-19,professional,HOU_AK_01_2026,house,AK,01,margin_D,pct,1,0,0,0,-3.61,-3.61,-3.61,,open,single,grant_williams
 2026-08-19,professional,HOU_AK_01_2026,house,AK,01,win_prob_D,prob,1,0,0,0,0.2785,0.2785,0.2785,,open,single,grant_williams
 2026-08-19,professional,HOU_AL_01_2026,house,AL,01,margin_D,pct,1,0,0,0,-11.71,-11.71,-11.71,,open,single,grant_williams
@@ -1051,6 +1052,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-20,market,NATL_HOUSE_2026,national,,,win_prob_R,prob,1,0,0,0,0.125,0.125,0.125,,open,single,polymarket
 2026-08-20,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0.505,0.505,0.505,,open,single,polymarket
 2026-08-20,market,NATL_SENATE_2026,national,,,win_prob_R,prob,1,0,0,0,0.495,0.495,0.495,,open,single,polymarket
+2026-08-20,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,6.4726,6.0905,6.8,0.334,gated,ok,
 2026-08-20,professional,HOU_AK_01_2026,house,AK,01,margin_D,pct,1,0,0,0,-3.61,-3.61,-3.61,,open,single,grant_williams
 2026-08-20,professional,HOU_AK_01_2026,house,AK,01,win_prob_D,prob,1,0,1,1,0.2785,0.2785,0.2785,,open,single,grant_williams
 2026-08-20,professional,HOU_AL_01_2026,house,AL,01,margin_D,pct,1,0,0,0,-11.71,-11.71,-11.71,,open,single,grant_williams

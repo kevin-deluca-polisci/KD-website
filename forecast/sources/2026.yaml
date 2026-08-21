@@ -787,3 +787,96 @@ sources:
 
       Meanwhile the daily capture is still worth keeping: it preserves the
       pointer table, so a key rotation or a redesign is visible.
+
+  # =========================================================================
+  # ADDED 2026-08-21 — free sources, no subscription
+  # =========================================================================
+
+  - id: predictit
+    name: PredictIt
+    category: market
+    method: http
+    enabled: true
+    cadence: daily
+    publication: individual        # public order book, same basis as Kalshi
+    license: permitted
+    robots_checked: 2026-08-21
+    declared_inputs: []
+    config:
+      urls:
+        - name: marketdata-all
+          url: https://www.predictit.org/api/marketdata/all/
+    notes: |
+      Real-money market with a position cap and, unlike the newer exchanges, a
+      long record in the academic literature — this is the market economists
+      have actually studied. One endpoint returns every open market, so there
+      is no pagination to get wrong.
+
+      THE REASON IT MATTERS HERE: it lists individual Senate races. Kalshi and
+      Polymarket carry chamber control and governors; as of today PredictIt is
+      the only source of a per-race market price in the archive, which is the
+      column the market category has been missing on the comparisons page.
+
+      Caveat for the methods page rather than for the code: `lastTradePrice`
+      is the last trade, which on a thin market can be hours old and on either
+      side of a wide spread. We do not smooth it.
+
+  - id: cnalysis
+    name: CNalysis
+    category: professional
+    method: http
+    enabled: true
+    cadence: daily
+    publication: aggregate_only    # free to read; no republication grant
+    license: permitted
+    robots_checked: 2026-08-21
+    declared_inputs: []
+    config:
+      urls:
+        - name: house
+          url: https://projects.cnalysis.com/26g/house
+        - name: senate
+          url: https://projects.cnalysis.com/26g/senate
+    notes: |
+      NO PARSER YET, DELIBERATELY. Capture starts today so the bytes accumulate
+      from now; the parser gets written against what is actually stored rather
+      than against a guess at the page structure. That is the whole point of
+      the two-phase design, and the one thing it cannot recover is a day that
+      was never captured.
+
+      parse.py will report "captured but NO PARSER written" every run until
+      one exists. That message is the to-do list.
+
+  - id: jhk_forecasts
+    name: JHK Forecasts
+    category: professional
+    method: http
+    enabled: true
+    cadence: daily
+    publication: aggregate_only
+    license: permitted
+    robots_checked: 2026-08-21
+    declared_inputs: []
+    config:
+      urls:
+        - name: home
+          url: https://www.jhkforecasts.com/2026-midterms
+    notes: |
+      NO PARSER YET — see cnalysis. Capturing from today.
+
+  - id: elections_daily
+    name: Elections Daily
+    category: professional
+    method: http
+    enabled: true
+    cadence: daily
+    publication: aggregate_only
+    license: permitted
+    robots_checked: 2026-08-21
+    declared_inputs: []
+    config:
+      urls:
+        - name: ratings
+          url: https://elections-daily.com/2026-senate-ratings/
+    notes: |
+      NO PARSER YET — see cnalysis. Capturing from today.

@@ -626,6 +626,14 @@ def main(argv=None) -> int:
         "snapshot_date": date, "days_to_election": days,
         "generic_ballot": gb, "shrink_lambda": round(lam, 4),
         "election_day_tide_D": round(tide, 3),
+        # The tide carries an interval of its own, and it was missing — the
+        # strip chart showed fundamentals with an 80% band and polling as a
+        # bare dot, which reads as "the polling model is certain" when in fact
+        # its uncertainty simply had not been written down. SIGMA_NATIONAL is
+        # exactly this quantity: how wrong the national number can be after
+        # shrinkage, hitting every race at once.
+        "tide_D_80_low": round(tide - 1.2816 * SIGMA_NATIONAL, 3),
+        "tide_D_80_high": round(tide + 1.2816 * SIGMA_NATIONAL, 3),
         "sigma_source": sigma_src, "calibration": cal,
         "constants": {"SHRINK_ASYMPTOTE": SHRINK_ASYMPTOTE,
                       "SHRINK_TAU_DAYS": SHRINK_TAU_DAYS,

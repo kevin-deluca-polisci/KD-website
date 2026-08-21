@@ -23,7 +23,6 @@
     <div class="seg" data-dim="chamber">
       <button type="button" data-value="senate" aria-selected="true">Senate</button>
       <button type="button" data-value="house" aria-selected="false">House</button>
-      <button type="button" data-value="governor" aria-selected="false">Governors</button>
     </div>
   </div>
 
@@ -38,6 +37,10 @@
     {{- with $L0 }}
     {{- $L := 52.0 }}{{ $T := 26.0 }}{{ $W := 640.0 }}{{ $H := 168.0 }}
     {{- $B := add $T $H }}
+    {{/* Everything below the axis is stacked from charts.py's measurement of
+         the deepest rotated seat label, so the House's "FL-25" and the
+         Senate's "OH" each get the room they actually need. */}}
+    {{- $axis := .axis_dy }}{{ $foot := .foot_dy }}{{ $svgh := .svg_h }}
     <div class="card">
       <h2>The seat that decides control</h2>
       <p class="sub">{{ if eq $ck "house" }}The {{ .n_drawn }} districts around the
@@ -46,7 +49,7 @@
          collapsed.{{ else }}Every Senate seat, ordered most Democratic to most
          Republican, with each one's expected margin as a bar.{{ end }}</p>
 
-      <svg viewBox="0 0 720 {{ add $B 92 }}" role="img"
+      <svg viewBox="0 0 720 {{ add $B $svgh }}" role="img"
            aria-label="{{ $ck }} seats ordered by expected margin, with the majority line marked">
 
         {{- $hdx := add $L (mul (div (index .hold_D_x 1) 100.0) $W) }}
@@ -91,21 +94,34 @@
               style="font-size:{{ if gt (len .label) 4 }}8.5{{ else }}10{{ end }}px;{{ if .threshold }}font-weight:700;fill:var(--ink){{ else if .competitive }}font-weight:600;fill:var(--ink-2){{ else }}fill:var(--ink-3){{ end }}">{{ .label }}</text>
         {{- end }}
 
-        <!-- where the simulation lands, as distinct from where the order says -->
-        {{- with .expected }}
-        {{- $xe := add $L (mul (div .x 100.0) $W) }}
-        <line x1="{{ $xe }}" y1="{{ sub $T 2 }}" x2="{{ $xe }}" y2="{{ add $B 42 }}"
-              stroke="var(--c-polling)" stroke-width="1.6" stroke-dasharray="2 3"/>
-        {{/* Below the axis, not at the top: at the top it sat immediately left
-             of the majority line and the two labels ran into each other. */}}
-        <text class="dlabel" x="{{ $xe }}" y="{{ add $B 36 }}" text-anchor="middle"
-              fill="var(--c-polling)">model: {{ printf "%.0f" .seats }}</text>
+        <!-- where each METHOD lands on the same seat axis -->
+        {{- range .markers }}
+        {{- $xm := add $L (mul (div .x 100.0) $W) }}
+        {{- $xl := add $L (mul (div .label_x 100.0) $W) }}
+        {{/* `dy` is computed in charts.py from the deepest rotated seat label,
+             because the Senate's two-character states and the House's
+             five-character districts hang below the axis by very different
+             amounts. This used to be a literal 30/46 tuned on the Senate, and
+             the House printed its method labels through its district names. */}}
+        {{- $ly := add $B .dy }}
+        {{- $col := printf "var(--c-%s)" .key }}
+        <line x1="{{ $xm }}" y1="{{ sub $T 2 }}" x2="{{ $xm }}" y2="{{ sub $ly 9 }}"
+              stroke="{{ $col }}" stroke-width="1.6" stroke-dasharray="2 3"/>
+        {{- if ne .x .label_x }}
+        <line x1="{{ $xm }}" y1="{{ sub $ly 9 }}" x2="{{ $xl }}" y2="{{ sub $ly 5 }}"
+              stroke="{{ $col }}" stroke-width="1" opacity=".5"/>
+        {{- end }}
+        <g>
+          <text class="dlabel" x="{{ $xl }}" y="{{ $ly }}" text-anchor="middle"
+                fill="{{ $col }}">{{ .label }}</text>
+          <title>{{ .label }}: {{ printf "%.1f" .seats }} Democratic seats</title>
+        </g>
         {{- end }}
 
         <!-- the majority line(s) -->
         {{- range $i, $th := .thresholds }}
         {{- $xt := add $L (mul (div $th.x 100.0) $W) }}
-        <line x1="{{ $xt }}" y1="{{ sub $T 12 }}" x2="{{ $xt }}" y2="{{ add $B 42 }}"
+        <line x1="{{ $xt }}" y1="{{ sub $T 12 }}" x2="{{ $xt }}" y2="{{ add $B 20 }}"
               stroke="{{ if $i }}var(--ink-3){{ else }}var(--ink){{ end }}"
               stroke-width="{{ if $i }}1.2{{ else }}1.4{{ end }}"
               {{ if $i }}stroke-dasharray="3 3"{{ end }}/>
@@ -116,17 +132,17 @@
 
         <line class="gridline" x1="{{ $L }}" y1="{{ $B }}" x2="{{ add $L $W }}" y2="{{ $B }}"/>
         {{- range .seat_ticks }}
-        <text class="tick" x="{{ add $L (mul (div .x 100.0) $W) }}" y="{{ add $B 56 }}"
+        <text class="tick" x="{{ add $L (mul (div .x 100.0) $W) }}" y="{{ add $B $axis }}"
               text-anchor="middle">{{ .seat_no }}</text>
         {{- end }}
         {{/* The Senate's cap labels already carry their own counts; the
              House's do not. Prefix the number only when the label lacks one,
              or the Senate reads "34 34 D seats not on the ballot". */}}
-        <text class="tick" x="{{ $L }}" y="{{ add $B 78 }}">←
+        <text class="tick" x="{{ $L }}" y="{{ add $B $foot }}">←
           {{ if not (in .left_label (printf "%.0f" .hidden_left)) }}{{ .hidden_left }} {{ end }}{{ .left_label }}</text>
-        <text class="tick" x="{{ add $L $W }}" y="{{ add $B 78 }}" text-anchor="end">
+        <text class="tick" x="{{ add $L $W }}" y="{{ add $B $foot }}" text-anchor="end">
           {{ if not (in .right_label (printf "%.0f" .hidden_right)) }}{{ .hidden_right }} {{ end }}{{ .right_label }} →</text>
-        <text class="tick" x="{{ add $L (div $W 2) }}" y="{{ add $B 78 }}" text-anchor="middle"
+        <text class="tick" x="{{ add $L (div $W 2) }}" y="{{ add $B $foot }}" text-anchor="middle"
               style="fill:var(--ink-2)">Democratic seat count</text>
       </svg>
 
@@ -230,49 +246,47 @@
   {{- end }}
   {{- end }}
 
-  <!-- ========================== GOVERNORS ========================== -->
-  <div data-panel data-chamber="governor">
-    {{- with $gov }}
-    <div class="card">
-      <h2>Governors</h2>
-      <p class="sub">{{ .n_races }} races, closest first.
-         {{ .n_rated }} carry expert ratings; {{ .n_market }} have a market price.
-         {{ .note }}</p>
-      <table>
-        <tr><th>State</th><th class="num">Market P(D)</th><th class="num">Raters</th>
-            <th class="num">Consensus</th><th class="num">Spread</th></tr>
-        {{- range .races }}
-        <tr>
-          <td><strong>{{ .state }}</strong></td>
-          <td class="num">{{ with .market_prob_D }}{{ printf "%.0f%%" (mul . 100) }}
-            {{- else }}{{ if .market_withheld }}<span class="muted">withheld</span>{{ else }}—{{ end }}{{ end }}</td>
-          <td class="num muted">{{ .n_raters }}</td>
-          <td class="num">
-            {{- with .mean_rating }}
-            {{- if lt . 2.0 }}Safe D{{ else if lt . 4.0 }}Likely D{{ else if lt . 4.75 }}Lean D
-            {{- else if le . 5.25 }}Toss-up{{ else if lt . 6.5 }}Lean R
-            {{- else if lt . 8.5 }}Likely R{{ else }}Safe R{{ end }}
-            {{- else }}—{{ end }}</td>
-          <td class="num">{{ with .spread }}{{ printf "%.1f" . }}{{ else }}—{{ end }}</td>
-        </tr>
-        {{- end }}
-      </table>
-      <p class="thin-note">Consensus is the mean of the raters' ordinal calls,
-         read back onto the same scale — a summary of where they sit, not a
-         forecast of ours. The full spread is drawn on the
-         <a href="/forecast/comparisons/">comparisons page</a>. Governor races are
-         collected daily and archived like everything else; they carry no
-         timeline because there is no series of ours to draw.</p>
-    </div>
-    {{- else }}
-    <div class="card">
-      <h2>Governors</h2>
-      <p class="sub">No gubernatorial data in today's snapshot.</p>
-    </div>
-    {{- end }}
   </div>
 
-  <p data-empty class="muted" hidden>Nothing collected for that contest yet.</p>
+  <!-- ========================== GOVERNORS ==========================
+       Outside the chamber toggle, and deliberately small. The course is about
+       congressional elections; governors are collected and archived in full,
+       and only the races that are actually close are drawn. -->
+  {{- with $gov }}
+  {{- if .races }}
+  <div class="card">
+    <h2>Governors worth watching</h2>
+    <p class="sub">{{ .n_close }} of {{ .n_races }} gubernatorial races are close
+       — a consensus rating between Lean D and Lean R, or a market price between
+       20% and 80%. The rest are collected and archived but not drawn. There is
+       no class model here: a national tide carried through partisan lean
+       describes these races badly, and governors are not the focus of the
+       course.</p>
+    <table>
+      <tr><th>State</th><th class="num">Market P(D)</th><th class="num">Raters</th>
+          <th>Consensus</th><th class="num">Spread</th></tr>
+      {{- range .races }}
+      <tr>
+        <td><strong>{{ .state }}</strong></td>
+        <td class="num">{{ with .market_prob_D }}{{ printf "%.0f%%" (mul . 100) }}
+          {{- else }}{{ if .market_withheld }}<span class="muted">withheld</span>{{ else }}—{{ end }}{{ end }}</td>
+        <td class="num muted">{{ .n_raters }}</td>
+        <td>
+          {{- with .mean_rating }}
+          {{- if lt . 2.0 }}Safe D{{ else if lt . 4.0 }}Likely D{{ else if lt . 4.75 }}Lean D
+          {{- else if le . 5.25 }}Toss-up{{ else if lt . 6.5 }}Lean R
+          {{- else if lt . 8.5 }}Likely R{{ else }}Safe R{{ end }}
+          {{- else }}—{{ end }}</td>
+        <td class="num">{{ with .spread }}{{ printf "%.1f" . }}{{ else }}—{{ end }}</td>
+      </tr>
+      {{- end }}
+    </table>
+    <p class="thin-note">Consensus is the mean of the raters' ordinal calls read
+       back onto the same scale — a summary of where they sit, not a forecast of
+       ours.</p>
   </div>
+  {{- end }}
+  {{- end }}
+
 </div>
 {{ partial "forecast/foot.html" (dict "page" . "d" $d) }}

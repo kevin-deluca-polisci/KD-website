@@ -168,6 +168,12 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             "tier": "gated" if gated else "open",
             "display": display,
             "sole_source": sole,
+            # Who actually went into the mean. Leading underscore: audit()
+            # reads it, write() strips it. It must NOT reach the CSV — naming
+            # the members of a gated average is a disclosure in its own right,
+            # and `sole_source` already handles the one case where naming is
+            # both necessary and permitted.
+            "_contributors": sorted(per_source),
         }
         if gated and n_gated < MIN_N:
             suppressed.append({**rec, "mean": "", "min": "", "max": "", "sd": "",
@@ -195,6 +201,7 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
                 ov = [statistics.fmean(per_source[s]) for s in open_srcs]
                 averages.append({
                     **rec, "tier": "open", "n_sources": len(ov), "n_gated": 0,
+                    "_contributors": sorted(open_srcs),
                     "mean": round(statistics.fmean(ov), 4),
                     "min": round(min(ov), 4), "max": round(max(ov), 4),
                     "sd": round(statistics.stdev(ov), 4) if len(ov) > 1 else "",
@@ -249,16 +256,40 @@ def audit(rows: list[dict], averages, by_source, suppressed) -> list[str]:
                 f"LEAK: per-source row published for {r['source_id']}/"
                 f"{r['quantity']} which is gated at row level")
 
-    # Nothing marked private may appear anywhere in the published tier.
-    private_q = {(r["source_id"], r["quantity"])
-                 for r in rows if r["publication"] == "private"}
+    # Nothing marked private may CONTRIBUTE to a published average.
+    #
+    # Two earlier versions of this check were both too coarse, and each was
+    # caught only because it blocked a clean publication:
+    #
+    #   - by quantity NAME: did any source anywhere carry this quantity at
+    #     private tier in this category? Fired the day a private aggregator
+    #     appeared alongside four public ones — correctly excluded from the
+    #     mean, but the proxy could not tell membership from existence.
+    #   - by SOURCE: is any contributor private anywhere? Fired on Grant
+    #     Williams, who publishes his own forecast openly and republishes Cook
+    #     PVI privately. Same trap as the row-level check above, which already
+    #     learned this lesson and was not consulted.
+    #
+    # Tier is a property of a ROW, not of a source and not of a quantity name.
+    # So the membership test has to be keyed the way aggregate() groups: date,
+    # category, race, quantity, source. Anything coarser answers a question
+    # nobody asked and blocks publications that are entirely clean — and a
+    # check that cries wolf gets switched off by whoever is on deadline, which
+    # is worse than not having it.
+    private_keys = {
+        (r["snapshot_date"], r["category"], r["race_id"], r["quantity"],
+         r["source_id"])
+        for r in rows if r["publication"] == "private"
+    }
     for a in averages:
-        for sid, q in private_q:
-            if a["quantity"] == q and a["category"] == next(
-                    (r["category"] for r in rows if r["source_id"] == sid), None):
-                problems.append(
-                    f"LEAK: private quantity {q!r} reached the published averages")
-                break
+        bad = sorted(
+            s for s in (a.get("_contributors") or ())
+            if (a["snapshot_date"], a["category"], a["race_id"],
+                a["quantity"], s) in private_keys)
+        if bad:
+            problems.append(
+                f"LEAK: private source(s) {bad} contributed to the "
+                f"published average for {a['race_id']}/{a['quantity']}")
     for a in averages:
         if a["tier"] == "gated" and int(a.get("n_gated", a["n_sources"])) < MIN_N:
             problems.append(
@@ -277,6 +308,9 @@ def write(cycle: int, averages, by_source, suppressed, ratings) -> list[Path]:
     written = []
 
     def dump(name, recs, fields):
+        # Internal keys never reach disk. `_contributors` in particular names
+        # the members of every average, gated ones included.
+        fields = [f for f in fields if not f.startswith("_")]
         p = d / name
         with p.open("w", newline="", encoding="utf-8") as fh:
             w = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore")

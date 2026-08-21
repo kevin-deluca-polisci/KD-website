@@ -104,10 +104,24 @@ document.documentElement.className+=" js";})();
   .D{color:var(--D)} .R{color:var(--R)}
   .muted{color:var(--ink-2);font-size:.9em}
 
-  table{width:100%;border-collapse:collapse;font-size:.9em;margin-top:8px}
-  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border)}
-  th{font-weight:650;color:var(--ink-2);border-bottom:2px solid var(--border-strong);font-size:.88em}
-  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  /* Tables size to their CONTENT, not to the card.
+     width:100% stretched a four-character margin across two hundred pixels
+     and put the number it was comparing half a screen from its neighbour.
+     Numeric columns get left padding for separation instead of dead space,
+     and a table wider than the card scrolls inside its own box rather than
+     pushing the page sideways. */
+  .tscroll{overflow-x:auto;margin-top:8px;max-width:100%}
+  table{width:auto;max-width:100%;border-collapse:collapse;font-size:.9em;margin-top:8px}
+  table.full{width:100%}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);
+        vertical-align:top}
+  th{font-weight:650;color:var(--ink-2);border-bottom:2px solid var(--border-strong);
+     font-size:.88em;white-space:nowrap}
+  th.num,td.num{text-align:right;font-variant-numeric:tabular-nums;
+                white-space:nowrap;padding-left:22px}
+  /* The one column that should absorb slack is a prose column, and only when
+     there is prose to hold. */
+  td.wrap,th.wrap{white-space:normal;min-width:16ch}
 
   .note{background:var(--warn-bg);border-left:3px solid var(--warn-line);
         padding:14px 16px;margin:18px 0;font-size:.92em;border-radius:0 6px 6px 0}

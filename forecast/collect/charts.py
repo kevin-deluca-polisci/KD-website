@@ -118,7 +118,9 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
         if m.get("election_day_tide_D") is not None:
             out.append(dict(snapshot_date=snapshot, series="polling",
                             panel="margin", unit="pct", value=m["election_day_tide_D"],
-                            low="", high="", n_sources=1, label=LABELS["polling"]))
+                            low=m.get("tide_D_80_low", ""),
+                            high=m.get("tide_D_80_high", ""),
+                            n_sources=1, label=LABELS["polling"]))
 
     # Seat counts and chamber probabilities for our own two models. Until
     # seats.py existed these four series were simply absent, which is why the
@@ -277,7 +279,12 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
             continue
         last = pts[-1]
         band = None
-        if _f(last.get("low")) is not None and _f(last.get("high")) is not None:
+        # A degenerate band is not an interval. A single-source category
+        # average has min == max, and drawn as a bar it claimed a precision of
+        # exactly zero — "80% 5.7 to 5.7" — where the truth is that nobody
+        # stated one.
+        if (_f(last.get("low")) is not None and _f(last.get("high")) is not None
+                and abs(_f(last["high"]) - _f(last["low"])) > 1e-9):
             band = {"y_low": round(Y(_f(last["low"])), 2),
                     "y_high": round(Y(_f(last["high"])), 2),
                     "low": _f(last["low"]), "high": _f(last["high"])}
@@ -403,6 +410,7 @@ def build_ladder(races: list[dict] | None, *, chamber: str,
                  fixed_left: int = 0, fixed_right: int = 0,
                  total: int = 100, thresholds: tuple = (),
                  expected: float | None = None,
+                 markers: dict | None = None,
                  max_drawn: int = 45,
                  left_label: str = "", right_label: str = "") -> dict | None:
     """Seats ordered most-Democratic to most-Republican, majority line marked.
@@ -444,8 +452,12 @@ def build_ladder(races: list[dict] | None, *, chamber: str,
     # even when the expected result is nowhere near it.
     focus = [s for s, _ in thresholds] or [total // 2 + 1]
     lo_seat, hi_seat = min(focus), max(focus)
-    if expected is not None:
-        lo_seat, hi_seat = min(lo_seat, int(expected)), max(hi_seat, int(expected) + 1)
+    # Every method's seat count has to fall inside the window, not just ours.
+    # A marker outside it is a method whose answer the chart cannot show, which
+    # is the one case where the reader most needs to see how far apart they are.
+    for v in [expected] + [v for v in (markers or {}).values() if v is not None]:
+        if v is not None:
+            lo_seat, hi_seat = min(lo_seat, int(v)), max(hi_seat, int(v) + 1)
     span = max_drawn - (hi_seat - lo_seat)
     first = max(1, lo_seat - fixed_left - span // 2)          # 1-based index into `ordered`
     last = min(n, first + max_drawn - 1)
@@ -509,7 +521,32 @@ def build_ladder(races: list[dict] | None, *, chamber: str,
 
     step = 5 if len(drawn) <= 45 else 10
     ticks = [-clip, -clip / 2, 0, clip / 2, clip]
+
+    # ---- vertical geometry below the axis, derived rather than hardcoded ----
+    #
+    # The seat labels are rotated -90, so they hang BELOW the axis by their own
+    # text length. The Senate's are two characters ("OH"); the House's are five
+    # ("FL-25") at a smaller size but still half again as deep. Fixed offsets
+    # tuned on the Senate put the method labels straight through the House's
+    # district names — which is exactly what shipped.
+    #
+    # So measure the deepest label and stack everything below it. 0.62em per
+    # character is the rough advance width of this sans at these sizes; it only
+    # has to be close, because every consumer of it is a stack offset and not
+    # an alignment.
+    maxlab = max((len(s["label"]) for s in seats), default=2)
+    fs = 8.5 if maxlab > 4 else 10.0
+    label_drop = round(7 + maxlab * fs * 0.62, 1)
+    marks = _ladder_markers(markers or {}, seat_x, hidden_left, len(drawn),
+                            label_drop)
+    marker_drop = max((m["dy"] for m in marks), default=label_drop)
+    axis_dy = round(marker_drop + 20, 1)     # the seat-count numbers
+    foot_dy = round(axis_dy + 20, 1)         # the cap labels and axis title
+
     return {
+        "label_drop": label_drop,
+        "axis_dy": axis_dy, "foot_dy": foot_dy,
+        "svg_h": round(foot_dy + 14, 1),
         "chamber": chamber, "clip": clip, "total": total,
         "n_races": n, "n_drawn": len(drawn),
         "hidden_left": hidden_left, "hidden_right": hidden_right,
@@ -529,6 +566,12 @@ def build_ladder(races: list[dict] | None, *, chamber: str,
         # seeing on one chart.
         "expected": (None if expected is None or not (hidden_left < expected <= hidden_left + len(drawn))
                      else {"seats": round(expected, 1), "x": round(seat_x(expected), 2)}),
+        # One tick per method, laid out on the same seat axis. Replaces the
+        # single "model:" line, which showed one of four answers and implied
+        # the other three did not exist. De-collided horizontally so two
+        # methods a seat apart do not print over each other; the MARK stays
+        # where the number is, only the label moves.
+        "markers": marks,
         "y_zero": round(_ladder_y(0.0, clip), 2),
         "y_ticks": [{"v": v, "y": round(_ladder_y(v, clip), 2),
                      "label": ("EVEN" if v == 0 else
@@ -536,6 +579,46 @@ def build_ladder(races: list[dict] | None, *, chamber: str,
                               ("+" if abs(v) == clip else "")}
                     for v in ticks],
     }
+
+
+def _ladder_markers(markers: dict, seat_x, hidden_left: int, n_drawn: int,
+                    label_drop: float) -> list[dict]:
+    out = []
+    for key in ORDER:
+        v = markers.get(key)
+        if v is None or not (hidden_left < v <= hidden_left + n_drawn):
+            continue
+        out.append({"key": key, "label": LABELS.get(key, key),
+                    "seats": round(v, 1), "x": round(seat_x(v), 2),
+                    "label_x": round(seat_x(v), 2)})
+    out.sort(key=lambda m: m["x"])
+
+    # Nudge labels apart horizontally, then alternate rows for what is left.
+    # Both are needed: two methods a seat apart need the horizontal shove, and
+    # four methods within a few seats overflow one row however far they are
+    # shoved. The MARK never moves — only the label and its leader line.
+    GAP = 11.0                      # display units, ~= 70px at 640px wide
+    for i in range(1, len(out)):
+        if out[i]["label_x"] - out[i - 1]["label_x"] < GAP:
+            out[i]["label_x"] = round(out[i - 1]["label_x"] + GAP, 2)
+    # Keep the rightmost label inside the plot; a label pushed past 100 prints
+    # over the right-hand cap, which is where "Professional" ended up on the
+    # House ladder. Walk back leftwards from the edge if the shove overran.
+    over = out[-1]["label_x"] - 96.0 if out else 0.0
+    if over > 0:
+        for m in reversed(out):
+            m["label_x"] = round(m["label_x"] - over, 2)
+            over = max(0.0, 4.0 - m["label_x"])   # stop at the left edge too
+            if not over:
+                break
+
+    for i, m in enumerate(out):
+        m["row"] = i % 2
+        # Absolute px below the axis, clearing the rotated seat labels. The
+        # template used to carry these as literals, which meant the House and
+        # the Senate shared one set of offsets tuned for two-character states.
+        m["dy"] = round(label_drop + (12.0 if i % 2 == 0 else 28.0), 1)
+    return out
 
 
 def _ordinal(n: int) -> str:
@@ -684,6 +767,9 @@ def build(derived: Path, snapshot: str) -> dict:
     rows = update_timeline(derived, snapshot)
     out = {p: build_panel(rows, p) for p in PANELS}
     out["views"] = VIEWS
+    # Congressional only. Governors are collected and archived, and a handful
+    # of close ones are listed on the contests page, but they are not part of
+    # the course's subject and a third tab on this chart said otherwise.
     out["ratings"] = {c: build_ratings_spread(derived, snapshot, c)
-                      for c in ("senate", "house", "governor")}
+                      for c in ("senate", "house")}
     return out

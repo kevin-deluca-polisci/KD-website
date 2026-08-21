@@ -116,7 +116,36 @@ def _withheld_cells(supp: list[dict], latest: str) -> set:
             if r["snapshot_date"] == latest}
 
 
-def build_ladders(senate: dict | None, proj: dict | None) -> dict:
+def _seat_markers(chamber: str, proj: dict | None, avgs: list[dict],
+                  latest: str) -> dict:
+    """Every method's seat count, for the ladder's tick marks.
+
+    Our two models answer from the projection; the professionals and the
+    markets answer through the published category average, which means a
+    category that is withheld today simply has no marker — correct, and
+    visibly different from a category that has no opinion.
+    """
+    out: dict[str, float | None] = {}
+    p = (proj or {}).get("projections") or {}
+    for key in ("fundamentals", "polling"):
+        got = p.get(key) or {}
+        if chamber == "senate":
+            out[key] = (got.get("senate") or {}).get("expected_D_total")
+        else:
+            out[key] = (got.get("house") or {}).get("expected_D_seats")
+    rid = NATL_SENATE if chamber == "senate" else NATL_HOUSE
+    for r in avgs:
+        if (r["snapshot_date"] == latest and r["race_id"] == rid
+                and r["quantity"] == "seats_D" and r["category"] in ("professional", "market")):
+            try:
+                out[r["category"]] = float(r["mean"])
+            except (TypeError, ValueError):
+                pass
+    return {k: v for k, v in out.items() if v is not None}
+
+
+def build_ladders(senate: dict | None, proj: dict | None,
+                  avgs: list[dict] | None = None, latest: str = "") -> dict:
     """One ladder per chamber, both off the polling projection.
 
     The Senate ladder counts from the seats not on the ballot; the House has no
@@ -134,6 +163,7 @@ def build_ladders(senate: dict | None, proj: dict | None) -> dict:
             thresholds=((50, "a tie, broken by the vice-president"),
                         (51, "an outright majority")),
             expected=senate.get("expected_D_total"),
+            markers=_seat_markers("senate", proj, avgs or [], latest),
             max_drawn=n_up,
             left_label=f"{hold_D} D seats not on the ballot",
             right_label=f"{100 - hold_D - n_up} R seats not on the ballot")
@@ -151,6 +181,7 @@ def build_ladders(senate: dict | None, proj: dict | None) -> dict:
             total=len(rows),
             thresholds=((house.get("majority_at", 218), "a majority"),),
             expected=house.get("expected_D_seats"),
+            markers=_seat_markers("house", proj, avgs or [], latest),
             max_drawn=45,
             left_label="safe Democratic seats",
             right_label="safe Republican seats")
@@ -231,11 +262,26 @@ def build_governors(latest: str, avgs: list[dict], supp: list[dict],
             return (0, abs(r["market_prob_D"] - 0.5) * 10.0, 0)
         return (1, 0, 0)
     races.sort(key=lambda r: (*closeness(r), r["state"]))
+    # Only the close ones reach the page. Governors are not the focus of the
+    # course — the framing is congressional — but a handful of these races are
+    # genuinely competitive and dropping them entirely would lose the one part
+    # a reader would look for. "Close" is a rating between Lean D and Lean R,
+    # or a market price between 20% and 80%; everything else is collected,
+    # archived, and not drawn.
+    def close(r):
+        if r["mean_rating"] is not None and 3.5 <= r["mean_rating"] <= 6.5:
+            return True
+        p = r["market_prob_D"]
+        return p is not None and 0.20 <= p <= 0.80
+    for r in races:
+        r["close"] = close(r)
+    shown = [r for r in races if r["close"]]
     return {
         "n_races": len(races),
         "n_rated": sum(1 for r in races if r["n_raters"]),
         "n_market": sum(1 for r in races if r["market_prob_D"] is not None),
-        "races": races,
+        "n_close": len(shown),
+        "races": shown,
         "note": ("No class model for governors. A national tide carried through "
                  "partisan lean is a poor description of gubernatorial races, so "
                  "this panel shows only what others measure."),
@@ -446,7 +492,7 @@ def main(argv=None) -> int:
     # count has since grown to 4,206 rows across twelve raters, which is well
     # past what any table was going to carry.
     chart_data = charts.build(d, latest)
-    chart_data["ladders"] = build_ladders(senate, proj)
+    chart_data["ladders"] = build_ladders(senate, proj, avgs, latest)
     spread = build_spread(d, latest, proj, avgs, supp, senate)
     governors = build_governors(latest, avgs, supp, ratings)
     model_index = build_model_index(d, latest)
