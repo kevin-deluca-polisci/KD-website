@@ -270,10 +270,57 @@ class Context:
         kw.setdefault("chamber", "national")
         kw.setdefault("state", "")
         kw.setdefault("district", "")
+
+        # A row may be dated EARLIER than the capture it came from.
+        #
+        # Some sources publish their own history: Race to the WH ships a trend
+        # sheet running back to February, Wikipedia keeps every revision. Those
+        # observations are not statements about today, and filing them under
+        # today's date would say the professional average moved eight points
+        # overnight when in fact six months of it arrived at once.
+        #
+        # Backdating only. A parser may not date a row into the future, and it
+        # may not date one after the capture it was read from — the raw bytes
+        # are the evidence, and evidence cannot post-date what it proves.
+        asof = kw.pop("snapshot_date", None) or self.snapshot_date
+        if asof > self.snapshot_date:
+            raise ValueError(
+                f"parser dated a row {asof} from a {self.snapshot_date} "
+                f"capture; rows may be backdated, never forward-dated")
+
+        # ATTRIBUTION OVERRIDE — one capture, several forecasters.
+        #
+        # Wikipedia's House article carries a table of generic-ballot averages
+        # from six DIFFERENT aggregators. Filed under source_id="wikipedia"
+        # they collapse to one contributor, because the aggregator counts
+        # sources by id — six independent averages would have counted as one,
+        # and the category would have stayed below the disclosure floor while
+        # appearing to have six opinions in it.
+        #
+        # So a parser may attribute a row to the forecaster it actually came
+        # from. Two conditions, and the second is the important one:
+        #
+        #   - it must also declare the CATEGORY, because a source read off
+        #     another source's page is rarely in the reading source's category;
+        #   - it must also declare the PUBLICATION tier, and that tier is
+        #     checked against the same restrict-only rule as any other. A row
+        #     attributed to a gated forecaster must carry that forecaster's
+        #     gate. Attribution is not a route around a licence: reading Silver
+        #     Bulletin's number off Wikipedia does not make it republishable,
+        #     it just means we know whose number it is.
+        attributed = kw.pop("source_id", None)
+        category = kw.pop("category", None) or self.category
+        if attributed and attributed != self.source_id:
+            if publication is None:
+                raise ValueError(
+                    f"row attributed to {attributed!r} without an explicit "
+                    f"publication tier; attribution must carry the attributed "
+                    f"source's licence, not the reading source's")
+
         r = Row(
-            snapshot_date=self.snapshot_date,
-            source_id=self.source_id,
-            category=self.category,
+            snapshot_date=asof,
+            source_id=attributed or self.source_id,
+            category=category,
             publication=tier,
             captured_at=art.meta.get("fetched_at", ""),
             raw_sha256=art.sha256,
@@ -312,15 +359,15 @@ def margin_ladder_expectation(buckets: list) -> float | None:
     claim about everything up to a landslide, and Kalshi's "Republicans win" is
     a claim about the entire other half of the line. Widening it to the real
     span would let a thinly traded end bucket dominate the mean. This
-    understates the tails on purpose, and the understatement is small — on the
-    live book it moves the answer by less than two tenths of a point across any
-    plausible assumption — but it IS an assumption and the methods page says so.
+    understates the tails on purpose, and the understatement is measurable
+    rather than assumed: Polymarket resolves both tails and read D+7.58 on
+    2026-08-21 where Kalshi's convention gave D+7.83.
 
     Returns only the expectation. The mass above zero is P(D wins the popular
     vote), which is NOT the same event as winning the chamber, and win_prob_D
-    on a national race already means the chamber. Two questions, one name, is
-    how a comparison table starts reporting disagreement that is really a
-    definition mismatch.
+    on a national race already means the chamber. Two questions under one name
+    is how a comparison table starts reporting a definition mismatch as
+    disagreement.
     """
     closed = [(lo, hi) for (lo, hi), _ in buckets
               if lo is not None and hi is not None]
