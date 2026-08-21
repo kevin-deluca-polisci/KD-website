@@ -392,15 +392,29 @@ def main(argv=None) -> int:
                              # page must say whose rather than calling it an
                              # average of anything.
                              "display": r.get("display", "ok"),
-                             "sole_source": r.get("sole_source", "")})
-    if model:
-        # Our own model, so n=1 is not a defect — but it is labelled as ours
-        # rather than presented as a category average of anything.
-        headline.append({"category": "fundamentals", "margin_D": model["margin_D"],
-                         "n_sources": 1, "low": model["margin_D_80_low"],
-                         "high": model["margin_D_80_high"], "tier": "open",
-                         "display": "single", "sole_source": "class model",
-                         "note": "class model"})
+                             "sole_source": r.get("sole_source", ""),
+                             # When the stalest contributor last published, and
+                             # how many are being quoted from an earlier day.
+                             # The page needs both to say "2 sources, Fair last
+                             # published Jul 31" rather than implying everyone
+                             # spoke this morning.
+                             "as_of": r.get("oldest_as_of") or latest,
+                             "n_carried": int(r.get("n_carried") or 0)})
+
+    # THE CLASS MODEL IS NOT APPENDED HERE ANY MORE.
+    #
+    # It used to be, from the days when publish.py read fundamentals_model.json
+    # directly because our model was not a contributor to anything. Since
+    # aggregate.py began emitting the class models as ordinary rows, this block
+    # was adding a SECOND fundamentals entry carrying the same number as the
+    # category average that already contained it — the site.json headline held
+    # two fundamentals rows reading 10.48, one of them labelled "class model",
+    # a label that had already been asked for twice to be taken off the page.
+    #
+    # The 80% interval that only this block knew about has not been lost: it is
+    # on fundamentals_model.json, which is published alongside, and the band is
+    # a property of our model rather than of the category, so the category
+    # average is the wrong place to have been carrying it anyway.
 
     series = defaultdict(list)
     for r in avgs:

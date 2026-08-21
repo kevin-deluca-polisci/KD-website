@@ -827,7 +827,22 @@ sources:
     category: fundamentals
     method: http
     enabled: true
-    cadence: daily
+    # SPORADIC, AND THIS FIELD IS NOW LOAD-BEARING.
+    #
+    # It said `daily`, which was simply false — Fair has published four
+    # mid-term predictions in the past year (2025-12-23, 2026-02-20,
+    # 2026-04-30, 2026-07-31) and posts a new one when he re-estimates, not
+    # every morning. The page is fetched daily; what is on it changes a few
+    # times a year.
+    #
+    # That lie had a cost. The parser back-dates each prediction to the day
+    # Fair published it, which is right for the archive, and every downstream
+    # step then asked "what did this source say TODAY?" and got nothing. Fair
+    # has never once appeared beside our model in the fundamentals average,
+    # which is the whole reason he was added. See carry_forward() in
+    # aggregate.py and external_tides() in model/seats.py, both of which now
+    # read this field.
+    cadence: sporadic
     # TIER: individual, i.e. we may name him and show his number.
     #
     # This is a judgment and it is the one line to change if you disagree.

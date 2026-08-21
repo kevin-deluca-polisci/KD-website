@@ -47,6 +47,9 @@ to be asked once per field rather than never.
 from __future__ import annotations
 
 import argparse
+import csv
+import datetime as dt
+import glob
 import json
 import sys
 from pathlib import Path
@@ -72,6 +75,56 @@ EXTERNAL_TIDES = {
 NATL_HOUSE = "NATL_HOUSE_2026"
 
 HOUSE_MAJORITY = 218
+
+# Must match CARRY_FORWARD_MAX_DAYS in collect/aggregate.py. The two cannot
+# import each other across the collect/model split, so the number is written
+# twice and cross-referenced in both places. Past this a source is not
+# episodic, it is abandoned.
+TIDE_MAX_AGE_DAYS = 200
+
+
+def external_tides(cycle: int, today: str) -> dict[str, tuple[str, float, str]]:
+    """source_id -> (category, margin_D, as_of) for each EXTERNAL_TIDES source.
+
+    THE MOST RECENT PUBLISHED VALUE ANYWHERE IN THE ARCHIVE, not the value in
+    today's parsed file.
+
+    This used to read only the rows for the current snapshot, which is correct
+    for a source that publishes daily and silently wrong for one that does not.
+    Fair posts a mid-term prediction a few times a year and the parser
+    back-dates each to its publication day, so his rows live in
+    parsed/2026-07-31.csv and nowhere near today's file. The scan found
+    nothing, no Fair tide was ever built, no Fair seat projection was ever
+    written, and the fundamentals category on the site was our own model alone
+    every single day since he was added — the one thing adding him was supposed
+    to prevent.
+
+    Sorted filenames mean a later date overwrites an earlier one, so what
+    survives per source is its newest prediction.
+    """
+    out: dict[str, tuple[str, float, str]] = {}
+    for f in sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv"))):
+        with open(f, encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                if (r.get("source_id") in EXTERNAL_TIDES
+                        and r.get("race_id") == NATL_HOUSE
+                        and r.get("quantity") == "margin_D"):
+                    try:
+                        v = float(r["value"])
+                    except (TypeError, ValueError):
+                        continue
+                    out[r["source_id"]] = (EXTERNAL_TIDES[r["source_id"]], v,
+                                           r["snapshot_date"])
+
+    fresh = {}
+    for sid, (cat, v, as_of) in out.items():
+        age = (dt.date.fromisoformat(today) - dt.date.fromisoformat(as_of)).days
+        if age > TIDE_MAX_AGE_DAYS:
+            print(f"  {sid}: last published {as_of} ({age} days ago) — past "
+                  f"{TIDE_MAX_AGE_DAYS}, not projecting a seat count from it")
+            continue
+        fresh[sid] = (cat, v, as_of)
+    return fresh
 
 
 def public_house(h: dict | None) -> dict | None:
@@ -171,15 +224,13 @@ def main(argv=None) -> int:
     # compute our own is the only thing that makes the two comparable. Read
     # from the parsed rows for the snapshot rather than from derived/, because
     # these arrive through capture and parse like any other source.
-    for r in rows:
-        if (r.get("source_id") in EXTERNAL_TIDES
-                and r.get("race_id") == NATL_HOUSE
-                and r.get("quantity") == "margin_D"):
-            try:
-                tides[r["source_id"]] = (EXTERNAL_TIDES[r["source_id"]],
-                                         float(r["value"]))
-            except (TypeError, ValueError):
-                continue
+    tide_as_of: dict[str, str] = {}
+    for sid, (cat, v, as_of) in external_tides(a.cycle, date).items():
+        tides[sid] = (cat, v)
+        tide_as_of[sid] = as_of
+        if as_of != date:
+            print(f"  {sid}: using the prediction published {as_of} — his "
+                  f"current one, and there is no newer")
 
     if not tides:
         print("  no tides available — run fundamentals.py and polling.py first")
@@ -197,6 +248,11 @@ def main(argv=None) -> int:
         # one under it, so adding a model is a registry entry plus a line in
         # EXTERNAL_TIDES and nothing downstream has to learn its name.
         p["category"] = category
+        # When this model last spoke. Ours speak today by construction; an
+        # external tide may be weeks old, and aggregate.py copies this onto the
+        # rows it emits so the seat count carries the same date stamp as the
+        # margin it came from.
+        p["as_of"] = tide_as_of.get(name, date)
         projections[name] = p
         s, h = p["senate"], p.get("house")
         print(f"\n  {name.upper()}  [{category}]  tide D{tide:+.2f}")

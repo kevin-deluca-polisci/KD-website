@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-21T18:33:57.325772+00:00",
+  "generated_at": "2026-08-21T19:50:59.546014+00:00",
   "latest_snapshot": "2026-08-21",
   "snapshot_count": 7,
   "headline": [
@@ -12,18 +12,9 @@
       "high": 10.48,
       "tier": "open",
       "display": "single",
-      "sole_source": "class_fundamentals"
-    },
-    {
-      "category": "fundamentals",
-      "margin_D": 10.48,
-      "n_sources": 1,
-      "low": 4.61,
-      "high": 16.35,
-      "tier": "open",
-      "display": "single",
-      "sole_source": "class model",
-      "note": "class model"
+      "sole_source": "class_fundamentals",
+      "as_of": "2026-08-21",
+      "n_carried": 0
     },
     {
       "category": "polling",
@@ -33,7 +24,9 @@
       "high": 6.4,
       "tier": "gated",
       "display": "ok",
-      "sole_source": ""
+      "sole_source": "",
+      "as_of": "2026-08-21",
+      "n_carried": 0
     },
     {
       "category": "professional",
@@ -43,7 +36,9 @@
       "high": 5.68,
       "tier": "open",
       "display": "single",
-      "sole_source": "grant_williams"
+      "sole_source": "grant_williams",
+      "as_of": "2026-08-21",
+      "n_carried": 0
     }
   ],
   "series": {

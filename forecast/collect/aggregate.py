@@ -33,12 +33,16 @@ from __future__ import annotations
 
 import argparse
 import csv
+import datetime as dt
 import json
 import re
 import statistics
 import sys
 from collections import defaultdict
 from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = REPO_ROOT / "forecast" / "data"
@@ -120,6 +124,125 @@ def read_parsed(cycle: int) -> list[dict]:
 MARGIN_FROM_ELSEWHERE = {"class_polling", "fair"}
 
 
+# --------------------------------------------------------------------------
+# Sources that do not publish every day.
+#
+# THE BUG THIS FIXES. Ray Fair publishes a mid-term prediction a few times a
+# year. The parser back-dates each one to the day he published it, which is the
+# right thing to do — an archive that stamped his December forecast with
+# today's date would be lying about when it was made. But every step
+# downstream then grouped by snapshot_date and asked "who is in the
+# fundamentals category TODAY?", and on any day Fair had not published, the
+# answer was nobody but us. On 2026-08-21 the fundamentals average read
+# D+10.5, n=1, sole source our own model — while Fair's published forecast of
+# D+1.8 sat in the same archive, three weeks old and completely invisible.
+# The two-member fundamentals category the site was built around had never
+# once existed.
+#
+# WHY CARRYING FORWARD IS HONEST HERE, AND WHERE IT WOULD NOT BE.
+# "Fair's forecast on 2026-08-21" is a well-formed question with the answer
+# D+1.8: that is his current published prediction, and there is no newer one to
+# prefer. Carrying it is a true statement about the world. Contrast a polling
+# average that stops updating — there the underlying thing kept moving and the
+# source stopped following it, so repeating yesterday's number asserts
+# something false. The difference is exactly whether the source was EXPECTED to
+# update, which is what `cadence` in the registry records. So cadence decides
+# it, and a source that claims `daily` and goes quiet is left visibly missing,
+# which is what the staleness detector is for.
+#
+# Fair's cadence was registered as `daily`, which is how this went unnoticed.
+EPISODIC_CADENCES = {"sporadic", "weekly", "monthly"}
+
+# Past this, a source is not episodic, it is abandoned, and repeating its last
+# word would be asserting that a forecaster who has said nothing for most of a
+# year still stands behind a number. model/seats.py enforces the same cap on
+# the same sources for the tide it reads; the two must agree, and neither can
+# import the other across the collect/model split.
+CARRY_FORWARD_MAX_DAYS = 200
+
+
+def carry_forward(rows: list[dict], registry: dict) -> list[str]:
+    """Fill an episodic source's most recent value onto later snapshot dates.
+
+    Mutates `rows` in place — every row gains `as_of`, the date the value was
+    actually published, which equals snapshot_date for everything observed
+    normally and is older for anything carried. Returns human-readable notes.
+
+    WHICH DATES GET FILLED. Only dates where the source's own category already
+    has a row from somebody else. The archive holds roughly 190 snapshot dates,
+    most of them Wikipedia rating revisions back-filled from page history, and
+    those are not days on which anyone measured the fundamentals — filling them
+    would invent about 180 snapshots that never happened and draw a fundamentals
+    line stretching back to January beside a polling line that starts in August.
+    A carried value completes an average on a day we actually took one. It does
+    not manufacture a day.
+    """
+    # ENABLED episodic sources only. A source we have switched off has been
+    # taken out of the picture deliberately, and repeating its last forecast
+    # every day afterwards would quietly undo that decision — the first run
+    # carried fiftyplusone forward, which is disabled precisely because we are
+    # not collecting it.
+    eligible = {s["id"] for s in registry.get("sources", [])
+                if s.get("enabled")
+                and (s.get("cadence") or "daily") in EPISODIC_CADENCES}
+
+    for r in rows:
+        r.setdefault("as_of", r["snapshot_date"])
+    if not eligible or not rows:
+        return []
+
+    # Dates on which each category was genuinely measured, and by whom.
+    cat_dates: dict[str, set] = defaultdict(set)
+    for r in rows:
+        cat_dates[r["category"]].add((r["snapshot_date"], r["source_id"]))
+
+    # Only quantities that would survive aggregation anyway. Cook's PVI, MEDSL's
+    # past results and FRED's income series are reference data the model is fed,
+    # not forecasts anyone makes — they are filtered out downstream regardless,
+    # and carrying them added a thousand rows that could not reach a single
+    # published number. Carrying a value forward is a claim that a forecaster
+    # still stands behind it; there is nobody standing behind a past election
+    # result.
+    skip = NO_AVERAGE | NEVER_PUBLISH | NOT_A_FORECAST
+
+    series: dict[tuple, dict[str, dict]] = defaultdict(dict)
+    for r in rows:
+        if r["source_id"] in eligible and r["quantity"] not in skip:
+            key = (r["source_id"], r["category"], r["race_id"], r["chamber"],
+                   r["state"], r["district"], r["quantity"], r["unit"])
+            series[key][r["snapshot_date"]] = r
+
+    added: list[dict] = []
+    stats: dict[str, dict] = defaultdict(lambda: {"rows": 0, "max_age": 0,
+                                                  "as_of": ""})
+    for key, observed in series.items():
+        sid, cat = key[0], key[1]
+        # Days this category was measured by somebody other than this source.
+        targets = sorted({d for d, s in cat_dates[cat] if s != sid})
+        seen = sorted(observed)
+        for d in targets:
+            if d in observed or d < seen[0]:
+                continue
+            prior = [x for x in seen if x <= d]
+            if not prior:
+                continue
+            src = observed[prior[-1]]
+            age = (dt.date.fromisoformat(d)
+                   - dt.date.fromisoformat(src["as_of"])).days
+            if age > CARRY_FORWARD_MAX_DAYS:
+                continue
+            added.append({**src, "snapshot_date": d, "as_of": src["as_of"]})
+            st = stats[sid]
+            st["rows"] += 1
+            if age >= st["max_age"]:
+                st["max_age"], st["as_of"] = age, src["as_of"]
+
+    rows.extend(added)
+    return [f"{sid}: carried {v['rows']} row(s) forward, oldest "
+            f"{v['max_age']} day(s) (published {v['as_of']})"
+            for sid, v in sorted(stats.items())]
+
+
 def class_model_rows(cycle: int) -> list[dict]:
     """Seat projections as ordinary contributors to their own category.
 
@@ -159,6 +282,12 @@ def class_model_rows(cycle: int) -> list[dict]:
 
     rows: list[dict] = []
 
+    # Set per projection, read by emit(). These rows are dated TODAY because
+    # the projection was computed today, but the tide behind an external model
+    # may be weeks old. seats.py records which, and it travels with the number
+    # rather than being re-derived here from the source's name.
+    as_of = {"d": date}
+
     def emit(source_id, cat, race_id, chamber, state, district, quantity,
              value, unit):
         if value is None:
@@ -169,6 +298,7 @@ def class_model_rows(cycle: int) -> list[dict]:
             "race_id": race_id, "chamber": chamber, "state": state,
             "district": district, "quantity": quantity,
             "value": float(value), "unit": unit,
+            "as_of": as_of["d"],
             "captured_at": "", "raw_sha256": "", "raw_path": "",
         })
 
@@ -176,6 +306,7 @@ def class_model_rows(cycle: int) -> list[dict]:
         cat = model.get("category")
         if not cat:
             continue
+        as_of["d"] = model.get("as_of") or date
         senate, house = model.get("senate") or {}, model.get("house") or {}
         if source_id not in MARGIN_FROM_ELSEWHERE:
             emit(source_id, cat, NATL_HOUSE, "national", "", "", "margin_D",
@@ -223,12 +354,14 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
         # same race must not count as several forecasters.
         per_source: dict[str, list[float]] = defaultdict(list)
         tiers: dict[str, str] = {}
+        as_ofs: dict[str, str] = {}
         for m in members:
             try:
                 per_source[m["source_id"]].append(float(m["value"]))
             except (TypeError, ValueError):
                 continue
             tiers[m["source_id"]] = m["publication"]
+            as_ofs[m["source_id"]] = m.get("as_of") or date
 
         if any(t == "private" for t in tiers.values()):
             per_source = {s: v for s, v in per_source.items()
@@ -275,6 +408,16 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             "tier": "gated" if gated else "open",
             "display": display,
             "sole_source": sole,
+            # Provenance in time. `oldest_as_of` is the publication date of the
+            # stalest thing in this mean, and `n_carried` counts how many
+            # contributors are being quoted from an earlier day. Together they
+            # let the page say "fundamentals, 2 sources — Fair last published
+            # Jul 31" instead of implying both forecasters spoke this morning.
+            # A category average that silently mixes today and three weeks ago
+            # is the kind of small dishonesty this whole archive exists to
+            # avoid.
+            "oldest_as_of": min((as_ofs[s] for s in per_source), default=date),
+            "n_carried": sum(1 for s in per_source if as_ofs.get(s, date) != date),
             # Who actually went into the mean. Leading underscore: audit()
             # reads it, write() strips it. It must NOT reach the CSV — naming
             # the members of a gated average is a disclosure in its own right,
@@ -315,13 +458,27 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
                     "display": "single" if len(ov) == 1 else "ok",
                     "sole_source": open_srcs[0] if len(ov) == 1 else "",
                     "partial": 1, "n_withheld": n_gated,
+                    # Recomputed over the open subset, not inherited: the
+                    # withheld gated source may well have been the stale one,
+                    # and reporting its as-of date on a mean it is not in would
+                    # be wrong in the direction that matters.
+                    "oldest_as_of": min((as_ofs[s] for s in open_srcs),
+                                        default=date),
+                    "n_carried": sum(1 for s in open_srcs
+                                     if as_ofs.get(s, date) != date),
                 })
         else:
             averages.append(rec)
 
+    # `as_of` is on the per-source table too. These rows are the ones the site
+    # publishes BY NAME, so this is where a reader can check for themselves
+    # that the Fair number beside our model is three weeks old rather than
+    # taking the category note's word for it.
     by_source = [
-        {k: r[k] for k in ("snapshot_date", "source_id", "category", "race_id",
-                           "chamber", "state", "district", "quantity", "value", "unit")}
+        {**{k: r[k] for k in ("snapshot_date", "source_id", "category", "race_id",
+                              "chamber", "state", "district", "quantity", "value",
+                              "unit")},
+         "as_of": r.get("as_of") or r["snapshot_date"]}
         for r in rows
         if r["publication"] == "individual" and r["quantity"] not in NO_AVERAGE
         and r["quantity"] not in NEVER_PUBLISH
@@ -551,6 +708,17 @@ def main(argv=None) -> int:
         print("No parsed rows. Run parse.py first.")
         return 0
 
+    try:
+        from parse import load_registry
+        carried = carry_forward(rows, load_registry(a.cycle))
+    except Exception as e:
+        # Do not aggregate without knowing each source's cadence. Silently
+        # skipping the carry-forward would republish the exact bug this was
+        # written to fix, and it would look like a normal run.
+        print(f"could not read the registry for source cadences: "
+              f"{type(e).__name__}: {e}")
+        return 2
+
     averages, by_source, suppressed = aggregate(rows)
     ratings = ratings_panel(rows)
     problems = audit(rows, averages, by_source, suppressed)
@@ -561,6 +729,9 @@ def main(argv=None) -> int:
     print(f"aggregate · cycle {a.cycle}")
     print("=" * 70)
     print(f"  {len(rows):6d} parsed rows in   (private)")
+    if carried:
+        for line in carried:
+            print(f"    carried forward  {line}")
     print(f"  {len(averages):6d} category averages out   (PUBLIC)")
     print(f"  {len(by_source):6d} per-source rows out     (PUBLIC — individual tier only)")
     print(f"  {len(ratings):6d} expert rating rows out   (PUBLIC, separate panel)")
