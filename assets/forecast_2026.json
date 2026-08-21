@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-21T02:55:31.933513+00:00",
+  "generated_at": "2026-08-21T03:49:46.521846+00:00",
   "latest_snapshot": "2026-08-20",
   "snapshot_count": 2,
   "headline": [
@@ -4412,6 +4412,7 @@
       52
     ],
     "prob_D_50_plus": 0.3907,
+    "prob_D_51_plus": 0.23,
     "sensitivity": {
       "33": 0.23,
       "34": 0.3907,
@@ -4422,213 +4423,250 @@
         "state": "MA",
         "expected_margin_D": 33.65,
         "pvi": 13.99,
-        "win_prob_D": 1.0
+        "win_prob_D": 1.0,
+        "competitive": false
       },
       {
         "state": "DE",
         "expected_margin_D": 21.69,
         "pvi": 8.01,
-        "win_prob_D": 0.9995
+        "win_prob_D": 0.9995,
+        "competitive": false
       },
       {
         "state": "RI",
         "expected_margin_D": 21.59,
         "pvi": 7.96,
-        "win_prob_D": 0.9995
+        "win_prob_D": 0.9995,
+        "competitive": false
       },
       {
         "state": "OR",
         "expected_margin_D": 20.97,
         "pvi": 7.65,
-        "win_prob_D": 0.9993
+        "win_prob_D": 0.9993,
+        "competitive": false
       },
       {
         "state": "IL",
         "expected_margin_D": 18.35,
         "pvi": 6.34,
-        "win_prob_D": 0.9975
+        "win_prob_D": 0.9975,
+        "competitive": false
       },
       {
         "state": "CO",
         "expected_margin_D": 17.61,
         "pvi": 5.97,
-        "win_prob_D": 0.9964
+        "win_prob_D": 0.9964,
+        "competitive": false
       },
       {
         "state": "NJ",
         "expected_margin_D": 14.21,
         "pvi": 4.27,
-        "win_prob_D": 0.985
+        "win_prob_D": 0.985,
+        "competitive": true
       },
       {
         "state": "ME",
         "expected_margin_D": 13.31,
         "pvi": 3.82,
-        "win_prob_D": 0.979
+        "win_prob_D": 0.979,
+        "competitive": true
       },
       {
         "state": "NM",
         "expected_margin_D": 13.03,
         "pvi": 3.68,
-        "win_prob_D": 0.9767
+        "win_prob_D": 0.9767,
+        "competitive": true
       },
       {
         "state": "VA",
         "expected_margin_D": 12.65,
         "pvi": 3.49,
-        "win_prob_D": 0.9733
+        "win_prob_D": 0.9733,
+        "competitive": true
       },
       {
         "state": "MN",
         "expected_margin_D": 10.73,
         "pvi": 2.53,
-        "win_prob_D": 0.9494
+        "win_prob_D": 0.9494,
+        "competitive": true
       },
       {
         "state": "NH",
         "expected_margin_D": 9.65,
         "pvi": 1.99,
-        "win_prob_D": 0.9298
+        "win_prob_D": 0.9298,
+        "competitive": true
       },
       {
         "state": "MI",
         "expected_margin_D": 5.29,
         "pvi": -0.19,
-        "win_prob_D": 0.7905
+        "win_prob_D": 0.7905,
+        "competitive": true
       },
       {
         "state": "GA",
         "expected_margin_D": 4.07,
         "pvi": -0.8,
-        "win_prob_D": 0.733
+        "win_prob_D": 0.733,
+        "competitive": true
       },
       {
         "state": "NC",
         "expected_margin_D": 2.87,
         "pvi": -1.4,
-        "win_prob_D": 0.6696
+        "win_prob_D": 0.6696,
+        "competitive": true
       },
       {
         "state": "OH",
         "expected_margin_D": -4.87,
         "pvi": -5.27,
-        "win_prob_D": 0.2288
+        "win_prob_D": 0.2288,
+        "competitive": true
       },
       {
         "state": "FL",
         "expected_margin_D": -5.11,
         "pvi": -5.39,
-        "win_prob_D": 0.2178
+        "win_prob_D": 0.2178,
+        "competitive": true
       },
       {
         "state": "TX",
         "expected_margin_D": -6.17,
         "pvi": -5.92,
-        "win_prob_D": 0.1733
+        "win_prob_D": 0.1733,
+        "competitive": true
       },
       {
         "state": "IA",
         "expected_margin_D": -6.51,
         "pvi": -6.09,
-        "win_prob_D": 0.1603
+        "win_prob_D": 0.1603,
+        "competitive": true
       },
       {
         "state": "AK",
         "expected_margin_D": -7.23,
         "pvi": -6.45,
-        "win_prob_D": 0.135
+        "win_prob_D": 0.135,
+        "competitive": true
       },
       {
         "state": "KS",
         "expected_margin_D": -10.39,
         "pvi": -8.03,
-        "win_prob_D": 0.0564
+        "win_prob_D": 0.0564,
+        "competitive": true
       },
       {
         "state": "SC",
         "expected_margin_D": -10.89,
         "pvi": -8.28,
-        "win_prob_D": 0.0483
+        "win_prob_D": 0.0483,
+        "competitive": true
       },
       {
         "state": "MT",
         "expected_margin_D": -13.97,
         "pvi": -9.82,
-        "win_prob_D": 0.0165
+        "win_prob_D": 0.0165,
+        "competitive": true
       },
       {
         "state": "NE",
         "expected_margin_D": -14.87,
         "pvi": -10.27,
-        "win_prob_D": 0.0116
+        "win_prob_D": 0.0116,
+        "competitive": true
       },
       {
         "state": "LA",
         "expected_margin_D": -15.83,
         "pvi": -10.75,
-        "win_prob_D": 0.0078
+        "win_prob_D": 0.0078,
+        "competitive": false
       },
       {
         "state": "MS",
         "expected_margin_D": -15.89,
         "pvi": -10.78,
-        "win_prob_D": 0.0076
+        "win_prob_D": 0.0076,
+        "competitive": false
       },
       {
         "state": "TN",
         "expected_margin_D": -22.85,
         "pvi": -14.26,
-        "win_prob_D": 0.0002
+        "win_prob_D": 0.0002,
+        "competitive": false
       },
       {
         "state": "SD",
         "expected_margin_D": -23.47,
         "pvi": -14.57,
-        "win_prob_D": 0.0002
+        "win_prob_D": 0.0002,
+        "competitive": false
       },
       {
         "state": "AL",
         "expected_margin_D": -23.95,
         "pvi": -14.81,
-        "win_prob_D": 0.0001
+        "win_prob_D": 0.0001,
+        "competitive": false
       },
       {
         "state": "KY",
         "expected_margin_D": -24.21,
         "pvi": -14.94,
-        "win_prob_D": 0.0001
+        "win_prob_D": 0.0001,
+        "competitive": false
       },
       {
         "state": "AR",
         "expected_margin_D": -24.95,
         "pvi": -15.31,
-        "win_prob_D": 0.0001
+        "win_prob_D": 0.0001,
+        "competitive": false
       },
       {
         "state": "OK",
         "expected_margin_D": -29.01,
         "pvi": -17.34,
-        "win_prob_D": 0.0
+        "win_prob_D": 0.0,
+        "competitive": false
       },
       {
         "state": "ID",
         "expected_margin_D": -30.41,
         "pvi": -18.04,
-        "win_prob_D": 0.0
+        "win_prob_D": 0.0,
+        "competitive": false
       },
       {
         "state": "WV",
         "expected_margin_D": -36.25,
         "pvi": -20.96,
-        "win_prob_D": 0.0
+        "win_prob_D": 0.0,
+        "competitive": false
       },
       {
         "state": "WY",
         "expected_margin_D": -40.79,
         "pvi": -23.23,
-        "win_prob_D": 0.0
+        "win_prob_D": 0.0,
+        "competitive": false
       }
-    ]
+    ],
+    "n_competitive": 18,
+    "competitive_note": "Races where the model puts the Democratic win probability between 1% and 99%. The rest are not close under any assumption this model makes."
   },
   "charts": {
     "margin": {
@@ -4916,6 +4954,1193 @@
           "sx": 65.22
         }
       ]
+    },
+    "ladder": {
+      "clip": 20.0,
+      "holdover_D": 34,
+      "holdover_R": 31,
+      "n_up": 35,
+      "hold_D_x": [
+        0,
+        8.0
+      ],
+      "hold_R_x": [
+        92.0,
+        100
+      ],
+      "slot_w": 2.4,
+      "seat_ticks": [
+        {
+          "seat_no": 39,
+          "x": 18.8
+        },
+        {
+          "seat_no": 44,
+          "x": 30.8
+        },
+        {
+          "seat_no": 49,
+          "x": 42.8
+        },
+        {
+          "seat_no": 54,
+          "x": 54.8
+        },
+        {
+          "seat_no": 59,
+          "x": 66.8
+        },
+        {
+          "seat_no": 64,
+          "x": 78.8
+        }
+      ],
+      "seats": [
+        {
+          "state": "MA",
+          "margin": 33.65,
+          "win_prob_D": 1.0,
+          "seat_no": 35,
+          "x": 9.2,
+          "y": 0.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "D"
+        },
+        {
+          "state": "DE",
+          "margin": 21.69,
+          "win_prob_D": 0.9995,
+          "seat_no": 36,
+          "x": 11.6,
+          "y": 0.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "D"
+        },
+        {
+          "state": "RI",
+          "margin": 21.59,
+          "win_prob_D": 0.9995,
+          "seat_no": 37,
+          "x": 14.0,
+          "y": 0.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "D"
+        },
+        {
+          "state": "OR",
+          "margin": 20.97,
+          "win_prob_D": 0.9993,
+          "seat_no": 38,
+          "x": 16.4,
+          "y": 0.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "D"
+        },
+        {
+          "state": "IL",
+          "margin": 18.35,
+          "win_prob_D": 0.9975,
+          "seat_no": 39,
+          "x": 18.8,
+          "y": 4.12,
+          "clipped": false,
+          "competitive": false,
+          "lead": "D"
+        },
+        {
+          "state": "CO",
+          "margin": 17.61,
+          "win_prob_D": 0.9964,
+          "seat_no": 40,
+          "x": 21.2,
+          "y": 5.98,
+          "clipped": false,
+          "competitive": false,
+          "lead": "D"
+        },
+        {
+          "state": "NJ",
+          "margin": 14.21,
+          "win_prob_D": 0.985,
+          "seat_no": 41,
+          "x": 23.6,
+          "y": 14.48,
+          "clipped": false,
+          "competitive": true,
+          "lead": "D"
+        },
+        {
+          "state": "ME",
+          "margin": 13.31,
+          "win_prob_D": 0.979,
+          "seat_no": 42,
+          "x": 26.0,
+          "y": 16.73,
+          "clipped": false,
+          "competitive": true,
+          "lead": "D"
+        },
+        {
+          "state": "NM",
+          "margin": 13.03,
+          "win_prob_D": 0.9767,
+          "seat_no": 43,
+          "x": 28.4,
+          "y": 17.43,
+          "clipped": false,
+          "competitive": true,
+          "lead": "D"
+        },
+        {
+          "state": "VA",
+          "margin": 12.65,
+          "win_prob_D": 0.9733,
+          "seat_no": 44,
+          "x": 30.8,
+          "y": 18.37,
+          "clipped": false,
+          "competitive": true,
+          "lead": "D"
+        },
+        {
+          "state": "MN",
+          "margin": 10.73,
+          "win_prob_D": 0.9494,
+          "seat_no": 45,
+          "x": 33.2,
+          "y": 23.18,
+          "clipped": false,
+          "competitive": true,
+          "lead": "D"
+        },
+        {
+          "state": "NH",
+          "margin": 9.65,
+          "win_prob_D": 0.9298,
+          "seat_no": 46,
+          "x": 35.6,
+          "y": 25.87,
+          "clipped": false,
+          "competitive": true,
+          "lead": "D"
+        },
+        {
+          "state": "MI",
+          "margin": 5.29,
+          "win_prob_D": 0.7905,
+          "seat_no": 47,
+          "x": 38.0,
+          "y": 36.77,
+          "clipped": false,
+          "competitive": true,
+          "lead": "D"
+        },
+        {
+          "state": "GA",
+          "margin": 4.07,
+          "win_prob_D": 0.733,
+          "seat_no": 48,
+          "x": 40.4,
+          "y": 39.83,
+          "clipped": false,
+          "competitive": true,
+          "lead": "D"
+        },
+        {
+          "state": "NC",
+          "margin": 2.87,
+          "win_prob_D": 0.6696,
+          "seat_no": 49,
+          "x": 42.8,
+          "y": 42.83,
+          "clipped": false,
+          "competitive": true,
+          "lead": "D"
+        },
+        {
+          "state": "OH",
+          "margin": -4.87,
+          "win_prob_D": 0.2288,
+          "seat_no": 50,
+          "x": 45.2,
+          "y": 62.17,
+          "clipped": false,
+          "competitive": true,
+          "lead": "R",
+          "threshold": 50
+        },
+        {
+          "state": "FL",
+          "margin": -5.11,
+          "win_prob_D": 0.2178,
+          "seat_no": 51,
+          "x": 47.6,
+          "y": 62.77,
+          "clipped": false,
+          "competitive": true,
+          "lead": "R",
+          "threshold": 51
+        },
+        {
+          "state": "TX",
+          "margin": -6.17,
+          "win_prob_D": 0.1733,
+          "seat_no": 52,
+          "x": 50.0,
+          "y": 65.42,
+          "clipped": false,
+          "competitive": true,
+          "lead": "R"
+        },
+        {
+          "state": "IA",
+          "margin": -6.51,
+          "win_prob_D": 0.1603,
+          "seat_no": 53,
+          "x": 52.4,
+          "y": 66.28,
+          "clipped": false,
+          "competitive": true,
+          "lead": "R"
+        },
+        {
+          "state": "AK",
+          "margin": -7.23,
+          "win_prob_D": 0.135,
+          "seat_no": 54,
+          "x": 54.8,
+          "y": 68.08,
+          "clipped": false,
+          "competitive": true,
+          "lead": "R"
+        },
+        {
+          "state": "KS",
+          "margin": -10.39,
+          "win_prob_D": 0.0564,
+          "seat_no": 55,
+          "x": 57.2,
+          "y": 75.98,
+          "clipped": false,
+          "competitive": true,
+          "lead": "R"
+        },
+        {
+          "state": "SC",
+          "margin": -10.89,
+          "win_prob_D": 0.0483,
+          "seat_no": 56,
+          "x": 59.6,
+          "y": 77.22,
+          "clipped": false,
+          "competitive": true,
+          "lead": "R"
+        },
+        {
+          "state": "MT",
+          "margin": -13.97,
+          "win_prob_D": 0.0165,
+          "seat_no": 57,
+          "x": 62.0,
+          "y": 84.92,
+          "clipped": false,
+          "competitive": true,
+          "lead": "R"
+        },
+        {
+          "state": "NE",
+          "margin": -14.87,
+          "win_prob_D": 0.0116,
+          "seat_no": 58,
+          "x": 64.4,
+          "y": 87.17,
+          "clipped": false,
+          "competitive": true,
+          "lead": "R"
+        },
+        {
+          "state": "LA",
+          "margin": -15.83,
+          "win_prob_D": 0.0078,
+          "seat_no": 59,
+          "x": 66.8,
+          "y": 89.57,
+          "clipped": false,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "MS",
+          "margin": -15.89,
+          "win_prob_D": 0.0076,
+          "seat_no": 60,
+          "x": 69.2,
+          "y": 89.72,
+          "clipped": false,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "TN",
+          "margin": -22.85,
+          "win_prob_D": 0.0002,
+          "seat_no": 61,
+          "x": 71.6,
+          "y": 100.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "SD",
+          "margin": -23.47,
+          "win_prob_D": 0.0002,
+          "seat_no": 62,
+          "x": 74.0,
+          "y": 100.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "AL",
+          "margin": -23.95,
+          "win_prob_D": 0.0001,
+          "seat_no": 63,
+          "x": 76.4,
+          "y": 100.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "KY",
+          "margin": -24.21,
+          "win_prob_D": 0.0001,
+          "seat_no": 64,
+          "x": 78.8,
+          "y": 100.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "AR",
+          "margin": -24.95,
+          "win_prob_D": 0.0001,
+          "seat_no": 65,
+          "x": 81.2,
+          "y": 100.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "OK",
+          "margin": -29.01,
+          "win_prob_D": 0.0,
+          "seat_no": 66,
+          "x": 83.6,
+          "y": 100.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "ID",
+          "margin": -30.41,
+          "win_prob_D": 0.0,
+          "seat_no": 67,
+          "x": 86.0,
+          "y": 100.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "WV",
+          "margin": -36.25,
+          "win_prob_D": 0.0,
+          "seat_no": 68,
+          "x": 88.4,
+          "y": 100.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "R"
+        },
+        {
+          "state": "WY",
+          "margin": -40.79,
+          "win_prob_D": 0.0,
+          "seat_no": 69,
+          "x": 90.8,
+          "y": 100.0,
+          "clipped": true,
+          "competitive": false,
+          "lead": "R"
+        }
+      ],
+      "y_zero": 50.0,
+      "y_ticks": [
+        {
+          "v": -20,
+          "y": 100.0,
+          "label": "R+20+"
+        },
+        {
+          "v": -10,
+          "y": 75.0,
+          "label": "R+10"
+        },
+        {
+          "v": 0,
+          "y": 50.0,
+          "label": "EVEN"
+        },
+        {
+          "v": 10,
+          "y": 25.0,
+          "label": "D+10"
+        },
+        {
+          "v": 20,
+          "y": 0.0,
+          "label": "D+20+"
+        }
+      ],
+      "tipping_50": {
+        "state": "OH",
+        "margin": -4.87,
+        "win_prob_D": 0.2288,
+        "swing_needed": 4.87,
+        "x": 46.4
+      },
+      "tipping_51": {
+        "state": "FL",
+        "margin": -5.11,
+        "win_prob_D": 0.2178,
+        "swing_needed": 5.11,
+        "x": 48.8
+      },
+      "prob_D_50_plus": 0.3907
+    }
+  },
+  "comparison": {
+    "national": [
+      {
+        "key": "fundamentals",
+        "label": "Fundamentals",
+        "who": "class model",
+        "house_margin": 10.48,
+        "house_prob": null,
+        "house_seats": null,
+        "senate_prob": null,
+        "senate_prob_basis": ""
+      },
+      {
+        "key": "polling",
+        "label": "Polling",
+        "who": "class model",
+        "house_margin": 5.674,
+        "house_prob": null,
+        "house_seats": null,
+        "senate_prob": 0.23,
+        "senate_prob_basis": "51+"
+      },
+      {
+        "key": "grant_williams",
+        "label": "Grant Williams",
+        "who": "professional",
+        "url": "https://grantwilliamsforecast.com/",
+        "house_margin": 5.73,
+        "house_prob": 0.8686,
+        "house_seats": 250.79,
+        "senate_prob": 0.6203,
+        "senate_prob_basis": "51+"
+      },
+      {
+        "key": "polymarket",
+        "label": "Polymarket",
+        "who": "market",
+        "url": "https://polymarket.com/",
+        "house_margin": null,
+        "house_prob": 0.875,
+        "house_seats": null,
+        "senate_prob": 0.505,
+        "senate_prob_basis": "51+"
+      }
+    ],
+    "senate": [
+      {
+        "state": "ME",
+        "ours": 13.31,
+        "ours_prob": 0.979,
+        "gw": 3.44,
+        "gw_prob": 0.7672,
+        "pres_2024": 7.089,
+        "gap": 9.87,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "TX",
+        "ours": -6.17,
+        "ours_prob": 0.1733,
+        "gw": 1.52,
+        "gw_prob": 0.6298,
+        "pres_2024": -13.878,
+        "gap": -7.69,
+        "opposed": true,
+        "competitive": true
+      },
+      {
+        "state": "GA",
+        "ours": 4.07,
+        "ours_prob": 0.733,
+        "gw": 11.39,
+        "gw_prob": 0.8664,
+        "pres_2024": -2.209,
+        "gap": -7.32,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "AK",
+        "ours": -7.23,
+        "ours_prob": 0.135,
+        "gw": -0.16,
+        "gw_prob": 0.486,
+        "pres_2024": -13.693,
+        "gap": -7.07,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "OH",
+        "ours": -4.87,
+        "ours_prob": 0.2288,
+        "gw": 1.55,
+        "gw_prob": 0.6346,
+        "pres_2024": -11.313,
+        "gap": -6.42,
+        "opposed": true,
+        "competitive": true
+      },
+      {
+        "state": "IA",
+        "ours": -6.51,
+        "ours_prob": 0.1603,
+        "gw": -0.19,
+        "gw_prob": 0.4835,
+        "pres_2024": -13.446,
+        "gap": -6.32,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "NC",
+        "ours": 2.87,
+        "ours_prob": 0.6696,
+        "gw": 8.32,
+        "gw_prob": 0.9497,
+        "pres_2024": -3.261,
+        "gap": -5.45,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "MI",
+        "ours": 5.29,
+        "ours_prob": 0.7905,
+        "gw": 0.72,
+        "gw_prob": 0.5569,
+        "pres_2024": -1.442,
+        "gap": 4.57,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "NJ",
+        "ours": 14.21,
+        "ours_prob": 0.985,
+        "gw": 18.43,
+        "gw_prob": 0.95,
+        "pres_2024": 6.028,
+        "gap": -4.22,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "SC",
+        "ours": -10.89,
+        "ours_prob": 0.0483,
+        "gw": -6.69,
+        "gw_prob": 0.2563,
+        "pres_2024": -18.123,
+        "gap": -4.2,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "NH",
+        "ours": 9.65,
+        "ours_prob": 0.9298,
+        "gw": 6.14,
+        "gw_prob": 0.8938,
+        "pres_2024": 2.821,
+        "gap": 3.51,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "NM",
+        "ours": 13.03,
+        "ours_prob": 0.9767,
+        "gw": 16.51,
+        "gw_prob": 0.9369,
+        "pres_2024": 6.142,
+        "gap": -3.48,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "MT",
+        "ours": -13.97,
+        "ours_prob": 0.0165,
+        "gw": -10.56,
+        "gw_prob": 0.1587,
+        "pres_2024": -20.578,
+        "gap": -3.41,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "NE",
+        "ours": -14.87,
+        "ours_prob": 0.0116,
+        "gw": -12.73,
+        "gw_prob": 0.1224,
+        "pres_2024": -20.841,
+        "gap": -2.14,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "VA",
+        "ours": 12.65,
+        "ours_prob": 0.9733,
+        "gw": 14.44,
+        "gw_prob": 0.9092,
+        "pres_2024": 5.891,
+        "gap": -1.79,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "KS",
+        "ours": -10.39,
+        "ours_prob": 0.0564,
+        "gw": -8.69,
+        "gw_prob": 0.2072,
+        "pres_2024": -16.411,
+        "gap": -1.7,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "MN",
+        "ours": 10.73,
+        "ours_prob": 0.9494,
+        "gw": 9.51,
+        "gw_prob": 0.8232,
+        "pres_2024": 4.343,
+        "gap": 1.22,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "FL",
+        "ours": -5.11,
+        "ours_prob": 0.2178,
+        "gw": -5.84,
+        "gw_prob": 0.1067,
+        "pres_2024": -13.222,
+        "gap": 0.73,
+        "opposed": false,
+        "competitive": true
+      },
+      {
+        "state": "KY",
+        "ours": -24.21,
+        "ours_prob": 0.0001,
+        "gw": -9.57,
+        "gw_prob": 0.1824,
+        "pres_2024": -31.028,
+        "gap": -14.64,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "OK",
+        "ours": -29.01,
+        "ours_prob": 0.0,
+        "gw": -18.56,
+        "gw_prob": 0.0566,
+        "pres_2024": -34.94,
+        "gap": -10.45,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "AL",
+        "ours": -23.95,
+        "ours_prob": 0.0001,
+        "gw": -13.78,
+        "gw_prob": 0.103,
+        "pres_2024": -30.881,
+        "gap": -10.17,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "ID",
+        "ours": -30.41,
+        "ours_prob": 0.0,
+        "gw": -20.52,
+        "gw_prob": 0.0415,
+        "pres_2024": -37.522,
+        "gap": -9.89,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "WV",
+        "ours": -36.25,
+        "ours_prob": 0.0,
+        "gw": -26.54,
+        "gw_prob": 0.0193,
+        "pres_2024": -42.688,
+        "gap": -9.71,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "AR",
+        "ours": -24.95,
+        "ours_prob": 0.0001,
+        "gw": -15.5,
+        "gw_prob": 0.0805,
+        "pres_2024": -31.34,
+        "gap": -9.45,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "MA",
+        "ours": 33.65,
+        "ours_prob": 1.0,
+        "gw": 24.29,
+        "gw_prob": 0.9991,
+        "pres_2024": 25.911,
+        "gap": 9.36,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "TN",
+        "ours": -22.85,
+        "ours_prob": 0.0002,
+        "gw": -13.53,
+        "gw_prob": 0.1101,
+        "pres_2024": -30.121,
+        "gap": -9.32,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "DE",
+        "ours": 21.69,
+        "ours_prob": 0.9995,
+        "gw": 13.26,
+        "gw_prob": 0.8939,
+        "pres_2024": 14.958,
+        "gap": 8.43,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "MS",
+        "ours": -15.89,
+        "ours_prob": 0.0076,
+        "gw": -8.58,
+        "gw_prob": 0.2031,
+        "pres_2024": -23.145,
+        "gap": -7.31,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "SD",
+        "ours": -23.47,
+        "ours_prob": 0.0002,
+        "gw": -16.49,
+        "gw_prob": 0.0697,
+        "pres_2024": -29.89,
+        "gap": -6.98,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "LA",
+        "ours": -15.83,
+        "ours_prob": 0.0078,
+        "gw": -10.4,
+        "gw_prob": 0.167,
+        "pres_2024": -22.357,
+        "gap": -5.43,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "IL",
+        "ours": 18.35,
+        "ours_prob": 0.9975,
+        "gw": 14.56,
+        "gw_prob": 0.9148,
+        "pres_2024": 11.136,
+        "gap": 3.79,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "OR",
+        "ours": 20.97,
+        "ours_prob": 0.9993,
+        "gw": 17.25,
+        "gw_prob": 0.9408,
+        "pres_2024": 14.866,
+        "gap": 3.72,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "WY",
+        "ours": -40.79,
+        "ours_prob": 0.0,
+        "gw": -38.55,
+        "gw_prob": 0.0046,
+        "pres_2024": -46.958,
+        "gap": -2.24,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "RI",
+        "ours": 21.59,
+        "ours_prob": 0.9995,
+        "gw": 23.56,
+        "gw_prob": 0.9758,
+        "pres_2024": 14.162,
+        "gap": -1.97,
+        "opposed": false,
+        "competitive": false
+      },
+      {
+        "state": "CO",
+        "ours": 17.61,
+        "ours_prob": 0.9964,
+        "gw": 16.23,
+        "gw_prob": 0.9316,
+        "pres_2024": 11.293,
+        "gap": 1.38,
+        "opposed": false,
+        "competitive": false
+      }
+    ],
+    "dumbbell": {
+      "lo": -17.53,
+      "hi": 21.09,
+      "zero_x": 45.39,
+      "ticks": [
+        {
+          "v": -10,
+          "x": 19.5,
+          "label": "R+10"
+        },
+        {
+          "v": 0,
+          "x": 45.39,
+          "label": "EVEN"
+        },
+        {
+          "v": 10,
+          "x": 71.28,
+          "label": "D+10"
+        },
+        {
+          "v": 20,
+          "x": 97.17,
+          "label": "D+20"
+        }
+      ],
+      "rows": [
+        {
+          "state": "ME",
+          "gap": 9.87,
+          "opposed": false,
+          "ours": 13.31,
+          "gw": 3.44,
+          "x_ours": 79.85,
+          "x_gw": 54.3,
+          "x_pres": 63.74,
+          "pres_2024": 7.089
+        },
+        {
+          "state": "TX",
+          "gap": -7.69,
+          "opposed": true,
+          "ours": -6.17,
+          "gw": 1.52,
+          "x_ours": 29.42,
+          "x_gw": 49.33,
+          "x_pres": 9.46,
+          "pres_2024": -13.878
+        },
+        {
+          "state": "GA",
+          "gap": -7.32,
+          "opposed": false,
+          "ours": 4.07,
+          "gw": 11.39,
+          "x_ours": 55.93,
+          "x_gw": 74.88,
+          "x_pres": 39.67,
+          "pres_2024": -2.209
+        },
+        {
+          "state": "AK",
+          "gap": -7.07,
+          "opposed": false,
+          "ours": -7.23,
+          "gw": -0.16,
+          "x_ours": 26.67,
+          "x_gw": 44.98,
+          "x_pres": 9.94,
+          "pres_2024": -13.693
+        },
+        {
+          "state": "OH",
+          "gap": -6.42,
+          "opposed": true,
+          "ours": -4.87,
+          "gw": 1.55,
+          "x_ours": 32.78,
+          "x_gw": 49.4,
+          "x_pres": 16.1,
+          "pres_2024": -11.313
+        },
+        {
+          "state": "IA",
+          "gap": -6.32,
+          "opposed": false,
+          "ours": -6.51,
+          "gw": -0.19,
+          "x_ours": 28.54,
+          "x_gw": 44.9,
+          "x_pres": 10.58,
+          "pres_2024": -13.446
+        },
+        {
+          "state": "NC",
+          "gap": -5.45,
+          "opposed": false,
+          "ours": 2.87,
+          "gw": 8.32,
+          "x_ours": 52.82,
+          "x_gw": 66.93,
+          "x_pres": 36.95,
+          "pres_2024": -3.261
+        },
+        {
+          "state": "MI",
+          "gap": 4.57,
+          "opposed": false,
+          "ours": 5.29,
+          "gw": 0.72,
+          "x_ours": 59.09,
+          "x_gw": 47.26,
+          "x_pres": 41.66,
+          "pres_2024": -1.442
+        },
+        {
+          "state": "NJ",
+          "gap": -4.22,
+          "opposed": false,
+          "ours": 14.21,
+          "gw": 18.43,
+          "x_ours": 82.18,
+          "x_gw": 93.1,
+          "x_pres": 61.0,
+          "pres_2024": 6.028
+        },
+        {
+          "state": "SC",
+          "gap": -4.2,
+          "opposed": false,
+          "ours": -10.89,
+          "gw": -6.69,
+          "x_ours": 17.2,
+          "x_gw": 28.07,
+          "x_pres": null,
+          "pres_2024": -18.123
+        },
+        {
+          "state": "NH",
+          "gap": 3.51,
+          "opposed": false,
+          "ours": 9.65,
+          "gw": 6.14,
+          "x_ours": 70.37,
+          "x_gw": 61.29,
+          "x_pres": 52.69,
+          "pres_2024": 2.821
+        },
+        {
+          "state": "NM",
+          "gap": -3.48,
+          "opposed": false,
+          "ours": 13.03,
+          "gw": 16.51,
+          "x_ours": 79.12,
+          "x_gw": 88.13,
+          "x_pres": 61.29,
+          "pres_2024": 6.142
+        },
+        {
+          "state": "MT",
+          "gap": -3.41,
+          "opposed": false,
+          "ours": -13.97,
+          "gw": -10.56,
+          "x_ours": 9.23,
+          "x_gw": 18.05,
+          "x_pres": null,
+          "pres_2024": -20.578
+        },
+        {
+          "state": "NE",
+          "gap": -2.14,
+          "opposed": false,
+          "ours": -14.87,
+          "gw": -12.73,
+          "x_ours": 6.9,
+          "x_gw": 12.44,
+          "x_pres": null,
+          "pres_2024": -20.841
+        },
+        {
+          "state": "VA",
+          "gap": -1.79,
+          "opposed": false,
+          "ours": 12.65,
+          "gw": 14.44,
+          "x_ours": 78.14,
+          "x_gw": 82.77,
+          "x_pres": 60.64,
+          "pres_2024": 5.891
+        },
+        {
+          "state": "KS",
+          "gap": -1.7,
+          "opposed": false,
+          "ours": -10.39,
+          "gw": -8.69,
+          "x_ours": 18.49,
+          "x_gw": 22.9,
+          "x_pres": 2.91,
+          "pres_2024": -16.411
+        },
+        {
+          "state": "MN",
+          "gap": 1.22,
+          "opposed": false,
+          "ours": 10.73,
+          "gw": 9.51,
+          "x_ours": 73.17,
+          "x_gw": 70.01,
+          "x_pres": 56.64,
+          "pres_2024": 4.343
+        },
+        {
+          "state": "FL",
+          "gap": 0.73,
+          "opposed": false,
+          "ours": -5.11,
+          "gw": -5.84,
+          "x_ours": 32.16,
+          "x_gw": 30.27,
+          "x_pres": 11.16,
+          "pres_2024": -13.222
+        }
+      ]
+    },
+    "sources": {
+      "grant_williams": {
+        "label": "Grant Williams",
+        "url": "https://grantwilliamsforecast.com/",
+        "kind": "professional",
+        "what": "A published statistical forecast combining district-level partisan lean, polling, incumbency and candidate quality. Released under an MIT licence, which is why it can be shown here race by race while most of its competitors cannot."
+      },
+      "polymarket": {
+        "label": "Polymarket",
+        "url": "https://polymarket.com/",
+        "kind": "market",
+        "what": "Real-money prediction markets. The price of a contract that pays $1 if an event happens is read as a probability, which is a reasonable approximation and not an identity \u2014 fees, capital costs and the favourite-longshot bias all push it around at the extremes."
+      },
+      "medsl": {
+        "label": "MIT Election Lab",
+        "url": "https://electionlab.mit.edu/data",
+        "kind": "returns",
+        "what": "Certified official returns, not a forecast. Used here as the baseline a forecast has to beat: what the state actually did last time. Public domain (CC0)."
+      }
+    },
+    "stats": {
+      "n": 35,
+      "mean_abs_gap": 5.87,
+      "max_gap": 14.64,
+      "n_opposed": 2,
+      "n_competitive": 18,
+      "mean_abs_gap_competitive": 4.51,
+      "mean_signed_gap_safe": -4.17
+    },
+    "professional_named": 1,
+    "professional_total": 1,
+    "naming_note": "The only professional forecast in today's average may be shown by name. The full archive is released after the election."
+  },
+  "model_index": {
+    "polymarket": {
+      "senate_win_prob_D": 0.505,
+      "senate_win_prob_R": 0.495,
+      "house_win_prob_D": 0.875,
+      "house_win_prob_R": 0.125
+    },
+    "grant_williams": {
+      "house_margin_D": 5.73,
+      "house_win_prob_D": 0.8686,
+      "house_seats_D": 250.79,
+      "senate_margin_D": 6.42,
+      "senate_win_prob_D": 0.6203,
+      "senate_seats_D": 51.43
+    },
+    "fred": {
+      "house_income_growth_last_full_year": 1.105,
+      "house_income_growth_ytd": -0.096,
+      "house_income_ytd_months": 6.0,
+      "house_income_growth_yoy_latest_month": 0.267
     }
   },
   "suppressed_cells": 513,

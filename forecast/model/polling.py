@@ -461,6 +461,15 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
         maj = sum(1 for w in wins if w + holdover_D >= 50) / N_SIMS
         out["holdover_D_assumed"] = holdover_D
         out["prob_D_50_plus"] = round(maj, 4)
+        # Both thresholds, because they are answers to different questions and
+        # the gap between them is large. Fifty is a tie; a tie is broken by the
+        # vice-president, who is a Republican this cycle, so fifty-one is the
+        # first number that is actually a majority. Prediction markets and
+        # forecasters that publish "chance of Democratic control" are pricing
+        # 51+, so comparing them against our 50+ figure compares two different
+        # events — and this cycle they differ by about fifteen points.
+        out["prob_D_51_plus"] = round(
+            sum(1 for w in wins if w + holdover_D >= 51) / N_SIMS, 4)
         # Always carried in the output, never optional. The seat baseline is
         # bookkeeping rather than a forecast, so it has no error bar of its
         # own, and without this the headline reads as if it had none either.
@@ -572,6 +581,8 @@ def main(argv=None) -> int:
     if "prob_D_50_plus" in sen:
         print(f"      P(D reach 50+ | {sen['holdover_D_assumed']} holdovers): "
               f"{sen['prob_D_50_plus']:.3f}")
+        print(f"      P(D reach 51+, an outright majority):      "
+              f"{sen['prob_D_51_plus']:.3f}   <- compare markets against THIS")
         sens = sen["prob_D_50_plus_sensitivity"]
         print("      one-seat sensitivity:  "
               + "   ".join(f"{h} -> {p:.3f}" for h, p in sorted(sens.items())))

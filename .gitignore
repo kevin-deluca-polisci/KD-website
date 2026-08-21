@@ -7,3 +7,6 @@ public/
 .idea/
 .vscode/
 .env
+
+# scratch: files the Cowork bridge cannot delete; safe to remove by hand
+_to_delete/

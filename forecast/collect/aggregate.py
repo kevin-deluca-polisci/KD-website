@@ -132,6 +132,16 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
         vals = [statistics.fmean(v) for v in per_source.values()]
         n = len(vals)
         gated = any(tiers.get(s) != "individual" for s in per_source)
+        # The floor has to count GATED contributors, not all contributors.
+        #
+        # An individual-tier source is published by name elsewhere on the site,
+        # so its value is known. If the floor counted it, an average of one open
+        # and two gated forecasts would clear MIN_N=3 while handing a reader the
+        # mean of the two gated ones by subtraction — and one open, one gated,
+        # one open would hand over the gated value exactly. The protection was
+        # never about how many numbers went in; it is about how many UNKNOWN
+        # numbers a reader is left with after subtracting the ones we published.
+        n_gated = sum(1 for s in per_source if tiers.get(s) != "individual")
 
         # How the site is allowed to render this cell.
         if n >= MIN_DISPLAY_N:
@@ -149,7 +159,7 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
         rec = {
             "snapshot_date": date, "category": cat, "race_id": rid,
             "chamber": ch, "state": st, "district": dist,
-            "quantity": q, "unit": unit, "n_sources": n,
+            "quantity": q, "unit": unit, "n_sources": n, "n_gated": n_gated,
             "mean": round(statistics.fmean(vals), 4),
             "min": round(min(vals), 4), "max": round(max(vals), 4),
             "sd": round(statistics.stdev(vals), 4) if n > 1 else "",
@@ -157,10 +167,13 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             "display": display,
             "sole_source": sole,
         }
-        if gated and n < MIN_N:
+        if gated and n_gated < MIN_N:
             suppressed.append({**rec, "mean": "", "min": "", "max": "", "sd": "",
-                               "reason": f"only {n} contributing source(s); "
-                                         f"MIN_N={MIN_N} for gated categories"})
+                               "reason": f"only {n_gated} gated source(s) of "
+                                         f"{n} contributing; MIN_N={MIN_N} counts "
+                                         f"gated sources only, because the open "
+                                         f"ones are published by name and can be "
+                                         f"subtracted back out"})
         else:
             averages.append(rec)
 
@@ -219,9 +232,10 @@ def audit(rows: list[dict], averages, by_source, suppressed) -> list[str]:
                     f"LEAK: private quantity {q!r} reached the published averages")
                 break
     for a in averages:
-        if a["tier"] == "gated" and a["n_sources"] < MIN_N:
+        if a["tier"] == "gated" and int(a.get("n_gated", a["n_sources"])) < MIN_N:
             problems.append(
-                f"LEAK: gated average published with n={a['n_sources']} "
+                f"LEAK: gated average published with n_gated="
+                f"{a.get('n_gated')} of n={a['n_sources']} "
                 f"< MIN_N for {a['race_id']}/{a['quantity']}")
     for a in averages:
         if a["quantity"] in NO_AVERAGE:
@@ -290,21 +304,26 @@ def main(argv=None) -> int:
     cat_sources: dict[str, set] = defaultdict(set)
     for r in rows:
         cat_sources[r["category"]].add(r["source_id"])
+    # Counted by GATED contributors, which is what the floor actually tests.
+    # Counting all contributors made this read "n=3, publishable" for a cell
+    # that was in fact one open source and two gated ones.
     cells: dict[str, dict] = defaultdict(lambda: defaultdict(int))
     for a_ in averages + suppressed:
-        cells[a_["category"]][int(a_["n_sources"])] += 1
+        cells[a_["category"]][int(a_.get("n_gated", a_["n_sources"]))] += 1
 
     print()
     for cat in sorted(cat_sources):
         by_n = cells.get(cat, {})
         if not by_n:
             continue
-        spread = ", ".join(f"n={k}: {v}" for k, v in sorted(by_n.items()))
+        spread = ", ".join(f"n_gated={k}: {v}" for k, v in sorted(by_n.items()))
         print(f"  {cat:14s} {len(cat_sources[cat])} source(s)  [{spread}]")
-        if max(by_n) < MIN_N:
+        if max(by_n) < MIN_N and any(k > 0 for k in by_n):
             need = MIN_N - max(by_n)
             print(f"      no cell reaches MIN_N={MIN_N}: needs {need} more "
-                  f"contributing source(s) before any average may be published.")
+                  f"GATED source(s) before any gated average may be published. "
+                  f"Adding an open source does not help — it is published by "
+                  f"name and subtracts straight back out.")
 
     singles = {(a_["category"], a_["sole_source"]) for a_ in averages
                if a_["display"] == "single"}

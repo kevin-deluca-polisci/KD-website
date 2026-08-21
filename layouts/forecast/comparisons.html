@@ -1,0 +1,288 @@
+{{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
+{{- $c := $d.comparison -}}
+{{- $p := $d.polling_model -}}
+{{ partial "forecast/head.html" (dict "page" . "d" $d) }}
+{{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>Two models, one race, different answers</h2>
+    <p class="sub">The tracker shows the methods agreeing or disagreeing about the
+       country. This page takes them down to individual races, where disagreement
+       stops being an average and starts being a claim about a specific seat that
+       one of the models is getting wrong. That is the useful question: not which
+       forecast is best, but <em>what does this one know that the other one
+       doesn't</em>.</p>
+    {{- with $c }}
+    <p class="muted">Our polling model is deliberately ignorant. It knows the
+       national tide and how each state has voted, and nothing else — not who is
+       running, not who is retiring, not how much money anyone has raised. Set
+       against a professional forecast that knows all of those things, every place
+       the two diverge is a place where candidates, incumbency or local conditions
+       are doing the work. Reading the gap is reading how much elections are about
+       something other than the partisanship of the state.</p>
+    {{- end }}
+  </div>
+
+  {{- with $c }}
+  {{- with .national }}
+  <div class="card">
+    <h2>The whole country, four ways</h2>
+    <p class="sub">The same two questions asked of every method we can name.
+       Blank cells are not missing data — they are questions that method does not
+       answer. A fundamentals model has no opinion about the Senate, and a market
+       has no opinion about the national House margin.</p>
+    <table>
+      <tr><th>Method</th><th class="num">National House margin</th>
+          <th class="num">D House seats</th><th class="num">P(D House)</th>
+          <th class="num">P(D Senate)</th></tr>
+      {{- range . }}
+      <tr>
+        <td><strong>{{ with .url }}<a href="{{ . }}">{{ end }}{{ .label }}{{ if .url }}</a>{{ end }}</strong>
+            <span class="muted">· {{ .who }}</span></td>
+        <td class="num {{ with .house_margin }}{{ if gt . 0.0 }}D{{ else }}R{{ end }}{{ end }}">
+          {{- with .house_margin }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ else }}—{{ end }}</td>
+        <td class="num">{{ with .house_seats }}{{ printf "%.0f" . }}{{ else }}—{{ end }}</td>
+        <td class="num">{{ with .house_prob }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td>
+        <td class="num">{{ with .senate_prob }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td>
+      </tr>
+      {{- end }}
+    </table>
+    <div class="note">
+      <strong>The Senate column is the one to be careful with.</strong>
+      Every figure in it is the probability of <em>control</em>, which needs 51
+      seats because a 50–50 tie is broken by a Republican vice-president. Our own
+      model's better-known number — the chance of reaching 50 — is
+      {{ with $p }}{{ printf "%.0f%%" (mul .prob_D_50_plus 100) }}{{ end }}, and
+      quoting that against a market price would be comparing two different events.
+      Getting this right is most of the work in comparing forecasts: before asking
+      who is more confident, check that both are answering the same question.
+    </div>
+  </div>
+  {{- end }}
+
+  {{- with .dumbbell }}
+  {{- $RH := 26.0 }}{{ $L := 44.0 }}{{ $W := 500.0 }}{{ $T := 34.0 }}
+  {{- $H := mul $RH (len .rows) }}
+  <div class="card">
+    <h2>Where the two disagree, seat by seat</h2>
+    <p class="sub">Each row is one competitive Senate race. The green dot is our
+       polling model; the amber dot is the professional forecast. The bar between
+       them is the disagreement. The small grey mark is how the state voted for
+       president in 2024 — the baseline both models start from, and the thing that
+       makes it obvious when a forecast is being driven by something other than
+       the partisanship of the state.</p>
+
+    <div class="viz">
+    <svg viewBox="0 0 720 {{ add $H (add $T 34) }}" role="img"
+         aria-label="Competitive Senate races, class polling model against the professional forecast">
+      {{- range .ticks }}
+      {{- $x := add $L (mul (div .x 100.0) $W) }}
+      <line class="gridline" x1="{{ $x }}" y1="{{ sub $T 16 }}" x2="{{ $x }}" y2="{{ add $T $H }}"/>
+      <text class="tick" x="{{ $x }}" y="{{ sub $T 22 }}" text-anchor="middle">{{ .label }}</text>
+      {{- end }}
+      {{- with .zero_x }}
+      <line class="baseline" x1="{{ add $L (mul (div . 100.0) $W) }}" y1="{{ sub $T 16 }}"
+            x2="{{ add $L (mul (div . 100.0) $W) }}" y2="{{ add $T $H }}"/>
+      {{- end }}
+
+      {{- range $i, $r := .rows }}
+      {{- $y := add $T (add (mul $RH $i) (div $RH 2)) }}
+      {{- $xo := add $L (mul (div $r.x_ours 100.0) $W) }}
+      {{- $xg := add $L (mul (div $r.x_gw 100.0) $W) }}
+      <text class="rowlab" x="{{ sub $L 10 }}" y="{{ add $y 4 }}" text-anchor="end"
+            style="font-size:12px">{{ $r.state }}</text>
+      <line x1="{{ $xo }}" y1="{{ $y }}" x2="{{ $xg }}" y2="{{ $y }}"
+            stroke="var(--ink-3)" stroke-width="{{ if $r.opposed }}3{{ else }}1.6{{ end }}"
+            opacity="{{ if $r.opposed }}.85{{ else }}.45{{ end }}"/>
+      {{- with $r.x_pres }}
+      <rect x="{{ sub (add $L (mul (div . 100.0) $W)) 1 }}" y="{{ sub $y 5 }}"
+            width="2" height="10" fill="var(--ink-3)" opacity=".55">
+        <title>{{ $r.state }} 2024 presidential margin {{ printf "%.1f" $r.pres_2024 }}</title>
+      </rect>
+      {{- end }}
+      <circle cx="{{ $xo }}" cy="{{ $y }}" r="5" fill="var(--c-polling)">
+        <title>{{ $r.state }} — our polling model {{ printf "%.1f" $r.ours }}</title>
+      </circle>
+      <circle cx="{{ $xg }}" cy="{{ $y }}" r="5" fill="var(--c-professional)">
+        <title>{{ $r.state }} — professional forecast {{ printf "%.1f" $r.gw }}</title>
+      </circle>
+      <text class="rowval" x="{{ add (add $L $W) 12 }}" y="{{ add $y 4 }}"
+            style="font-size:12px{{ if $r.opposed }};fill:var(--ink){{ else }};fill:var(--ink-3);font-weight:600{{ end }}">
+        {{ printf "%+.1f" $r.gap }}{{ if $r.opposed }} ·  opposite calls{{ end }}</text>
+      {{- end }}
+    </svg>
+    </div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--c-polling)"></span>Our polling model</span>
+      <span><span class="swatch" style="background:var(--c-professional)"></span>Professional forecast</span>
+      <span><span class="swatch" style="background:var(--ink-3);width:3px;height:12px;border-radius:0"></span>2024 presidential margin</span>
+    </div>
+    <p class="thin-note">Scaled over the competitive races only. Rows with a heavy
+       bar are seats where the two models do not merely differ on the size of the
+       result — they disagree about who wins.</p>
+  </div>
+  {{- end }}
+
+  <!-- worked examples, generated from the data rather than written by hand -->
+  {{- with .senate }}
+  {{- $top := index (where . "competitive" true) 0 }}
+  <div class="card">
+    <h2>How to read a disagreement</h2>
+    <p class="sub">Three things can produce a gap between two forecasts of the same
+       seat, and telling them apart is the exercise.</p>
+
+    {{- with $top }}
+    <h3>Something one model knows and the other cannot</h3>
+    <p class="muted"><strong>{{ .state }}</strong> is the widest disagreement among
+       competitive seats this week. Our model has it at
+       <strong>{{ if gt .ours 0.0 }}D+{{ printf "%.1f" .ours }}{{ else }}R+{{ printf "%.1f" (mul .ours -1) }}{{ end }}</strong>;
+       the professional forecast has it at
+       <strong>{{ if gt .gw 0.0 }}D+{{ printf "%.1f" .gw }}{{ else }}R+{{ printf "%.1f" (mul .gw -1) }}{{ end }}</strong>,
+       a gap of {{ printf "%.1f" (math.Abs .gap) }} points.
+       {{- with .pres_2024 }} The state's 2024 presidential margin was
+       {{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }},
+       which is where our model starts and very nearly where it finishes.{{ end }}
+       Our model is reading the state. The professional forecast is reading the
+       ballot. When the gap runs in the direction of a long-serving incumbent of
+       the state's minority party, incumbency is usually the whole story — and it
+       is a real effect that our model has no way to see.</p>
+    {{- end }}
+
+    {{- with (where . "opposed" true) }}
+    <h3>A disagreement about who wins</h3>
+    <p class="muted">{{ len . }} seat{{ if ne (len .) 1 }}s{{ end }} where the two
+       models pick different winners:
+       {{ range $i, $r := . }}{{ if $i }}, {{ end }}<strong>{{ $r.state }}</strong>
+       (ours {{ if gt $r.ours 0.0 }}D+{{ printf "%.1f" $r.ours }}{{ else }}R+{{ printf "%.1f" (mul $r.ours -1) }}{{ end }},
+       theirs {{ if gt $r.gw 0.0 }}D+{{ printf "%.1f" $r.gw }}{{ else }}R+{{ printf "%.1f" (mul $r.gw -1) }}{{ end }}){{ end }}.
+       These are the rows worth spending time on. A forecast that puts a Democrat
+       ahead in a state that voted Republican for president by double digits is
+       making a strong claim about candidate quality, an open seat, or a poll it
+       trusts — and it should be possible to find out which.</p>
+    {{- end }}
+
+    <h3>A model running out of road</h3>
+    <p class="muted">Not every gap is about a race. Across the seats that are not
+       close, our margins run
+       {{- with $c.stats.mean_signed_gap_safe }}
+       {{ printf "%.1f" (math.Abs .) }} points more
+       {{ if lt . 0.0 }}Republican{{ else }}Democratic{{ end }}{{ end }}
+       than the professional forecast on average — not because we disagree about
+       Wyoming, but because turning partisan lean into a margin with a straight
+       line overshoots at the extremes, where there are not enough voters left to
+       swing. That is a fault in our machinery rather than a claim about any seat,
+       and it is the reason the table below sorts competitive races to the top.</p>
+  </div>
+  {{- end }}
+
+  <div class="card">
+    <h2>Every Senate race</h2>
+    <p class="sub">Competitive seats first, then the rest, each sorted by how far
+       apart the two models are.
+       {{- with .stats }} Across all {{ .n }} races the average disagreement is
+       {{ printf "%.1f" .mean_abs_gap }} points; among the {{ .n_competitive }}
+       competitive ones it is {{ printf "%.1f" .mean_abs_gap_competitive }}.{{ end }}</p>
+    <table>
+      <tr><th>State</th><th class="num">2024 president</th>
+          <th class="num">Our polling model</th><th class="num">Professional</th>
+          <th class="num">Gap</th><th class="num">P(D) ours</th><th class="num">P(D) theirs</th></tr>
+      {{- range .senate }}
+      <tr{{ if not .competitive }} class="muted"{{ end }}>
+        <td><strong>{{ .state }}</strong>{{ if .opposed }} <span class="R">•</span>{{ end }}</td>
+        <td class="num muted">{{ with .pres_2024 }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ else }}—{{ end }}</td>
+        <td class="num {{ if gt .ours 0.0 }}D{{ else }}R{{ end }}">{{ if gt .ours 0.0 }}D+{{ printf "%.1f" .ours }}{{ else }}R+{{ printf "%.1f" (mul .ours -1) }}{{ end }}</td>
+        <td class="num {{ with .gw }}{{ if gt . 0.0 }}D{{ else }}R{{ end }}{{ end }}">{{ with .gw }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ else }}—{{ end }}</td>
+        <td class="num">{{ with .gap }}{{ printf "%+.1f" . }}{{ else }}—{{ end }}</td>
+        <td class="num">{{ printf "%.0f%%" (mul .ours_prob 100) }}</td>
+        <td class="num">{{ with .gw_prob }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td>
+      </tr>
+      {{- end }}
+    </table>
+    <p class="thin-note"><span class="R">•</span> marks a seat where the two models
+       pick different winners. Gap is our margin minus theirs, so a negative number
+       means we are the more Republican of the two.</p>
+  </div>
+
+  <div class="card">
+    <h2>Who can appear on this page</h2>
+    <p class="sub">Fewer forecasters than we collect, and the reason is licensing
+       rather than editorial choice.</p>
+    <p class="muted">{{ .naming_note }}</p>
+    <p class="muted">Every comparison above is against
+       {{- range $k, $v := .sources }}{{ if eq $v.kind "professional" }}
+       <a href="{{ $v.url }}">{{ $v.label }}</a>{{ end }}{{ end }}, which is
+       published under a permissive licence. That is a real limitation and it is
+       worth naming: one professional forecast is a comparison, not a consensus,
+       and if it happens to be unusual then so is every gap on this page. The
+       comparison gets more informative as more forecasters give permission, and
+       becomes complete when the full archive is released after the election.</p>
+    <h3>The models behind the columns</h3>
+    <table>
+      <tr><th>Column</th><th>What it is</th></tr>
+      {{- range $k, $v := .sources }}
+      <tr><td><a href="{{ $v.url }}"><strong>{{ $v.label }}</strong></a>
+              <span class="muted">· {{ $v.kind }}</span></td>
+          <td class="muted">{{ $v.what }}</td></tr>
+      {{- end }}
+      <tr><td><strong>Our polling model</strong> <span class="muted">· class model</span></td>
+          <td class="muted">The national generic-ballot tide carried to each state
+              by its partisan lean, with no knowledge of candidates. Described in
+              full on the <a href="/forecast/methods/">methods page</a>.</td></tr>
+    </table>
+  </div>
+  {{- end }}
+
+  {{- with $d.expert_ratings_panel }}
+  <div class="card">
+    <h2>Where the raters disagree</h2>
+    <p class="sub">{{ len . }} seats on which the professional raters do not all
+       say the same thing, sorted by how far apart they are. Ratings are
+       transcribed from Wikipedia under CC BY-SA and are deliberately never
+       averaged: “Lean R” is not a number, and turning it into one is a modelling
+       choice worth arguing about out loud rather than burying in a script. The
+       spread itself is the signal — a seat four raters call four different things
+       is a seat nobody understands yet.</p>
+    <table>
+      <tr><th>Seat</th><th class="num">Spread</th><th>Ratings</th></tr>
+      {{- range first 30 . }}
+      <tr>
+        <td><strong>{{ .state }}{{ with .district }}-{{ . }}{{ end }}</strong></td>
+        <td class="num">{{ .disagreement }}</td>
+        <td class="muted">
+          {{- range $i, $r := .ratings }}{{ if $i }} · {{ end }}{{ $r.forecaster }}: <strong>{{ $r.label }}</strong>{{ end -}}
+        </td>
+      </tr>
+      {{- end }}
+    </table>
+    {{- if gt (len .) 30 }}
+    <p class="muted" style="margin-top:12px">Showing the 30 widest of {{ len . }}.</p>
+    {{- end }}
+  </div>
+  {{- end }}
+
+  <div class="card">
+    <h2>The archive behind all of this</h2>
+    <p class="sub">Every forecaster we are permitted to collect, captured once a
+       day and written to disk as raw bytes <em>before</em> anything is parsed.
+       That ordering is the whole design: when a source changes its layout in
+       October and a parser quietly starts returning nonsense, the stored bytes
+       let us fix the parser and reprocess the entire history. If only parsed
+       output were kept, that history would be gone.</p>
+    <p class="muted">Alongside the bytes sits a manifest of SHA-256 hashes,
+       committed on the day each capture was taken. It is a commitment without a
+       disclosure: when the archive is released after the election, anyone can
+       check that the released bytes are bit-identical to what was collected on
+       the dates claimed. The full archive, including the forecasters who cannot
+       be shown here during the cycle, becomes a public data resource once the
+       election is over.</p>
+    {{- if gt $d.suppressed_cells 0 }}
+    <div class="note">
+      <strong>{{ $d.suppressed_cells }} cells are withheld today.</strong>
+      {{ $d.disclosure_note }}
+    </div>
+    {{- end }}
+  </div>
+</div>
+{{ partial "forecast/foot.html" (dict "page" . "d" $d) }}

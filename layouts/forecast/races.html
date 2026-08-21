@@ -4,21 +4,154 @@
 {{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
 
 <div class="wrap">
+
+  {{- with $d.charts.ladder }}
+  {{- $L := 52.0 }}{{ $T := 26.0 }}{{ $W := 640.0 }}{{ $H := 168.0 }}
+  {{- $B := add $T $H }}
+  <div class="card">
+    <h2>The seat that decides control</h2>
+    <p class="sub">Every Senate seat, ordered from the most Democratic to the most
+       Republican, with each one's expected margin drawn as a bar. Reading left to
+       right, the bars are the Democrats' seats in the order they would fall.
+       Control is not decided by the average race. It is decided by one specific
+       race in the middle of that order, and this is a picture of which one.</p>
+
+    <div class="viz">
+    <svg viewBox="0 0 720 {{ add $B 92 }}" role="img"
+         aria-label="Senate seats ordered by expected margin, with the seats at the 50 and 51 thresholds marked">
+
+      <!-- seats not on the ballot: two thirds of the chamber, and the reason the
+           Democrats need 16 of the 35 races rather than half of them. Drawn as
+           compressed caps so the contested seats get the width. -->
+      {{- $hdx := add $L (mul (div (index .hold_D_x 1) 100.0) $W) }}
+      {{- $hrx := add $L (mul (div (index .hold_R_x 0) 100.0) $W) }}
+      <rect x="{{ $L }}" y="{{ $T }}" width="{{ sub $hdx $L }}" height="{{ $H }}"
+            fill="var(--D)" opacity=".09"/>
+      <rect x="{{ $hrx }}" y="{{ $T }}" width="{{ sub (add $L $W) $hrx }}" height="{{ $H }}"
+            fill="var(--R)" opacity=".09"/>
+      <!-- axis-break marks: the ends are compressed, and a chart may not hide that -->
+      {{- range $s := (slice $hdx $hrx) }}
+      <path d="M {{ sub $s 4 }} {{ add $B 5 }} l 4 -8 l 4 8" fill="none"
+            stroke="var(--ink-3)" stroke-width="1.3"/>
+      {{- end }}
+
+      <!-- value axis -->
+      {{- range .y_ticks }}
+      {{- $y := add $T (mul (div .y 100.0) $H) }}
+      <line class="gridline" x1="{{ $L }}" y1="{{ $y }}" x2="{{ add $L $W }}" y2="{{ $y }}"/>
+      <text class="tick" x="{{ sub $L 8 }}" y="{{ add $y 4 }}" text-anchor="end">{{ .label }}</text>
+      {{- end }}
+      {{- $zy := add $T (mul (div .y_zero 100.0) $H) }}
+      <line class="baseline" x1="{{ $L }}" y1="{{ $zy }}" x2="{{ add $L $W }}" y2="{{ $zy }}"/>
+
+      <!-- one bar per contested seat -->
+      {{- $bw := mul (div (mul .slot_w 0.66) 100.0) $W }}
+      {{- range .seats }}
+      {{- $x := add $L (mul (div .x 100.0) $W) }}
+      {{- $y := add $T (mul (div .y 100.0) $H) }}
+      <rect x="{{ sub $x (div $bw 2) }}"
+            y="{{ if gt .margin 0.0 }}{{ $y }}{{ else }}{{ $zy }}{{ end }}"
+            width="{{ $bw }}"
+            height="{{ if gt .margin 0.0 }}{{ sub $zy $y }}{{ else }}{{ sub $y $zy }}{{ end }}"
+            fill="{{ if eq .lead "D" }}var(--D){{ else }}var(--R){{ end }}"
+            opacity="{{ if .competitive }}1{{ else }}.34{{ end }}">
+        <title>{{ .state }} — expected {{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}, P(D) {{ printf "%.0f%%" (mul .win_prob_D 100) }}. Democratic seat number {{ .seat_no }}.</title>
+      </rect>
+      {{- if .clipped }}
+      <!-- a notch, so a clipped bar never reads as its own true length -->
+      <path d="M {{ sub $x (div $bw 2) }} {{ if gt .margin 0.0 }}{{ add $T 6 }}{{ else }}{{ sub $B 6 }}{{ end }}
+               l {{ div $bw 2 }} {{ if gt .margin 0.0 }}-6{{ else }}6{{ end }}
+               l {{ div $bw 2 }} {{ if gt .margin 0.0 }}6{{ else }}-6{{ end }}"
+            fill="none" stroke="var(--surface)" stroke-width="1.8"/>
+      {{- end }}
+      <text x="{{ $x }}" y="{{ add $B 7 }}" text-anchor="end"
+            transform="rotate(-90 {{ $x }} {{ add $B 7 }})"
+            style="font-size:10px;{{ if .threshold }}font-weight:700;fill:var(--ink){{ else if .competitive }}font-weight:600;fill:var(--ink-2){{ else }}fill:var(--ink-3){{ end }}">{{ .state }}</text>
+      {{- end }}
+
+      <!-- the two thresholds. Fifty is a tie the vice-president breaks;
+           fifty-one is the first number that is a majority. -->
+      {{- $x50 := add $L (mul (div .tipping_50.x 100.0) $W) }}
+      {{- $x51 := add $L (mul (div .tipping_51.x 100.0) $W) }}
+      <line x1="{{ $x50 }}" y1="{{ sub $T 12 }}" x2="{{ $x50 }}" y2="{{ add $B 42 }}"
+            stroke="var(--ink)" stroke-width="1.4"/>
+      <line x1="{{ $x51 }}" y1="{{ sub $T 12 }}" x2="{{ $x51 }}" y2="{{ add $B 42 }}"
+            stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <text class="dlabel" x="{{ sub $x50 7 }}" y="{{ sub $T 16 }}" text-anchor="end"
+            fill="var(--ink)">50th seat · {{ .tipping_50.state }}</text>
+      <text class="dlabel" x="{{ add $x51 7 }}" y="{{ sub $T 16 }}"
+            fill="var(--ink-3)">51st — a majority · {{ .tipping_51.state }}</text>
+
+      <line class="gridline" x1="{{ $L }}" y1="{{ $B }}" x2="{{ add $L $W }}" y2="{{ $B }}"/>
+
+      <!-- seat-number scale, so the compressed ends do not lose the reader -->
+      {{- range .seat_ticks }}
+      {{- $x := add $L (mul (div .x 100.0) $W) }}
+      <text class="tick" x="{{ $x }}" y="{{ add $B 56 }}" text-anchor="middle">{{ .seat_no }}</text>
+      {{- end }}
+      <text class="tick" x="{{ $L }}" y="{{ add $B 78 }}">← {{ .holdover_D }} D held</text>
+      <text class="tick" x="{{ add $L $W }}" y="{{ add $B 78 }}" text-anchor="end">
+        {{ .holdover_R }} R held →</text>
+      <text class="tick" x="{{ add $L (div $W 2) }}" y="{{ add $B 78 }}" text-anchor="middle"
+            style="fill:var(--ink-2)">Democratic seat count</text>
+    </svg>
+    </div>
+
+    {{- with .tipping_50 }}
+    <p class="sub" style="margin-top:18px">
+      <strong>{{ .state }} is the fiftieth Democratic seat.</strong>
+      The model has it at
+      {{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }},
+      so {{ if gt .swing_needed 0.0 }}a uniform {{ printf "%.1f" .swing_needed }}-point move toward
+      the Democrats nationwide would carry it, and with it a fifty-fifty
+      Senate{{ else }}the Democrats already hold it in expectation{{ end }}.
+    </p>
+    {{- end }}
+    {{- with .tipping_51 }}
+    <p class="muted">
+      Fifty is a tie, and a tie is broken by the vice-president, who is a
+      Republican this cycle. The first seat that is actually a majority is the
+      fifty-first, which is <strong>{{ .state }}</strong> at
+      {{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}.
+      A chart that draws only the fifty-line is quietly assuming a friendly
+      vice-president.
+    </p>
+    {{- end }}
+    {{- if $p }}
+    <p class="muted" style="margin-top:10px">
+      Run as a simulation rather than read off the order, the model puts the
+      chance of the Democrats reaching 50 at
+      <strong>{{ printf "%.0f%%" (mul $p.prob_D_50_plus 100) }}</strong>{{ with $p.prob_D_51_plus }}
+      and of an outright majority at <strong>{{ printf "%.0f%%" (mul . 100) }}</strong>{{ end }}.
+      Both numbers rest on the assumption that {{ $p.holdover_D }} Democratic
+      seats carry over untouched; move that by one and the first figure moves by
+      about twenty points.
+    </p>
+    {{- end }}
+    <p class="thin-note">Margins beyond ±{{ printf "%.0f" .clip }} points are clipped and
+       marked with a notch. Nothing above that threshold has any bearing on where
+       the majority lands, and drawing Wyoming at true length would squash every
+       race that does.</p>
+  </div>
+  {{- end }}
+
   {{- with $p }}
   <div class="card">
     <h2>Senate, race by race</h2>
-    <p class="sub">Expected margin is the election-day national tide plus twice the
-       state's partisan lean. The lean is our own reconstruction from official
-       returns, not a licensed index, so these numbers are ours to publish.
-       Nothing here knows who the candidates are, which is exactly why it
-       disagrees with the professionals where a party has an unusually strong
-       recruit.</p>
+    <p class="sub">The {{ .n_competitive }} races the model does not consider settled —
+       New Jersey through Nebraska in the order above. Expected margin is the
+       election-day national tide plus twice the state's partisan lean. The lean is
+       our own reconstruction from official returns, not a licensed index, so these
+       numbers are ours to publish. Nothing here knows who the candidates are, which
+       is exactly why it disagrees with the professionals where a party has an
+       unusually strong recruit.</p>
     <table>
       <tr><th>State</th><th class="num">Expected margin</th><th class="num">P(D)</th>
           <th class="num">State lean</th><th></th></tr>
       {{- range .races }}
+      {{- if .competitive }}
       <tr>
-        <td><strong>{{ .state }}</strong></td>
+        <td><strong>{{ .state }}</strong>{{ if eq .state "NE" }} <span class="muted">*</span>{{ end }}</td>
         <td class="num {{ if gt .expected_margin_D 0.0 }}D{{ else }}R{{ end }}">
           {{ if gt .expected_margin_D 0.0 }}D+{{ printf "%.1f" .expected_margin_D }}{{ else }}R+{{ printf "%.1f" (mul .expected_margin_D -1) }}{{ end }}
         </td>
@@ -34,25 +167,32 @@
         </td>
       </tr>
       {{- end }}
+      {{- end }}
     </table>
+    <p class="thin-note">{{ .competitive_note }}
+       {{ printf "%.0f" (sub (float (len .races)) .n_competitive) }} of the
+       {{ len .races }} races on the ballot fall outside that band and are shown
+       only in the chart above.</p>
+
+    {{- $ne := where .races "state" "NE" }}
+    {{- if and $ne (index $ne 0).competitive }}
+    <div class="note">
+      <strong>* Nebraska is the case this model cannot handle.</strong>
+      There is no Democrat on the ballot. Dan Osborn is running as an independent,
+      and against a two-party model that fact simply does not exist — the number
+      above is what a generic Democrat would be expected to do in Nebraska, which
+      is not the race being held. It is left in the table rather than dropped
+      because a model failing visibly is more useful to look at than a model
+      quietly omitting the seat it cannot represent. Handling it properly means
+      modelling a three-way race where the second-place party has effectively
+      withdrawn, which is a different piece of machinery.
+    </div>
+    {{- end }}
+    <p class="thin-note">There is no House table on this page. The House model runs
+       daily but its district numbers stay unpublished, for a reason set out under
+       <a href="/forecast/methods/#house">what is not published</a> on the methods
+       page — it is a licensing constraint rather than a modelling one.</p>
   </div>
   {{- end }}
-
-  <div class="card">
-    <h2>Why there is no House table here</h2>
-    <p class="sub">The House model exists and runs daily. It is not published, and
-       the reason is arithmetic rather than caution.</p>
-    <p class="muted">District forecasts are built from a licensed partisan index.
-       Given the national tide, which we do publish, that index is exactly
-       recoverable from any district forecast:</p>
-    <p style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
-              background:var(--bg);border:1px solid var(--border);border-radius:7px;
-              padding:12px 14px;margin:14px 0">PVI = (district margin − national tide) ÷ 2</p>
-    <p class="muted">So publishing 435 district margins would republish the index
-       itself. The district run writes to a gitignored directory and stays there.
-       This becomes publishable the day we hold a district-level presidential
-       baseline we are allowed to redistribute, which is a licensing question
-       rather than a modelling one.</p>
-  </div>
 </div>
 {{ partial "forecast/foot.html" (dict "page" . "d" $d) }}
