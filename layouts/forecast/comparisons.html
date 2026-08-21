@@ -73,9 +73,11 @@
             x1="{{ $x }}" y1="{{ sub $T 14 }}" x2="{{ $x }}" y2="{{ add $T $H }}"/>
       <text class="tick" x="{{ $x }}" y="{{ sub $T 20 }}" text-anchor="middle">{{ .label }}</text>
       {{- end }}
-      {{/* Right-anchored over its own column. Left-anchored just past the
-           plot, it sat on top of the 100% tick label. */}}
-      <text class="tick" x="{{ add (add $L $W) 46 }}" y="{{ sub $T 20 }}"
+      {{/* The spread column sits clear of the plot, not merely just past it.
+           The 100% tick is CENTRED on the axis end, so it reaches ~20px beyond
+           it; a right-anchored header any nearer prints straight through it
+           ("100%PREAD"). 94 leaves a gap at both ends of the column. */}}
+      <text class="tick" x="{{ add (add $L $W) 94 }}" y="{{ sub $T 20 }}"
             text-anchor="end" style="fill:var(--ink-3)">SPREAD</text>
 
       {{- $lx := $L }}{{ $wd := $W }}
@@ -97,7 +99,7 @@
         {{- partial "forecast/glyph.html" (dict "x" (add $lx (mul (div .x 100.0) $wd)) "y" $y
                                   "key" .key "fill" (printf "var(--c-%s)" .key)) }}
         {{- end }}
-        <text class="rowval" x="{{ add (add $lx $wd) 46 }}" y="{{ add $y 4 }}"
+        <text class="rowval" x="{{ add (add $lx $wd) 94 }}" y="{{ add $y 4 }}"
               text-anchor="end"
               style="font-size:12px">{{ printf "%.0f" $row.spread }}</text>
       </g>
