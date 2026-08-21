@@ -138,41 +138,54 @@
 
         <h2>Publications</h2>
 
-        {{ $pubs := getCSV "," "data/publications.csv" }}
+        {{/* NAMED FIELDS, from data/publications.yaml, which scripts/build_data.py
+             generates from data-src/publications.csv.
+
+             This was `getCSV "," "data/publications.csv"` reading a [][]string
+             by position — `index $pub 9` for the author, `index $pub 6` for the
+             description. Two reasons that had to go. getCSV was deprecated in
+             Hugo 0.123 and removed in every version after it, so this page had
+             a bomb in it set to go off at the next HUGO_VERSION bump. And
+             positional indices are unreadable and silently wrong when they
+             drift: the media page had been asking for index 5 of a five-column
+             row for who knows how long, which is why no media description has
+             ever appeared on the site.
+
+             Numbering is unchanged. The CSV loop skipped a header row, so with
+             N entries it saw N+1 rows and counted `sub (len) $i` from N down to
+             1. YAML has no header, so len is N and $i starts at 0 — and the
+             same expression still counts N down to 1. */}}
+        {{ $pubs := .Site.Data.publications }}
         {{ range $i, $pub := $pubs }}
-            {{ if eq (index $pub 0) "Title" }}
-            {{ else }}
             {{ $num := sub (len $pubs) $i }}
             <div class="publication">
                 <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
-                <span class="pub-title">{{ index $pub 0 }}</span>
-                {{ if ne (index $pub 9) "" }}<span class="pub-authors"> {{ index $pub 9 }}</span>{{ end }}
-                <span class="pub-journal"> <em>{{ index $pub 2 }}</em>{{ if ne (index $pub 3) "" }} {{ index $pub 3 }}{{ if ne (index $pub 4) "" }}({{ index $pub 4 }}){{ end }}{{ if ne (index $pub 5) "" }}: {{ index $pub 5 }}{{ end }}{{ end }} ({{ index $pub 1 }})</span>
-                {{ if ne (index $pub 6) "" }}<span class="pub-description"> {{ index $pub 6 }}</span>{{ end }}
+                <span class="pub-title">{{ $pub.Title }}</span>
+                {{ with $pub.Author1 }}<span class="pub-authors"> {{ . }}</span>{{ end }}
+                <span class="pub-journal"> <em>{{ $pub.Journal }}</em>{{ with $pub.Volume }} {{ . }}{{ with $pub.Issue }}({{ . }}){{ end }}{{ with $pub.Pages }}: {{ . }}{{ end }}{{ end }} ({{ $pub.Year }})</span>
+                {{ with $pub.Description }}<span class="pub-description"> {{ . }}</span>{{ end }}
                 <span class="pub-links">
-                    {{ if ne (index $pub 7) "" }}<a href="{{ index $pub 7 }}" target="_blank">pub</a>{{ end }}
-                    {{ if ne (index $pub 8) "" }}<a href="{{ index $pub 8 }}" target="_blank">pdf</a>{{ end }}
+                    {{ with $pub.DOI }}<a href="{{ . }}" target="_blank">pub</a>{{ end }}
+                    {{ with $pub.PDF }}<a href="{{ . }}" target="_blank">pdf</a>{{ end }}
                 </span>
             </div>
-            {{ end }}
         {{ end }}
 
         <h2>Works in Progress</h2>
 
-        {{ $wip := getCSV "," "data/working-papers.csv" }}
+        {{/* index, not dot-notation: the file is working-papers.yaml and a
+             hyphen is not a legal identifier in a Go template field lookup. */}}
+        {{ $wip := index .Site.Data "working-papers" }}
         {{ range $i, $paper := $wip }}
-            {{ if eq (index $paper 0) "Title" }}
-            {{ else }}
             {{ $num := sub (len $wip) $i }}
             <div class="publication">
                 <span style="font-weight: bold; margin-right: 8px;">{{ $num }}.</span>
-                <span class="pub-title">{{ index $paper 0 }}</span>
-                {{ if ne (index $paper 2) "" }}<span class="pub-authors"> {{ index $paper 2 }}</span>{{ end }}
-                <span class="pub-status"> ({{ index $paper 1 }})</span>
-                {{ if ne (index $paper 3) "" }}<span class="pub-description"> {{ index $paper 3 }}</span>{{ end }}
-                {{ if ne (index $paper 4) "" }}<span class="pub-links"><a href="{{ index $paper 4 }}" target="_blank">draft</a></span>{{ end }}
+                <span class="pub-title">{{ $paper.Title }}</span>
+                {{ with $paper.Authors }}<span class="pub-authors"> {{ . }}</span>{{ end }}
+                <span class="pub-status"> ({{ $paper.Status }})</span>
+                {{ with $paper.Description }}<span class="pub-description"> {{ . }}</span>{{ end }}
+                {{ with $paper.Draft }}<span class="pub-links"><a href="{{ . }}" target="_blank">draft</a></span>{{ end }}
             </div>
-            {{ end }}
         {{ end }}
 
     </main>
