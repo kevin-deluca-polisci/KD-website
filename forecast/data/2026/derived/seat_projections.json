@@ -1,5 +1,5 @@
 {
-  "snapshot_date": "2026-08-21",
+  "snapshot_date": "2026-08-22",
   "sigma": 6.55,
   "holdover_D": 34,
   "majority_at": {
@@ -3261,7 +3261,9 @@
         }
       ],
       "category": "fundamentals",
-      "as_of": "2026-08-21"
+      "publication": "individual",
+      "margin_published_elsewhere": false,
+      "as_of": "2026-08-22"
     },
     "class_polling": {
       "tide_D": 6.5,
@@ -6516,7 +6518,9 @@
         }
       ],
       "category": "polling",
-      "as_of": "2026-08-21"
+      "publication": "individual",
+      "margin_published_elsewhere": true,
+      "as_of": "2026-08-22"
     },
     "fair": {
       "tide_D": 1.78,
@@ -9771,6 +9775,8 @@
         }
       ],
       "category": "fundamentals",
+      "publication": "individual",
+      "margin_published_elsewhere": true,
       "as_of": "2026-07-31"
     }
   },
