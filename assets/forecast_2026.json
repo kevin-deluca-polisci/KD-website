@@ -1,15 +1,15 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-22T16:00:54.215914+00:00",
+  "generated_at": "2026-08-22T16:19:52.836857+00:00",
   "latest_snapshot": "2026-08-22",
   "snapshot_count": 92,
   "headline": [
     {
       "category": "academic",
-      "margin_D": 6.9325,
+      "margin_D": 6.8775,
       "n_sources": 4,
-      "low": 2.65,
-      "high": 12.94,
+      "low": 2.66,
+      "high": 12.71,
       "tier": "open",
       "display": "ok",
       "sole_source": "",
@@ -30,10 +30,10 @@
     },
     {
       "category": "market",
-      "margin_D": 7.6193,
+      "margin_D": 7.6055,
       "n_sources": 1,
-      "low": 7.6193,
-      "high": 7.6193,
+      "low": 7.6055,
+      "high": 7.6055,
       "tier": "open",
       "display": "single",
       "sole_source": "polymarket",
@@ -405,7 +405,7 @@
       ],
       [
         "2026-08-22",
-        6.9325
+        6.8775
       ]
     ],
     "fundamentals": [
@@ -485,7 +485,7 @@
       ],
       [
         "2026-08-22",
-        7.6193
+        7.6055
       ]
     ]
   },
@@ -1045,9 +1045,9 @@
         "category": "academic",
         "publication": "individual",
         "refit_on_our_history": false,
-        "margin_D": 12.94,
+        "margin_D": 12.71,
         "margin_D_80_low": 7.77,
-        "margin_D_80_high": 18.06,
+        "margin_D_80_high": 17.34,
         "inputs": {
           "pct_expect_worse": 37.0,
           "pct_expect_worse_source": "Michigan Surveys of Consumers, Table 8, June of the election year",
@@ -1068,8 +1068,8 @@
           },
           "pres_party_seat_change": -48.1,
           "implied_D_seats": 263.1,
-          "inversion_extrapolated": true,
-          "curve_points_used": 8,
+          "inversion_extrapolated": false,
+          "curve_points_used": 10,
           "sensitivity_month": [
             {
               "month": "Mar 2026",
@@ -1121,7 +1121,6 @@
         },
         "notes": [
           "forecasts SEAT CHANGE directly \u2014 the margin shown is our own seat curve run backwards from that seat count, and is not a number Lockerbie publishes",
-          "that seat count falls outside the range of tides the other models produced today, so the inversion is extrapolated rather than interpolated",
           "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
           "published out-of-sample mean absolute error is 16.8 seats \u2014 the interval is his, not ours, and it is very wide"
         ]
@@ -1133,7 +1132,7 @@
         "category": "academic",
         "publication": "individual",
         "refit_on_our_history": false,
-        "margin_D": 2.65,
+        "margin_D": 2.66,
         "margin_D_80_low": null,
         "margin_D_80_high": null,
         "inputs": {
@@ -1427,207 +1426,207 @@
         "as_of": "2026-08-22"
       },
       "academic_economic_pessimism": {
-        "tide_D": 12.94,
+        "tide_D": 12.71,
         "senate": {
           "n_races": 35,
-          "expected_D_seats_up": 18.86,
+          "expected_D_seats_up": 18.73,
           "D_seats_up_80pct": [
             15,
             22
           ],
-          "expected_D_total": 52.86,
+          "expected_D_total": 52.73,
           "D_total_80pct": [
             49,
             56
           ],
-          "prob_D_50_plus": 0.8999,
-          "prob_D_51_plus": 0.7974
+          "prob_D_50_plus": 0.8901,
+          "prob_D_51_plus": 0.7834
         },
         "races": {
           "AK": {
-            "expected_margin_D": 0.04,
+            "expected_margin_D": -0.19,
             "pvi": -6.45,
-            "win_prob_D": 0.5024
+            "win_prob_D": 0.4884
           },
           "AL": {
-            "expected_margin_D": -16.68,
+            "expected_margin_D": -16.91,
             "pvi": -14.81,
-            "win_prob_D": 0.0054
+            "win_prob_D": 0.0049
           },
           "AR": {
-            "expected_margin_D": -17.68,
+            "expected_margin_D": -17.91,
             "pvi": -15.31,
-            "win_prob_D": 0.0035
+            "win_prob_D": 0.0031
           },
           "CO": {
-            "expected_margin_D": 24.88,
+            "expected_margin_D": 24.65,
             "pvi": 5.97,
             "win_prob_D": 0.9999
           },
           "DE": {
-            "expected_margin_D": 28.96,
+            "expected_margin_D": 28.73,
             "pvi": 8.01,
             "win_prob_D": 1.0
           },
           "FL": {
-            "expected_margin_D": 2.16,
+            "expected_margin_D": 1.93,
             "pvi": -5.39,
-            "win_prob_D": 0.6292
+            "win_prob_D": 0.6159
           },
           "GA": {
-            "expected_margin_D": 11.34,
+            "expected_margin_D": 11.11,
             "pvi": -0.8,
-            "win_prob_D": 0.9583
+            "win_prob_D": 0.9551
           },
           "IA": {
-            "expected_margin_D": 0.76,
+            "expected_margin_D": 0.53,
             "pvi": -6.09,
-            "win_prob_D": 0.5462
+            "win_prob_D": 0.5322
           },
           "ID": {
-            "expected_margin_D": -23.14,
+            "expected_margin_D": -23.37,
             "pvi": -18.04,
             "win_prob_D": 0.0002
           },
           "IL": {
-            "expected_margin_D": 25.62,
+            "expected_margin_D": 25.39,
             "pvi": 6.34,
-            "win_prob_D": 1.0
+            "win_prob_D": 0.9999
           },
           "KS": {
-            "expected_margin_D": -3.12,
+            "expected_margin_D": -3.35,
             "pvi": -8.03,
-            "win_prob_D": 0.3169
+            "win_prob_D": 0.3045
           },
           "KY": {
-            "expected_margin_D": -16.94,
+            "expected_margin_D": -17.17,
             "pvi": -14.94,
-            "win_prob_D": 0.0049
+            "win_prob_D": 0.0044
           },
           "LA": {
-            "expected_margin_D": -8.56,
+            "expected_margin_D": -8.79,
             "pvi": -10.75,
-            "win_prob_D": 0.0956
+            "win_prob_D": 0.0898
           },
           "MA": {
-            "expected_margin_D": 40.92,
+            "expected_margin_D": 40.69,
             "pvi": 13.99,
             "win_prob_D": 1.0
           },
           "ME": {
-            "expected_margin_D": 20.58,
+            "expected_margin_D": 20.35,
             "pvi": 3.82,
-            "win_prob_D": 0.9992
+            "win_prob_D": 0.9991
           },
           "MI": {
-            "expected_margin_D": 12.56,
+            "expected_margin_D": 12.33,
             "pvi": -0.19,
-            "win_prob_D": 0.9724
+            "win_prob_D": 0.9701
           },
           "MN": {
-            "expected_margin_D": 18.0,
+            "expected_margin_D": 17.77,
             "pvi": 2.53,
-            "win_prob_D": 0.997
+            "win_prob_D": 0.9967
           },
           "MS": {
-            "expected_margin_D": -8.62,
+            "expected_margin_D": -8.85,
             "pvi": -10.78,
-            "win_prob_D": 0.0941
+            "win_prob_D": 0.0883
           },
           "MT": {
-            "expected_margin_D": -6.7,
+            "expected_margin_D": -6.93,
             "pvi": -9.82,
-            "win_prob_D": 0.1532
+            "win_prob_D": 0.145
           },
           "NC": {
-            "expected_margin_D": 10.14,
+            "expected_margin_D": 9.91,
             "pvi": -1.4,
-            "win_prob_D": 0.9392
+            "win_prob_D": 0.9349
           },
           "NE": {
-            "expected_margin_D": -7.6,
+            "expected_margin_D": -7.83,
             "pvi": -10.27,
-            "win_prob_D": 0.123
+            "win_prob_D": 0.116
           },
           "NH": {
-            "expected_margin_D": 16.92,
+            "expected_margin_D": 16.69,
             "pvi": 1.99,
-            "win_prob_D": 0.9951
+            "win_prob_D": 0.9946
           },
           "NJ": {
-            "expected_margin_D": 21.48,
+            "expected_margin_D": 21.25,
             "pvi": 4.27,
-            "win_prob_D": 0.9995
+            "win_prob_D": 0.9994
           },
           "NM": {
-            "expected_margin_D": 20.3,
+            "expected_margin_D": 20.07,
             "pvi": 3.68,
-            "win_prob_D": 0.999
+            "win_prob_D": 0.9989
           },
           "OH": {
-            "expected_margin_D": 2.4,
+            "expected_margin_D": 2.17,
             "pvi": -5.27,
-            "win_prob_D": 0.643
+            "win_prob_D": 0.6298
           },
           "OK": {
-            "expected_margin_D": -21.74,
+            "expected_margin_D": -21.97,
             "pvi": -17.34,
-            "win_prob_D": 0.0005
+            "win_prob_D": 0.0004
           },
           "OR": {
-            "expected_margin_D": 28.24,
+            "expected_margin_D": 28.01,
             "pvi": 7.65,
             "win_prob_D": 1.0
           },
           "RI": {
-            "expected_margin_D": 28.86,
+            "expected_margin_D": 28.63,
             "pvi": 7.96,
             "win_prob_D": 1.0
           },
           "SC": {
-            "expected_margin_D": -3.62,
+            "expected_margin_D": -3.85,
             "pvi": -8.28,
-            "win_prob_D": 0.2902
+            "win_prob_D": 0.2783
           },
           "SD": {
-            "expected_margin_D": -16.2,
+            "expected_margin_D": -16.43,
             "pvi": -14.57,
-            "win_prob_D": 0.0067
+            "win_prob_D": 0.0061
           },
           "TN": {
-            "expected_margin_D": -15.58,
+            "expected_margin_D": -15.81,
             "pvi": -14.26,
-            "win_prob_D": 0.0087
+            "win_prob_D": 0.0079
           },
           "TX": {
-            "expected_margin_D": 1.1,
+            "expected_margin_D": 0.87,
             "pvi": -5.92,
-            "win_prob_D": 0.5667
+            "win_prob_D": 0.5528
           },
           "VA": {
-            "expected_margin_D": 19.92,
+            "expected_margin_D": 19.69,
             "pvi": 3.49,
-            "win_prob_D": 0.9988
+            "win_prob_D": 0.9987
           },
           "WV": {
-            "expected_margin_D": -28.98,
+            "expected_margin_D": -29.21,
             "pvi": -20.96,
             "win_prob_D": 0.0
           },
           "WY": {
-            "expected_margin_D": -33.52,
+            "expected_margin_D": -33.75,
             "pvi": -23.23,
             "win_prob_D": 0.0
           }
         },
         "house": {
           "n_districts": 435,
-          "expected_D_seats": 264.45,
+          "expected_D_seats": 263.06,
           "D_seats_80pct": [
-            234,
-            298
+            233,
+            297
           ],
-          "prob_D_majority": 0.9879,
+          "prob_D_majority": 0.9855,
           "majority_at": 218,
           "pvi_source": "cook_pvi"
         },
@@ -1637,207 +1636,207 @@
         "as_of": "2026-08-22"
       },
       "academic_political_history": {
-        "tide_D": 2.65,
+        "tide_D": 2.66,
         "senate": {
           "n_races": 35,
-          "expected_D_seats_up": 13.63,
+          "expected_D_seats_up": 13.64,
           "D_seats_up_80pct": [
             11,
             16
           ],
-          "expected_D_total": 47.63,
+          "expected_D_total": 47.64,
           "D_total_80pct": [
             45,
             50
           ],
-          "prob_D_50_plus": 0.1797,
-          "prob_D_51_plus": 0.0835
+          "prob_D_50_plus": 0.1802,
+          "prob_D_51_plus": 0.0841
         },
         "races": {
           "AK": {
-            "expected_margin_D": -10.25,
+            "expected_margin_D": -10.24,
             "pvi": -6.45,
-            "win_prob_D": 0.0588
+            "win_prob_D": 0.059
           },
           "AL": {
-            "expected_margin_D": -26.97,
+            "expected_margin_D": -26.96,
             "pvi": -14.81,
             "win_prob_D": 0.0
           },
           "AR": {
-            "expected_margin_D": -27.97,
+            "expected_margin_D": -27.96,
             "pvi": -15.31,
             "win_prob_D": 0.0
           },
           "CO": {
-            "expected_margin_D": 14.59,
+            "expected_margin_D": 14.6,
             "pvi": 5.97,
-            "win_prob_D": 0.987
+            "win_prob_D": 0.9871
           },
           "DE": {
-            "expected_margin_D": 18.67,
+            "expected_margin_D": 18.68,
             "pvi": 8.01,
             "win_prob_D": 0.9978
           },
           "FL": {
-            "expected_margin_D": -8.13,
+            "expected_margin_D": -8.12,
             "pvi": -5.39,
-            "win_prob_D": 0.1073
+            "win_prob_D": 0.1075
           },
           "GA": {
-            "expected_margin_D": 1.05,
+            "expected_margin_D": 1.06,
             "pvi": -0.8,
-            "win_prob_D": 0.5637
+            "win_prob_D": 0.5643
           },
           "IA": {
-            "expected_margin_D": -9.53,
+            "expected_margin_D": -9.52,
             "pvi": -6.09,
-            "win_prob_D": 0.0728
+            "win_prob_D": 0.0731
           },
           "ID": {
-            "expected_margin_D": -33.43,
+            "expected_margin_D": -33.42,
             "pvi": -18.04,
             "win_prob_D": 0.0
           },
           "IL": {
-            "expected_margin_D": 15.33,
+            "expected_margin_D": 15.34,
             "pvi": 6.34,
             "win_prob_D": 0.9904
           },
           "KS": {
-            "expected_margin_D": -13.41,
+            "expected_margin_D": -13.4,
             "pvi": -8.03,
-            "win_prob_D": 0.0203
+            "win_prob_D": 0.0204
           },
           "KY": {
-            "expected_margin_D": -27.23,
+            "expected_margin_D": -27.22,
             "pvi": -14.94,
             "win_prob_D": 0.0
           },
           "LA": {
-            "expected_margin_D": -18.85,
+            "expected_margin_D": -18.84,
             "pvi": -10.75,
             "win_prob_D": 0.002
           },
           "MA": {
-            "expected_margin_D": 30.63,
+            "expected_margin_D": 30.64,
             "pvi": 13.99,
             "win_prob_D": 1.0
           },
           "ME": {
-            "expected_margin_D": 10.29,
+            "expected_margin_D": 10.3,
             "pvi": 3.82,
-            "win_prob_D": 0.9419
+            "win_prob_D": 0.9421
           },
           "MI": {
-            "expected_margin_D": 2.27,
+            "expected_margin_D": 2.28,
             "pvi": -0.19,
-            "win_prob_D": 0.6355
+            "win_prob_D": 0.6361
           },
           "MN": {
-            "expected_margin_D": 7.71,
+            "expected_margin_D": 7.72,
             "pvi": 2.53,
-            "win_prob_D": 0.8804
+            "win_prob_D": 0.8807
           },
           "MS": {
-            "expected_margin_D": -18.91,
+            "expected_margin_D": -18.9,
             "pvi": -10.78,
-            "win_prob_D": 0.0019
+            "win_prob_D": 0.002
           },
           "MT": {
-            "expected_margin_D": -16.99,
+            "expected_margin_D": -16.98,
             "pvi": -9.82,
-            "win_prob_D": 0.0047
+            "win_prob_D": 0.0048
           },
           "NC": {
-            "expected_margin_D": -0.15,
+            "expected_margin_D": -0.14,
             "pvi": -1.4,
-            "win_prob_D": 0.4909
+            "win_prob_D": 0.4915
           },
           "NE": {
-            "expected_margin_D": -17.89,
+            "expected_margin_D": -17.88,
             "pvi": -10.27,
             "win_prob_D": 0.0032
           },
           "NH": {
-            "expected_margin_D": 6.63,
+            "expected_margin_D": 6.64,
             "pvi": 1.99,
-            "win_prob_D": 0.8443
+            "win_prob_D": 0.8446
           },
           "NJ": {
-            "expected_margin_D": 11.19,
+            "expected_margin_D": 11.2,
             "pvi": 4.27,
-            "win_prob_D": 0.9562
+            "win_prob_D": 0.9564
           },
           "NM": {
-            "expected_margin_D": 10.01,
+            "expected_margin_D": 10.02,
             "pvi": 3.68,
-            "win_prob_D": 0.9368
+            "win_prob_D": 0.937
           },
           "OH": {
-            "expected_margin_D": -7.89,
+            "expected_margin_D": -7.88,
             "pvi": -5.27,
-            "win_prob_D": 0.1142
+            "win_prob_D": 0.1145
           },
           "OK": {
-            "expected_margin_D": -32.03,
+            "expected_margin_D": -32.02,
             "pvi": -17.34,
             "win_prob_D": 0.0
           },
           "OR": {
-            "expected_margin_D": 17.95,
+            "expected_margin_D": 17.96,
             "pvi": 7.65,
             "win_prob_D": 0.9969
           },
           "RI": {
-            "expected_margin_D": 18.57,
+            "expected_margin_D": 18.58,
             "pvi": 7.96,
             "win_prob_D": 0.9977
           },
           "SC": {
-            "expected_margin_D": -13.91,
+            "expected_margin_D": -13.9,
             "pvi": -8.28,
-            "win_prob_D": 0.0168
+            "win_prob_D": 0.0169
           },
           "SD": {
-            "expected_margin_D": -26.49,
+            "expected_margin_D": -26.48,
             "pvi": -14.57,
             "win_prob_D": 0.0
           },
           "TN": {
-            "expected_margin_D": -25.87,
+            "expected_margin_D": -25.86,
             "pvi": -14.26,
             "win_prob_D": 0.0
           },
           "TX": {
-            "expected_margin_D": -9.19,
+            "expected_margin_D": -9.18,
             "pvi": -5.92,
-            "win_prob_D": 0.0803
+            "win_prob_D": 0.0805
           },
           "VA": {
-            "expected_margin_D": 9.63,
+            "expected_margin_D": 9.64,
             "pvi": 3.49,
-            "win_prob_D": 0.9293
+            "win_prob_D": 0.9295
           },
           "WV": {
-            "expected_margin_D": -39.27,
+            "expected_margin_D": -39.26,
             "pvi": -20.96,
             "win_prob_D": 0.0
           },
           "WY": {
-            "expected_margin_D": -43.81,
+            "expected_margin_D": -43.8,
             "pvi": -23.23,
             "win_prob_D": 0.0
           }
         },
         "house": {
           "n_districts": 435,
-          "expected_D_seats": 213.72,
+          "expected_D_seats": 213.75,
           "D_seats_80pct": [
             193,
-            234
+            235
           ],
-          "prob_D_majority": 0.3911,
+          "prob_D_majority": 0.3923,
           "majority_at": 218,
           "pvi_source": "cook_pvi"
         },
@@ -2819,51 +2818,51 @@
       "x_ticks": [
         {
           "v": 0,
-          "x": 21.68,
+          "x": 21.82,
           "label": "EVEN"
         },
         {
           "v": 5,
-          "x": 46.83,
+          "x": 47.37,
           "label": "D+5"
         },
         {
           "v": 10,
-          "x": 71.98,
+          "x": 72.92,
           "label": "D+10"
         },
         {
           "v": 15,
-          "x": 97.13,
+          "x": 98.47,
           "label": "D+15"
         }
       ],
       "y_ticks": [
         {
           "v": 0,
-          "y": 78.32,
+          "y": 78.18,
           "label": "EVEN"
         },
         {
           "v": 5,
-          "y": 53.17,
+          "y": 52.63,
           "label": "D+5"
         },
         {
           "v": 10,
-          "y": 28.02,
+          "y": 27.08,
           "label": "D+10"
         },
         {
           "v": 15,
-          "y": 2.87,
+          "y": 1.53,
           "label": "D+15"
         }
       ],
       "ref_y": null,
       "ref_label": "",
       "ref_value": null,
-      "zero_y": 78.32,
+      "zero_y": 78.18,
       "series": [
         {
           "key": "polling",
@@ -2873,39 +2872,39 @@
           "points": [
             {
               "x": 96.7,
-              "y": 45.7,
+              "y": 45.05,
               "date": "2026-08-19",
               "v": 6.4841
             },
             {
               "x": 97.8,
-              "y": 46.14,
+              "y": 45.49,
               "date": "2026-08-20",
               "v": 6.3968
             },
             {
               "x": 98.9,
-              "y": 47.54,
+              "y": 46.91,
               "date": "2026-08-21",
               "v": 6.1197
             },
             {
               "x": 100.0,
-              "y": 47.18,
+              "y": 46.55,
               "date": "2026-08-22",
               "v": 6.1898
             }
           ],
-          "polyline": "96.7,45.7 97.8,46.14 98.9,47.54 100.0,47.18",
+          "polyline": "96.7,45.05 97.8,45.49 98.9,46.91 100.0,46.55",
           "last": {
             "x": 100.0,
-            "y": 47.18,
+            "y": 46.55,
             "date": "2026-08-22",
             "v": 6.1898
           },
           "band": {
-            "y_low": 48.64,
-            "y_high": 46.13,
+            "y_low": 48.03,
+            "y_high": 45.48,
             "low": 5.9,
             "high": 6.4,
             "kind": "spread",
@@ -2914,11 +2913,11 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 56.0,
+          "label_y": 55.32,
           "label_nudged": true,
-          "sx": 52.82,
-          "sx_low": 51.36,
-          "sx_high": 53.87
+          "sx": 53.45,
+          "sx_low": 51.97,
+          "sx_high": 54.52
         },
         {
           "key": "market",
@@ -2928,31 +2927,31 @@
           "points": [
             {
               "x": 98.9,
-              "y": 39.49,
+              "y": 38.73,
               "date": "2026-08-21",
               "v": 7.7204
             },
             {
               "x": 100.0,
-              "y": 40.0,
+              "y": 39.32,
               "date": "2026-08-22",
-              "v": 7.6193
+              "v": 7.6055
             }
           ],
-          "polyline": "98.9,39.49 100.0,40.0",
+          "polyline": "98.9,38.73 100.0,39.32",
           "last": {
             "x": 100.0,
-            "y": 40.0,
+            "y": 39.32,
             "date": "2026-08-22",
-            "v": 7.6193
+            "v": 7.6055
           },
           "band": null,
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 1,
-          "label_y": 40.0,
+          "label_y": 39.32,
           "label_nudged": false,
-          "sx": 60.0
+          "sx": 60.68
         },
         {
           "key": "fundamentals",
@@ -2968,57 +2967,57 @@
             },
             {
               "x": 65.93,
-              "y": 71.48,
+              "y": 71.23,
               "date": "2026-02-20",
               "v": 1.36
             },
             {
               "x": 78.02,
-              "y": 71.68,
+              "y": 71.44,
               "date": "2026-04-30",
               "v": 1.32
             },
             {
               "x": 93.41,
-              "y": 69.36,
+              "y": 69.08,
               "date": "2026-07-31",
               "v": 1.78
             },
             {
               "x": 96.7,
-              "y": 69.36,
+              "y": 69.08,
               "date": "2026-08-19",
               "v": 1.78
             },
             {
               "x": 97.8,
-              "y": 47.49,
+              "y": 46.86,
               "date": "2026-08-20",
               "v": 6.13
             },
             {
               "x": 98.9,
-              "y": 47.49,
+              "y": 46.86,
               "date": "2026-08-21",
               "v": 6.13
             },
             {
               "x": 100.0,
-              "y": 47.49,
+              "y": 46.86,
               "date": "2026-08-22",
               "v": 6.13
             }
           ],
-          "polyline": "54.95,86.76 65.93,71.48 78.02,71.68 93.41,69.36 96.7,69.36 97.8,47.49 98.9,47.49 100.0,47.49",
+          "polyline": "54.95,86.76 65.93,71.23 78.02,71.44 93.41,69.08 96.7,69.08 97.8,46.86 98.9,46.86 100.0,46.86",
           "last": {
             "x": 100.0,
-            "y": 47.49,
+            "y": 46.86,
             "date": "2026-08-22",
             "v": 6.13
           },
           "band": {
-            "y_low": 69.36,
-            "y_high": 25.61,
+            "y_low": 69.08,
+            "y_high": 24.63,
             "low": 1.78,
             "high": 10.48,
             "kind": "spread",
@@ -3027,11 +3026,11 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 2,
-          "label_y": 64.0,
+          "label_y": 63.32,
           "label_nudged": true,
-          "sx": 52.51,
-          "sx_low": 30.64,
-          "sx_high": 74.39
+          "sx": 53.14,
+          "sx_low": 30.92,
+          "sx_high": 75.37
         },
         {
           "key": "professional",
@@ -3041,33 +3040,33 @@
           "points": [
             {
               "x": 96.7,
-              "y": 49.5,
+              "y": 48.9,
               "date": "2026-08-19",
               "v": 5.73
             },
             {
               "x": 97.8,
-              "y": 49.75,
+              "y": 49.16,
               "date": "2026-08-20",
               "v": 5.68
             },
             {
               "x": 98.9,
-              "y": 49.75,
+              "y": 49.16,
               "date": "2026-08-21",
               "v": 5.68
             },
             {
               "x": 100.0,
-              "y": 49.7,
+              "y": 49.11,
               "date": "2026-08-22",
               "v": 5.69
             }
           ],
-          "polyline": "96.7,49.5 97.8,49.75 98.9,49.75 100.0,49.7",
+          "polyline": "96.7,48.9 97.8,49.16 98.9,49.16 100.0,49.11",
           "last": {
             "x": 100.0,
-            "y": 49.7,
+            "y": 49.11,
             "date": "2026-08-22",
             "v": 5.69
           },
@@ -3075,9 +3074,9 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 1,
-          "label_y": 72.0,
+          "label_y": 71.32,
           "label_nudged": true,
-          "sx": 50.3
+          "sx": 50.89
         },
         {
           "key": "academic",
@@ -3087,537 +3086,537 @@
           "points": [
             {
               "x": 0.0,
-              "y": 71.02,
+              "y": 70.77,
               "date": "2025-01-01",
               "v": 1.45
             },
             {
               "x": 1.1,
-              "y": 74.95,
+              "y": 74.76,
               "date": "2025-01-15",
               "v": 0.67
             },
             {
               "x": 2.2,
-              "y": 80.53,
+              "y": 80.43,
               "date": "2025-01-22",
               "v": -0.44
             },
             {
               "x": 3.3,
-              "y": 80.13,
+              "y": 80.02,
               "date": "2025-01-29",
               "v": -0.36
             },
             {
               "x": 4.4,
-              "y": 77.06,
+              "y": 76.9,
               "date": "2025-02-05",
               "v": 0.25
             },
             {
               "x": 5.49,
-              "y": 74.59,
+              "y": 74.4,
               "date": "2025-02-12",
               "v": 0.74
             },
             {
               "x": 6.59,
-              "y": 73.94,
+              "y": 73.73,
               "date": "2025-02-19",
               "v": 0.87
             },
             {
               "x": 7.69,
-              "y": 75.0,
+              "y": 74.81,
               "date": "2025-02-26",
               "v": 0.66
             },
             {
               "x": 8.79,
-              "y": 73.79,
+              "y": 73.58,
               "date": "2025-03-05",
               "v": 0.9
             },
             {
               "x": 9.89,
-              "y": 71.53,
+              "y": 71.28,
               "date": "2025-03-12",
               "v": 1.35
             },
             {
               "x": 10.99,
-              "y": 70.62,
+              "y": 70.36,
               "date": "2025-03-19",
               "v": 1.53
             },
             {
               "x": 12.09,
-              "y": 71.43,
+              "y": 71.18,
               "date": "2025-03-26",
               "v": 1.37
             },
             {
               "x": 13.19,
-              "y": 71.22,
+              "y": 70.98,
               "date": "2025-04-02",
               "v": 1.41
             },
             {
               "x": 14.29,
-              "y": 69.31,
+              "y": 69.03,
               "date": "2025-04-09",
               "v": 1.79
             },
             {
               "x": 15.38,
-              "y": 67.8,
+              "y": 67.5,
               "date": "2025-04-16",
               "v": 2.09
             },
             {
               "x": 16.48,
-              "y": 66.65,
+              "y": 66.33,
               "date": "2025-04-23",
               "v": 2.32
             },
             {
               "x": 17.58,
-              "y": 65.99,
+              "y": 65.66,
               "date": "2025-04-30",
               "v": 2.45
             },
             {
               "x": 18.68,
-              "y": 64.64,
+              "y": 64.28,
               "date": "2025-05-07",
               "v": 2.72
             },
             {
               "x": 19.78,
-              "y": 66.19,
+              "y": 65.87,
               "date": "2025-05-14",
               "v": 2.41
             },
             {
               "x": 20.88,
-              "y": 67.35,
+              "y": 67.04,
               "date": "2025-05-21",
               "v": 2.18
             },
             {
               "x": 21.98,
-              "y": 67.9,
+              "y": 67.6,
               "date": "2025-05-28",
               "v": 2.07
             },
             {
               "x": 23.08,
-              "y": 67.7,
+              "y": 67.4,
               "date": "2025-06-04",
               "v": 2.11
             },
             {
               "x": 24.18,
-              "y": 67.75,
+              "y": 67.45,
               "date": "2025-06-11",
               "v": 2.1
             },
             {
               "x": 25.27,
-              "y": 67.45,
+              "y": 67.14,
               "date": "2025-06-18",
               "v": 2.16
             },
             {
               "x": 26.37,
-              "y": 67.05,
+              "y": 66.73,
               "date": "2025-06-25",
               "v": 2.24
             },
             {
               "x": 27.47,
-              "y": 66.6,
+              "y": 66.27,
               "date": "2025-07-02",
               "v": 2.33
             },
             {
               "x": 28.57,
-              "y": 65.99,
+              "y": 65.66,
               "date": "2025-07-09",
               "v": 2.45
             },
             {
               "x": 29.67,
-              "y": 67.65,
+              "y": 67.35,
               "date": "2025-07-16",
               "v": 2.12
             },
             {
               "x": 30.77,
-              "y": 65.29,
+              "y": 64.95,
               "date": "2025-07-23",
               "v": 2.59
             },
             {
               "x": 31.87,
-              "y": 64.48,
+              "y": 64.13,
               "date": "2025-07-30",
               "v": 2.75
             },
             {
               "x": 32.97,
-              "y": 61.01,
+              "y": 60.6,
               "date": "2025-08-06",
               "v": 3.44
             },
             {
               "x": 34.07,
-              "y": 62.27,
+              "y": 61.88,
               "date": "2025-08-13",
               "v": 3.19
             },
             {
               "x": 35.16,
-              "y": 62.72,
+              "y": 62.34,
               "date": "2025-08-20",
               "v": 3.1
             },
             {
               "x": 36.26,
-              "y": 66.04,
+              "y": 65.71,
               "date": "2025-08-27",
               "v": 2.44
             },
             {
               "x": 37.36,
-              "y": 63.93,
+              "y": 63.57,
               "date": "2025-09-03",
               "v": 2.86
             },
             {
               "x": 38.46,
-              "y": 64.08,
+              "y": 63.72,
               "date": "2025-09-10",
               "v": 2.83
             },
             {
               "x": 39.56,
-              "y": 62.27,
+              "y": 61.88,
               "date": "2025-09-17",
               "v": 3.19
             },
             {
               "x": 40.66,
-              "y": 64.53,
+              "y": 64.18,
               "date": "2025-09-24",
               "v": 2.74
             },
             {
               "x": 41.76,
-              "y": 64.59,
+              "y": 64.23,
               "date": "2025-10-01",
               "v": 2.73
             },
             {
               "x": 42.86,
-              "y": 64.94,
+              "y": 64.59,
               "date": "2025-10-08",
               "v": 2.66
             },
             {
               "x": 43.96,
-              "y": 63.68,
+              "y": 63.31,
               "date": "2025-10-15",
               "v": 2.91
             },
             {
               "x": 45.05,
-              "y": 63.28,
+              "y": 62.9,
               "date": "2025-10-22",
               "v": 2.99
             },
             {
               "x": 46.15,
-              "y": 63.18,
+              "y": 62.8,
               "date": "2025-10-29",
               "v": 3.01
             },
             {
               "x": 47.25,
-              "y": 63.38,
+              "y": 63.0,
               "date": "2025-11-05",
               "v": 2.97
             },
             {
               "x": 48.35,
-              "y": 62.02,
+              "y": 61.62,
               "date": "2025-11-12",
               "v": 3.24
             },
             {
               "x": 49.45,
-              "y": 60.11,
+              "y": 59.68,
               "date": "2025-11-19",
               "v": 3.62
             },
             {
               "x": 50.55,
-              "y": 59.71,
+              "y": 59.27,
               "date": "2025-11-26",
               "v": 3.7
             },
             {
               "x": 51.65,
-              "y": 60.11,
+              "y": 59.68,
               "date": "2025-12-03",
               "v": 3.62
             },
             {
               "x": 52.75,
-              "y": 63.08,
+              "y": 62.7,
               "date": "2025-12-10",
               "v": 3.03
             },
             {
               "x": 53.85,
-              "y": 63.18,
+              "y": 62.8,
               "date": "2025-12-17",
               "v": 3.01
             },
             {
               "x": 56.04,
-              "y": 62.37,
+              "y": 61.98,
               "date": "2025-12-24",
               "v": 3.17
             },
             {
               "x": 57.14,
-              "y": 60.76,
+              "y": 60.35,
               "date": "2025-12-31",
               "v": 3.49
             },
             {
               "x": 58.24,
-              "y": 57.8,
+              "y": 57.33,
               "date": "2026-01-07",
               "v": 4.08
             },
             {
               "x": 59.34,
-              "y": 60.01,
+              "y": 59.58,
               "date": "2026-01-14",
               "v": 3.64
             },
             {
               "x": 60.44,
-              "y": 59.05,
+              "y": 58.61,
               "date": "2026-01-21",
               "v": 3.83
             },
             {
               "x": 61.54,
-              "y": 59.4,
+              "y": 58.97,
               "date": "2026-01-28",
               "v": 3.76
             },
             {
               "x": 62.64,
-              "y": 59.1,
+              "y": 58.66,
               "date": "2026-02-04",
               "v": 3.82
             },
             {
               "x": 63.74,
-              "y": 59.3,
+              "y": 58.87,
               "date": "2026-02-11",
               "v": 3.78
             },
             {
               "x": 64.84,
-              "y": 59.51,
+              "y": 59.07,
               "date": "2026-02-18",
               "v": 3.74
             },
             {
               "x": 67.03,
-              "y": 58.55,
+              "y": 58.1,
               "date": "2026-02-25",
               "v": 3.93
             },
             {
               "x": 68.13,
-              "y": 59.76,
+              "y": 59.33,
               "date": "2026-03-04",
               "v": 3.69
             },
             {
               "x": 69.23,
-              "y": 59.86,
+              "y": 59.43,
               "date": "2026-03-11",
               "v": 3.67
             },
             {
               "x": 70.33,
-              "y": 59.15,
+              "y": 58.71,
               "date": "2026-03-18",
               "v": 3.81
             },
             {
               "x": 71.43,
-              "y": 58.7,
+              "y": 58.25,
               "date": "2026-03-25",
               "v": 3.9
             },
             {
               "x": 72.53,
-              "y": 57.9,
+              "y": 57.43,
               "date": "2026-04-01",
               "v": 4.06
             },
             {
               "x": 73.63,
-              "y": 59.91,
+              "y": 59.48,
               "date": "2026-04-08",
               "v": 3.66
             },
             {
               "x": 74.73,
-              "y": 58.45,
+              "y": 58.0,
               "date": "2026-04-15",
               "v": 3.95
             },
             {
               "x": 75.82,
-              "y": 57.9,
+              "y": 57.43,
               "date": "2026-04-22",
               "v": 4.06
             },
             {
               "x": 76.92,
-              "y": 57.95,
+              "y": 57.49,
               "date": "2026-04-29",
               "v": 4.05
             },
             {
               "x": 79.12,
-              "y": 57.64,
+              "y": 57.18,
               "date": "2026-05-06",
               "v": 4.11
             },
             {
               "x": 80.22,
-              "y": 58.05,
+              "y": 57.59,
               "date": "2026-05-13",
               "v": 4.03
             },
             {
               "x": 81.32,
-              "y": 55.93,
+              "y": 55.44,
               "date": "2026-05-20",
               "v": 4.45
             },
             {
               "x": 82.42,
-              "y": 56.49,
+              "y": 56.0,
               "date": "2026-05-27",
               "v": 4.34
             },
             {
               "x": 83.52,
-              "y": 57.69,
+              "y": 57.23,
               "date": "2026-06-03",
               "v": 4.1
             },
             {
               "x": 84.62,
-              "y": 59.56,
+              "y": 59.12,
               "date": "2026-06-10",
               "v": 3.73
             },
             {
               "x": 85.71,
-              "y": 59.56,
+              "y": 59.12,
               "date": "2026-06-17",
               "v": 3.73
             },
             {
               "x": 86.81,
-              "y": 59.46,
+              "y": 59.02,
               "date": "2026-06-24",
               "v": 3.75
             },
             {
               "x": 87.91,
-              "y": 58.75,
+              "y": 58.3,
               "date": "2026-07-01",
               "v": 3.89
             },
             {
               "x": 89.01,
-              "y": 62.27,
+              "y": 61.88,
               "date": "2026-07-08",
               "v": 3.19
             },
             {
               "x": 90.11,
-              "y": 63.68,
+              "y": 63.31,
               "date": "2026-07-15",
               "v": 2.91
             },
             {
               "x": 91.21,
-              "y": 61.52,
+              "y": 61.11,
               "date": "2026-07-22",
               "v": 3.34
             },
             {
               "x": 92.31,
-              "y": 61.11,
+              "y": 60.7,
               "date": "2026-07-29",
               "v": 3.42
             },
             {
               "x": 94.51,
-              "y": 59.35,
+              "y": 58.92,
               "date": "2026-08-05",
               "v": 3.77
             },
             {
               "x": 95.6,
-              "y": 61.27,
+              "y": 60.86,
               "date": "2026-08-12",
               "v": 3.39
             },
             {
               "x": 100.0,
-              "y": 43.45,
+              "y": 43.04,
               "date": "2026-08-22",
-              "v": 6.9325
+              "v": 6.8775
             }
           ],
-          "polyline": "0.0,71.02 1.1,74.95 2.2,80.53 3.3,80.13 4.4,77.06 5.49,74.59 6.59,73.94 7.69,75.0 8.79,73.79 9.89,71.53 10.99,70.62 12.09,71.43 13.19,71.22 14.29,69.31 15.38,67.8 16.48,66.65 17.58,65.99 18.68,64.64 19.78,66.19 20.88,67.35 21.98,67.9 23.08,67.7 24.18,67.75 25.27,67.45 26.37,67.05 27.47,66.6 28.57,65.99 29.67,67.65 30.77,65.29 31.87,64.48 32.97,61.01 34.07,62.27 35.16,62.72 36.26,66.04 37.36,63.93 38.46,64.08 39.56,62.27 40.66,64.53 41.76,64.59 42.86,64.94 43.96,63.68 45.05,63.28 46.15,63.18 47.25,63.38 48.35,62.02 49.45,60.11 50.55,59.71 51.65,60.11 52.75,63.08 53.85,63.18 56.04,62.37 57.14,60.76 58.24,57.8 59.34,60.01 60.44,59.05 61.54,59.4 62.64,59.1 63.74,59.3 64.84,59.51 67.03,58.55 68.13,59.76 69.23,59.86 70.33,59.15 71.43,58.7 72.53,57.9 73.63,59.91 74.73,58.45 75.82,57.9 76.92,57.95 79.12,57.64 80.22,58.05 81.32,55.93 82.42,56.49 83.52,57.69 84.62,59.56 85.71,59.56 86.81,59.46 87.91,58.75 89.01,62.27 90.11,63.68 91.21,61.52 92.31,61.11 94.51,59.35 95.6,61.27 100.0,43.45",
+          "polyline": "0.0,70.77 1.1,74.76 2.2,80.43 3.3,80.02 4.4,76.9 5.49,74.4 6.59,73.73 7.69,74.81 8.79,73.58 9.89,71.28 10.99,70.36 12.09,71.18 13.19,70.98 14.29,69.03 15.38,67.5 16.48,66.33 17.58,65.66 18.68,64.28 19.78,65.87 20.88,67.04 21.98,67.6 23.08,67.4 24.18,67.45 25.27,67.14 26.37,66.73 27.47,66.27 28.57,65.66 29.67,67.35 30.77,64.95 31.87,64.13 32.97,60.6 34.07,61.88 35.16,62.34 36.26,65.71 37.36,63.57 38.46,63.72 39.56,61.88 40.66,64.18 41.76,64.23 42.86,64.59 43.96,63.31 45.05,62.9 46.15,62.8 47.25,63.0 48.35,61.62 49.45,59.68 50.55,59.27 51.65,59.68 52.75,62.7 53.85,62.8 56.04,61.98 57.14,60.35 58.24,57.33 59.34,59.58 60.44,58.61 61.54,58.97 62.64,58.66 63.74,58.87 64.84,59.07 67.03,58.1 68.13,59.33 69.23,59.43 70.33,58.71 71.43,58.25 72.53,57.43 73.63,59.48 74.73,58.0 75.82,57.43 76.92,57.49 79.12,57.18 80.22,57.59 81.32,55.44 82.42,56.0 83.52,57.23 84.62,59.12 85.71,59.12 86.81,59.02 87.91,58.3 89.01,61.88 90.11,63.31 91.21,61.11 92.31,60.7 94.51,58.92 95.6,60.86 100.0,43.04",
           "last": {
             "x": 100.0,
-            "y": 43.45,
+            "y": 43.04,
             "date": "2026-08-22",
-            "v": 6.9325
+            "v": 6.8775
           },
           "band": {
-            "y_low": 64.99,
+            "y_low": 64.59,
             "y_high": 13.24,
-            "low": 2.65,
-            "high": 12.94,
+            "low": 2.66,
+            "high": 12.71,
             "kind": "spread",
             "n": 4
           },
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 48.0,
+          "label_y": 47.32,
           "label_nudged": true,
-          "sx": 56.55,
-          "sx_low": 35.01,
+          "sx": 56.96,
+          "sx_low": 35.41,
           "sx_high": 86.76
         }
       ]
@@ -3746,48 +3745,48 @@
       "x_ticks": [
         {
           "v": 200.0,
-          "x": 11.55,
+          "x": 11.4,
           "label": "200"
         },
         {
           "v": 225.0,
-          "x": 40.73,
+          "x": 40.93,
           "label": "225"
         },
         {
           "v": 250.0,
-          "x": 69.9,
+          "x": 70.47,
           "label": "250"
         },
         {
           "v": 275.0,
-          "x": 99.08,
+          "x": 100.0,
           "label": "275"
         }
       ],
       "y_ticks": [
         {
           "v": 200.0,
-          "y": 88.45,
+          "y": 88.6,
           "label": "200"
         },
         {
           "v": 225.0,
-          "y": 59.27,
+          "y": 59.07,
           "label": "225"
         },
         {
           "v": 250.0,
-          "y": 30.1,
+          "y": 29.53,
           "label": "250"
         },
         {
           "v": 275.0,
-          "y": 0.92,
+          "y": 0.0,
           "label": "275"
         }
       ],
-      "ref_y": 67.44,
+      "ref_y": 67.33,
       "ref_label": "218 \u2014 a majority",
       "ref_value": 218,
       "zero_y": null,
@@ -3800,33 +3799,33 @@
           "points": [
             {
               "x": 97.7,
-              "y": 57.66,
+              "y": 57.44,
               "date": "2026-08-20",
               "v": 226.38
             },
             {
               "x": 98.85,
-              "y": 53.33,
+              "y": 53.05,
               "date": "2026-08-21",
               "v": 230.09
             },
             {
               "x": 100.0,
-              "y": 54.39,
+              "y": 54.13,
               "date": "2026-08-22",
               "v": 229.18
             }
           ],
-          "polyline": "97.7,57.66 98.85,53.33 100.0,54.39",
+          "polyline": "97.7,57.44 98.85,53.05 100.0,54.13",
           "last": {
             "x": 100.0,
-            "y": 54.39,
+            "y": 54.13,
             "date": "2026-08-22",
             "v": 229.18
           },
           "band": {
-            "y_low": 56.51,
-            "y_high": 53.33,
+            "y_low": 56.27,
+            "y_high": 53.05,
             "low": 227.37,
             "high": 230.09,
             "kind": "spread",
@@ -3835,11 +3834,11 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 87.95,
+          "label_y": 88.02000000000001,
           "label_nudged": true,
-          "sx": 45.61,
-          "sx_low": 43.49,
-          "sx_high": 46.67
+          "sx": 45.87,
+          "sx_low": 43.73,
+          "sx_high": 46.95
         },
         {
           "key": "market",
@@ -3849,21 +3848,21 @@
           "points": [
             {
               "x": 98.85,
-              "y": 53.47,
+              "y": 53.19,
               "date": "2026-08-21",
               "v": 229.97
             },
             {
               "x": 100.0,
-              "y": 53.42,
+              "y": 53.15,
               "date": "2026-08-22",
               "v": 230.01
             }
           ],
-          "polyline": "98.85,53.47 100.0,53.42",
+          "polyline": "98.85,53.19 100.0,53.15",
           "last": {
             "x": 100.0,
-            "y": 53.42,
+            "y": 53.15,
             "date": "2026-08-22",
             "v": 230.01
           },
@@ -3871,9 +3870,9 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": "1",
-          "label_y": 74.95,
+          "label_y": 75.02000000000001,
           "label_nudged": true,
-          "sx": 46.58
+          "sx": 46.85
         },
         {
           "key": "fundamentals",
@@ -3883,33 +3882,33 @@
           "points": [
             {
               "x": 97.7,
-              "y": 29.95,
+              "y": 29.38,
               "date": "2026-08-20",
               "v": 250.13
             },
             {
               "x": 98.85,
-              "y": 53.23,
+              "y": 52.95,
               "date": "2026-08-21",
               "v": 230.18
             },
             {
               "x": 100.0,
-              "y": 53.23,
+              "y": 52.95,
               "date": "2026-08-22",
               "v": 230.18
             }
           ],
-          "polyline": "97.7,29.95 98.85,53.23 100.0,53.23",
+          "polyline": "97.7,29.38 98.85,52.95 100.0,52.95",
           "last": {
             "x": 100.0,
-            "y": 53.23,
+            "y": 52.95,
             "date": "2026-08-22",
             "v": 230.18
           },
           "band": {
             "y_low": 76.51,
-            "y_high": 29.95,
+            "y_high": 29.38,
             "low": 210.23,
             "high": 250.13,
             "kind": "spread",
@@ -3918,11 +3917,11 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 2,
-          "label_y": 61.95,
+          "label_y": 62.02,
           "label_nudged": true,
-          "sx": 46.77,
+          "sx": 47.05,
           "sx_low": 23.49,
-          "sx_high": 70.05
+          "sx_high": 70.62
         },
         {
           "key": "professional",
@@ -3932,33 +3931,33 @@
           "points": [
             {
               "x": 96.55,
-              "y": 29.18,
+              "y": 28.6,
               "date": "2026-08-19",
               "v": 250.79
             },
             {
               "x": 97.7,
-              "y": 29.51,
+              "y": 28.94,
               "date": "2026-08-20",
               "v": 250.5
             },
             {
               "x": 98.85,
-              "y": 29.69,
+              "y": 29.12,
               "date": "2026-08-21",
               "v": 250.35
             },
             {
               "x": 100.0,
-              "y": 29.67,
+              "y": 29.1,
               "date": "2026-08-22",
               "v": 250.37
             }
           ],
-          "polyline": "96.55,29.18 97.7,29.51 98.85,29.69 100.0,29.67",
+          "polyline": "96.55,28.6 97.7,28.94 98.85,29.12 100.0,29.1",
           "last": {
             "x": 100.0,
-            "y": 29.67,
+            "y": 29.1,
             "date": "2026-08-22",
             "v": 250.37
           },
@@ -3966,9 +3965,9 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 1,
-          "label_y": 29.67,
+          "label_y": 29.1,
           "label_nudged": false,
-          "sx": 70.33
+          "sx": 70.9
         },
         {
           "key": "academic",
@@ -3978,79 +3977,79 @@
           "points": [
             {
               "x": 0.0,
-              "y": 78.04,
+              "y": 78.06,
               "date": "2025-01-01",
               "v": 208.92
             },
             {
               "x": 1.15,
-              "y": 81.63,
+              "y": 81.7,
               "date": "2025-01-15",
               "v": 205.84
             },
             {
               "x": 2.3,
-              "y": 86.76,
+              "y": 86.9,
               "date": "2025-01-22",
               "v": 201.44
             },
             {
               "x": 3.45,
-              "y": 86.39,
+              "y": 86.52,
               "date": "2025-01-29",
               "v": 201.76
             },
             {
               "x": 4.6,
-              "y": 83.57,
+              "y": 83.66,
               "date": "2025-02-05",
               "v": 204.18
             },
             {
               "x": 5.75,
-              "y": 81.32,
+              "y": 81.38,
               "date": "2025-02-12",
               "v": 206.11
             },
             {
               "x": 6.9,
-              "y": 80.71,
+              "y": 80.77,
               "date": "2025-02-19",
               "v": 206.63
             },
             {
               "x": 8.05,
-              "y": 81.68,
+              "y": 81.75,
               "date": "2025-02-26",
               "v": 205.8
             },
             {
               "x": 9.2,
-              "y": 80.58,
+              "y": 80.64,
               "date": "2025-03-05",
               "v": 206.74
             },
             {
               "x": 10.34,
-              "y": 78.51,
+              "y": 78.55,
               "date": "2025-03-12",
               "v": 208.51
             },
             {
               "x": 11.49,
-              "y": 77.66,
+              "y": 77.68,
               "date": "2025-03-19",
               "v": 209.24
             },
             {
               "x": 12.64,
-              "y": 78.42,
+              "y": 78.45,
               "date": "2025-03-26",
               "v": 208.59
             },
             {
               "x": 13.79,
-              "y": 78.22,
+              "y": 78.25,
               "date": "2025-04-02",
               "v": 208.76
             },
@@ -4062,454 +4061,454 @@
             },
             {
               "x": 16.09,
-              "y": 75.06,
+              "y": 75.05,
               "date": "2025-04-16",
               "v": 211.47
             },
             {
               "x": 17.24,
-              "y": 73.99,
+              "y": 73.96,
               "date": "2025-04-23",
               "v": 212.39
             },
             {
               "x": 18.39,
-              "y": 73.38,
+              "y": 73.35,
               "date": "2025-04-30",
               "v": 212.91
             },
             {
               "x": 19.54,
-              "y": 72.12,
+              "y": 72.07,
               "date": "2025-05-07",
               "v": 213.99
             },
             {
               "x": 20.69,
-              "y": 73.57,
+              "y": 73.54,
               "date": "2025-05-14",
               "v": 212.75
             },
             {
               "x": 21.84,
-              "y": 74.64,
+              "y": 74.62,
               "date": "2025-05-21",
               "v": 211.83
             },
             {
               "x": 22.99,
-              "y": 75.15,
+              "y": 75.14,
               "date": "2025-05-28",
               "v": 211.39
             },
             {
               "x": 24.14,
-              "y": 74.97,
+              "y": 74.95,
               "date": "2025-06-04",
               "v": 211.55
             },
             {
               "x": 25.29,
-              "y": 75.01,
+              "y": 75.0,
               "date": "2025-06-11",
               "v": 211.51
             },
             {
               "x": 26.44,
-              "y": 74.73,
+              "y": 74.72,
               "date": "2025-06-18",
               "v": 211.75
             },
             {
               "x": 27.59,
-              "y": 74.36,
+              "y": 74.34,
               "date": "2025-06-25",
               "v": 212.07
             },
             {
               "x": 28.74,
-              "y": 73.94,
+              "y": 73.91,
               "date": "2025-07-02",
               "v": 212.43
             },
             {
               "x": 29.89,
-              "y": 73.38,
+              "y": 73.35,
               "date": "2025-07-09",
               "v": 212.91
             },
             {
               "x": 31.03,
-              "y": 74.92,
+              "y": 74.91,
               "date": "2025-07-16",
               "v": 211.59
             },
             {
               "x": 32.18,
-              "y": 72.73,
+              "y": 72.69,
               "date": "2025-07-23",
               "v": 213.47
             },
             {
               "x": 33.33,
-              "y": 71.98,
+              "y": 71.93,
               "date": "2025-07-30",
               "v": 214.11
             },
             {
               "x": 34.48,
-              "y": 68.7,
+              "y": 68.61,
               "date": "2025-08-06",
               "v": 216.92
             },
             {
               "x": 35.63,
-              "y": 69.9,
+              "y": 69.83,
               "date": "2025-08-13",
               "v": 215.89
             },
             {
               "x": 36.78,
-              "y": 70.32,
+              "y": 70.25,
               "date": "2025-08-20",
               "v": 215.53
             },
             {
               "x": 37.93,
-              "y": 73.43,
+              "y": 73.39,
               "date": "2025-08-27",
               "v": 212.87
             },
             {
               "x": 39.08,
-              "y": 71.47,
+              "y": 71.41,
               "date": "2025-09-03",
               "v": 214.55
             },
             {
               "x": 40.23,
-              "y": 71.61,
+              "y": 71.55,
               "date": "2025-09-10",
               "v": 214.43
             },
             {
               "x": 41.38,
-              "y": 69.9,
+              "y": 69.83,
               "date": "2025-09-17",
               "v": 215.89
             },
             {
               "x": 42.53,
-              "y": 72.03,
+              "y": 71.98,
               "date": "2025-09-24",
               "v": 214.07
             },
             {
               "x": 43.68,
-              "y": 72.07,
+              "y": 72.02,
               "date": "2025-10-01",
               "v": 214.03
             },
             {
               "x": 44.83,
-              "y": 72.4,
+              "y": 72.36,
               "date": "2025-10-08",
               "v": 213.75
             },
             {
               "x": 45.98,
-              "y": 71.23,
+              "y": 71.17,
               "date": "2025-10-15",
               "v": 214.75
             },
             {
               "x": 47.13,
-              "y": 70.86,
+              "y": 70.8,
               "date": "2025-10-22",
               "v": 215.07
             },
             {
               "x": 48.28,
-              "y": 70.75,
+              "y": 70.69,
               "date": "2025-10-29",
               "v": 215.16
             },
             {
               "x": 49.43,
-              "y": 70.94,
+              "y": 70.88,
               "date": "2025-11-05",
               "v": 215.0
             },
             {
               "x": 50.57,
-              "y": 69.66,
+              "y": 69.58,
               "date": "2025-11-12",
               "v": 216.1
             },
             {
               "x": 51.72,
-              "y": 67.84,
+              "y": 67.74,
               "date": "2025-11-19",
               "v": 217.66
             },
             {
               "x": 52.87,
-              "y": 67.44,
+              "y": 67.33,
               "date": "2025-11-26",
               "v": 218.0
             },
             {
               "x": 54.02,
-              "y": 67.84,
+              "y": 67.74,
               "date": "2025-12-03",
               "v": 217.66
             },
             {
               "x": 55.17,
-              "y": 70.66,
+              "y": 70.6,
               "date": "2025-12-10",
               "v": 215.24
             },
             {
               "x": 56.32,
-              "y": 70.75,
+              "y": 70.69,
               "date": "2025-12-17",
               "v": 215.16
             },
             {
               "x": 57.47,
-              "y": 70.0,
+              "y": 69.92,
               "date": "2025-12-24",
               "v": 215.81
             },
             {
               "x": 58.62,
-              "y": 68.47,
+              "y": 68.37,
               "date": "2025-12-31",
               "v": 217.12
             },
             {
               "x": 59.77,
-              "y": 65.62,
+              "y": 65.49,
               "date": "2026-01-07",
               "v": 219.56
             },
             {
               "x": 60.92,
-              "y": 67.74,
+              "y": 67.64,
               "date": "2026-01-14",
               "v": 217.74
             },
             {
               "x": 62.07,
-              "y": 66.82,
+              "y": 66.71,
               "date": "2026-01-21",
               "v": 218.53
             },
             {
               "x": 63.22,
-              "y": 67.16,
+              "y": 67.05,
               "date": "2026-01-28",
               "v": 218.24
             },
             {
               "x": 64.37,
-              "y": 66.87,
+              "y": 66.76,
               "date": "2026-02-04",
               "v": 218.49
             },
             {
               "x": 65.52,
-              "y": 67.05,
+              "y": 66.94,
               "date": "2026-02-11",
               "v": 218.33
             },
             {
               "x": 66.67,
-              "y": 67.25,
+              "y": 67.15,
               "date": "2026-02-18",
               "v": 218.16
             },
             {
               "x": 67.82,
-              "y": 66.34,
+              "y": 66.22,
               "date": "2026-02-25",
               "v": 218.94
             },
             {
               "x": 68.97,
-              "y": 67.49,
+              "y": 67.38,
               "date": "2026-03-04",
               "v": 217.96
             },
             {
               "x": 70.11,
-              "y": 67.59,
+              "y": 67.49,
               "date": "2026-03-11",
               "v": 217.87
             },
             {
               "x": 71.26,
-              "y": 66.91,
+              "y": 66.8,
               "date": "2026-03-18",
               "v": 218.45
             },
             {
               "x": 72.41,
-              "y": 66.48,
+              "y": 66.37,
               "date": "2026-03-25",
               "v": 218.82
             },
             {
               "x": 73.56,
-              "y": 65.71,
+              "y": 65.59,
               "date": "2026-04-01",
               "v": 219.48
             },
             {
               "x": 74.71,
-              "y": 67.64,
+              "y": 67.54,
               "date": "2026-04-08",
               "v": 217.83
             },
             {
               "x": 75.86,
-              "y": 66.25,
+              "y": 66.13,
               "date": "2026-04-15",
               "v": 219.02
             },
             {
               "x": 77.01,
-              "y": 65.71,
+              "y": 65.59,
               "date": "2026-04-22",
               "v": 219.48
             },
             {
               "x": 78.16,
-              "y": 65.76,
+              "y": 65.63,
               "date": "2026-04-29",
               "v": 219.44
             },
             {
               "x": 79.31,
-              "y": 65.47,
+              "y": 65.34,
               "date": "2026-05-06",
               "v": 219.69
             },
             {
               "x": 80.46,
-              "y": 65.85,
+              "y": 65.73,
               "date": "2026-05-13",
               "v": 219.36
             },
             {
               "x": 81.61,
-              "y": 63.81,
+              "y": 63.66,
               "date": "2026-05-20",
               "v": 221.11
             },
             {
               "x": 82.76,
-              "y": 64.35,
+              "y": 64.2,
               "date": "2026-05-27",
               "v": 220.65
             },
             {
               "x": 83.91,
-              "y": 65.51,
+              "y": 65.39,
               "date": "2026-06-03",
               "v": 219.65
             },
             {
               "x": 85.06,
-              "y": 67.3,
+              "y": 67.19,
               "date": "2026-06-10",
               "v": 218.12
             },
             {
               "x": 86.21,
-              "y": 67.3,
+              "y": 67.19,
               "date": "2026-06-17",
               "v": 218.12
             },
             {
               "x": 87.36,
-              "y": 67.21,
+              "y": 67.1,
               "date": "2026-06-24",
               "v": 218.2
             },
             {
               "x": 88.51,
-              "y": 66.53,
+              "y": 66.41,
               "date": "2026-07-01",
               "v": 218.78
             },
             {
               "x": 89.66,
-              "y": 69.9,
+              "y": 69.83,
               "date": "2026-07-08",
               "v": 215.89
             },
             {
               "x": 90.8,
-              "y": 71.23,
+              "y": 71.17,
               "date": "2026-07-15",
               "v": 214.75
             },
             {
               "x": 91.95,
-              "y": 69.18,
+              "y": 69.09,
               "date": "2026-07-22",
               "v": 216.51
             },
             {
               "x": 93.1,
-              "y": 68.81,
+              "y": 68.72,
               "date": "2026-07-29",
               "v": 216.83
             },
             {
               "x": 94.25,
-              "y": 67.1,
+              "y": 66.99,
               "date": "2026-08-05",
               "v": 218.29
             },
             {
               "x": 95.4,
-              "y": 68.95,
+              "y": 68.86,
               "date": "2026-08-12",
               "v": 216.71
             },
             {
               "x": 100.0,
-              "y": 48.95,
+              "y": 49.02,
               "date": "2026-08-22",
-              "v": 233.8425
+              "v": 233.5025
             }
           ],
-          "polyline": "0.0,78.04 1.15,81.63 2.3,86.76 3.45,86.39 4.6,83.57 5.75,81.32 6.9,80.71 8.05,81.68 9.2,80.58 10.34,78.51 11.49,77.66 12.64,78.42 13.79,78.22 14.94,76.45 16.09,75.06 17.24,73.99 18.39,73.38 19.54,72.12 20.69,73.57 21.84,74.64 22.99,75.15 24.14,74.97 25.29,75.01 26.44,74.73 27.59,74.36 28.74,73.94 29.89,73.38 31.03,74.92 32.18,72.73 33.33,71.98 34.48,68.7 35.63,69.9 36.78,70.32 37.93,73.43 39.08,71.47 40.23,71.61 41.38,69.9 42.53,72.03 43.68,72.07 44.83,72.4 45.98,71.23 47.13,70.86 48.28,70.75 49.43,70.94 50.57,69.66 51.72,67.84 52.87,67.44 54.02,67.84 55.17,70.66 56.32,70.75 57.47,70.0 58.62,68.47 59.77,65.62 60.92,67.74 62.07,66.82 63.22,67.16 64.37,66.87 65.52,67.05 66.67,67.25 67.82,66.34 68.97,67.49 70.11,67.59 71.26,66.91 72.41,66.48 73.56,65.71 74.71,67.64 75.86,66.25 77.01,65.71 78.16,65.76 79.31,65.47 80.46,65.85 81.61,63.81 82.76,64.35 83.91,65.51 85.06,67.3 86.21,67.3 87.36,67.21 88.51,66.53 89.66,69.9 90.8,71.23 91.95,69.18 93.1,68.81 94.25,67.1 95.4,68.95 100.0,48.95",
+          "polyline": "0.0,78.06 1.15,81.7 2.3,86.9 3.45,86.52 4.6,83.66 5.75,81.38 6.9,80.77 8.05,81.75 9.2,80.64 10.34,78.55 11.49,77.68 12.64,78.45 13.79,78.25 14.94,76.45 16.09,75.05 17.24,73.96 18.39,73.35 19.54,72.07 20.69,73.54 21.84,74.62 22.99,75.14 24.14,74.95 25.29,75.0 26.44,74.72 27.59,74.34 28.74,73.91 29.89,73.35 31.03,74.91 32.18,72.69 33.33,71.93 34.48,68.61 35.63,69.83 36.78,70.25 37.93,73.39 39.08,71.41 40.23,71.55 41.38,69.83 42.53,71.98 43.68,72.02 44.83,72.36 45.98,71.17 47.13,70.8 48.28,70.69 49.43,70.88 50.57,69.58 51.72,67.74 52.87,67.33 54.02,67.74 55.17,70.6 56.32,70.69 57.47,69.92 58.62,68.37 59.77,65.49 60.92,67.64 62.07,66.71 63.22,67.05 64.37,66.76 65.52,66.94 66.67,67.15 67.82,66.22 68.97,67.38 70.11,67.49 71.26,66.8 72.41,66.37 73.56,65.59 74.71,67.54 75.86,66.13 77.01,65.59 78.16,65.63 79.31,65.34 80.46,65.73 81.61,63.66 82.76,64.2 83.91,65.39 85.06,67.19 86.21,67.19 87.36,67.1 88.51,66.41 89.66,69.83 90.8,71.17 91.95,69.09 93.1,68.72 94.25,66.99 95.4,68.86 100.0,49.02",
           "last": {
             "x": 100.0,
-            "y": 48.95,
+            "y": 49.02,
             "date": "2026-08-22",
-            "v": 233.8425
+            "v": 233.5025
           },
           "band": {
-            "y_low": 72.43,
-            "y_high": 13.24,
-            "low": 213.72,
-            "high": 264.45,
+            "y_low": 72.36,
+            "y_high": 14.1,
+            "low": 213.75,
+            "high": 263.06,
             "kind": "spread",
             "n": 4
           },
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 48.95,
+          "label_y": 49.02,
           "label_nudged": false,
-          "sx": 51.05,
-          "sx_low": 27.57,
-          "sx_high": 86.76
+          "sx": 50.98,
+          "sx_low": 27.64,
+          "sx_high": 85.9
         }
       ]
     },
@@ -5404,23 +5403,23 @@
             },
             {
               "x": 100.0,
-              "y": 31.28,
+              "y": 31.31,
               "date": "2026-08-22",
-              "v": 0.6872
+              "v": 0.6869
             }
           ],
-          "polyline": "0.0,71.61 1.15,77.88 2.3,85.22 3.45,84.76 4.6,80.79 5.75,77.42 6.9,76.35 8.05,77.95 9.2,76.09 10.34,72.54 11.49,70.93 12.64,72.34 13.79,71.97 14.94,68.66 16.09,66.13 17.24,64.0 18.39,62.8 19.54,60.24 20.69,63.1 21.84,65.34 22.99,66.27 24.14,65.92 25.29,66.03 26.44,65.46 27.59,64.79 28.74,63.9 29.89,62.8 31.03,65.81 32.18,61.38 33.33,59.97 34.48,53.42 35.63,55.83 36.78,56.69 37.93,62.84 39.08,58.92 40.23,59.25 41.38,55.83 42.53,60.04 43.68,60.15 44.83,60.77 45.98,58.53 47.13,57.78 48.28,57.56 49.43,57.96 50.57,55.44 51.72,51.67 52.87,50.86 54.02,51.67 55.17,57.4 56.32,57.56 57.47,56.02 58.62,52.93 59.77,47.11 60.92,51.51 62.07,49.57 63.22,50.24 64.37,49.66 65.52,50.05 66.67,50.41 67.82,48.52 68.97,51.01 70.11,51.16 71.26,49.74 72.41,48.88 73.56,47.28 74.71,51.28 75.86,48.34 77.01,47.28 78.16,47.32 79.31,46.79 80.46,47.51 81.61,43.67 82.76,44.66 83.91,46.88 85.06,50.52 86.21,50.52 87.36,50.32 88.51,48.95 89.66,55.83 90.8,58.53 91.95,54.43 93.1,53.63 94.25,50.14 95.4,53.93 100.0,31.28",
+          "polyline": "0.0,71.61 1.15,77.88 2.3,85.22 3.45,84.76 4.6,80.79 5.75,77.42 6.9,76.35 8.05,77.95 9.2,76.09 10.34,72.54 11.49,70.93 12.64,72.34 13.79,71.97 14.94,68.66 16.09,66.13 17.24,64.0 18.39,62.8 19.54,60.24 20.69,63.1 21.84,65.34 22.99,66.27 24.14,65.92 25.29,66.03 26.44,65.46 27.59,64.79 28.74,63.9 29.89,62.8 31.03,65.81 32.18,61.38 33.33,59.97 34.48,53.42 35.63,55.83 36.78,56.69 37.93,62.84 39.08,58.92 40.23,59.25 41.38,55.83 42.53,60.04 43.68,60.15 44.83,60.77 45.98,58.53 47.13,57.78 48.28,57.56 49.43,57.96 50.57,55.44 51.72,51.67 52.87,50.86 54.02,51.67 55.17,57.4 56.32,57.56 57.47,56.02 58.62,52.93 59.77,47.11 60.92,51.51 62.07,49.57 63.22,50.24 64.37,49.66 65.52,50.05 66.67,50.41 67.82,48.52 68.97,51.01 70.11,51.16 71.26,49.74 72.41,48.88 73.56,47.28 74.71,51.28 75.86,48.34 77.01,47.28 78.16,47.32 79.31,46.79 80.46,47.51 81.61,43.67 82.76,44.66 83.91,46.88 85.06,50.52 86.21,50.52 87.36,50.32 88.51,48.95 89.66,55.83 90.8,58.53 91.95,54.43 93.1,53.63 94.25,50.14 95.4,53.93 100.0,31.31",
           "last": {
             "x": 100.0,
-            "y": 31.28,
+            "y": 31.31,
             "date": "2026-08-22",
-            "v": 0.6872
+            "v": 0.6869
           },
           "band": {
-            "y_low": 60.89,
-            "y_high": 1.21,
-            "low": 0.3911,
-            "high": 0.9879,
+            "y_low": 60.77,
+            "y_high": 1.45,
+            "low": 0.3923,
+            "high": 0.9855,
             "kind": "spread",
             "n": 4
           },
@@ -5429,9 +5428,9 @@
           "n_sources": 4,
           "label_y": 52.35,
           "label_nudged": true,
-          "sx": 68.72,
-          "sx_low": 39.11,
-          "sx_high": 98.79
+          "sx": 68.69,
+          "sx_low": 39.23,
+          "sx_high": 98.55
         }
       ]
     },
@@ -6285,23 +6284,23 @@
             },
             {
               "x": 100.0,
-              "y": 48.32,
+              "y": 48.6,
               "date": "2026-08-22",
-              "v": 49.7525
+              "v": 49.7225
             }
           ],
-          "polyline": "0.0,73.11 1.15,76.52 2.3,81.58 3.45,81.22 4.6,78.45 5.75,76.15 6.9,75.6 8.05,76.52 9.2,75.51 10.34,73.48 11.49,72.74 12.64,73.39 13.79,73.2 14.94,71.55 16.09,70.26 17.24,69.24 18.39,68.69 19.54,67.5 20.69,68.88 21.84,69.89 22.99,70.35 24.14,70.17 25.29,70.17 26.44,69.98 27.59,69.61 28.74,69.24 29.89,68.69 31.03,70.17 32.18,68.05 33.33,67.4 34.48,64.46 35.63,65.47 36.78,65.93 37.93,68.78 39.08,66.94 40.23,67.03 41.38,65.47 42.53,67.4 43.68,67.5 44.83,67.77 45.98,66.67 47.13,66.39 48.28,66.3 49.43,66.39 50.57,65.29 51.72,63.63 52.87,63.26 54.02,63.63 55.17,66.21 56.32,66.3 57.47,65.56 58.62,64.27 59.77,61.69 60.92,63.54 62.07,62.71 63.22,63.08 64.37,62.8 65.52,62.98 66.67,63.17 67.82,62.34 68.97,63.35 70.11,63.44 71.26,62.8 72.41,62.43 73.56,61.79 74.71,63.44 75.86,62.25 77.01,61.79 78.16,61.88 79.31,61.6 80.46,61.88 81.61,60.13 82.76,60.68 83.91,61.69 85.06,63.17 86.21,63.17 87.36,63.08 88.51,62.52 89.66,65.47 90.8,66.67 91.95,64.92 93.1,64.55 94.25,62.98 95.4,64.64 100.0,48.32",
+          "polyline": "0.0,73.11 1.15,76.52 2.3,81.58 3.45,81.22 4.6,78.45 5.75,76.15 6.9,75.6 8.05,76.52 9.2,75.51 10.34,73.48 11.49,72.74 12.64,73.39 13.79,73.2 14.94,71.55 16.09,70.26 17.24,69.24 18.39,68.69 19.54,67.5 20.69,68.88 21.84,69.89 22.99,70.35 24.14,70.17 25.29,70.17 26.44,69.98 27.59,69.61 28.74,69.24 29.89,68.69 31.03,70.17 32.18,68.05 33.33,67.4 34.48,64.46 35.63,65.47 36.78,65.93 37.93,68.78 39.08,66.94 40.23,67.03 41.38,65.47 42.53,67.4 43.68,67.5 44.83,67.77 45.98,66.67 47.13,66.39 48.28,66.3 49.43,66.39 50.57,65.29 51.72,63.63 52.87,63.26 54.02,63.63 55.17,66.21 56.32,66.3 57.47,65.56 58.62,64.27 59.77,61.69 60.92,63.54 62.07,62.71 63.22,63.08 64.37,62.8 65.52,62.98 66.67,63.17 67.82,62.34 68.97,63.35 70.11,63.44 71.26,62.8 72.41,62.43 73.56,61.79 74.71,63.44 75.86,62.25 77.01,61.79 78.16,61.88 79.31,61.6 80.46,61.88 81.61,60.13 82.76,60.68 83.91,61.69 85.06,63.17 86.21,63.17 87.36,63.08 88.51,62.52 89.66,65.47 90.8,66.67 91.95,64.92 93.1,64.55 94.25,62.98 95.4,64.64 100.0,48.6",
           "last": {
             "x": 100.0,
-            "y": 48.32,
+            "y": 48.6,
             "date": "2026-08-22",
-            "v": 49.7525
+            "v": 49.7225
           },
           "band": {
-            "y_low": 67.86,
-            "y_high": 19.71,
-            "low": 47.63,
-            "high": 52.86,
+            "y_low": 67.77,
+            "y_high": 20.9,
+            "low": 47.64,
+            "high": 52.73,
             "kind": "spread",
             "n": 4
           },
@@ -6310,9 +6309,9 @@
           "n_sources": 4,
           "label_y": 60.24,
           "label_nudged": true,
-          "sx": 51.68,
-          "sx_low": 32.14,
-          "sx_high": 80.29
+          "sx": 51.4,
+          "sx_low": 32.23,
+          "sx_high": 79.1
         }
       ]
     },
@@ -6539,7 +6538,7 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 89.87,
+          "label_y": 90.21,
           "label_nudged": true,
           "sx": 27.52,
           "sx_low": 24.57,
@@ -6643,7 +6642,7 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 2,
-          "label_y": 76.87,
+          "label_y": 77.21,
           "label_nudged": true,
           "sx": 33.89,
           "sx_low": 5.69,
@@ -7207,34 +7206,34 @@
             },
             {
               "x": 100.0,
-              "y": 63.87,
+              "y": 64.21,
               "date": "2026-08-22",
-              "v": 0.3613
+              "v": 0.3579
             }
           ],
-          "polyline": "0.0,95.06 1.15,96.67 2.3,98.02 3.45,97.93 4.6,97.29 5.75,96.57 6.9,96.36 8.05,96.68 9.2,96.3 10.34,95.31 11.49,94.94 12.64,95.26 13.79,95.14 14.94,94.29 16.09,93.45 17.24,92.79 18.39,92.36 19.54,91.39 20.69,92.51 21.84,93.22 22.99,93.5 24.14,93.4 25.29,93.41 26.44,93.27 27.59,93.07 28.74,92.76 29.89,92.36 31.03,93.37 32.18,91.86 33.33,91.28 34.48,88.79 35.63,89.64 36.78,89.99 37.93,92.42 39.08,90.91 40.23,91.01 41.38,89.64 42.53,91.32 43.68,91.37 44.83,91.59 45.98,90.68 47.13,90.35 48.28,90.28 49.43,90.4 50.57,89.44 51.72,87.97 52.87,87.55 54.02,87.97 55.17,90.23 56.32,90.28 57.47,89.76 58.62,88.57 59.77,85.89 60.92,87.84 62.07,87.02 63.22,87.25 64.37,87.06 65.52,87.17 66.67,87.38 67.82,86.54 68.97,87.59 70.11,87.7 71.26,87.1 72.41,86.72 73.56,85.95 74.71,87.76 75.86,86.42 77.01,85.95 78.16,86.0 79.31,85.75 80.46,86.07 81.61,84.04 82.76,84.66 83.91,85.79 85.06,87.42 86.21,87.42 87.36,87.3 88.51,86.74 89.66,89.64 90.8,90.68 91.95,89.11 93.1,88.86 94.25,87.21 95.4,89.0 100.0,63.87",
+          "polyline": "0.0,95.06 1.15,96.67 2.3,98.02 3.45,97.93 4.6,97.29 5.75,96.57 6.9,96.36 8.05,96.68 9.2,96.3 10.34,95.31 11.49,94.94 12.64,95.26 13.79,95.14 14.94,94.29 16.09,93.45 17.24,92.79 18.39,92.36 19.54,91.39 20.69,92.51 21.84,93.22 22.99,93.5 24.14,93.4 25.29,93.41 26.44,93.27 27.59,93.07 28.74,92.76 29.89,92.36 31.03,93.37 32.18,91.86 33.33,91.28 34.48,88.79 35.63,89.64 36.78,89.99 37.93,92.42 39.08,90.91 40.23,91.01 41.38,89.64 42.53,91.32 43.68,91.37 44.83,91.59 45.98,90.68 47.13,90.35 48.28,90.28 49.43,90.4 50.57,89.44 51.72,87.97 52.87,87.55 54.02,87.97 55.17,90.23 56.32,90.28 57.47,89.76 58.62,88.57 59.77,85.89 60.92,87.84 62.07,87.02 63.22,87.25 64.37,87.06 65.52,87.17 66.67,87.38 67.82,86.54 68.97,87.59 70.11,87.7 71.26,87.1 72.41,86.72 73.56,85.95 74.71,87.76 75.86,86.42 77.01,85.95 78.16,86.0 79.31,85.75 80.46,86.07 81.61,84.04 82.76,84.66 83.91,85.79 85.06,87.42 86.21,87.42 87.36,87.3 88.51,86.74 89.66,89.64 90.8,90.68 91.95,89.11 93.1,88.86 94.25,87.21 95.4,89.0 100.0,64.21",
           "last": {
             "x": 100.0,
-            "y": 63.87,
+            "y": 64.21,
             "date": "2026-08-22",
-            "v": 0.3613
+            "v": 0.3579
           },
           "band": {
-            "y_low": 91.65,
-            "y_high": 20.26,
-            "low": 0.0835,
-            "high": 0.7974,
+            "y_low": 91.59,
+            "y_high": 21.66,
+            "low": 0.0841,
+            "high": 0.7834,
             "kind": "spread",
             "n": 4
           },
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 63.87,
+          "label_y": 64.21,
           "label_nudged": false,
-          "sx": 36.13,
-          "sx_low": 8.35,
-          "sx_high": 79.74
+          "sx": 35.79,
+          "sx_low": 8.41,
+          "sx_high": 78.34
         }
       ]
     },
@@ -11583,8 +11582,8 @@
           {
             "key": "academic",
             "label": "Academic",
-            "seats": 49.8,
-            "x": 45.81
+            "seats": 49.7,
+            "x": 45.73
           },
           {
             "key": "professional",
@@ -12358,8 +12357,8 @@
           {
             "key": "academic",
             "label": "Academic",
-            "seats": 233.8,
-            "x": 50.64
+            "seats": 233.5,
+            "x": 50.0
           },
           {
             "key": "professional",
@@ -12466,7 +12465,7 @@
         "senate_seats_80": null,
         "n_sources": 2,
         "sole_source": "polymarket",
-        "house_margin": 7.6193,
+        "house_margin": 7.6055,
         "house_margin_withheld": false,
         "house_margin_spread": null,
         "house_seats": null,
@@ -12584,53 +12583,53 @@
         "senate_seats_80": null,
         "n_sources": 4,
         "sole_source": "",
-        "house_margin": 6.9325,
+        "house_margin": 6.8775,
         "house_margin_withheld": false,
         "house_margin_spread": {
-          "min": 2.65,
-          "max": 12.94,
-          "range": 10.29,
-          "sd": 4.679,
+          "min": 2.66,
+          "max": 12.71,
+          "range": 10.05,
+          "sd": 4.578,
           "n": 4,
           "all_open": true
         },
-        "house_seats": 233.8425,
+        "house_seats": 233.5025,
         "house_seats_withheld": false,
         "house_seats_spread": {
-          "min": 213.72,
-          "max": 264.45,
-          "range": 50.73,
-          "sd": 23.053,
+          "min": 213.75,
+          "max": 263.06,
+          "range": 49.31,
+          "sd": 22.431,
           "n": 4,
           "all_open": true
         },
-        "house_prob": 0.6872,
+        "house_prob": 0.6869,
         "house_prob_withheld": false,
         "house_prob_spread": {
-          "min": 0.391,
-          "max": 0.988,
-          "range": 0.597,
-          "sd": 0.283,
+          "min": 0.392,
+          "max": 0.986,
+          "range": 0.593,
+          "sd": 0.282,
           "n": 4,
           "all_open": true
         },
-        "senate_seats": 49.7525,
+        "senate_seats": 49.7225,
         "senate_seats_withheld": false,
         "senate_seats_spread": {
-          "min": 47.63,
-          "max": 52.86,
-          "range": 5.23,
-          "sd": 2.373,
+          "min": 47.64,
+          "max": 52.73,
+          "range": 5.09,
+          "sd": 2.313,
           "n": 4,
           "all_open": true
         },
-        "senate_prob": 0.3613,
+        "senate_prob": 0.3579,
         "senate_prob_withheld": false,
         "senate_prob_spread": {
           "min": 0.084,
-          "max": 0.797,
-          "range": 0.714,
-          "sd": 0.33,
+          "max": 0.783,
+          "range": 0.699,
+          "sd": 0.323,
           "n": 4,
           "all_open": true
         }
@@ -12638,7 +12637,7 @@
     ],
     "across_families": {
       "house_margin": {
-        "value": 6.51,
+        "value": 6.5,
         "n_categories": 5,
         "categories": [
           "polling",
@@ -12649,11 +12648,11 @@
         ],
         "spread": [
           5.69,
-          7.62
+          7.61
         ]
       },
       "house_seats": {
-        "value": 235.89,
+        "value": 235.81,
         "n_categories": 4,
         "categories": [
           "polling",
@@ -12745,7 +12744,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 34.9125,
+            "margin": 34.8575,
             "prob": 1.0,
             "withheld": false,
             "n": 4
@@ -12784,7 +12783,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 22.9525,
+            "margin": 22.8975,
             "prob": 0.9991,
             "withheld": false,
             "n": 4
@@ -12823,7 +12822,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 22.8525,
+            "margin": 22.7975,
             "prob": 0.9991,
             "withheld": false,
             "n": 4
@@ -12862,7 +12861,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 22.2325,
+            "margin": 22.1775,
             "prob": 0.9988,
             "withheld": false,
             "n": 4
@@ -12901,7 +12900,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 19.6125,
+            "margin": 19.5575,
             "prob": 0.996,
             "withheld": false,
             "n": 4
@@ -12940,7 +12939,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 18.8725,
+            "margin": 18.8175,
             "prob": 0.9945,
             "withheld": false,
             "n": 4
@@ -12979,7 +12978,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 15.4725,
+            "margin": 15.4175,
             "prob": 0.9804,
             "withheld": false,
             "n": 4
@@ -13018,7 +13017,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 14.5725,
+            "margin": 14.5175,
             "prob": 0.9735,
             "withheld": false,
             "n": 4
@@ -13057,7 +13056,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 14.2925,
+            "margin": 14.2375,
             "prob": 0.971,
             "withheld": false,
             "n": 4
@@ -13096,7 +13095,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 13.9125,
+            "margin": 13.8575,
             "prob": 0.9673,
             "withheld": false,
             "n": 4
@@ -13135,7 +13134,7 @@
             "n": 1
           },
           "academic": {
-            "margin": 11.9925,
+            "margin": 11.9375,
             "prob": 0.9425,
             "withheld": false,
             "n": 4
@@ -13174,8 +13173,8 @@
             "n": 1
           },
           "academic": {
-            "margin": 10.9125,
-            "prob": 0.9233,
+            "margin": 10.8575,
+            "prob": 0.9232,
             "withheld": false,
             "n": 4
           }
@@ -13213,8 +13212,8 @@
             "n": 1
           },
           "academic": {
-            "margin": 6.5525,
-            "prob": 0.7991,
+            "margin": 6.4975,
+            "prob": 0.7987,
             "withheld": false,
             "n": 4
           }
@@ -13252,8 +13251,8 @@
             "n": 1
           },
           "academic": {
-            "margin": 5.3325,
-            "prob": 0.7508,
+            "margin": 5.2775,
+            "prob": 0.7501,
             "withheld": false,
             "n": 4
           }
@@ -13291,8 +13290,8 @@
             "n": 1
           },
           "academic": {
-            "margin": 4.1325,
-            "prob": 0.6983,
+            "margin": 4.0775,
+            "prob": 0.6973,
             "withheld": false,
             "n": 4
           }
@@ -13330,8 +13329,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -3.6075,
-            "prob": 0.319,
+            "margin": -3.6625,
+            "prob": 0.3158,
             "withheld": false,
             "n": 4
           }
@@ -13369,14 +13368,14 @@
             "n": 1
           },
           "academic": {
-            "margin": -3.8475,
-            "prob": 0.3083,
+            "margin": -3.9025,
+            "prob": 0.305,
             "withheld": false,
             "n": 4
           }
         },
         "n_cats": 5,
-        "prob_spread": 0.2689
+        "prob_spread": 0.2656
       },
       {
         "state": "TX",
@@ -13408,8 +13407,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -4.9075,
-            "prob": 0.263,
+            "margin": -4.9625,
+            "prob": 0.2596,
             "withheld": false,
             "n": 4
           }
@@ -13447,8 +13446,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -5.2475,
-            "prob": 0.2492,
+            "margin": -5.3025,
+            "prob": 0.2458,
             "withheld": false,
             "n": 4
           }
@@ -13486,8 +13485,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -5.9675,
-            "prob": 0.2213,
+            "margin": -6.0225,
+            "prob": 0.2179,
             "withheld": false,
             "n": 4
           }
@@ -13525,8 +13524,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -9.1275,
-            "prob": 0.1215,
+            "margin": -9.1825,
+            "prob": 0.1184,
             "withheld": false,
             "n": 4
           }
@@ -13564,8 +13563,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -9.6275,
-            "prob": 0.1091,
+            "margin": -9.6825,
+            "prob": 0.1061,
             "withheld": false,
             "n": 4
           }
@@ -13603,8 +13602,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -12.7075,
-            "prob": 0.0518,
+            "margin": -12.7625,
+            "prob": 0.0498,
             "withheld": false,
             "n": 4
           }
@@ -13642,8 +13641,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -13.6075,
-            "prob": 0.0406,
+            "margin": -13.6625,
+            "prob": 0.0388,
             "withheld": false,
             "n": 4
           }
@@ -13681,8 +13680,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -14.5675,
-            "prob": 0.0307,
+            "margin": -14.6225,
+            "prob": 0.0293,
             "withheld": false,
             "n": 4
           }
@@ -13720,8 +13719,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -14.6275,
-            "prob": 0.0302,
+            "margin": -14.6825,
+            "prob": 0.0288,
             "withheld": false,
             "n": 4
           }
@@ -13759,8 +13758,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -21.5875,
-            "prob": 0.0024,
+            "margin": -21.6425,
+            "prob": 0.0023,
             "withheld": false,
             "n": 4
           }
@@ -13798,8 +13797,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -22.2075,
-            "prob": 0.0019,
+            "margin": -22.2625,
+            "prob": 0.0017,
             "withheld": false,
             "n": 4
           }
@@ -13837,8 +13836,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -22.6875,
-            "prob": 0.0015,
+            "margin": -22.7425,
+            "prob": 0.0014,
             "withheld": false,
             "n": 4
           }
@@ -13876,8 +13875,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -22.9475,
-            "prob": 0.0014,
+            "margin": -23.0025,
+            "prob": 0.0012,
             "withheld": false,
             "n": 4
           }
@@ -13915,8 +13914,8 @@
             "n": 1
           },
           "academic": {
-            "margin": -23.6875,
-            "prob": 0.0009,
+            "margin": -23.7425,
+            "prob": 0.0008,
             "withheld": false,
             "n": 4
           }
@@ -13954,7 +13953,7 @@
             "n": 1
           },
           "academic": {
-            "margin": -27.7475,
+            "margin": -27.8025,
             "prob": 0.0001,
             "withheld": false,
             "n": 4
@@ -13993,7 +13992,7 @@
             "n": 1
           },
           "academic": {
-            "margin": -29.1475,
+            "margin": -29.2025,
             "prob": 0.0001,
             "withheld": false,
             "n": 4
@@ -14032,7 +14031,7 @@
             "n": 1
           },
           "academic": {
-            "margin": -34.9875,
+            "margin": -35.0425,
             "prob": 0.0,
             "withheld": false,
             "n": 4
@@ -14071,7 +14070,7 @@
             "n": 1
           },
           "academic": {
-            "margin": -39.5275,
+            "margin": -39.5825,
             "prob": 0.0,
             "withheld": false,
             "n": 4
@@ -14114,8 +14113,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.2213,
-              "x": 22.13
+              "prob": 0.2179,
+              "x": 21.79
             }
           ],
           "n_cats": 5,
@@ -14154,8 +14153,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.263,
-              "x": 26.3
+              "prob": 0.2596,
+              "x": 25.96
             }
           ],
           "n_cats": 5,
@@ -14194,8 +14193,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.319,
-              "x": 31.9
+              "prob": 0.3158,
+              "x": 31.58
             }
           ],
           "n_cats": 5,
@@ -14274,8 +14273,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.2492,
-              "x": 24.92
+              "prob": 0.2458,
+              "x": 24.58
             }
           ],
           "n_cats": 5,
@@ -14314,8 +14313,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.6983,
-              "x": 69.83
+              "prob": 0.6973,
+              "x": 69.73
             }
           ],
           "n_cats": 5,
@@ -14354,14 +14353,14 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.3083,
-              "x": 30.83
+              "prob": 0.305,
+              "x": 30.5
             }
           ],
           "n_cats": 5,
           "x_lo": 3.94,
-          "x_hi": 30.83,
-          "spread": 26.9
+          "x_hi": 30.5,
+          "spread": 26.6
         },
         {
           "state": "GA",
@@ -14394,8 +14393,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.7508,
-              "x": 75.08
+              "prob": 0.7501,
+              "x": 75.01
             }
           ],
           "n_cats": 5,
@@ -14434,8 +14433,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.7991,
-              "x": 79.91
+              "prob": 0.7987,
+              "x": 79.87
             }
           ],
           "n_cats": 5,
@@ -14474,8 +14473,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.1091,
-              "x": 10.91
+              "prob": 0.1061,
+              "x": 10.61
             }
           ],
           "n_cats": 5,
@@ -14514,8 +14513,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.0302,
-              "x": 3.02
+              "prob": 0.0288,
+              "x": 2.88
             }
           ],
           "n_cats": 5,
@@ -14554,8 +14553,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.0307,
-              "x": 3.07
+              "prob": 0.0293,
+              "x": 2.93
             }
           ],
           "n_cats": 5,
@@ -14594,8 +14593,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.0518,
-              "x": 5.18
+              "prob": 0.0498,
+              "x": 4.98
             }
           ],
           "n_cats": 5,
@@ -14634,8 +14633,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.1215,
-              "x": 12.15
+              "prob": 0.1184,
+              "x": 11.84
             }
           ],
           "n_cats": 5,
@@ -14674,8 +14673,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.0406,
-              "x": 4.06
+              "prob": 0.0388,
+              "x": 3.88
             }
           ],
           "n_cats": 5,
@@ -14794,8 +14793,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.9233,
-              "x": 92.33
+              "prob": 0.9232,
+              "x": 92.32
             }
           ],
           "n_cats": 5,
@@ -15007,12 +15006,12 @@
         "label": "Markets",
         "metrics": {
           "house_margin": {
-            "now": 7.62,
+            "now": 7.61,
             "changes": {
               "all": {
                 "from": 7.72,
                 "from_date": "2026-08-21",
-                "delta": -0.1,
+                "delta": -0.11,
                 "days_actual": 1,
                 "mixed_recipe": false
               }
@@ -15109,78 +15108,78 @@
         "label": "Academic",
         "metrics": {
           "house_margin": {
-            "now": 6.93,
+            "now": 6.88,
             "changes": {
               "30d": {
                 "from": 3.34,
                 "from_date": "2026-07-22",
-                "delta": 3.59,
+                "delta": 3.54,
                 "days_actual": 31,
                 "mixed_recipe": true
               },
               "90d": {
                 "from": 4.45,
                 "from_date": "2026-05-20",
-                "delta": 2.48,
+                "delta": 2.43,
                 "days_actual": 94,
                 "mixed_recipe": true
               },
               "all": {
                 "from": 1.45,
                 "from_date": "2025-01-01",
-                "delta": 5.48,
+                "delta": 5.43,
                 "days_actual": 598,
                 "mixed_recipe": true
               }
             }
           },
           "house_seats": {
-            "now": 233.84,
+            "now": 233.5,
             "changes": {
               "30d": {
                 "from": 216.51,
                 "from_date": "2026-07-22",
-                "delta": 17.33,
+                "delta": 16.99,
                 "days_actual": 31,
                 "mixed_recipe": true
               },
               "90d": {
                 "from": 221.11,
                 "from_date": "2026-05-20",
-                "delta": 12.73,
+                "delta": 12.39,
                 "days_actual": 94,
                 "mixed_recipe": true
               },
               "all": {
                 "from": 208.92,
                 "from_date": "2025-01-01",
-                "delta": 24.92,
+                "delta": 24.58,
                 "days_actual": 598,
                 "mixed_recipe": true
               }
             }
           },
           "senate_seats": {
-            "now": 49.75,
+            "now": 49.72,
             "changes": {
               "30d": {
                 "from": 47.95,
                 "from_date": "2026-07-22",
-                "delta": 1.8,
+                "delta": 1.77,
                 "days_actual": 31,
                 "mixed_recipe": true
               },
               "90d": {
                 "from": 48.47,
                 "from_date": "2026-05-20",
-                "delta": 1.28,
+                "delta": 1.25,
                 "days_actual": 94,
                 "mixed_recipe": true
               },
               "all": {
                 "from": 47.06,
                 "from_date": "2025-01-01",
-                "delta": 2.69,
+                "delta": 2.66,
                 "days_actual": 598,
                 "mixed_recipe": true
               }
@@ -15198,7 +15197,7 @@
       "senate_win_prob_R": 0.495,
       "house_win_prob_D": 0.875,
       "house_win_prob_R": 0.125,
-      "house_margin_D": 7.6193
+      "house_margin_D": 7.6055
     },
     "grant_williams": {
       "house_margin_D": 5.69,
@@ -15228,18 +15227,18 @@
       "senate_win_prob_D": 0.1309
     },
     "academic_economic_pessimism": {
-      "house_margin_D": 12.94,
-      "house_seats_D": 264.45,
-      "house_win_prob_D": 0.9879,
-      "senate_seats_D": 52.86,
-      "senate_win_prob_D": 0.7974
+      "house_margin_D": 12.71,
+      "house_seats_D": 263.06,
+      "house_win_prob_D": 0.9855,
+      "senate_seats_D": 52.73,
+      "senate_win_prob_D": 0.7834
     },
     "academic_political_history": {
-      "house_margin_D": 2.65,
-      "house_seats_D": 213.72,
-      "house_win_prob_D": 0.3911,
-      "senate_seats_D": 47.63,
-      "senate_win_prob_D": 0.0835
+      "house_margin_D": 2.66,
+      "house_seats_D": 213.75,
+      "house_win_prob_D": 0.3923,
+      "senate_seats_D": 47.64,
+      "senate_win_prob_D": 0.0841
     },
     "academic_referendum": {
       "house_margin_D": 8.28,
