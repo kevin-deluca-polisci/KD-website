@@ -125,7 +125,9 @@ jobs:
           [ "${{ inputs.dry_run }}" = "true" ]  && ARGS="$ARGS --dry-run"
           [ "${{ inputs.backfill }}" = "true" ] && ARGS="$ARGS --backfill"
           python3 forecast/collect/capture.py --cycle "$CYCLE" $ARGS
- 
+      - name: Backfill market history
+        if: inputs.dry_run != true && inputs.backfill_markets == true
+        run: python3 forecast/collect/market_history.py --cycle "$CYCLE"
       - name: Push raw to the private archive
         if: inputs.dry_run != true
         run: |
@@ -152,9 +154,6 @@ jobs:
       - name: Parse, model, aggregate, publish
         if: inputs.dry_run != true
         run: |
-          if [ "${{ inputs.backfill_markets }}" = "true" ]; then
-            python3 forecast/collect/market_history.py --cycle "$CYCLE"
-          fi
           python3 forecast/collect/parse.py     --cycle "$CYCLE" --all
           python3 forecast/model/state_pvi.py   --cycle "$CYCLE"
           # fundamentals MUST run daily. It was left out of this list when the
