@@ -343,21 +343,57 @@ def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list
 # --------------------------------------------------------------------------
 
 def _nice_ticks(lo: float, hi: float, n: int = 4) -> list[float]:
+    """Round tick values strictly INSIDE [lo, hi].
+
+    REWRITTEN when the axis was tightened, because the old version was built
+    for a loose one. It generated ticks with half a step of slack past both
+    ends, on the assumption that the caller would widen the domain to meet
+    them — which is exactly what the caller used to do. Once the domain was
+    fitted to the data and out-of-range ticks were dropped instead, that slack
+    turned into missing labels: a panel could end up with two ticks, or one,
+    placed wherever the rounding happened to land.
+
+    It also picked the magnitude with `len(str(int(raw)))`, which collapses to
+    0.1 for anything below 1. On a probability panel spanning eight points that
+    offered a choice between a 10-point step and a 20-point step, so a reader
+    got one gridline and no sense of scale.
+
+    Now: magnitude by log10, the usual 1/2/2.5/5 progression, ticks generated
+    only where they fall inside the domain, and a step down to a finer interval
+    if the first choice yields fewer than three labels.
+    """
     if hi <= lo:
-        hi = lo + 1
-    raw = (hi - lo) / n
-    mag = 10 ** (len(str(int(abs(raw)))) - 1) if abs(raw) >= 1 else 0.1
-    for m in (1, 2, 2.5, 5, 10):
-        step = m * mag
-        if step >= raw:
-            break
-    start = (int(lo / step)) * step
-    ticks = []
-    v = start
-    while v <= hi + step * 0.5:
-        if v >= lo - step * 0.5:
-            ticks.append(round(v, 4))
-        v += step
+        hi = lo + 1.0
+    raw = (hi - lo) / max(n, 1)
+    if raw <= 0:
+        return [lo]
+    mag = 10.0 ** math.floor(math.log10(raw))
+    # Coarse to fine, so the first match is the largest step that still gives
+    # about n intervals, and the fallbacks below get progressively finer.
+    candidates = [m * mag for m in (10, 5, 2.5, 2, 1)]
+    candidates += [m * mag / 10.0 for m in (5, 2.5, 2, 1)]
+
+    def gen(step: float) -> list[float]:
+        if step <= 0:
+            return []
+        first = math.ceil(lo / step - 1e-9) * step
+        out, v = [], first
+        # A hard cap: a pathological step must not spin here.
+        while v <= hi + 1e-9 and len(out) < 40:
+            out.append(round(v, 6))
+            v += step
+        return out
+
+    chosen = next((c for c in candidates if c >= raw), candidates[-1])
+    ticks = gen(chosen)
+    if len(ticks) < 3:
+        for c in candidates[candidates.index(chosen) + 1:]:
+            finer = gen(c)
+            if len(finer) >= 3:
+                ticks = finer
+                break
+            if finer:
+                ticks = finer
     return ticks
 
 

@@ -417,12 +417,40 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
         if not cursor or not series:
             break
 
+    # SERIES THE INDEX DOES NOT LIST.
+    #
+    # Kalshi's /series endpoint does not return every series that has live
+    # markets. The seat-count ladders (KXDHOUSESEATS, KXDSENATESEATS) and the
+    # popular-vote margin ladder (KXHOUSEPOPVOTEMARGIN) are all missing from
+    # it, and have been for the life of this project. Discovery matched HOUSE,
+    # SENATE and the rest, fetched those, found them empty, and the market
+    # category quietly carried probabilities and no seat counts at all — with
+    # no error anywhere, because nothing had failed. The registry named the
+    # missing tickers in `series_always` and nothing read the field.
+    #
+    # So: whatever the index says, these are fetched. A forced ticker that no
+    # longer exists returns an empty market list, which is cheap and visible,
+    # and far better than the silence it replaces.
+    discovered = list(matched)
+    always = [t for t in (cfg.get("series_always") or []) if t]
+    forced = [t for t in always if t not in set(discovered)]
+    if forced:
+        matched.extend(forced)
+        notes.append(f"forced {len(forced)} series_always ticker(s) the index "
+                     f"did not list: {forced}")
+
     # Prune market files for series we no longer collect. Idempotent overwrite
     # replaces same-named artifacts but never removes retired ones, so tightening
     # the filter left 265 stale files behind that the parser then re-read every
-    # day forever. Only prune when discovery actually succeeded — a failed run
-    # must never be able to empty the directory.
-    if matched and not fetcher.dry_run:
+    # day forever.
+    #
+    # THE GUARD IS ON `discovered`, NOT ON `matched`, and the difference now
+    # matters. Since series_always adds to `matched` unconditionally, a run
+    # whose discovery returned nothing would still have a non-empty `matched` —
+    # and would then prune every market file that was not on the forced list,
+    # emptying the day on the strength of a failed index call. Guarding on what
+    # the index actually returned keeps the original protection intact.
+    if discovered and not fetcher.dry_run:
         keep = {store._slugify(f"markets-{t}") for t in set(matched)}
         day = store.root / src["id"] / store.snapshot_date
         removed = 0

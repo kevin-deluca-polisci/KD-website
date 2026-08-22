@@ -33,22 +33,32 @@
   <section data-section="overview" id="overview">
     <div class="card">
       <h2>What goes into each number</h2>
-      <p class="sub">Four categories, each a family of forecasts that share a way
-         of knowing. Our own two models get the most detail because they are the
-         ones you can hold us to.</p>
+      <p class="sub">Five families, each a group of forecasts that share a way of
+         knowing. They are listed here in the order the site draws them, which
+         runs from least modelled to most.</p>
       <table>
-        <tr><th>Category</th><th>What its members have in common</th></tr>
-        <tr><td><strong>Fundamentals</strong></td>
-            <td class="muted">Predicts from conditions rather than opinion: the economy, presidential approval, seats defended. Knows nothing about candidates or polls.</td></tr>
+        <tr><th>Family</th><th>What its members have in common</th></tr>
         <tr><td><strong>Polling</strong></td>
             <td class="muted">Starts from what people tell pollsters, then averages, weights, or corrects for how early it is.</td></tr>
-        <tr><td><strong>Professional</strong></td>
-            <td class="muted">Published statistical forecasts combining most of the above plus candidate quality, fundraising and local knowledge.</td></tr>
         <tr><td><strong>Markets</strong></td>
             <td class="muted">Prices from people betting money — an aggregate of everyone else's models plus whatever the traders think they know.</td></tr>
+        <tr><td><strong>Fundamentals</strong></td>
+            <td class="muted">Predicts from conditions rather than opinion: the economy, presidential approval, seats defended. Knows nothing about candidates or polls.</td></tr>
+        <tr><td><strong>Professional</strong></td>
+            <td class="muted">Published statistical forecasts combining most of the above plus candidate quality, fundraising and local knowledge.</td></tr>
+        <tr><td><strong>Academic</strong></td>
+            <td class="muted">Specifications published in the political-science forecasting literature, rebuilt here and run on our data. <a href="#academic">Four of them</a>, disagreeing more with each other than any other family does.</td></tr>
       </table>
-      <p class="thin-note">Expert ratings are collected but kept out of all four
-         averages: “Lean R” is not a number, and choosing which number to make it
+      {{/* The one thing about this table that is genuinely confusing, said
+           rather than left for the reader to work out. */}}
+      <p class="thin-note">A forecast can belong to more than one family, and
+         several do. The first four labels describe a METHOD — what the forecast
+         looks at. “Academic” describes PROVENANCE — where it was published.
+         Those are different questions, so a referendum model published in a
+         journal is an academic forecast and a fundamentals one, and it counts
+         in both averages.</p>
+      <p class="thin-note">Expert ratings are collected but kept out of every
+         average: “Lean R” is not a number, and choosing which number to make it
          is a modelling decision. They have their own
          <a href="#ratings">section</a> and a
          <a href="/forecast/comparisons/">graphic</a>.</p>
@@ -57,7 +67,9 @@
     <div class="card">
       <h2>The choices that move the answer</h2>
       <p class="sub">Everything in our two models that is a judgment rather than a
-         measurement.</p>
+         measurement. The academic models carry their own, listed with each
+         model in the <a href="#academic">academic section</a> — Lockerbie's
+         open-seat term is the starkest, since it is a sign somebody types in.</p>
       <table>
         <tr><th>Choice</th><th>What we did</th><th>Why it is arguable</th></tr>
         <tr><td>Generic-ballot shrinkage</td>
