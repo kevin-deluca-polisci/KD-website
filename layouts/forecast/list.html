@@ -236,8 +236,25 @@
         <text class="rowval" x="700" y="{{ add $y 4 }}" text-anchor="end">D+{{ printf "%.1f" $s.last.v }}</text>
         {{- end }}
       </svg>
-      <p class="thin-note">Markets are absent from this row: they quote
-         probabilities, not margins.</p>
+      {{/* This note was written when it was permanently true and left
+           unconditional, so it went on asserting that markets quote no vote
+           share for a fortnight after they started doing exactly that — the
+           Markets row was already drawn in the chart directly above it. Now it
+           asks the data. */}}
+      {{- $has_market := false }}
+      {{- range .series }}{{ if eq .key "market" }}{{ $has_market = true }}{{ end }}{{ end }}
+      {{- if $has_market }}
+      <p class="thin-note">The markets figure comes from the national
+         popular-vote margin ladders on Kalshi and Polymarket — a row of
+         contracts priced on 2-point buckets, read as a distribution rather
+         than as a price. It is the only market-implied vote share there is:
+         a chamber-control price implies a winner, not a margin.
+         <a href="/forecast/methods/#markets">How a ladder is read →</a></p>
+      {{- else }}
+      <p class="thin-note">Markets are absent from this row today: nothing on
+         either exchange is quoting a national vote share. They price chamber
+         control and seat counts, and neither implies a margin.</p>
+      {{- end }}
       {{- end }}
       {{- end }}
     </div>
