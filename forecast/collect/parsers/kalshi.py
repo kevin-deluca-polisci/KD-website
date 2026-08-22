@@ -397,6 +397,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     unmatched: list[str] = []
     empty_series: list[str] = []
     unparsed_seen: list[str] = []   # captured on purpose, read by nothing
+    ladder_unreadable: list[str] = []   # a distribution we could not read
     rows_by_series: dict[str, int] = {}   # series -> rows it produced
     priced = 0                     # markets that had a usable price
     seen_markets = 0               # markets present, priced or not
@@ -451,6 +452,35 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             rows_by_series[series] += len(got)
             priced += len(markets)
             continue
+        if series in _SEAT_SERIES or series in _MARGIN_SERIES:
+            # A LADDER THAT WOULD NOT READ AS A LADDER IS NOT A PILE OF
+            # CHAMBER-CONTROL PRICES. It falls through to the per-market loop
+            # below otherwise, and that loop is exactly wrong for this shape:
+            # every rung carries the chamber and the word "party" in its text,
+            # so _CTRL_H files each bucket price as P(Democratic House). Twelve
+            # numbers between 0.045 and 0.16 arrive where one number near 0.8
+            # belongs, and each of them is individually well-formed, so nothing
+            # downstream can tell.
+            #
+            # This is the second time the archive has been poisoned this exact
+            # way. The first was KXRHOUSESEATS, fixed by naming it unparsed
+            # (see _UNPARSED_SERIES); that fix was specific to one ticker and
+            # left the mechanism in place. The second was the market backfill,
+            # whose synthesised artifacts dropped `yes_sub_title` and so made
+            # the D ladders unreadable — a series ON the parsed list, which the
+            # first fix could not have caught. So the rule is stated about the
+            # SHAPE rather than about any ticker: a series we read as a
+            # distribution is never read one market at a time. Better no number
+            # than the wrong quantity wearing the right units.
+            #
+            # A ladder of one or two markets is thin, not broken — the rungs
+            # open a few at a time — and it is skipped without complaint. Three
+            # or more is the threshold the ladder readers themselves use for
+            # "this is a distribution", so a series that clears it and still
+            # will not read is a fault worth raising on.
+            if len(markets) >= 3:
+                ladder_unreadable.append(series)
+            continue
         for m in markets:
             ticker = str(m.get("ticker", ""))
             title = str(m.get("title") or m.get("subtitle") or "")
@@ -472,6 +502,24 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                                 quantity=f"win_prob_{side}", value=round(p, 4),
                                 unit="prob"))
             rows_by_series[series] += 1
+    if ladder_unreadable:
+        # Raised rather than printed: a ladder is the only thing on this
+        # exchange that gives us a seat distribution or a national margin, and
+        # losing it silently is how the markets column stayed empty for months.
+        # parse.py catches this per source and per date, so the other sources'
+        # rows for the day survive and the message lands in its PROBLEMS block.
+        bad = sorted(set(ladder_unreadable))
+        sample = next((m for a in market_arts
+                       if a.name.replace("markets-", "") in bad
+                       for m in (a.json().get("markets") or [])), {})
+        raise ValueError(
+            f"{len(bad)} Kalshi ladder series carried markets but could not be "
+            f"read as a distribution: {bad}. Fewer than three buckets carried "
+            f"both a label and a price. Fields on the first market: "
+            f"{sorted(sample)[:14]}. If these are backfilled artifacts, the "
+            f"synthesis dropped a field the ladder reader needs "
+            f"(yes_sub_title, event_ticker) — see collect/market_history.py.")
+
     if seen_markets and priced == 0:
         # MARKETS EXIST AND NOT ONE OF THEM HAD A READABLE PRICE. That is a
         # parser fault, not a fact about Kalshi, and it must be loud.

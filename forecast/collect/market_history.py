@@ -48,13 +48,48 @@ TWO RULES IT WILL NOT BREAK
 2. NO PRICE, NO FILE. Where a contract has no bar for a date — it had not
    opened, or nothing traded — nothing is written. A market with no price is
    not a market at zero.
+
+3. A SYNTHESISED MARKET CARRIES THE CAPTURED MARKET'S OWN FIELDS. Only the
+   price is replaced. See SHAPE_VERSION below — this rule was learned the
+   expensive way and it is the one that makes rule "shaped like a live
+   capture" true rather than merely intended.
+
+WHAT WENT WRONG THE FIRST TIME — READ THIS BEFORE CHANGING THE SYNTHESIS
+
+Version 1 built each historical market from four fields it chose by hand:
+ticker, title, subtitle, last_price. That is not the artifact the live capture
+would have written; it is a summary of one, and the fields it dropped were the
+ones the ladder readers depend on.
+
+collect/parsers/kalshi.py reads a seat ladder as a DISTRIBUTION across markets,
+and to do that it needs `yes_sub_title` (the bucket label, "218-221") and
+`event_ticker` (the cycle guard). Neither survived the summary. `_seat_rows`
+therefore found fewer than three readable buckets, returned nothing, and the
+markets fell through to the per-market classifier — which read every rung of
+the ladder as a chamber-CONTROL price, because each carries "House" and
+"party" in its text. Twelve bucket prices between 0.045 and 0.16 were filed as
+P(Democratic House) for every day from 2025-12-21 to 2026-02-20.
+
+Nothing raised. Every row was individually well-formed: a probability in
+[0, 1] about the House is exactly what the validator checks for. The published
+tracker showed the market line at 8% in January against 88% in August — a
+collapse that never happened, drawn from real prices read as the wrong
+quantity. It is the same failure the KXRHOUSESEATS comment in the parser
+already describes, arriving by a different road, which is the argument for
+copying the market dict wholesale rather than picking fields out of it: the
+next reader of a captured field is not obliged to tell this module first.
+
+Polymarket had the same defect for the same reason — `groupItemTitle` carries
+the party for control markets and was not copied.
 """
 from __future__ import annotations
 
 import argparse
 import collections
+import csv
 import datetime as dt
 import json
+import re
 import sys
 import traceback
 import urllib.parse
@@ -73,6 +108,91 @@ POLY_CLOB = "https://clob.polymarket.com/prices-history"
 # intraday path, which we do not keep and would not publish.
 KALSHI_PERIOD_MINUTES = 1440
 POLY_FIDELITY_MINUTES = 1440
+
+# ---------------------------------------------------------------------------
+# The shape of a synthesised artifact, and how a wrong one gets taken back.
+#
+# A capture is evidence and is never rewritten. A BACKFILLED artifact is an
+# inference this module made, and an inference made by a version we now know
+# to have been wrong has to be withdrawable — otherwise the only way to unpick
+# a bad reconstruction is to go into the private archive by hand, which is the
+# kind of chore that does not get done and leaves the error published.
+#
+# So every synthesised artifact records the shape version that built it, and a
+# run whose version is newer sweeps the older ones out of its own source's
+# directories before writing, taking their parsed rows with them. Rule 1 is
+# untouched: nothing without `provenance: backfilled` in its meta is ever
+# considered, so a real capture cannot be caught by this even by accident.
+#
+#   1  ticker/title/subtitle/last_price, hand-picked. Broke both ladder
+#      readers. See the module docstring.
+#   2  the captured market dict copied whole, with the live price fields
+#      removed and the historical close put back in their place.
+SHAPE_VERSION = 2
+
+# Fields that describe the market AT CAPTURE TIME and would be a lie on a past
+# date. Everything else — ticker, event_ticker, titles, sub-titles, strikes,
+# rules, the group label — describes the contract itself and is as true in
+# January as it is today, so it is copied through untouched.
+_LIVE_ONLY = re.compile(
+    r"(price|bid|ask|volume|open_interest|liquidity|dollar_recency|"
+    r"settle|result|expiration_value|previous_)", re.I)
+
+
+def _is_live_only(key: str) -> bool:
+    """Is this field a fact about today rather than about the contract?
+
+    Matched by pattern rather than by a list of names, because the failure to
+    guard against is a field we have not met: Kalshi renamed its whole price
+    surface once already (the `_dollars` suffix) and a deny-list written today
+    would let the next such field through, silently stamping today's price on
+    a January artifact. A pattern over-reaches instead, which costs archive
+    detail and cannot mislead.
+
+    The one exception is a STRIKE. `strike_price` and `custom_strike_price`
+    name the contract's own boundary — the same number in January as today —
+    and they are what a future reader would use to price a ladder without
+    parsing its label text.
+    """
+    return bool(_LIVE_ONLY.search(key)) and "strike" not in key.lower()
+
+# The Polymarket equivalents. Gamma's market dict is flat camelCase.
+_POLY_LIVE_ONLY = {
+    "outcomePrices", "lastTradePrice", "bestBid", "bestAsk", "spread",
+    "volume", "volumeNum", "volume24hr", "volume1wk", "volume1mo", "volume1yr",
+    "liquidity", "liquidityNum", "oneDayPriceChange", "oneHourPriceChange",
+    "oneWeekPriceChange", "oneMonthPriceChange", "lastTradeTime",
+    "umaResolutionStatus", "competitive",
+}
+
+
+def _kalshi_market(m: dict, px_cents: float) -> dict:
+    """The captured Kalshi market, re-priced to a past day's close.
+
+    The price goes back as `last_price_dollars` — the modern, dollar-
+    denominated, string-valued field the parser reads first among the
+    single-sided names. Writing it as a bare `last_price` in cents would work
+    today and would sit one API rename away from breaking, and it has one
+    live failure mode besides: the parser divides by 100 only when the value
+    exceeds 1, so a genuine 1-cent bucket would arrive as a probability of
+    1.0. In dollars there is no such ambiguity.
+    """
+    out = {k: v for k, v in m.items() if not _is_live_only(k)}
+    out["last_price_dollars"] = f"{px_cents / 100.0:.4f}"
+    # A contract with a traded bar on that date was open on that date. Say so
+    # explicitly rather than inheriting today's status, which for a settled
+    # market would make the ladder readers skip a day they can see the price of.
+    out["status"] = "active"
+    out["backfilled"] = True
+    return out
+
+
+def _poly_market(m: dict, p: float) -> dict:
+    """The captured Polymarket market, re-priced to a past day's close."""
+    out = {k: v for k, v in m.items() if k not in _POLY_LIVE_ONLY}
+    out["outcomePrices"] = json.dumps([f"{p:.4f}", f"{1 - p:.4f}"])
+    out["backfilled"] = True
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -252,6 +372,135 @@ def _capture_days(cycle: int, source: str) -> list[Path]:
     return sorted(d for d in base.iterdir() if d.is_dir())
 
 
+def _withdraw_stale(cycle: int, source: str, dry: bool) -> int:
+    """Delete this source's backfilled artifacts written by an older shape.
+
+    AND THE PARSED ROWS THEY PRODUCED. Deleting the artifact alone would not
+    unpublish anything: parse.py rewrites a date's file only when that date
+    parses to at least one row, so a date whose only Kalshi artifact had just
+    been removed would keep its old rows forever and the bad numbers would
+    stay on the site through any number of clean re-runs.
+
+    Only files whose meta says `provenance: backfilled` are considered, so a
+    real capture cannot be reached from here. parsed/ is per-forecaster and
+    gitignored; it is rebuilt from raw/ on the next `parse.py --all`.
+    """
+    base = DATA / str(cycle) / "raw" / source
+    if not base.is_dir():
+        return 0
+    stale_dates: set[str] = set()
+    removed = 0
+    for meta_path in sorted(base.glob("*/*.meta.json")):
+        try:
+            meta = json.loads(meta_path.read_text())
+        except (json.JSONDecodeError, OSError):
+            continue
+        if meta.get("provenance") != "backfilled":
+            continue                      # a capture, or something else's file
+        if int(meta.get("shape_version") or 1) >= SHAPE_VERSION:
+            continue                      # current shape: leave it alone
+        stale_dates.add(meta_path.parent.name)
+        removed += 1
+        if dry:
+            continue
+        artifact = meta_path.with_name(meta_path.name[:-len(".meta.json")] + ".json")
+        artifact.unlink(missing_ok=True)
+        meta_path.unlink(missing_ok=True)
+    if not removed:
+        return 0
+    print(f"    withdrew {removed} artifact(s) from shape version < "
+          f"{SHAPE_VERSION} across {len(stale_dates)} date(s)"
+          f"{' (dry run)' if dry else ''}")
+    if dry:
+        return removed
+    # Empty day directories would otherwise read as "captured but no bytes",
+    # which parse.py reports as a missing private archive on every run.
+    for d in sorted(stale_dates):
+        day = base / d
+        if day.is_dir() and not any(day.iterdir()):
+            day.rmdir()
+    dropped, touched = _drop_parsed_rows(cycle, source, stale_dates)
+    if dropped:
+        print(f"    dropped {dropped} stale parsed row(s) for {source} "
+              f"across {len(touched)} date(s)")
+    cleared = _clear_timeline_dates(cycle, touched)
+    if cleared:
+        print(f"    cleared {cleared} timeline row(s) on those dates — they "
+              f"refill from the corrected averages in this same run")
+    return removed
+
+
+def _clear_timeline_dates(cycle: int, dates: set[str]) -> int:
+    """Delete every timeline row on the given dates, so the chart refills them.
+
+    THE WITHDRAWAL HAS TO REACH AS FAR AS THE ERROR DID. Pulling the artifact
+    and its parsed rows corrects category_averages.csv, and the comparison
+    table and the movement card read that file directly, so they are right
+    again on the next run. The CHART does not: timeline.csv accumulates, and
+    its self-healing pass is additive — it fills dates it has never seen and
+    leaves rows it already holds exactly as they were. A wrong number that is
+    already in there stays in there, and the chart is the part of the site
+    people actually look at.
+
+    Deleting the date entirely rather than just this source's series is
+    deliberate: charts.collect_today() rebuilds a date from that date's
+    published averages in one pass, so a half-cleared date would come back
+    half-old. Every series on these dates is re-derived from the averages,
+    which is where the authority lives.
+
+    Scoped to dates whose parsed rows actually changed — not every date the
+    sweep touched — because rewriting a date whose numbers did not move gains
+    nothing and risks losing a row written from inputs we no longer hold.
+    """
+    if not dates:
+        return 0
+    path = DATA / str(cycle) / "derived" / "timeline.csv"
+    if not path.exists():
+        return 0
+    with path.open(encoding="utf-8") as fh:
+        reader = csv.DictReader(fh)
+        fields = reader.fieldnames or []
+        rows = list(reader)
+    kept = [r for r in rows if r.get("snapshot_date") not in dates]
+    if len(kept) == len(rows):
+        return 0
+    with path.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.DictWriter(fh, fieldnames=fields)
+        w.writeheader()
+        w.writerows(kept)
+    return len(rows) - len(kept)
+
+
+def _drop_parsed_rows(cycle: int, source: str,
+                      dates: set[str]) -> tuple[int, set[str]]:
+    """Remove one source's rows from the given dates' parsed files.
+
+    Returns (rows dropped, the dates that actually lost a row).
+    """
+    parsed = DATA / str(cycle) / "parsed"
+    dropped = 0
+    touched: set[str] = set()
+    for d in sorted(dates):
+        path = parsed / f"{d}.csv"
+        if not path.exists():
+            continue
+        with path.open(encoding="utf-8") as fh:
+            reader = csv.DictReader(fh)
+            fields = reader.fieldnames or []
+            rows = list(reader)
+        kept = [r for r in rows if r.get("source_id") != source]
+        dropped_here = len(rows) - len(kept)
+        if not dropped_here:
+            continue
+        dropped += dropped_here
+        touched.add(d)
+        with path.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=fields)
+            w.writeheader()
+            w.writerows(kept)
+    return dropped, touched
+
+
 def _write(cycle: int, source: str, date: str, name: str,
            payload, meta_extra: dict, dry: bool) -> bool:
     """Write one synthesised artifact. Returns True if written."""
@@ -267,6 +516,7 @@ def _write(cycle: int, source: str, date: str, name: str,
     meta = {
         "bytes": len(body),
         "provenance": "backfilled",
+        "shape_version": SHAPE_VERSION,
         "synthesised_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "note": ("Reconstructed from the exchange's own price history, not "
                  "captured on this date. Shaped like a live capture so the "
@@ -283,6 +533,7 @@ def _write(cycle: int, source: str, date: str, name: str,
 
 def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int]:
     """Rebuild markets-<SERIES>.json for every past date we can price."""
+    _withdraw_stale(cycle, "kalshi", dry)
     days = _capture_days(cycle, "kalshi")
     if not days:
         print("  kalshi: no capture to learn contract identities from — run "
@@ -327,6 +578,11 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
     # price was unreadable, or every date already existed. Those need different
     # fixes and the summary could not tell them apart.
     stats = collections.Counter()
+    # series -> [first date priced, last date priced, {dates}]. Printed at the
+    # end because "the backfill stopped in February" is a question about what
+    # the exchange served, and until this was recorded there was no way to tell
+    # a short candle history from a date we declined to write.
+    spans: dict[str, list] = collections.defaultdict(lambda: ["", "", set()])
     for (series, ticker), m in sorted(contracts.items()):
         if True:
             n_contracts += 1
@@ -365,12 +621,11 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
                     continue      # rule 2: no price, no row
                 stats["priced"] += 1
                 d0 = dt.datetime.fromtimestamp(ts, dt.timezone.utc).date().isoformat()
-                rebuilt[series][d0].append({
-                    "ticker": ticker,
-                    "title": m.get("title", ""),
-                    "subtitle": m.get("subtitle", ""),
-                    "last_price": px,
-                })
+                rebuilt[series][d0].append(_kalshi_market(m, px))
+                span = spans[series]
+                span[0] = min(span[0], d0) if span[0] else d0
+                span[1] = max(span[1], d0) if span[1] else d0
+                span[2].add(d0)
 
     written = 0
     for series, by_date in rebuilt.items():
@@ -387,6 +642,8 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
     if stats:
         print("    kalshi stages: " + ", ".join(f"{k}={v}" for k, v in
                                                 sorted(stats.items())))
+    for series, (lo, hi, dates) in sorted(spans.items()):
+        print(f"    candles {series:22s} {lo} .. {hi}  ({len(dates)} date(s))")
     return n_contracts, written
 
 
@@ -395,6 +652,7 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
 # ---------------------------------------------------------------------------
 
 def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int]:
+    _withdraw_stale(cycle, "polymarket", dry)
     days = _capture_days(cycle, "polymarket")
     if not days:
         print("  polymarket: no capture to learn contract identities from")
@@ -403,8 +661,17 @@ def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int,
     start_ts = int(dt.datetime.fromisoformat(since + "T00:00:00+00:00").timestamp())
     n_contracts = 0
     stats = collections.Counter()
-    # artifact name -> {date -> event payload}
-    rebuilt: dict[str, dict[str, list]] = defaultdict(lambda: defaultdict(list))
+    # artifact name -> {date -> {event title -> [market dicts]}}
+    #
+    # GROUPED BY EVENT, because a Polymarket artifact is a LIST OF EVENTS and
+    # each event is a question whose markets only mean anything together. The
+    # first version flattened every market of the file into one anonymous
+    # event with one title, which put the per-district markets of one event
+    # under the control question of another.
+    rebuilt: dict[str, dict[str, dict[str, list]]] = defaultdict(
+        lambda: defaultdict(lambda: defaultdict(list)))
+    # (artifact name, event title) -> the event's own fields, markets removed.
+    ev_meta: dict[tuple, dict] = {}
 
     # (artifact name, event title, market question) -> market dict, unioned
     # across every captured day for the same reason kalshi does it: a market
@@ -475,24 +742,22 @@ def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int,
                     if d0 >= since:
                         per_day[d0] = float(p)
                         stats["points"] += 1
+                title = str(ev.get("title") or "")
+                ev_meta[(name, title)] = {k: v for k, v in ev.items()
+                                          if k != "markets"}
                 for d0, p in per_day.items():
-                    rebuilt[name][d0].append({
-                        "question": m.get("question", ""),
-                        "outcomes": m.get("outcomes") or '["Yes", "No"]',
-                        "outcomePrices": json.dumps([f"{p:.4f}", f"{1-p:.4f}"]),
-                        "_event_title": ev.get("title", ""),
-                    })
+                    rebuilt[name][d0][title].append(_poly_market(m, p))
 
     written = 0
     for name, by_date in rebuilt.items():
-        for d0, markets in by_date.items():
-            title = markets[0].pop("_event_title", "") if markets else ""
-            for mm in markets:
-                mm.pop("_event_title", None)
+        for d0, by_event in by_date.items():
+            payload = [{**ev_meta.get((name, title), {"title": title}),
+                        "markets": markets}
+                       for title, markets in sorted(by_event.items())]
+            n_markets = sum(len(ms) for ms in by_event.values())
             stats["dates"] += 1
-            if _write(cycle, "polymarket", d0, name,
-                      [{"title": title, "markets": markets}],
-                      {"endpoint": POLY_CLOB, "contracts": len(markets)}, dry):
+            if _write(cycle, "polymarket", d0, name, payload,
+                      {"endpoint": POLY_CLOB, "contracts": n_markets}, dry):
                 written += 1
             else:
                 stats["skipped_exists"] += 1
