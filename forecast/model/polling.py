@@ -608,13 +608,18 @@ def backfill_history(cycle: int, step_days: int = 7) -> dict:
     # moving, which is the truth about a week with no new polling.
     end_date = dt.date.fromisoformat(
         (newest_parsed_date_for(cycle) or dt.date.today().isoformat()))
-    # A full window in, and never before the site's common start date. See
-    # academic.SERIES_START for why that date and why nothing is deleted for it.
-    cur = max(first + dt.timedelta(days=academic.RECONSTRUCT_WINDOW_DAYS),
-              dt.date.fromisoformat(academic.SERIES_START))
+    # A full window in. The grid is anchored on the poll record, NOT on
+    # academic.SERIES_START — see the long note in academic.backfill() for why
+    # moving the anchor churns every historical date for a two-day gain. Points
+    # before the start of the term are skipped in the loop below instead.
+    cur = first + dt.timedelta(days=academic.RECONSTRUCT_WINDOW_DAYS)
+    floor = dt.date.fromisoformat(academic.SERIES_START)
     out: dict[str, dict] = {}
     empty = 0
     while cur <= end_date:
+        if cur < floor:                   # before the term: outside the frame
+            cur += dt.timedelta(days=step_days)
+            continue
         got = academic.reconstruct_generic_ballot(polls, cur)
         if got is None:
             empty += 1

@@ -1167,13 +1167,23 @@ def backfill(cycle: int, approval: float, include_referendum: bool,
     print(f"  poll record: {len(polls)} polls, {first_poll} to {last_poll}")
 
     # Start a full window in, so the first point is an average over a full
-    # window rather than over whichever one poll happens to be earliest — and
-    # never before SERIES_START, which is where every series on the site
-    # begins. Taking the later of the two also puts the first point exactly on
-    # inauguration day rather than wherever the weekly grid happened to land
-    # after it.
-    d0 = max(first_poll + dt.timedelta(days=RECONSTRUCT_WINDOW_DAYS),
-             dt.date.fromisoformat(SERIES_START))
+    # window rather than over whichever one poll happens to be earliest.
+    #
+    # THE GRID IS ANCHORED HERE AND NOT ON SERIES_START, which it briefly was.
+    # Moving the anchor to inauguration day put the first point exactly on it,
+    # which reads well and cost far too much: the weekly grid then lands on
+    # 01-20, 01-27, 02-03 where the archive holds 01-22, 01-29, 02-05. Seven-day
+    # steps two days apart never coincide, so EVERY historical date would have
+    # been replaced by a neighbour two days off. Eighty-five dates of academic
+    # and polling history would leave the averages and eighty-five near-copies
+    # arrive, for a two-day cosmetic gain.
+    #
+    # So the anchor stays where the poll record puts it and pre-term points are
+    # skipped in the loop instead. SERIES_START is a frame, and a frame decides
+    # what is drawn, not what the grid is measured from. The first point lands
+    # on the first grid date on or after inauguration day.
+    d0 = first_poll + dt.timedelta(days=RECONSTRUCT_WINDOW_DAYS)
+    floor = dt.date.fromisoformat(SERIES_START)
     today = dt.date.fromisoformat(newest_parsed_date(cycle)
                                   or dt.date.today().isoformat())
     end = min(last_poll, today)
@@ -1182,6 +1192,9 @@ def backfill(cycle: int, approval: float, include_referendum: bool,
     empty_windows = 0
     cur = d0
     while cur <= end:
+        if cur < floor:                   # before the term: outside the frame
+            cur += dt.timedelta(days=step_days)
+            continue
         got = reconstruct_generic_ballot(polls, cur)
         if got is None:
             empty_windows += 1
