@@ -7,6 +7,10 @@
   "models": {
     "academic_bew": {
       "name": "Generic ballot (Bafumi, Erikson & Wlezien)",
+      "categories": [
+        "academic",
+        "polling"
+      ],
       "citation": "Bafumi, Erikson & Wlezien, 'Balancing, Generic Polls and Midterm Congressional Elections', Journal of Politics 72(3), 2010",
       "attribution": "Our implementation of BEW's published midterm equations, run on our generic-ballot average.",
       "category": "academic",
@@ -47,6 +51,10 @@
     },
     "academic_referendum": {
       "name": "Referendum (approval + income, no exposure)",
+      "categories": [
+        "academic",
+        "fundamentals"
+      ],
       "citation": "Tufte, 'Determinants of the Outcomes of Midterm Congressional Elections', APSR 69(3), 1975; the modern version is Lewis-Beck & Tien",
       "attribution": "Our fit of the referendum specification. NOT Lewis-Beck & Tien's published forecast.",
       "category": "academic",
@@ -85,14 +93,18 @@
     },
     "academic_economic_pessimism": {
       "name": "Economic pessimism (Lockerbie)",
+      "categories": [
+        "academic",
+        "fundamentals"
+      ],
       "citation": "Lockerbie, 'The Challenge of Forecasting the 2024 Presidential and House Elections: Economic Pessimism and Election Outcomes', PS: Political Science & Politics, 2024",
       "attribution": "Our implementation of Lockerbie's published House equation. The open-seat term's SIGN is our assumption, not his \u2014 see the sensitivity table.",
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 12.71,
+      "margin_D": 12.72,
       "margin_D_80_low": 7.77,
-      "margin_D_80_high": 17.34,
+      "margin_D_80_high": 17.37,
       "inputs": {
         "pct_expect_worse": 37.0,
         "pct_expect_worse_source": "Michigan Surveys of Consumers, Table 8, June of the election year",
@@ -113,7 +125,7 @@
         },
         "pres_party_seat_change": -48.1,
         "implied_D_seats": 263.1,
-        "inversion_extrapolated": false,
+        "inversion_extrapolated": true,
         "curve_points_used": 10,
         "sensitivity_month": [
           {
@@ -166,18 +178,23 @@
       },
       "notes": [
         "forecasts SEAT CHANGE directly \u2014 the margin shown is our own seat curve run backwards from that seat count, and is not a number Lockerbie publishes",
+        "that seat count falls outside the range of tides the other models produced today, so the inversion is extrapolated rather than interpolated",
         "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
         "published out-of-sample mean absolute error is 16.8 seats \u2014 the interval is his, not ours, and it is very wide"
       ]
     },
     "academic_political_history": {
       "name": "Political history (Lewis-Beck & Quinlan)",
+      "categories": [
+        "academic",
+        "fundamentals"
+      ],
       "citation": "Lewis-Beck & Quinlan, 'A Political History Forecast of the 2024 US Congressional Elections', PS: Political Science & Politics 58(2), 2025, Table 1",
       "attribution": "Our implementation of their published Table 1 equations. Forecasts both chambers directly.",
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 2.66,
+      "margin_D": 2.67,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
