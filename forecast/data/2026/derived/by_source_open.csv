@@ -3946,7 +3946,7 @@ snapshot_date,source_id,category,race_id,chamber,state,district,quantity,value,u
 2026-08-22,kalshi,market,NATL_HOUSE_2026,national,,,win_prob_D,0.7911,prob,2026-08-22
 2026-08-22,kalshi,market,NATL_SENATE_2026,national,,,seats_D,49.87,seats,2026-08-22
 2026-08-22,kalshi,market,NATL_SENATE_2026,national,,,win_prob_D,0.4698,prob,2026-08-22
-2026-08-22,kalshi,market,NATL_HOUSE_2026,national,,,margin_D,7.7132,margin,2026-08-22
+2026-08-22,kalshi,market,NATL_HOUSE_2026,national,,,margin_D,7.7141,margin,2026-08-22
 2026-08-22,polymarket,market,NATL_SENATE_2026,national,,,win_prob_D,0.505,prob,2026-08-22
 2026-08-22,polymarket,market,NATL_SENATE_2026,national,,,win_prob_R,0.495,prob,2026-08-22
 2026-08-22,polymarket,market,NATL_HOUSE_2026,national,,,win_prob_D,0.875,prob,2026-08-22
@@ -4242,7 +4242,7 @@ snapshot_date,source_id,category,race_id,chamber,state,district,quantity,value,u
 2026-08-22,polymarket,market,GOV_AR_2026,governor,AR,,win_prob_D,0.0075,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_AR_2026,governor,AR,,win_prob_R,0.9655,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_CO_2026,governor,CO,,win_prob_D,0.96,prob,2026-08-22
-2026-08-22,polymarket,market,GOV_CO_2026,governor,CO,,win_prob_R,0.038,prob,2026-08-22
+2026-08-22,polymarket,market,GOV_CO_2026,governor,CO,,win_prob_R,0.0385,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_CT_2026,governor,CT,,win_prob_D,0.965,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_CT_2026,governor,CT,,win_prob_R,0.0275,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_FL_2026,governor,FL,,win_prob_D,0.205,prob,2026-08-22
@@ -4252,11 +4252,11 @@ snapshot_date,source_id,category,race_id,chamber,state,district,quantity,value,u
 2026-08-22,polymarket,market,GOV_HI_2026,governor,HI,,win_prob_D,0.9655,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_HI_2026,governor,HI,,win_prob_R,0.0215,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_ID_2026,governor,ID,,win_prob_D,0.025,prob,2026-08-22
-2026-08-22,polymarket,market,GOV_ID_2026,governor,ID,,win_prob_R,0.954,prob,2026-08-22
+2026-08-22,polymarket,market,GOV_ID_2026,governor,ID,,win_prob_R,0.9555,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_IL_2026,governor,IL,,win_prob_D,0.957,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_IL_2026,governor,IL,,win_prob_R,0.0375,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_IA_2026,governor,IA,,win_prob_D,0.735,prob,2026-08-22
-2026-08-22,polymarket,market,GOV_IA_2026,governor,IA,,win_prob_R,0.26,prob,2026-08-22
+2026-08-22,polymarket,market,GOV_IA_2026,governor,IA,,win_prob_R,0.265,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_KS_2026,governor,KS,,win_prob_D,0.34,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_KS_2026,governor,KS,,win_prob_R,0.66,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_ME_2026,governor,ME,,win_prob_D,0.955,prob,2026-08-22
@@ -4274,7 +4274,7 @@ snapshot_date,source_id,category,race_id,chamber,state,district,quantity,value,u
 2026-08-22,polymarket,market,GOV_NV_2026,governor,NV,,win_prob_D,0.41,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_NV_2026,governor,NV,,win_prob_R,0.595,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_NH_2026,governor,NH,,win_prob_D,0.1725,prob,2026-08-22
-2026-08-22,polymarket,market,GOV_NH_2026,governor,NH,,win_prob_R,0.805,prob,2026-08-22
+2026-08-22,polymarket,market,GOV_NH_2026,governor,NH,,win_prob_R,0.81,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_NM_2026,governor,NM,,win_prob_D,0.925,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_NM_2026,governor,NM,,win_prob_R,0.045,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_NY_2026,governor,NY,,win_prob_D,0.945,prob,2026-08-22
@@ -4283,7 +4283,7 @@ snapshot_date,source_id,category,race_id,chamber,state,district,quantity,value,u
 2026-08-22,polymarket,market,GOV_OH_2026,governor,OH,,win_prob_R,0.5,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_OK_2026,governor,OK,,win_prob_D,0.045,prob,2026-08-22
 2026-08-22,polymarket,market,GOV_OK_2026,governor,OK,,win_prob_R,0.96,prob,2026-08-22
-2026-08-22,polymarket,market,NATL_HOUSE_2026,national,,,margin_D,7.6211,margin,2026-08-22
+2026-08-22,polymarket,market,NATL_HOUSE_2026,national,,,margin_D,7.6395,margin,2026-08-22
 2026-08-22,grant_williams,professional,NATL_HOUSE_2026,national,,,margin_D,5.69,pct,2026-08-22
 2026-08-22,grant_williams,professional,NATL_HOUSE_2026,national,,,win_prob_D,0.8665,prob,2026-08-22
 2026-08-22,grant_williams,professional,NATL_HOUSE_2026,national,,,seats_D,250.37,seats,2026-08-22
@@ -5342,7 +5342,7 @@ snapshot_date,source_id,category,race_id,chamber,state,district,quantity,value,u
 2026-08-22,predictit,market,SEN_VA_2026,senate,VA,,win_prob_R,0.05,prob,2026-08-22
 2026-08-22,predictit,market,SEN_OH_2026,senate,OH,,win_prob_D,0.52,prob,2026-08-22
 2026-08-22,predictit,market,SEN_OH_2026,senate,OH,,win_prob_R,0.49,prob,2026-08-22
-2026-08-22,predictit,market,GOV_AZ_2026,governor,AZ,,win_prob_D,0.77,prob,2026-08-22
+2026-08-22,predictit,market,GOV_AZ_2026,governor,AZ,,win_prob_D,0.78,prob,2026-08-22
 2026-08-22,predictit,market,GOV_AZ_2026,governor,AZ,,win_prob_R,0.22,prob,2026-08-22
 2026-08-22,predictit,market,GOV_MI_2026,governor,MI,,win_prob_D,0.82,prob,2026-08-22
 2026-08-22,predictit,market,GOV_MI_2026,governor,MI,,win_prob_R,0.19,prob,2026-08-22
