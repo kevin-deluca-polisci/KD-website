@@ -54,6 +54,16 @@ on:
         type: boolean
         required: false
         default: false
+
+      backfill_markets:
+        description: >-
+          Reconstruct market price history from Kalshi candlesticks and
+          Polymarket prices-history, into the private raw archive. One-off.
+          Never overwrites a real capture. Run this only after a capture has
+          confirmed the seat ladders are fetchable.
+        type: boolean
+        required: false
+        default: false
         
 concurrency: {group: forecast-capture, cancel-in-progress: false}
 # issues: write is needed by the gate's issue-opening step. Without it that
@@ -142,6 +152,9 @@ jobs:
       - name: Parse, model, aggregate, publish
         if: inputs.dry_run != true
         run: |
+          if [ "${{ inputs.backfill_markets }}" = "true" ]; then
+            python3 forecast/collect/market_history.py --cycle "$CYCLE"
+          fi
           python3 forecast/collect/parse.py     --cycle "$CYCLE" --all
           python3 forecast/model/state_pvi.py   --cycle "$CYCLE"
           # fundamentals MUST run daily. It was left out of this list when the
