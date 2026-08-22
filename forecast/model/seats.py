@@ -488,11 +488,29 @@ def main(argv=None) -> int:
                 # generic ballot, which reaches the margin panel through the
                 # aggregators' own rows, and emitting it again here would put
                 # one average into the polling mean twice.
-                ah.setdefault(d0, {})["class_polling"] = {
+                # ITS OWN SOURCE ID, not class_polling.
+                #
+                # This is our generic-ballot average, reconstructed from
+                # Silver's poll-level file by an unweighted 21-day mean of raw
+                # poll margins. class_polling is a different number: it takes
+                # Silver's own house-effect-adjusted average and carries it
+                # through. Same polls, different recipes, so they are two
+                # aggregates and filing them under one id was wrong.
+                #
+                # AND IT CONTRIBUTES ITS MARGIN. class_polling does not, because
+                # its tide IS Silver's published average and Silver is already
+                # one of the aggregators on the margin panel — emitting it would
+                # count him twice. That objection does not apply here: this is
+                # our arithmetic on the poll list, it differs from his average
+                # by a measurable amount, and on every date before the capture
+                # began it is the only polling evidence that exists at all.
+                # Withholding it is what left the polling margin line with five
+                # points against fifty-two on the seats panel.
+                ah.setdefault(d0, {})["polling_reconstructed"] = {
                     "margin_D": t, "category": "polling",
                     "categories": ["polling"], "publication": "individual",
                     "provenance": m.get("provenance") or "backfilled",
-                    "margin_published_elsewhere": True,
+                    "margin_published_elsewhere": False,
                 }
 
         if not ah:

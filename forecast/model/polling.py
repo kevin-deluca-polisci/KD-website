@@ -583,6 +583,11 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float) -> dict:
 # hold no history for them; inventing one would be fabrication. So a backfilled
 # polling date has ONE member where a live date has five — which is precisely
 # the composition change chain_index() in aggregate.py exists to absorb.
+def newest_parsed_date_for(cycle: int) -> str | None:
+    files = sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")))
+    return Path(files[-1]).stem if files else None
+
+
 def backfill_history(cycle: int, step_days: int = 7) -> dict:
     """{date: {nowcast_tide_D, generic_ballot, ...}} from the poll record."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -595,10 +600,18 @@ def backfill_history(cycle: int, step_days: int = 7) -> dict:
 
     first, last = polls[0][0], polls[-1][0]
     print(f"  poll record: {len(polls)} polls, {first} to {last}")
+    # THROUGH TODAY, not only to the newest poll's end date. The reconstruction
+    # has to exist on both sides of the join or the chained index has no member
+    # in common there and breaks — see the note in aggregate.chain_index(). A
+    # 21-day trailing window on a date a few days past the last poll is still a
+    # real average over real polls; it is simply an average that has stopped
+    # moving, which is the truth about a week with no new polling.
+    end_date = dt.date.fromisoformat(
+        (newest_parsed_date_for(cycle) or dt.date.today().isoformat()))
     cur = first + dt.timedelta(days=academic.RECONSTRUCT_WINDOW_DAYS)
     out: dict[str, dict] = {}
     empty = 0
-    while cur <= last:
+    while cur <= end_date:
         got = academic.reconstruct_generic_ballot(polls, cur)
         if got is None:
             empty += 1
@@ -790,10 +803,19 @@ def main(argv=None) -> int:
     if a.backfill:
         hist = backfill_history(a.cycle, max(1, a.step_days))
         if hist:
-            # Today's live value replaces its backfilled twin, so the one date
-            # with a genuine capture is not overwritten by a reconstruction of
-            # itself. Marked so the page can tell them apart.
-            hist[date] = {**out, "provenance": "captured"}
+            # TODAY IS NOT OVERWRITTEN WITH THE LIVE MODEL ANY MORE, and that
+            # reversal is the point of this change.
+            #
+            # The reconstruction used to be treated as a stand-in for
+            # class_polling on dates we had not captured, so today's real value
+            # replaced it. That made one series with two recipes and a seam in
+            # the middle. It is cleaner to call it what it is: a separate
+            # aggregate, computed the same way on every date including today,
+            # standing beside class_polling rather than pretending to be it.
+            #
+            # The practical payoff is a chained index with a member on both
+            # sides of the join, so the polling line splices instead of
+            # breaking.
             priv = DATA / str(a.cycle) / "model_private"
             priv.mkdir(parents=True, exist_ok=True)
             (priv / "polling_model_history.json").write_text(
