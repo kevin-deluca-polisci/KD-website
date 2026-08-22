@@ -130,15 +130,46 @@
          trend to read yet.</p>
       {{- end }}
 
+      {{/* THE TABLE VIEW STAYS, BUT NOT AS A DUMP.
+           It used to print every point of every series — one row per date per
+           method. That was fine at three snapshots and became unreadable the
+           moment the academic backfill added six hundred days: a reader who
+           opened it got hundreds of rows and no answer.
+           It cannot simply be deleted. Two of the five series fall below 3:1
+           contrast against the light surface, and a text alternative is what
+           makes that legal rather than merely regrettable — the same reason
+           every series is directly labelled at its last point.
+           So it is now a SUMMARY: where each method started, where it is, and
+           how far it moved. That is what the chart says, in words, in five
+           rows. The full series is a CSV for anyone who wants to plot it
+           themselves. */}}
       <details>
         <summary>See the numbers</summary>
         <table>
-          <tr><th>Method</th><th>Date</th><th class="num">{{ if eq $pan.unit "prob" }}Chance{{ else }}Seats{{ end }}</th></tr>
-          {{- range $s := $pan.series }}{{- range $s.points }}
-          <tr><td>{{ $s.label }}</td><td>{{ .date }}</td>
-              <td class="num">{{ if eq $pan.unit "prob" }}{{ printf "%.1f%%" (mul .v 100) }}{{ else }}{{ printf "%.1f" .v }}{{ end }}</td></tr>
-          {{- end }}{{- end }}
+          <tr><th>Method</th><th>First</th><th>Latest</th>
+              <th class="num">Change</th><th class="num">Points</th></tr>
+          {{- range $s := $pan.series }}
+          {{- $n := len $s.points }}
+          {{- if gt $n 0 }}
+          {{- $a := index $s.points 0 }}{{ $b := index $s.points (sub $n 1) }}
+          <tr>
+            <td>{{ $s.label }}</td>
+            <td class="muted">{{ $a.date }}:
+              {{ if eq $pan.unit "prob" }}{{ printf "%.0f%%" (mul $a.v 100) }}{{ else }}{{ printf "%.1f" $a.v }}{{ end }}</td>
+            <td>{{ $b.date }}:
+              <strong>{{ if eq $pan.unit "prob" }}{{ printf "%.0f%%" (mul $b.v 100) }}{{ else }}{{ printf "%.1f" $b.v }}{{ end }}</strong></td>
+            <td class="num">
+              {{- if gt $n 1 }}{{ $d := sub $b.v $a.v }}
+              {{- if gt $d 0.0 }}+{{ end }}{{ if eq $pan.unit "prob" }}{{ printf "%.0f" (mul $d 100) }} pts{{ else }}{{ printf "%.1f" $d }}{{ end }}
+              {{- else }}<span class="muted">—</span>{{ end }}</td>
+            <td class="num muted">{{ $n }}</td>
+          </tr>
+          {{- end }}
+          {{- end }}
         </table>
+        <p class="thin-note">Every point of every series is in
+           <a href="/data/">the data page</a> as CSV, along with what each
+           source said on each date.</p>
       </details>
     </div>
     {{- end }}

@@ -845,9 +845,63 @@ def run_lbq(c: Ctx) -> Result | None:
     )
 
 
+# ---------------------------------------------------------------------------
+# WHICH FAMILIES A MODEL BELONGS TO
+# ---------------------------------------------------------------------------
+# "Academic" is not the same KIND of label as the other four, and pretending
+# otherwise put every model in this file in exactly one box when several belong
+# in two.
+#
+# Fundamentals, polling, markets and professional are claims about METHOD: what
+# the forecast looks at. Academic is a claim about PROVENANCE: who published it
+# and where. Those are orthogonal. A referendum model published in APSR is an
+# academic forecast AND a fundamentals forecast, in the plain sense that it
+# predicts from the economy and presidential approval and knows nothing about
+# polls. Filing it under one and not the other made the fundamentals line on
+# the tracker narrower than the evidence we actually hold.
+#
+# So a model declares a LIST. The first entry is its PRIMARY family, which is
+# the one the across-family average uses; the rest are additional memberships,
+# which the category averages and the timeline honour in full.
+#
+#   BEW              academic + polling. Its only moving input is the generic
+#                    ballot. It is a poll-based forecast that happens to have
+#                    been published in the Journal of Politics.
+#   Referendum       academic + fundamentals. Approval and income, no polls.
+#   Lockerbie        academic + fundamentals. Economic expectations, no polls.
+#   Lewis-Beck &     academic + fundamentals. No economy and no polls, but the
+#   Quinlan          site's own definition of fundamentals is "conditions
+#                    rather than opinion", and governorships held, seats not up
+#                    and retirements are conditions.
+#
+# WHAT DUAL MEMBERSHIP COSTS, stated plainly because it is a real cost and the
+# comment here used to claim it had been solved.
+#
+# Category averages are computed within a category, so a dual member is counted
+# once in each — which is right, because "what does this way of knowing say" is
+# a different question for each family and the model genuinely answers both.
+#
+# The across-family row is where it bites. That row averages FAMILY MEANS, and
+# a model sitting in two families influences two of them. The referendum model
+# is one of four in academic and one of eight in fundamentals, so it carries
+# (1/5)(1/4) + (1/5)(1/8) of the headline instead of one share. It is not
+# double-counted in any category, but it is over-weighted in the total.
+#
+# We accept that for now rather than building a second, primary-only set of
+# averages purely to feed one row. The effect is small and the alternative is a
+# parallel aggregation that could drift from the real one. But it IS a thumb on
+# the scale, it is here in writing, and it belongs in the same conversation as
+# the panel-composition question — a headline that moves because a model joined
+# a second family is exactly the kind of movement that is not news.
+#
+# THIS IS ITSELF A COMPOSITION CHANGE, and it will move the polling and
+# fundamentals lines on the day it lands, without anybody's forecast having
+# changed. See the note on panel composition in collect/publish.py.
+
 MODELS = [
     {
         "key": "academic_bew",
+        "categories": ["academic", "polling"],
         "name": "Generic ballot (Bafumi, Erikson & Wlezien)",
         "citation": BEW_CITE,
         "attribution": "Our implementation of BEW's published midterm equations, "
@@ -858,6 +912,7 @@ MODELS = [
     },
     {
         "key": "academic_referendum",
+        "categories": ["academic", "fundamentals"],
         "name": "Referendum (approval + income, no exposure)",
         "citation": REFERENDUM_CITE,
         "attribution": "Our fit of the referendum specification. NOT Lewis-Beck "
@@ -868,6 +923,7 @@ MODELS = [
     },
     {
         "key": "academic_economic_pessimism",
+        "categories": ["academic", "fundamentals"],
         "name": "Economic pessimism (Lockerbie)",
         "citation": LOCKERBIE_CITE,
         "attribution": "Our implementation of Lockerbie's published House "
@@ -884,6 +940,7 @@ MODELS = [
     },
     {
         "key": "academic_political_history",
+        "categories": ["academic", "fundamentals"],
         "name": "Political history (Lewis-Beck & Quinlan)",
         "citation": LBQ_CITE,
         "attribution": "Our implementation of their published Table 1 "
@@ -895,6 +952,7 @@ MODELS = [
     },
     {
         "key": "academic_state_approval_economy",
+        "categories": ["academic", "fundamentals"],
         "name": "State approval + state economy (Enns et al.)",
         "citation": ENNS_CITE,
         "attribution": "Not implemented. Listed so the gap is visible.",
@@ -1233,9 +1291,11 @@ def main(argv=None) -> int:
         lo, hi = res.interval_80 or (None, None)
         out["models"][spec["key"]] = {
             "name": spec["name"],
+            # PRIMARY first. seats.py and aggregate.py both rely on that order.
+            "categories": spec.get("categories") or ["academic"],
             "citation": spec["citation"],
             "attribution": spec["attribution"],
-            "category": "academic",
+            "category": (spec.get("categories") or ["academic"])[0],
             "publication": "individual",
             "refit_on_our_history": spec["refit"],
             "margin_D": round(res.margin_D, 2),

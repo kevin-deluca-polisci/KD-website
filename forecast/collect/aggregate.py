@@ -351,6 +351,20 @@ def class_model_rows(cycle: int) -> list[dict]:
           cat = model.get("category")
           if not cat:
               continue
+          # EVERY FAMILY THIS MODEL BELONGS TO, not just the first.
+          #
+          # "Academic" describes where a forecast was published; "fundamentals"
+          # and "polling" describe what it looks at. Those are different
+          # questions and a model can answer both — the referendum model is an
+          # academic forecast AND a fundamentals one. Emitting a row per
+          # membership is what puts it into both category averages and both
+          # lines on the timeline.
+          #
+          # The rows are IDENTICAL apart from the category, so a reader who
+          # sums across categories would count this model twice. Nothing on the
+          # site does that: category averages are computed within a category,
+          # and the across-family row in publish.py uses the primary only.
+          cats = model.get("categories") or [cat]
           as_of["d"] = model.get("as_of") or date
           tier["p"] = model.get("publication") or "individual"
           senate, house = model.get("senate") or {}, model.get("house") or {}
@@ -360,27 +374,29 @@ def class_model_rows(cycle: int) -> list[dict]:
           elsewhere = model.get("margin_published_elsewhere")
           if elsewhere is None:
               elsewhere = source_id in MARGIN_FROM_ELSEWHERE
-          if not elsewhere:
-              emit(source_id, cat, NATL_HOUSE, "national", "", "", "margin_D",
-                   model.get("tide_D"), "margin")
-          emit(source_id, cat, NATL_HOUSE, "national", "", "", "seats_D",
-               house.get("expected_D_seats"), "seats")
-          emit(source_id, cat, NATL_HOUSE, "national", "", "", "win_prob_D",
-               house.get("prob_D_majority"), "prob")
-          emit(source_id, cat, NATL_SENATE, "national", "", "", "seats_D",
-               senate.get("expected_D_total"), "seats")
-          # 51+ is a majority. 50+ is a tie the vice-president breaks, and every
-          # outside forecast and market this is averaged against prices the
-          # majority, so averaging our 50+ against their 51+ would compare two
-          # different events and call the difference disagreement.
-          emit(source_id, cat, NATL_SENATE, "national", "", "", "win_prob_D",
-               senate.get("prob_D_51_plus"), "prob")
-          for st, r in (model.get("races") or {}).items():
-              rid = f"SEN_{st}_2026"
-              emit(source_id, cat, rid, "senate", st, "", "margin_D",
-                   r.get("expected_margin_D"), "margin")
-              emit(source_id, cat, rid, "senate", st, "", "win_prob_D",
-                   r.get("win_prob_D"), "prob")
+          for cat in cats:
+              if not elsewhere:
+                  emit(source_id, cat, NATL_HOUSE, "national", "", "", "margin_D",
+                       model.get("tide_D"), "margin")
+              emit(source_id, cat, NATL_HOUSE, "national", "", "", "seats_D",
+                   house.get("expected_D_seats"), "seats")
+              emit(source_id, cat, NATL_HOUSE, "national", "", "", "win_prob_D",
+                   house.get("prob_D_majority"), "prob")
+              emit(source_id, cat, NATL_SENATE, "national", "", "", "seats_D",
+                   senate.get("expected_D_total"), "seats")
+              # 51+ is a majority. 50+ is a tie the vice-president breaks, and
+              # every outside forecast and market this is averaged against
+              # prices the majority, so averaging our 50+ against their 51+
+              # would compare two different events and call the difference
+              # disagreement.
+              emit(source_id, cat, NATL_SENATE, "national", "", "", "win_prob_D",
+                   senate.get("prob_D_51_plus"), "prob")
+              for st, r in (model.get("races") or {}).items():
+                  rid = f"SEN_{st}_2026"
+                  emit(source_id, cat, rid, "senate", st, "", "margin_D",
+                       r.get("expected_margin_D"), "margin")
+                  emit(source_id, cat, rid, "senate", st, "", "win_prob_D",
+                       r.get("win_prob_D"), "prob")
     return rows
 
 
@@ -742,6 +758,160 @@ def small_drops(cycle: int, averages: list[dict],
     return out
 
 
+# ---------------------------------------------------------------------------
+# Chaining
+# ---------------------------------------------------------------------------
+# THE PROBLEM. A category average is the mean of whoever is in the category
+# that day, and the membership changes. When Lockerbie and Lewis-Beck & Quinlan
+# were added, the academic line moved. When the academic models were also filed
+# under fundamentals, the fundamentals line moved thirteen seats in an
+# afternoon. Nobody's forecast had changed. A reader watching the chart cannot
+# tell that kind of movement from the kind that matters, and the chart does not
+# currently tell them.
+#
+# THE FIX is the one price indices have used for a century. Do not compare
+# today's basket with yesterday's basket. Compare the items in BOTH baskets,
+# and carry the level forward by that change:
+#
+#     level(t) = level(t-1) + [ mean_common(t) - mean_common(t-1) ]
+#
+# where common = the sources present on both dates. A source that joins today
+# contributes NOTHING to today's movement — it enters the level from tomorrow
+# on, once it has two observations to move between. A source that leaves stops
+# contributing rather than yanking the level as it goes.
+#
+# WHAT THIS BUYS AND WHAT IT COSTS. Every movement on a chained line is a real
+# movement: forecasters changed their minds, or the data did. That is the whole
+# point. The cost is that the LEVEL is no longer "the mean of who we have
+# today" — it is an index anchored at the first date and moved by common-member
+# changes ever since, so it can drift away from the simple mean. Both numbers
+# are published: `mean` is what the category says today, `mean_chained` is how
+# it got there. The comparison table uses the mean; the timeline uses the
+# chain.
+#
+# WHEN CHAINING IS IMPOSSIBLE. If two consecutive dates share no source at all,
+# there is no common basket and no honest way to bridge them. The chain BREAKS:
+# the level restarts at that day's simple mean and the row is flagged. A broken
+# chain is not a bug to be smoothed over — it means the category was rebuilt
+# from scratch and the two segments are not comparable.
+#
+# PROBABILITIES are chained additively like everything else and then clamped to
+# (0,1). Strictly they should be chained in log-odds, which cannot leave the
+# interval; additive chaining plus a clamp is the cruder choice, taken because
+# a probability that has drifted to the clamp is a visible signal that the
+# category has been rebuilt underneath the reader, where a log-odds chain would
+# quietly absorb it.
+PROB_CLAMP = (0.005, 0.995)
+
+
+def chain_index(rows: list[dict], averages: list[dict]) -> None:
+    """Add `mean_chained`, `n_common` and `chain_note` to each average, in place.
+
+    THE MEMBER SET COMES FROM THE PUBLISHED AVERAGE, NOT FROM THE RAW ROWS, and
+    the first version of this function got that wrong in a way worth recording.
+
+    It computed each date's mean over every source in `rows`. But an average is
+    not always over every source: when a cell holds gated contributors and
+    cannot clear MIN_N, aggregate() publishes a `partial` row computed over the
+    OPEN SUBSET only. Chaining over the full set and publishing the result
+    beside that partial mean would have put the gated contribution back on the
+    page in a second column — the disclosure floor walked around by arithmetic,
+    in code written to fix a charting problem.
+
+    So the chain reads `_contributors`, which is the exact list aggregate()
+    used for that row, and never sees a source the row itself excluded. If the
+    published member set changes because a source became disclosable rather
+    than because it changed its mind, that is a composition change like any
+    other and the chain treats it as one.
+    """
+    KEYS = ("category", "race_id", "chamber", "state", "district", "quantity", "unit")
+
+    # (cell, date) -> {source: value}, one value per source.
+    per: dict[tuple, dict[str, list]] = defaultdict(lambda: defaultdict(list))
+    for r in rows:
+        q = r["quantity"]
+        if q in NO_AVERAGE or q in NEVER_PUBLISH or q in NOT_A_FORECAST:
+            continue
+        try:
+            v = float(r["value"])
+        except (TypeError, ValueError):
+            continue
+        cell = tuple(r[k] for k in KEYS)
+        per[(cell, r["snapshot_date"])][r["source_id"]].append(v)
+    src_means = {k: {s: statistics.fmean(vs) for s, vs in d.items()}
+                 for k, d in per.items()}
+
+    # The members each PUBLISHED row actually averaged.
+    members: dict[tuple, list[str]] = {}
+    for a in averages:
+        cell = tuple(a[k] for k in KEYS)
+        members[(cell, a["snapshot_date"])] = list(a.get("_contributors") or ())
+
+    by_cell: dict[tuple, list[str]] = defaultdict(list)
+    for cell, date in members:
+        by_cell[cell].append(date)
+
+    def mean_over(cell, date, srcs):
+        vals = [src_means[(cell, date)][s] for s in srcs
+                if s in src_means.get((cell, date), {})]
+        return statistics.fmean(vals) if vals else None
+
+    chained: dict[tuple, tuple] = {}
+    for cell, dates in by_cell.items():
+        dates.sort()
+        is_prob = cell[KEYS.index("unit")] == "prob"
+        level, prev_date = None, None
+        for date in dates:
+            cur = set(members[(cell, date)])
+            if not cur:
+                continue
+            if level is None:
+                m = mean_over(cell, date, cur)
+                if m is None:
+                    continue
+                level, prev_date = m, date
+                chained[(cell, date)] = (level, len(cur), "start")
+                continue
+            prev = set(members[(cell, prev_date)])
+            common = cur & prev
+            m_now = mean_over(cell, date, common) if common else None
+            m_then = mean_over(cell, prev_date, common) if common else None
+            if m_now is not None and m_then is not None:
+                level = level + (m_now - m_then)
+                if cur == prev:
+                    note = ""
+                else:
+                    joined = sorted(cur - prev)
+                    left = sorted(prev - cur)
+                    bits = []
+                    if joined:
+                        bits.append(f"+{len(joined)}")
+                    if left:
+                        bits.append(f"-{len(left)}")
+                    note = (f"composition changed ({', '.join(bits)}); "
+                            f"chained on {len(common)} in common")
+            else:
+                level = mean_over(cell, date, cur)
+                note = "BREAK: no member in common with the previous date"
+            if level is None:
+                continue
+            if is_prob:
+                level = min(max(level, PROB_CLAMP[0]), PROB_CLAMP[1])
+            chained[(cell, date)] = (level, len(common), note)
+            prev_date = date
+
+    for a in averages:
+        cell = tuple(a[k] for k in KEYS)
+        got = chained.get((cell, a["snapshot_date"]))
+        if got is None:
+            a["mean_chained"], a["n_common"], a["chain_note"] = "", "", ""
+        else:
+            lvl, n_common, note = got
+            a["mean_chained"] = round(lvl, 4)
+            a["n_common"] = n_common
+            a["chain_note"] = note
+
+
 def write(cycle: int, averages, by_source, suppressed, ratings) -> list[Path]:
     d = DATA_DIR / str(cycle) / "derived"
     d.mkdir(parents=True, exist_ok=True)
@@ -795,6 +965,9 @@ def main(argv=None) -> int:
         return 2
 
     averages, by_source, suppressed = aggregate(rows)
+    # After aggregate(), because it needs the finished rows; before
+    # write(), because the columns it adds have to reach disk.
+    chain_index(rows, averages)
     ratings = ratings_panel(rows)
     problems = audit(rows, averages, by_source, suppressed)
     shrunk = would_shrink(a.cycle, averages, suppressed)

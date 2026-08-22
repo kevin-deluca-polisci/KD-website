@@ -177,7 +177,26 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
         ("NATL_HOUSE_2026", "margin_D"): "margin",
     }
     for r in _rd(derived / "category_averages.csv"):
-        cat, q, v = r["category"], r["quantity"], _f(r["mean"])
+        cat, q = r["category"], r["quantity"]
+        # THE TIMELINE PLOTS THE CHAINED LEVEL, NOT THE SIMPLE MEAN.
+        #
+        # A category's membership changes — models get added, a gated source
+        # crosses the disclosure floor, a family gains a member because a model
+        # turned out to belong to two. Every one of those moves the simple mean
+        # without anyone's forecast having changed, and on a time series that is
+        # indistinguishable from news. Chaining, computed in aggregate.py,
+        # carries the level forward using only sources present on both dates,
+        # so a movement on this chart is a movement in somebody's opinion.
+        #
+        # The comparison table still shows the simple mean, and should: "what
+        # does this family say today" is a different question from "how did it
+        # get here", and the mean is the honest answer to the first.
+        #
+        # Falls back to the mean where no chain exists — an archive written
+        # before chaining, or a cell whose chain broke.
+        v = _f(r.get("mean_chained"))
+        if v is None:
+            v = _f(r["mean"])
         if v is None or cat not in LABELS:
             continue
         panel = PANEL_OF.get((r["race_id"], q))

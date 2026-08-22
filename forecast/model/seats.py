@@ -211,6 +211,11 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Seat projections from each tide.")
     ap.add_argument("--cycle", type=int, default=2026)
     ap.add_argument("--holdover-d", type=int, default=polling.HOLDOVER_D_DEFAULT)
+    ap.add_argument("--backfill-history", action="store_true",
+                    help="project every date in the model history files "
+                         "(academic and polling) rather than only today. The "
+                         "real name for this; --backfill-academic is kept as "
+                         "an alias so existing workflow files keep working.")
     ap.add_argument("--backfill-academic", action="store_true",
                     help="project every date in model_private/"
                          "academic_models_history.json, not just today. Slow "
@@ -289,13 +294,22 @@ def main(argv=None) -> int:
     # Tier is read from the file rather than asserted, for the same reason the
     # category is: if a model is ever added whose licence is not ours to give,
     # this loop must not be the thing that quietly publishes it.
+    acad_categories: dict[str, list] = {}
     am = d / "academic_models.json"
     if am.exists():
         acad = json.loads(am.read_text())
         for key, m in (acad.get("models") or {}).items():
             if m.get("margin_D") is None:
                 continue
-            tides[key] = (m.get("category") or "academic", float(m["margin_D"]),
+            cats = m.get("categories") or [m.get("category") or "academic"]
+            # The tide carries the PRIMARY family, which is what the tuple has
+            # always held; the full list travels separately and is stamped onto
+            # the projection below. A model may belong to more than one family
+            # — see the note at the top of academic.py — and the category
+            # averages honour every membership while the across-family average
+            # uses only the first.
+            acad_categories[key] = cats
+            tides[key] = (cats[0], float(m["margin_D"]),
                           m.get("publication") or "individual", False)
         skipped = acad.get("not_implemented") or {}
         if skipped:
@@ -336,6 +350,9 @@ def main(argv=None) -> int:
         # one under it, so adding a model is a registry entry plus a line in
         # EXTERNAL_TIDE_SOURCES and nothing downstream has to learn its name.
         p["category"] = category
+        # Every family this model belongs to, primary first. Defaults to the
+        # single category so nothing outside academic/ has to change.
+        p["categories"] = acad_categories.get(name, [category])
         # The LICENCE travels with it too. A seat count inverts back to the
         # tide that made it, so a projection built from a gated source's margin
         # is that source's number in another coat and carries its tier.
@@ -449,13 +466,40 @@ def main(argv=None) -> int:
     # wrong as part of the daily run. Existing dates are updated in place rather
     # than duplicated, and a date's own captured projections are preserved:
     # only the academic keys are touched.
-    if a.backfill_academic:
+    if a.backfill_academic or a.backfill_history:
+        # TWO HISTORIES, ONE LOOP. academic.py and polling.py each reconstruct
+        # their own tides from the poll record and write a history file; both
+        # are projected here through the same seat machinery as everything
+        # else, so a backfilled date is built exactly like a live one.
+        ah: dict = {}
         ah_p = priv / "academic_models_history.json"
-        if not ah_p.exists():
-            print("  --backfill-academic: no academic_models_history.json — "
-                  "run  python3 forecast/model/academic.py --backfill  first")
+        if ah_p.exists():
+            for d0, day in json.loads(ah_p.read_text()).items():
+                ah.setdefault(d0, {}).update(day.get("models") or {})
+
+        ph_p = priv / "polling_model_history.json"
+        if ph_p.exists():
+            for d0, m in json.loads(ph_p.read_text()).items():
+                t = m.get("nowcast_tide_D")
+                if t is None:
+                    continue
+                # Same shape academic.py writes, so the loop below needs no
+                # branch. class_polling contributes seats only: its tide IS the
+                # generic ballot, which reaches the margin panel through the
+                # aggregators' own rows, and emitting it again here would put
+                # one average into the polling mean twice.
+                ah.setdefault(d0, {})["class_polling"] = {
+                    "margin_D": t, "category": "polling",
+                    "categories": ["polling"], "publication": "individual",
+                    "provenance": m.get("provenance") or "backfilled",
+                    "margin_published_elsewhere": True,
+                }
+
+        if not ah:
+            print("  --backfill-history: no history files — run "
+                  "academic.py --backfill and/or polling.py --backfill first")
         else:
-            ah = json.loads(ah_p.read_text())
+            ah = {d0: {"models": mm} for d0, mm in ah.items()}
             todo = sorted(d0 for d0 in ah if d0 != date)
             print(f"\n  backfilling academic projections for {len(todo)} "
                   f"date(s) — about {len(todo) * 4}s, one Monte Carlo per "
@@ -470,12 +514,15 @@ def main(argv=None) -> int:
                     p0 = project(float(m["margin_D"]), pvi, states, rows,
                                  sigma, a.holdover_d)
                     p0["category"] = m.get("category") or "academic"
+                    p0["categories"] = (m.get("categories")
+                                        or [p0["category"]])
                     p0["publication"] = m.get("publication") or "individual"
                     # Its margin is not a parsed row on that date — nobody
                     # captured it, we computed it — so this projection has to
                     # contribute the margin or the backfilled line has seats
                     # and no tide behind it.
-                    p0["margin_published_elsewhere"] = False
+                    p0["margin_published_elsewhere"] = bool(
+                        m.get("margin_published_elsewhere", False))
                     p0["as_of"] = d0
                     p0["provenance"] = m.get("provenance") or "backfilled"
                     day["projections"][key] = p0

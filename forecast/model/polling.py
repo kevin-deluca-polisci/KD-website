@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import datetime as dt
 import glob
 import json
 import math
@@ -556,11 +557,99 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float) -> dict:
 
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Backfill
+# ---------------------------------------------------------------------------
+# The polling line on this site began the day capture began, which is a fact
+# about our infrastructure and not about the polls. Silver's captured file is
+# not an average — it is several hundred INDIVIDUAL polls, each with its own
+# enddate, running back to December 2024. Every one of them existed on its
+# enddate. So the average as of any past date is a computation over exactly the
+# polls published by then, not an estimate of what they might have said.
+#
+# The reconstruction machinery lives in model/academic.py, because BEW needed
+# it first, and it is imported rather than copied. Two implementations of "the
+# generic ballot as of date D" would drift, and the day they drifted the
+# academic and polling lines would disagree for a reason no reader could see.
+#
+# RAW `net`, NOT `adjusted_net` — the adjusted columns are Silver's model
+# output and get revised retroactively, so using them would leak hindsight into
+# a number presented as contemporaneous. The live daily path keeps preferring
+# adjusted, because for today there is no hindsight to leak. academic.py's
+# comment has the full argument and the measured size of the seam.
+#
+# WHAT THIS BACKFILLS: our own class_polling tide, and only that. The four
+# outside aggregators are other people's numbers on other people's dates and we
+# hold no history for them; inventing one would be fabrication. So a backfilled
+# polling date has ONE member where a live date has five — which is precisely
+# the composition change chain_index() in aggregate.py exists to absorb.
+def backfill_history(cycle: int, step_days: int = 7) -> dict:
+    """{date: {nowcast_tide_D, generic_ballot, ...}} from the poll record."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import academic  # noqa: E402  — the reconstruction lives there
+
+    polls = academic.load_poll_history(cycle)
+    if not polls:
+        print("  no Silver Bulletin poll list in raw/ — nothing to reconstruct")
+        return {}
+
+    first, last = polls[0][0], polls[-1][0]
+    print(f"  poll record: {len(polls)} polls, {first} to {last}")
+    cur = first + dt.timedelta(days=academic.RECONSTRUCT_WINDOW_DAYS)
+    out: dict[str, dict] = {}
+    empty = 0
+    while cur <= last:
+        got = academic.reconstruct_generic_ballot(polls, cur)
+        if got is None:
+            empty += 1
+            cur += dt.timedelta(days=step_days)
+            continue
+        margin, n_polls = got
+        days = (dt.date.fromisoformat(ELECTION_DAY) - cur).days
+        out[cur.isoformat()] = {
+            "snapshot_date": cur.isoformat(),
+            "generic_ballot": {"raw": round(margin, 3), "adjusted": None,
+                               "used": "reconstructed_raw_mean",
+                               "value": round(margin, 3)},
+            "n_polls_in_window": n_polls,
+            "shrink_lambda": round(shrink_lambda(days), 4),
+            # The NOWCAST, matching what the live path feeds seats.py: the
+            # generic ballot as it stood, not shrunk toward November. Shrinking
+            # here would make the backfilled line a series of forecasts of
+            # election day while the live end of the same line is a nowcast,
+            # and the join would be a step with no cause.
+            "nowcast_tide_D": round(margin, 3),
+            "election_day_tide_D": round(margin * shrink_lambda(days), 3),
+            "provenance": "backfilled",
+        }
+        cur += dt.timedelta(days=step_days)
+
+    print(f"  reconstructed {len(out)} date(s)")
+    if empty:
+        print(f"  {empty} date(s) had no poll in the trailing "
+              f"{academic.RECONSTRUCT_WINDOW_DAYS} days and were left out "
+              f"rather than carried forward")
+    if out:
+        ks = sorted(out)
+        print(f"  polling {ks[0]} D{out[ks[0]]['nowcast_tide_D']:+.2f}"
+              f"  ->  {ks[-1]} D{out[ks[-1]]['nowcast_tide_D']:+.2f}")
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Polling-based forecast.")
     ap.add_argument("--cycle", type=int, default=2026)
     ap.add_argument("--calibrate", action="store_true", help="show the sigma fit and exit")
     ap.add_argument("--house", action="store_true", help="also run the private House model")
+    ap.add_argument("--backfill", action="store_true",
+                    help="also reconstruct this model's tide for every date "
+                         "the poll record supports, into model_private/"
+                         "polling_model_history.json. Rebuilt from the archive "
+                         "each time, so it is safe to repeat.")
+    ap.add_argument("--step-days", type=int, default=7,
+                    help="spacing of backfilled points (default 7). The window "
+                         "is a 21-day trailing average, so daily points mostly "
+                         "repeat each other.")
     ap.add_argument("--holdover-d", type=int, default=HOLDOVER_D_DEFAULT,
                     help=f"D seats NOT up this cycle (default {HOLDOVER_D_DEFAULT}; "
                          f"see HOLDOVER_D_DEFAULT — one seat is worth ~20 points)")
@@ -697,6 +786,24 @@ def main(argv=None) -> int:
             print(f"      P(D >= 218) {h['prob_D_218_plus']:.3f}")
             print(f"  wrote {hp.relative_to(REPO)}   "
                   f"(district index: {h.get('pvi_source')})")
+
+    if a.backfill:
+        hist = backfill_history(a.cycle, max(1, a.step_days))
+        if hist:
+            # Today's live value replaces its backfilled twin, so the one date
+            # with a genuine capture is not overwritten by a reconstruction of
+            # itself. Marked so the page can tell them apart.
+            hist[date] = {**out, "provenance": "captured"}
+            priv = DATA / str(a.cycle) / "model_private"
+            priv.mkdir(parents=True, exist_ok=True)
+            (priv / "polling_model_history.json").write_text(
+                json.dumps(hist, indent=2))
+            print(f"  wrote model_private/polling_model_history.json"
+                  f"   PRIVATE — {len(hist)} date(s)")
+            recon = hist.get(date, {}).get("nowcast_tide_D")
+            live = out.get("nowcast_tide_D")
+            print(f"  next: python3 forecast/model/seats.py --cycle {a.cycle} "
+                  f"--backfill-academic   (projects these too)")
     return 0
 
 
