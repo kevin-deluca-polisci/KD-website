@@ -1,9 +1,21 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-22T11:57:11.909305+00:00",
+  "generated_at": "2026-08-22T13:31:07.407472+00:00",
   "latest_snapshot": "2026-08-22",
   "snapshot_count": 8,
   "headline": [
+    {
+      "category": "academic",
+      "margin_D": 6.07,
+      "n_sources": 2,
+      "low": 3.86,
+      "high": 8.28,
+      "tier": "open",
+      "display": "thin",
+      "sole_source": "",
+      "as_of": "2026-08-22",
+      "n_carried": 0
+    },
     {
       "category": "fundamentals",
       "margin_D": 6.13,
@@ -18,13 +30,13 @@
     },
     {
       "category": "market",
-      "margin_D": 7.7122,
-      "n_sources": 2,
-      "low": 7.6375,
-      "high": 7.7868,
+      "margin_D": 7.6306,
+      "n_sources": 1,
+      "low": 7.6306,
+      "high": 7.6306,
       "tier": "open",
-      "display": "thin",
-      "sole_source": "",
+      "display": "single",
+      "sole_source": "polymarket",
       "as_of": "2026-08-22",
       "n_carried": 0
     },
@@ -131,7 +143,13 @@
       ],
       [
         "2026-08-22",
-        7.7122
+        7.6306
+      ]
+    ],
+    "academic": [
+      [
+        "2026-08-22",
+        6.07
       ]
     ]
   },
@@ -609,6 +627,426 @@
       "senate_majority": 51
     },
     "projections": {
+      "academic_bew": {
+        "tide_D": 3.86,
+        "senate": {
+          "n_races": 35,
+          "expected_D_seats_up": 14.2,
+          "D_seats_up_80pct": [
+            11,
+            17
+          ],
+          "expected_D_total": 48.2,
+          "D_total_80pct": [
+            45,
+            51
+          ],
+          "prob_D_50_plus": 0.2523,
+          "prob_D_51_plus": 0.1309
+        },
+        "races": {
+          "AK": {
+            "expected_margin_D": -9.04,
+            "pvi": -6.45,
+            "win_prob_D": 0.0838
+          },
+          "AL": {
+            "expected_margin_D": -25.76,
+            "pvi": -14.81,
+            "win_prob_D": 0.0
+          },
+          "AR": {
+            "expected_margin_D": -26.76,
+            "pvi": -15.31,
+            "win_prob_D": 0.0
+          },
+          "CO": {
+            "expected_margin_D": 15.8,
+            "pvi": 5.97,
+            "win_prob_D": 0.9921
+          },
+          "DE": {
+            "expected_margin_D": 19.88,
+            "pvi": 8.01,
+            "win_prob_D": 0.9988
+          },
+          "FL": {
+            "expected_margin_D": -6.92,
+            "pvi": -5.39,
+            "win_prob_D": 0.1454
+          },
+          "GA": {
+            "expected_margin_D": 2.26,
+            "pvi": -0.8,
+            "win_prob_D": 0.635
+          },
+          "IA": {
+            "expected_margin_D": -8.32,
+            "pvi": -6.09,
+            "win_prob_D": 0.102
+          },
+          "ID": {
+            "expected_margin_D": -32.22,
+            "pvi": -18.04,
+            "win_prob_D": 0.0
+          },
+          "IL": {
+            "expected_margin_D": 16.54,
+            "pvi": 6.34,
+            "win_prob_D": 0.9942
+          },
+          "KS": {
+            "expected_margin_D": -12.2,
+            "pvi": -8.03,
+            "win_prob_D": 0.0313
+          },
+          "KY": {
+            "expected_margin_D": -26.02,
+            "pvi": -14.94,
+            "win_prob_D": 0.0
+          },
+          "LA": {
+            "expected_margin_D": -17.64,
+            "pvi": -10.75,
+            "win_prob_D": 0.0035
+          },
+          "MA": {
+            "expected_margin_D": 31.84,
+            "pvi": 13.99,
+            "win_prob_D": 1.0
+          },
+          "ME": {
+            "expected_margin_D": 11.5,
+            "pvi": 3.82,
+            "win_prob_D": 0.9604
+          },
+          "MI": {
+            "expected_margin_D": 3.48,
+            "pvi": -0.19,
+            "win_prob_D": 0.7024
+          },
+          "MN": {
+            "expected_margin_D": 8.92,
+            "pvi": 2.53,
+            "win_prob_D": 0.9134
+          },
+          "MS": {
+            "expected_margin_D": -17.7,
+            "pvi": -10.78,
+            "win_prob_D": 0.0034
+          },
+          "MT": {
+            "expected_margin_D": -15.78,
+            "pvi": -9.82,
+            "win_prob_D": 0.008
+          },
+          "NC": {
+            "expected_margin_D": 1.06,
+            "pvi": -1.4,
+            "win_prob_D": 0.5643
+          },
+          "NE": {
+            "expected_margin_D": -16.68,
+            "pvi": -10.27,
+            "win_prob_D": 0.0054
+          },
+          "NH": {
+            "expected_margin_D": 7.84,
+            "pvi": 1.99,
+            "win_prob_D": 0.8843
+          },
+          "NJ": {
+            "expected_margin_D": 12.4,
+            "pvi": 4.27,
+            "win_prob_D": 0.9708
+          },
+          "NM": {
+            "expected_margin_D": 11.22,
+            "pvi": 3.68,
+            "win_prob_D": 0.9566
+          },
+          "OH": {
+            "expected_margin_D": -6.68,
+            "pvi": -5.27,
+            "win_prob_D": 0.1539
+          },
+          "OK": {
+            "expected_margin_D": -30.82,
+            "pvi": -17.34,
+            "win_prob_D": 0.0
+          },
+          "OR": {
+            "expected_margin_D": 19.16,
+            "pvi": 7.65,
+            "win_prob_D": 0.9983
+          },
+          "RI": {
+            "expected_margin_D": 19.78,
+            "pvi": 7.96,
+            "win_prob_D": 0.9987
+          },
+          "SC": {
+            "expected_margin_D": -12.7,
+            "pvi": -8.28,
+            "win_prob_D": 0.0263
+          },
+          "SD": {
+            "expected_margin_D": -25.28,
+            "pvi": -14.57,
+            "win_prob_D": 0.0001
+          },
+          "TN": {
+            "expected_margin_D": -24.66,
+            "pvi": -14.26,
+            "win_prob_D": 0.0001
+          },
+          "TX": {
+            "expected_margin_D": -7.98,
+            "pvi": -5.92,
+            "win_prob_D": 0.1116
+          },
+          "VA": {
+            "expected_margin_D": 10.84,
+            "pvi": 3.49,
+            "win_prob_D": 0.951
+          },
+          "WV": {
+            "expected_margin_D": -38.06,
+            "pvi": -20.96,
+            "win_prob_D": 0.0
+          },
+          "WY": {
+            "expected_margin_D": -42.6,
+            "pvi": -23.23,
+            "win_prob_D": 0.0
+          }
+        },
+        "house": {
+          "n_districts": 435,
+          "expected_D_seats": 218.66,
+          "D_seats_80pct": [
+            198,
+            240
+          ],
+          "prob_D_majority": 0.5077,
+          "majority_at": 218,
+          "pvi_source": "cook_pvi"
+        },
+        "category": "academic",
+        "publication": "individual",
+        "margin_published_elsewhere": false,
+        "as_of": "2026-08-22"
+      },
+      "academic_referendum": {
+        "tide_D": 8.28,
+        "senate": {
+          "n_races": 35,
+          "expected_D_seats_up": 16.32,
+          "D_seats_up_80pct": [
+            14,
+            19
+          ],
+          "expected_D_total": 50.32,
+          "D_total_80pct": [
+            48,
+            53
+          ],
+          "prob_D_50_plus": 0.6071,
+          "prob_D_51_plus": 0.4334
+        },
+        "races": {
+          "AK": {
+            "expected_margin_D": -4.62,
+            "pvi": -6.45,
+            "win_prob_D": 0.2403
+          },
+          "AL": {
+            "expected_margin_D": -21.34,
+            "pvi": -14.81,
+            "win_prob_D": 0.0006
+          },
+          "AR": {
+            "expected_margin_D": -22.34,
+            "pvi": -15.31,
+            "win_prob_D": 0.0003
+          },
+          "CO": {
+            "expected_margin_D": 20.22,
+            "pvi": 5.97,
+            "win_prob_D": 0.999
+          },
+          "DE": {
+            "expected_margin_D": 24.3,
+            "pvi": 8.01,
+            "win_prob_D": 0.9999
+          },
+          "FL": {
+            "expected_margin_D": -2.5,
+            "pvi": -5.39,
+            "win_prob_D": 0.3513
+          },
+          "GA": {
+            "expected_margin_D": 6.68,
+            "pvi": -0.8,
+            "win_prob_D": 0.8461
+          },
+          "IA": {
+            "expected_margin_D": -3.9,
+            "pvi": -6.09,
+            "win_prob_D": 0.2758
+          },
+          "ID": {
+            "expected_margin_D": -27.8,
+            "pvi": -18.04,
+            "win_prob_D": 0.0
+          },
+          "IL": {
+            "expected_margin_D": 20.96,
+            "pvi": 6.34,
+            "win_prob_D": 0.9993
+          },
+          "KS": {
+            "expected_margin_D": -7.78,
+            "pvi": -8.03,
+            "win_prob_D": 0.1175
+          },
+          "KY": {
+            "expected_margin_D": -21.6,
+            "pvi": -14.94,
+            "win_prob_D": 0.0005
+          },
+          "LA": {
+            "expected_margin_D": -13.22,
+            "pvi": -10.75,
+            "win_prob_D": 0.0218
+          },
+          "MA": {
+            "expected_margin_D": 36.26,
+            "pvi": 13.99,
+            "win_prob_D": 1.0
+          },
+          "ME": {
+            "expected_margin_D": 15.92,
+            "pvi": 3.82,
+            "win_prob_D": 0.9925
+          },
+          "MI": {
+            "expected_margin_D": 7.9,
+            "pvi": -0.19,
+            "win_prob_D": 0.8861
+          },
+          "MN": {
+            "expected_margin_D": 13.34,
+            "pvi": 2.53,
+            "win_prob_D": 0.9792
+          },
+          "MS": {
+            "expected_margin_D": -13.28,
+            "pvi": -10.78,
+            "win_prob_D": 0.0213
+          },
+          "MT": {
+            "expected_margin_D": -11.36,
+            "pvi": -9.82,
+            "win_prob_D": 0.0414
+          },
+          "NC": {
+            "expected_margin_D": 5.48,
+            "pvi": -1.4,
+            "win_prob_D": 0.7986
+          },
+          "NE": {
+            "expected_margin_D": -12.26,
+            "pvi": -10.27,
+            "win_prob_D": 0.0306
+          },
+          "NH": {
+            "expected_margin_D": 12.26,
+            "pvi": 1.99,
+            "win_prob_D": 0.9694
+          },
+          "NJ": {
+            "expected_margin_D": 16.82,
+            "pvi": 4.27,
+            "win_prob_D": 0.9949
+          },
+          "NM": {
+            "expected_margin_D": 15.64,
+            "pvi": 3.68,
+            "win_prob_D": 0.9915
+          },
+          "OH": {
+            "expected_margin_D": -2.26,
+            "pvi": -5.27,
+            "win_prob_D": 0.365
+          },
+          "OK": {
+            "expected_margin_D": -26.4,
+            "pvi": -17.34,
+            "win_prob_D": 0.0
+          },
+          "OR": {
+            "expected_margin_D": 23.58,
+            "pvi": 7.65,
+            "win_prob_D": 0.9998
+          },
+          "RI": {
+            "expected_margin_D": 24.2,
+            "pvi": 7.96,
+            "win_prob_D": 0.9999
+          },
+          "SC": {
+            "expected_margin_D": -8.28,
+            "pvi": -8.28,
+            "win_prob_D": 0.1031
+          },
+          "SD": {
+            "expected_margin_D": -20.86,
+            "pvi": -14.57,
+            "win_prob_D": 0.0007
+          },
+          "TN": {
+            "expected_margin_D": -20.24,
+            "pvi": -14.26,
+            "win_prob_D": 0.001
+          },
+          "TX": {
+            "expected_margin_D": -3.56,
+            "pvi": -5.92,
+            "win_prob_D": 0.2934
+          },
+          "VA": {
+            "expected_margin_D": 15.26,
+            "pvi": 3.49,
+            "win_prob_D": 0.9901
+          },
+          "WV": {
+            "expected_margin_D": -33.64,
+            "pvi": -20.96,
+            "win_prob_D": 0.0
+          },
+          "WY": {
+            "expected_margin_D": -38.18,
+            "pvi": -23.23,
+            "win_prob_D": 0.0
+          }
+        },
+        "house": {
+          "n_districts": 435,
+          "expected_D_seats": 238.54,
+          "D_seats_80pct": [
+            215,
+            266
+          ],
+          "prob_D_majority": 0.8621,
+          "majority_at": 218,
+          "pvi_source": "cook_pvi"
+        },
+        "category": "academic",
+        "publication": "individual",
+        "margin_published_elsewhere": false,
+        "as_of": "2026-08-22"
+      },
       "class_fundamentals": {
         "tide_D": 10.48,
         "senate": {
@@ -1407,7 +1845,7 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 2,
-          "label_y": 54.69,
+          "label_y": 55.06,
           "label_nudged": true,
           "sx": 52.99,
           "sx_low": 29.94,
@@ -1462,7 +1900,7 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 46.69,
+          "label_y": 47.06,
           "label_nudged": false,
           "sx": 53.31,
           "sx_low": 51.77,
@@ -1510,7 +1948,7 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 1,
-          "label_y": 62.69,
+          "label_y": 63.06,
           "label_nudged": true,
           "sx": 50.66
         },
@@ -1528,34 +1966,25 @@
             },
             {
               "x": 100.0,
-              "y": 38.62,
+              "y": 39.06,
               "date": "2026-08-22",
-              "v": 7.7122
+              "v": 7.6306
             }
           ],
-          "polyline": "85.71,38.58 100.0,38.62",
+          "polyline": "85.71,38.58 100.0,39.06",
           "last": {
             "x": 100.0,
-            "y": 38.62,
+            "y": 39.06,
             "date": "2026-08-22",
-            "v": 7.7122
+            "v": 7.6306
           },
-          "band": {
-            "y_low": 39.02,
-            "y_high": 38.23,
-            "low": 7.6375,
-            "high": 7.7868,
-            "kind": "spread",
-            "n": 2
-          },
+          "band": null,
           "last_date": "2026-08-22",
           "stale": false,
-          "n_sources": 2,
-          "label_y": 38.62,
+          "n_sources": 1,
+          "label_y": 39.06,
           "label_nudged": false,
-          "sx": 61.38,
-          "sx_low": 60.98,
-          "sx_high": 61.77
+          "sx": 60.94
         }
       ]
     },
@@ -1808,7 +2237,7 @@
           "band": null,
           "last_date": "2026-08-22",
           "stale": false,
-          "n_sources": 1,
+          "n_sources": "1",
           "label_y": 62.7,
           "label_nudged": true,
           "sx": 50.02
@@ -2061,34 +2490,34 @@
             },
             {
               "x": 100.0,
-              "y": 21.51,
+              "y": 19.09,
               "date": "2026-08-22",
-              "v": 0.8274
+              "v": 0.8468
             }
           ],
-          "polyline": "0.0,15.58 33.33,14.33 66.67,21.38 100.0,21.51",
+          "polyline": "0.0,15.58 33.33,14.33 66.67,21.38 100.0,19.09",
           "last": {
             "x": 100.0,
-            "y": 21.51,
+            "y": 19.09,
             "date": "2026-08-22",
-            "v": 0.8274
+            "v": 0.8468
           },
           "band": {
-            "y_low": 25.04,
-            "y_high": 15.8,
-            "low": 0.7991,
-            "high": 0.8732,
+            "y_low": 22.43,
+            "y_high": 15.75,
+            "low": 0.82,
+            "high": 0.8736,
             "kind": "spread",
-            "n": 3
+            "n": 2
           },
           "last_date": "2026-08-22",
           "stale": false,
-          "n_sources": 3,
+          "n_sources": 2,
           "label_y": 29.64,
           "label_nudged": true,
-          "sx": 78.49,
-          "sx_low": 74.96,
-          "sx_high": 84.2
+          "sx": 80.91,
+          "sx_low": 77.57,
+          "sx_high": 84.25
         }
       ]
     },
@@ -2341,7 +2770,7 @@
           "band": null,
           "last_date": "2026-08-22",
           "stale": false,
-          "n_sources": 1,
+          "n_sources": "1",
           "label_y": 42.64,
           "label_nudged": false,
           "sx": 57.36
@@ -2604,33 +3033,33 @@
             },
             {
               "x": 100.0,
-              "y": 39.36,
+              "y": 38.44,
               "date": "2026-08-22",
-              "v": 0.4851
+              "v": 0.4925
             }
           ],
-          "polyline": "0.0,36.88 33.33,36.88 66.67,39.79 100.0,39.36",
+          "polyline": "0.0,36.88 33.33,36.88 66.67,39.79 100.0,38.44",
           "last": {
             "x": 100.0,
-            "y": 39.36,
+            "y": 38.44,
             "date": "2026-08-22",
-            "v": 0.4851
+            "v": 0.4925
           },
           "band": {
-            "y_low": 41.23,
+            "y_low": 40.0,
             "y_high": 36.88,
-            "low": 0.4702,
+            "low": 0.48,
             "high": 0.505,
             "kind": "spread",
-            "n": 3
+            "n": 2
           },
           "last_date": "2026-08-22",
           "stale": false,
-          "n_sources": 3,
-          "label_y": 39.36,
+          "n_sources": 2,
+          "label_y": 38.44,
           "label_nudged": false,
-          "sx": 60.64,
-          "sx_low": 58.77,
+          "sx": 61.56,
+          "sx_low": 60.0,
           "sx_high": 63.12
         }
       ]
@@ -6978,12 +7407,6 @@
             "x": 44.83
           },
           {
-            "key": "market",
-            "label": "Markets",
-            "seats": 49.9,
-            "x": 46.09
-          },
-          {
             "key": "professional",
             "label": "Professional",
             "seats": 51.4,
@@ -7747,12 +8170,6 @@
             "x": 41.94
           },
           {
-            "key": "market",
-            "label": "Markets",
-            "seats": 230.0,
-            "x": 43.49
-          },
-          {
             "key": "fundamentals",
             "label": "Fundamentals",
             "seats": 230.2,
@@ -7799,24 +8216,6 @@
   "spread": {
     "national": [
       {
-        "category": "fundamentals",
-        "label": "Fundamentals",
-        "house_seats_80": null,
-        "senate_seats_80": null,
-        "n_sources": 2,
-        "sole_source": "",
-        "house_margin": 6.13,
-        "house_margin_withheld": false,
-        "house_seats": 230.18,
-        "house_seats_withheld": false,
-        "house_prob": 0.6307,
-        "house_prob_withheld": false,
-        "senate_seats": 49.345,
-        "senate_seats_withheld": false,
-        "senate_prob": 0.3389,
-        "senate_prob_withheld": false
-      },
-      {
         "category": "polling",
         "label": "Polling",
         "house_seats_80": null,
@@ -7832,6 +8231,42 @@
         "senate_seats": 49.3425,
         "senate_seats_withheld": false,
         "senate_prob": 0.2752,
+        "senate_prob_withheld": false
+      },
+      {
+        "category": "market",
+        "label": "Markets",
+        "house_seats_80": null,
+        "senate_seats_80": null,
+        "n_sources": 2,
+        "sole_source": "polymarket",
+        "house_margin": 7.6306,
+        "house_margin_withheld": false,
+        "house_seats": null,
+        "house_seats_withheld": false,
+        "house_prob": 0.8468,
+        "house_prob_withheld": false,
+        "senate_seats": null,
+        "senate_seats_withheld": false,
+        "senate_prob": 0.4925,
+        "senate_prob_withheld": false
+      },
+      {
+        "category": "fundamentals",
+        "label": "Fundamentals",
+        "house_seats_80": null,
+        "senate_seats_80": null,
+        "n_sources": 2,
+        "sole_source": "",
+        "house_margin": 6.13,
+        "house_margin_withheld": false,
+        "house_seats": 230.18,
+        "house_seats_withheld": false,
+        "house_prob": 0.6307,
+        "house_prob_withheld": false,
+        "senate_seats": 49.345,
+        "senate_seats_withheld": false,
+        "senate_prob": 0.3389,
         "senate_prob_withheld": false
       },
       {
@@ -7853,41 +8288,125 @@
         "senate_prob_withheld": false
       },
       {
-        "category": "market",
-        "label": "Markets",
+        "category": "academic",
+        "label": "Academic",
         "house_seats_80": null,
         "senate_seats_80": null,
-        "n_sources": 3,
-        "sole_source": "kalshi",
-        "house_margin": 7.7122,
+        "n_sources": 2,
+        "sole_source": "",
+        "house_margin": 6.07,
         "house_margin_withheld": false,
-        "house_seats": 230.01,
+        "house_seats": 228.6,
         "house_seats_withheld": false,
-        "house_prob": 0.8274,
+        "house_prob": 0.6849,
         "house_prob_withheld": false,
-        "senate_seats": 49.87,
+        "senate_seats": 49.26,
         "senate_seats_withheld": false,
-        "senate_prob": 0.4851,
+        "senate_prob": 0.2822,
         "senate_prob_withheld": false
       }
     ],
+    "across_families": {
+      "house_margin": {
+        "value": 6.34,
+        "n_categories": 5,
+        "categories": [
+          "polling",
+          "market",
+          "fundamentals",
+          "professional",
+          "academic"
+        ],
+        "spread": [
+          5.69,
+          7.63
+        ]
+      },
+      "house_seats": {
+        "value": 234.58,
+        "n_categories": 4,
+        "categories": [
+          "polling",
+          "fundamentals",
+          "professional",
+          "academic"
+        ],
+        "spread": [
+          228.6,
+          250.37
+        ]
+      },
+      "house_prob": {
+        "value": 0.75,
+        "n_categories": 5,
+        "categories": [
+          "polling",
+          "market",
+          "fundamentals",
+          "professional",
+          "academic"
+        ],
+        "spread": [
+          0.63,
+          0.87
+        ]
+      },
+      "senate_seats": {
+        "value": 49.83,
+        "n_categories": 4,
+        "categories": [
+          "polling",
+          "fundamentals",
+          "professional",
+          "academic"
+        ],
+        "spread": [
+          49.26,
+          51.38
+        ]
+      },
+      "senate_prob": {
+        "value": 0.4,
+        "n_categories": 5,
+        "categories": [
+          "polling",
+          "market",
+          "fundamentals",
+          "professional",
+          "academic"
+        ],
+        "spread": [
+          0.28,
+          0.62
+        ]
+      },
+      "label": "All families",
+      "basis": "unweighted mean of the family averages that are published today; a family withheld below the disclosure floor is left out rather than averaged in, because averaging it in would let a reader recover it by subtraction",
+      "families_withheld": []
+    },
     "races": [
       {
         "state": "MA",
         "race_id": "SEN_MA_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": 34.11,
-            "prob": 1.0,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 34.28,
             "prob": 1.0,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.9657,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 34.11,
+            "prob": 1.0,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 24.05,
@@ -7895,14 +8414,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.9657,
+          "academic": {
+            "margin": 34.05,
+            "prob": 1.0,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0343
       },
       {
@@ -7910,17 +8429,23 @@
         "race_id": "SEN_DE_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": 22.15,
-            "prob": 0.9984,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 22.32,
             "prob": 0.9997,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.96,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 22.15,
+            "prob": 0.9984,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 13.05,
@@ -7928,14 +8453,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.96,
+          "academic": {
+            "margin": 22.09,
+            "prob": 0.9993,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1093
       },
       {
@@ -7943,17 +8468,23 @@
         "race_id": "SEN_RI_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": 22.05,
-            "prob": 0.9983,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 22.22,
             "prob": 0.9997,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.96,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 22.05,
+            "prob": 0.9983,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 23.35,
@@ -7961,14 +8492,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.96,
+          "academic": {
+            "margin": 21.99,
+            "prob": 0.9993,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0397
       },
       {
@@ -7976,17 +8507,23 @@
         "race_id": "SEN_OR_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": 21.43,
-            "prob": 0.9977,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 21.6,
             "prob": 0.9995,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.9617,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 21.43,
+            "prob": 0.9977,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 17.03,
@@ -7994,14 +8531,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.9617,
+          "academic": {
+            "margin": 21.37,
+            "prob": 0.999,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0608
       },
       {
@@ -8009,17 +8546,23 @@
         "race_id": "SEN_IL_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": 18.81,
-            "prob": 0.9931,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 18.98,
             "prob": 0.9981,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.9647,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 18.81,
+            "prob": 0.9931,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 14.34,
@@ -8027,14 +8570,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.9647,
+          "academic": {
+            "margin": 18.75,
+            "prob": 0.9968,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0863
       },
       {
@@ -8042,17 +8585,23 @@
         "race_id": "SEN_CO_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": 18.07,
-            "prob": 0.9908,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 18.24,
             "prob": 0.9973,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.936,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 18.07,
+            "prob": 0.9908,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 16.02,
@@ -8060,14 +8609,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.936,
+          "academic": {
+            "margin": 18.01,
+            "prob": 0.9955,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0673
       },
       {
@@ -8075,17 +8624,23 @@
         "race_id": "SEN_NJ_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": 14.67,
-            "prob": 0.9703,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 14.84,
             "prob": 0.9882,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.9632,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 14.67,
+            "prob": 0.9703,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 18.22,
@@ -8093,14 +8648,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.9632,
+          "academic": {
+            "margin": 14.61,
+            "prob": 0.9829,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0395
       },
       {
@@ -8108,17 +8663,23 @@
         "race_id": "SEN_ME_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": 13.77,
-            "prob": 0.961,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 13.94,
             "prob": 0.9833,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.6675,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 13.77,
+            "prob": 0.961,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 3.24,
@@ -8126,14 +8687,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.6675,
+          "academic": {
+            "margin": 13.71,
+            "prob": 0.9765,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.3158
       },
       {
@@ -8141,17 +8702,23 @@
         "race_id": "SEN_NM_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": 13.49,
-            "prob": 0.9577,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 13.66,
             "prob": 0.9814,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.9557,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 13.49,
+            "prob": 0.9577,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 16.29,
@@ -8159,14 +8726,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.9557,
+          "academic": {
+            "margin": 13.43,
+            "prob": 0.9741,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0469
       },
       {
@@ -8174,17 +8741,23 @@
         "race_id": "SEN_VA_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": 13.11,
-            "prob": 0.9528,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 13.28,
             "prob": 0.9787,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.955,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 13.11,
+            "prob": 0.9528,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 14.22,
@@ -8192,14 +8765,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.955,
+          "academic": {
+            "margin": 13.05,
+            "prob": 0.9706,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0727
       },
       {
@@ -8207,17 +8780,23 @@
         "race_id": "SEN_MN_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": 11.19,
-            "prob": 0.9215,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 11.36,
             "prob": 0.9585,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.8925,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 11.19,
+            "prob": 0.9215,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 5.98,
@@ -8225,14 +8804,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.8925,
+          "academic": {
+            "margin": 11.13,
+            "prob": 0.9463,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0714
       },
       {
@@ -8240,17 +8819,23 @@
         "race_id": "SEN_NH_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": 10.11,
-            "prob": 0.8984,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 10.28,
             "prob": 0.9416,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.8775,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 10.11,
+            "prob": 0.8984,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 6.36,
@@ -8258,14 +8843,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.8775,
+          "academic": {
+            "margin": 10.05,
+            "prob": 0.9268,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0641
       },
       {
@@ -8273,17 +8858,23 @@
         "race_id": "SEN_MI_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": 5.75,
-            "prob": 0.7615,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 5.92,
             "prob": 0.8168,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.62,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 5.75,
+            "prob": 0.7615,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 2.29,
@@ -8291,14 +8882,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.62,
+          "academic": {
+            "margin": 5.69,
+            "prob": 0.7943,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1968
       },
       {
@@ -8306,17 +8897,23 @@
         "race_id": "SEN_GA_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": 4.53,
-            "prob": 0.7117,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 4.7,
             "prob": 0.7633,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.915,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 4.53,
+            "prob": 0.7117,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 11.18,
@@ -8324,14 +8921,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.915,
+          "academic": {
+            "margin": 4.47,
+            "prob": 0.7406,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.2033
       },
       {
@@ -8339,17 +8936,23 @@
         "race_id": "SEN_NC_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": 3.33,
-            "prob": 0.6588,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": 3.5,
             "prob": 0.7033,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.9075,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": 3.33,
+            "prob": 0.6588,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 7.68,
@@ -8357,14 +8960,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.9075,
+          "academic": {
+            "margin": 3.27,
+            "prob": 0.6815,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.2798
       },
       {
@@ -8372,17 +8975,23 @@
         "race_id": "SEN_OH_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -4.41,
-            "prob": 0.2934,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -4.24,
             "prob": 0.2589,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.5275,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -4.41,
+            "prob": 0.2934,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 1.4,
@@ -8390,14 +8999,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.5275,
+          "academic": {
+            "margin": -4.47,
+            "prob": 0.2595,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.3624
       },
       {
@@ -8405,17 +9014,23 @@
         "race_id": "SEN_FL_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -4.65,
-            "prob": 0.2832,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -4.48,
             "prob": 0.2471,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0975,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -4.65,
+            "prob": 0.2832,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -8.91,
@@ -8423,14 +9038,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0975,
+          "academic": {
+            "margin": -4.71,
+            "prob": 0.2484,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.2438
       },
       {
@@ -8438,17 +9053,23 @@
         "race_id": "SEN_TX_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -5.71,
-            "prob": 0.2401,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -5.54,
             "prob": 0.199,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.4925,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -5.71,
+            "prob": 0.2401,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": 1.41,
@@ -8456,14 +9077,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.4925,
+          "academic": {
+            "margin": -5.77,
+            "prob": 0.2025,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.4208
       },
       {
@@ -8471,17 +9092,23 @@
         "race_id": "SEN_IA_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -6.05,
-            "prob": 0.2269,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -5.88,
             "prob": 0.1848,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.4125,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -6.05,
+            "prob": 0.2269,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -0.36,
@@ -8489,14 +9116,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.4125,
+          "academic": {
+            "margin": -6.11,
+            "prob": 0.1889,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.2835
       },
       {
@@ -8504,17 +9131,23 @@
         "race_id": "SEN_AK_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -6.77,
-            "prob": 0.2004,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -6.6,
             "prob": 0.157,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.6,
+            "withheld": false,
+            "n": 1
+          },
+          "fundamentals": {
+            "margin": -6.77,
+            "prob": 0.2004,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -0.27,
@@ -8522,14 +9155,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.6,
+          "academic": {
+            "margin": -6.83,
+            "prob": 0.162,
             "withheld": false,
-            "n": 1
+            "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.443
       },
       {
@@ -8537,17 +9170,23 @@
         "race_id": "SEN_KS_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -9.93,
-            "prob": 0.1058,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -9.76,
             "prob": 0.0682,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.195,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -9.93,
+            "prob": 0.1058,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -8.9,
@@ -8555,14 +9194,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.195,
+          "academic": {
+            "margin": -9.99,
+            "prob": 0.0744,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1343
       },
       {
@@ -8570,17 +9209,23 @@
         "race_id": "SEN_SC_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -10.43,
-            "prob": 0.0943,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -10.26,
             "prob": 0.0587,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.105,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -10.43,
+            "prob": 0.0943,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -6.9,
@@ -8588,14 +9233,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.105,
+          "academic": {
+            "margin": -10.49,
+            "prob": 0.0647,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1896
       },
       {
@@ -8603,17 +9248,23 @@
         "race_id": "SEN_MT_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -13.51,
-            "prob": 0.0421,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -13.34,
             "prob": 0.0209,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0088,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -13.51,
+            "prob": 0.0421,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -10.77,
@@ -8621,14 +9272,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0088,
+          "academic": {
+            "margin": -13.57,
+            "prob": 0.0247,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1452
       },
       {
@@ -8636,17 +9287,23 @@
         "race_id": "SEN_NE_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -14.41,
-            "prob": 0.0322,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -14.24,
             "prob": 0.0149,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0063,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -14.41,
+            "prob": 0.0322,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -12.95,
@@ -8654,14 +9311,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0063,
+          "academic": {
+            "margin": -14.47,
+            "prob": 0.018,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1119
       },
       {
@@ -8669,17 +9326,23 @@
         "race_id": "SEN_LA_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -15.37,
-            "prob": 0.0238,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -15.2,
             "prob": 0.0102,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0575,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -15.37,
+            "prob": 0.0238,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -10.62,
@@ -8687,14 +9350,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0575,
+          "academic": {
+            "margin": -15.43,
+            "prob": 0.0126,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1509
       },
       {
@@ -8702,17 +9365,23 @@
         "race_id": "SEN_MS_2026",
         "competitive": true,
         "cats": {
-          "fundamentals": {
-            "margin": -15.43,
-            "prob": 0.0234,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -15.26,
             "prob": 0.0099,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0775,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -15.43,
+            "prob": 0.0234,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -8.79,
@@ -8720,14 +9389,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0775,
+          "academic": {
+            "margin": -15.49,
+            "prob": 0.0123,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1868
       },
       {
@@ -8735,17 +9404,23 @@
         "race_id": "SEN_TN_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": -22.39,
-            "prob": 0.0014,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -22.22,
             "prob": 0.0004,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0403,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -22.39,
+            "prob": 0.0014,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -13.75,
@@ -8753,14 +9428,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0403,
+          "academic": {
+            "margin": -22.45,
+            "prob": 0.0006,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1062
       },
       {
@@ -8768,17 +9443,23 @@
         "race_id": "SEN_SD_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": -23.01,
-            "prob": 0.0011,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -22.84,
             "prob": 0.0003,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0258,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -23.01,
+            "prob": 0.0011,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -16.7,
@@ -8786,14 +9467,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0258,
+          "academic": {
+            "margin": -23.07,
+            "prob": 0.0004,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0674
       },
       {
@@ -8801,17 +9482,23 @@
         "race_id": "SEN_AL_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": -23.49,
-            "prob": 0.0008,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -23.32,
             "prob": 0.0002,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0325,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -23.49,
+            "prob": 0.0008,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -13.99,
@@ -8819,14 +9506,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0325,
+          "academic": {
+            "margin": -23.55,
+            "prob": 0.0003,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0993
       },
       {
@@ -8834,17 +9521,23 @@
         "race_id": "SEN_KY_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": -23.75,
-            "prob": 0.0008,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -23.58,
             "prob": 0.0002,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0575,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -23.75,
+            "prob": 0.0008,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -9.79,
@@ -8852,14 +9545,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0575,
+          "academic": {
+            "margin": -23.81,
+            "prob": 0.0003,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.1785
       },
       {
@@ -8867,17 +9560,23 @@
         "race_id": "SEN_AR_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": -24.49,
-            "prob": 0.0006,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -24.32,
             "prob": 0.0001,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0615,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -24.49,
+            "prob": 0.0006,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -9.26,
@@ -8885,14 +9584,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0615,
+          "academic": {
+            "margin": -24.55,
+            "prob": 0.0001,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0614
       },
       {
@@ -8900,17 +9599,23 @@
         "race_id": "SEN_OK_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": -28.55,
-            "prob": 0.0001,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -28.38,
             "prob": 0.0,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0573,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -28.55,
+            "prob": 0.0001,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -18.77,
@@ -8918,14 +9623,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0573,
+          "academic": {
+            "margin": -28.61,
+            "prob": 0.0,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0573
       },
       {
@@ -8933,17 +9638,23 @@
         "race_id": "SEN_ID_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": -29.95,
-            "prob": 0.0,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -29.78,
             "prob": 0.0,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0405,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -29.95,
+            "prob": 0.0,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -20.74,
@@ -8951,14 +9662,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0405,
+          "academic": {
+            "margin": -30.01,
+            "prob": 0.0,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0405
       },
       {
@@ -8966,17 +9677,23 @@
         "race_id": "SEN_WV_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": -35.79,
-            "prob": 0.0,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -35.62,
             "prob": 0.0,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.031,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -35.79,
+            "prob": 0.0,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -26.76,
@@ -8984,14 +9701,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.031,
+          "academic": {
+            "margin": -35.85,
+            "prob": 0.0,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.031
       },
       {
@@ -8999,17 +9716,23 @@
         "race_id": "SEN_WY_2026",
         "competitive": false,
         "cats": {
-          "fundamentals": {
-            "margin": -40.33,
-            "prob": 0.0,
-            "withheld": false,
-            "n": 2
-          },
           "polling": {
             "margin": -40.16,
             "prob": 0.0,
             "withheld": false,
             "n": 4
+          },
+          "market": {
+            "margin": null,
+            "prob": 0.0287,
+            "withheld": false,
+            "n": 2
+          },
+          "fundamentals": {
+            "margin": -40.33,
+            "prob": 0.0,
+            "withheld": false,
+            "n": 2
           },
           "professional": {
             "margin": -38.76,
@@ -9017,14 +9740,14 @@
             "withheld": false,
             "n": 1
           },
-          "market": {
-            "margin": null,
-            "prob": 0.0287,
+          "academic": {
+            "margin": -40.39,
+            "prob": 0.0,
             "withheld": false,
             "n": 2
           }
         },
-        "n_cats": 4,
+        "n_cats": 5,
         "prob_spread": 0.0287
       }
     ],
@@ -9035,16 +9758,22 @@
           "race_id": "SEN_AK_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.2004,
-              "x": 20.04
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.157,
               "x": 15.7
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.6,
+              "x": 60.0
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.2004,
+              "x": 20.04
             },
             {
               "key": "professional",
@@ -9053,13 +9782,13 @@
               "x": 47.48
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.6,
-              "x": 60.0
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.162,
+              "x": 16.2
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 15.7,
           "x_hi": 60.0,
           "spread": 44.3
@@ -9069,16 +9798,22 @@
           "race_id": "SEN_TX_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.2401,
-              "x": 24.01
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.199,
               "x": 19.9
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.4925,
+              "x": 49.25
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.2401,
+              "x": 24.01
             },
             {
               "key": "professional",
@@ -9087,13 +9822,13 @@
               "x": 61.98
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.4925,
-              "x": 49.25
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.2025,
+              "x": 20.25
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 19.9,
           "x_hi": 61.98,
           "spread": 42.1
@@ -9103,16 +9838,22 @@
           "race_id": "SEN_OH_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.2934,
-              "x": 29.34
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.2589,
               "x": 25.89
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.5275,
+              "x": 52.75
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.2934,
+              "x": 29.34
             },
             {
               "key": "professional",
@@ -9121,13 +9862,13 @@
               "x": 62.13
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.5275,
-              "x": 52.75
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.2595,
+              "x": 25.95
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 25.89,
           "x_hi": 62.13,
           "spread": 36.2
@@ -9137,16 +9878,22 @@
           "race_id": "SEN_ME_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.961,
-              "x": 96.1
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.9833,
               "x": 98.33
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.6675,
+              "x": 66.75
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.961,
+              "x": 96.1
             },
             {
               "key": "professional",
@@ -9155,13 +9902,13 @@
               "x": 75.68
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.6675,
-              "x": 66.75
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.9765,
+              "x": 97.65
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 66.75,
           "x_hi": 98.33,
           "spread": 31.6
@@ -9171,16 +9918,22 @@
           "race_id": "SEN_IA_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.2269,
-              "x": 22.69
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.1848,
               "x": 18.48
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.4125,
+              "x": 41.25
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.2269,
+              "x": 22.69
             },
             {
               "key": "professional",
@@ -9189,13 +9942,13 @@
               "x": 46.83
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.4125,
-              "x": 41.25
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.1889,
+              "x": 18.89
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 18.48,
           "x_hi": 46.83,
           "spread": 28.3
@@ -9205,16 +9958,22 @@
           "race_id": "SEN_NC_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.6588,
-              "x": 65.88
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.7033,
               "x": 70.33
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.9075,
+              "x": 90.75
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.6588,
+              "x": 65.88
             },
             {
               "key": "professional",
@@ -9223,13 +9982,13 @@
               "x": 93.86
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.9075,
-              "x": 90.75
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.6815,
+              "x": 68.15
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 65.88,
           "x_hi": 93.86,
           "spread": 28.0
@@ -9239,16 +9998,22 @@
           "race_id": "SEN_FL_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.2832,
-              "x": 28.32
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.2471,
               "x": 24.71
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.0975,
+              "x": 9.75
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.2832,
+              "x": 28.32
             },
             {
               "key": "professional",
@@ -9257,13 +10022,13 @@
               "x": 3.94
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.0975,
-              "x": 9.75
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.2484,
+              "x": 24.84
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 3.94,
           "x_hi": 28.32,
           "spread": 24.4
@@ -9273,16 +10038,22 @@
           "race_id": "SEN_GA_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.7117,
-              "x": 71.17
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.7633,
               "x": 76.33
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.915,
+              "x": 91.5
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.7117,
+              "x": 71.17
             },
             {
               "key": "professional",
@@ -9291,13 +10062,13 @@
               "x": 86.23
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.915,
-              "x": 91.5
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.7406,
+              "x": 74.06
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 71.17,
           "x_hi": 91.5,
           "spread": 20.3
@@ -9307,16 +10078,22 @@
           "race_id": "SEN_MI_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.7615,
-              "x": 76.15
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.8168,
               "x": 81.68
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.62,
+              "x": 62.0
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.7615,
+              "x": 76.15
             },
             {
               "key": "professional",
@@ -9325,13 +10102,13 @@
               "x": 68.72
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.62,
-              "x": 62.0
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.7943,
+              "x": 79.43
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 62.0,
           "x_hi": 81.68,
           "spread": 19.7
@@ -9341,16 +10118,22 @@
           "race_id": "SEN_SC_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.0943,
-              "x": 9.43
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.0587,
               "x": 5.87
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.105,
+              "x": 10.5
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.0943,
+              "x": 9.43
             },
             {
               "key": "professional",
@@ -9359,13 +10142,13 @@
               "x": 24.83
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.105,
-              "x": 10.5
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.0647,
+              "x": 6.47
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 5.87,
           "x_hi": 24.83,
           "spread": 19.0
@@ -9375,16 +10158,22 @@
           "race_id": "SEN_MS_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.0234,
-              "x": 2.34
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.0099,
               "x": 0.99
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.0775,
+              "x": 7.75
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.0234,
+              "x": 2.34
             },
             {
               "key": "professional",
@@ -9393,13 +10182,13 @@
               "x": 19.67
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.0775,
-              "x": 7.75
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.0123,
+              "x": 1.23
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 0.99,
           "x_hi": 19.67,
           "spread": 18.7
@@ -9409,16 +10198,22 @@
           "race_id": "SEN_LA_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.0238,
-              "x": 2.38
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.0102,
               "x": 1.02
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.0575,
+              "x": 5.75
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.0238,
+              "x": 2.38
             },
             {
               "key": "professional",
@@ -9427,13 +10222,13 @@
               "x": 16.11
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.0575,
-              "x": 5.75
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.0126,
+              "x": 1.26
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 1.02,
           "x_hi": 16.11,
           "spread": 15.1
@@ -9443,16 +10238,22 @@
           "race_id": "SEN_MT_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.0421,
-              "x": 4.21
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.0209,
               "x": 2.09
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.0088,
+              "x": 0.88
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.0421,
+              "x": 4.21
             },
             {
               "key": "professional",
@@ -9461,13 +10262,13 @@
               "x": 15.4
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.0088,
-              "x": 0.88
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.0247,
+              "x": 2.47
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 0.88,
           "x_hi": 15.4,
           "spread": 14.5
@@ -9477,16 +10278,22 @@
           "race_id": "SEN_KS_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.1058,
-              "x": 10.58
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.0682,
               "x": 6.82
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.195,
+              "x": 19.5
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.1058,
+              "x": 10.58
             },
             {
               "key": "professional",
@@ -9495,13 +10302,13 @@
               "x": 20.25
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.195,
-              "x": 19.5
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.0744,
+              "x": 7.44
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 6.82,
           "x_hi": 20.25,
           "spread": 13.4
@@ -9511,16 +10318,22 @@
           "race_id": "SEN_NE_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.0322,
-              "x": 3.22
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.0149,
               "x": 1.49
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.0063,
+              "x": 0.63
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.0322,
+              "x": 3.22
             },
             {
               "key": "professional",
@@ -9529,13 +10342,13 @@
               "x": 11.82
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.0063,
-              "x": 0.63
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.018,
+              "x": 1.8
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 0.63,
           "x_hi": 11.82,
           "spread": 11.2
@@ -9545,16 +10358,22 @@
           "race_id": "SEN_VA_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.9528,
-              "x": 95.28
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.9787,
               "x": 97.87
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.955,
+              "x": 95.5
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.9528,
+              "x": 95.28
             },
             {
               "key": "professional",
@@ -9563,13 +10382,13 @@
               "x": 90.6
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.955,
-              "x": 95.5
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.9706,
+              "x": 97.06
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 90.6,
           "x_hi": 97.87,
           "spread": 7.3
@@ -9579,16 +10398,22 @@
           "race_id": "SEN_MN_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.9215,
-              "x": 92.15
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.9585,
               "x": 95.85
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.8925,
+              "x": 89.25
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.9215,
+              "x": 92.15
             },
             {
               "key": "professional",
@@ -9597,13 +10422,13 @@
               "x": 88.71
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.8925,
-              "x": 89.25
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.9463,
+              "x": 94.63
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 88.71,
           "x_hi": 95.85,
           "spread": 7.1
@@ -9613,16 +10438,22 @@
           "race_id": "SEN_NH_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.8984,
-              "x": 89.84
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.9416,
               "x": 94.16
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.8775,
+              "x": 87.75
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.8984,
+              "x": 89.84
             },
             {
               "key": "professional",
@@ -9631,13 +10462,13 @@
               "x": 90.28
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.8775,
-              "x": 87.75
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.9268,
+              "x": 92.68
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 87.75,
           "x_hi": 94.16,
           "spread": 6.4
@@ -9647,16 +10478,22 @@
           "race_id": "SEN_NM_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.9577,
-              "x": 95.77
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.9814,
               "x": 98.14
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.9557,
+              "x": 95.57
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.9577,
+              "x": 95.77
             },
             {
               "key": "professional",
@@ -9665,13 +10502,13 @@
               "x": 93.45
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.9557,
-              "x": 95.57
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.9741,
+              "x": 97.41
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 93.45,
           "x_hi": 98.14,
           "spread": 4.7
@@ -9681,16 +10518,22 @@
           "race_id": "SEN_NJ_2026",
           "points": [
             {
-              "key": "fundamentals",
-              "label": "Fundamentals",
-              "prob": 0.9703,
-              "x": 97.03
-            },
-            {
               "key": "polling",
               "label": "Polling",
               "prob": 0.9882,
               "x": 98.82
+            },
+            {
+              "key": "market",
+              "label": "Markets",
+              "prob": 0.9632,
+              "x": 96.32
+            },
+            {
+              "key": "fundamentals",
+              "label": "Fundamentals",
+              "prob": 0.9703,
+              "x": 97.03
             },
             {
               "key": "professional",
@@ -9699,29 +10542,31 @@
               "x": 94.87
             },
             {
-              "key": "market",
-              "label": "Markets",
-              "prob": 0.9632,
-              "x": 96.32
+              "key": "academic",
+              "label": "Academic",
+              "prob": 0.9829,
+              "x": 98.29
             }
           ],
-          "n_cats": 4,
+          "n_cats": 5,
           "x_lo": 94.87,
           "x_hi": 98.82,
           "spread": 3.9
         }
       ],
       "categories": [
-        "fundamentals",
         "polling",
+        "market",
+        "fundamentals",
         "professional",
-        "market"
+        "academic"
       ],
       "labels": {
-        "fundamentals": "Fundamentals",
         "polling": "Polling",
+        "market": "Markets",
+        "fundamentals": "Fundamentals",
         "professional": "Professional",
-        "market": "Markets"
+        "academic": "Academic"
       },
       "ticks": [
         {
@@ -9750,39 +10595,35 @@
       "median_spread": 19.0
     },
     "categories": [
-      "fundamentals",
       "polling",
+      "market",
+      "fundamentals",
       "professional",
-      "market"
+      "academic"
     ],
     "labels": {
-      "fundamentals": "Fundamentals",
       "polling": "Polling",
+      "market": "Markets",
+      "fundamentals": "Fundamentals",
       "professional": "Professional",
-      "market": "Markets"
+      "academic": "Academic"
     },
     "categories_per_race": [
-      "fundamentals",
       "polling",
+      "market",
+      "fundamentals",
       "professional",
-      "market"
+      "academic"
     ],
     "categories_missing_per_race": []
   },
   "model_index": {
-    "kalshi": {
-      "house_seats_D": 230.01,
-      "house_win_prob_D": 0.7991,
-      "senate_seats_D": 49.87,
-      "senate_win_prob_D": 0.4702,
-      "house_margin_D": 7.7868
-    },
     "polymarket": {
       "senate_win_prob_D": 0.505,
-      "senate_win_prob_R": 0.0305,
-      "house_win_prob_D": 0.8745,
-      "house_win_prob_R": 0.0305,
-      "house_margin_D": 7.6375
+      "senate_win_prob_R": 0.495,
+      "house_win_prob_D": 0.875,
+      "house_win_prob_R": 0.125,
+      "house_margin_D": 7.6306
     },
     "grant_williams": {
       "house_margin_D": 5.69,
@@ -9801,8 +10642,22 @@
     "predictit": {
       "senate_win_prob_R": 0.54,
       "senate_win_prob_D": 0.48,
-      "house_win_prob_D": 0.81,
+      "house_win_prob_D": 0.82,
       "house_win_prob_R": 0.19
+    },
+    "academic_bew": {
+      "house_margin_D": 3.86,
+      "house_seats_D": 218.66,
+      "house_win_prob_D": 0.5077,
+      "senate_seats_D": 48.2,
+      "senate_win_prob_D": 0.1309
+    },
+    "academic_referendum": {
+      "house_margin_D": 8.28,
+      "house_seats_D": 238.54,
+      "house_win_prob_D": 0.8621,
+      "senate_seats_D": 50.32,
+      "senate_win_prob_D": 0.4334
     },
     "class_fundamentals": {
       "house_margin_D": 10.48,
