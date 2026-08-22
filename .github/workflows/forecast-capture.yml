@@ -152,7 +152,9 @@ jobs:
           # the published figure at D+9.5 while the model itself had moved to
           # D+10.5. A frozen number on a live page is worse than no number.
           python3 forecast/model/fundamentals.py --cycle "$CYCLE"
-          python3 forecast/model/polling.py     --cycle "$CYCLE"
+          POLL_ARGS=""
+          [ "${{ inputs.backfill_academic }}" = "true" ] && POLL_ARGS="--backfill"
+          python3 forecast/model/polling.py     --cycle "$CYCLE" $POLL_ARGS          
           # academic.py reads the RAW generic ballot out of polling_model.json,
           # so it has to come after polling.py. Run earlier it finds nothing,
           # declines to run, and the academic column vanishes with no error.
