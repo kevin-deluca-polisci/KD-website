@@ -56,6 +56,7 @@ import collections
 import datetime as dt
 import json
 import sys
+import traceback
 import urllib.parse
 from collections import defaultdict
 from pathlib import Path
@@ -394,32 +395,46 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
 # ---------------------------------------------------------------------------
 
 def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int]:
-    day = _newest_capture_day(cycle, "polymarket")
-    if day is None:
+    days = _capture_days(cycle, "polymarket")
+    if not days:
         print("  polymarket: no capture to learn contract identities from")
         return 0, 0
 
     start_ts = int(dt.datetime.fromisoformat(since + "T00:00:00+00:00").timestamp())
     n_contracts = 0
+    stats = collections.Counter()
     # artifact name -> {date -> event payload}
     rebuilt: dict[str, dict[str, list]] = defaultdict(lambda: defaultdict(list))
 
-    for f in sorted(day.glob("event-*.json")):
-        if f.name.endswith(".meta.json"):
-            continue
-        name = f.stem
-        try:
-            payload = json.loads(f.read_text())
-        except json.JSONDecodeError:
-            continue
-        events = payload if isinstance(payload, list) else [payload]
-        for ev in events:
-            for m in (ev.get("markets") or []):
+    # (artifact name, event title, market question) -> market dict, unioned
+    # across every captured day for the same reason kalshi does it: a market
+    # that closed before the newest capture is exactly the history worth
+    # having, and it appears in no recent file.
+    seen: dict[tuple, tuple] = {}
+    for day in days:
+        for f in sorted(day.glob("event-*.json")):
+            if f.name.endswith(".meta.json"):
+                continue
+            try:
+                payload = json.loads(f.read_text())
+            except json.JSONDecodeError:
+                continue
+            events = payload if isinstance(payload, list) else [payload]
+            for ev in events:
+                for m in (ev.get("markets") or []):
+                    key = (f.stem, ev.get("title", ""), m.get("question", ""))
+                    seen[key] = (f.stem, ev, m)
+    print(f"    {len(seen)} distinct contract(s) across {len(days)} "
+          f"capture day(s)")
+
+    for (name, _t, _q), (name2, ev, m) in sorted(seen.items()):
+            if True:
                 try:
                     tokens = json.loads(m.get("clobTokenIds") or "[]")
                 except (TypeError, json.JSONDecodeError):
                     tokens = []
                 if not tokens:
+                    stats["no_token"] += 1
                     continue
                 n_contracts += 1
                 # The FIRST token is the "Yes" side, matching the order of
@@ -434,8 +449,10 @@ def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int,
                 except Exception as e:                  # noqa: BLE001
                     print(f"    {m.get('question','?')[:40]}: "
                           f"{type(e).__name__} — skipped")
+                    stats["fetch_failed"] += 1
                     continue
                 if dry or not body:
+                    stats["no_body"] += 1
                     continue
                 try:
                     payload = json.loads(body) or {}
@@ -446,6 +463,7 @@ def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int,
                 _report_shape("polymarket", m.get("question", "?"), payload,
                               body, hist)
                 if not hist:
+                    stats["no_history"] += 1
                     continue
                 # One bar per day: the last observation on each date.
                 per_day: dict[str, float] = {}
@@ -456,6 +474,7 @@ def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int,
                     d0 = dt.datetime.fromtimestamp(ts, dt.timezone.utc).date().isoformat()
                     if d0 >= since:
                         per_day[d0] = float(p)
+                        stats["points"] += 1
                 for d0, p in per_day.items():
                     rebuilt[name][d0].append({
                         "question": m.get("question", ""),
@@ -470,10 +489,16 @@ def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int,
             title = markets[0].pop("_event_title", "") if markets else ""
             for mm in markets:
                 mm.pop("_event_title", None)
+            stats["dates"] += 1
             if _write(cycle, "polymarket", d0, name,
                       [{"title": title, "markets": markets}],
                       {"endpoint": POLY_CLOB, "contracts": len(markets)}, dry):
                 written += 1
+            else:
+                stats["skipped_exists"] += 1
+    if stats:
+        print("    polymarket stages: " + ", ".join(f"{k}={v}" for k, v in
+                                                    sorted(stats.items())))
     return n_contracts, written
 
 
@@ -499,22 +524,47 @@ def main(argv=None) -> int:
           f"{' · DRY RUN' if a.dry_run else ''}")
     print("=" * 68)
 
+    # ONE SOURCE'S CRASH MUST NOT DISCARD THE OTHER'S WORK.
+    #
+    # It already did once. Kalshi finished cleanly — 20,230 candles priced,
+    # 3,565 artifacts written — and then Polymarket raised a NameError, the
+    # script exited 1, the workflow step failed, the job stopped before the
+    # raw push, and every one of those 3,565 files went into the bin with the
+    # runner. The work was done and correct and thrown away on account of a
+    # typo in an unrelated function.
+    #
+    # So each source is isolated, its traceback is printed in full rather than
+    # summarised, and the exit code reflects what actually happened: zero if
+    # anything was written and can be pushed, one only if the whole attempt
+    # produced nothing. A partial success that reports itself loudly is worth
+    # more than a clean failure that loses the good half.
     total_written = 0
-    if "kalshi" in want:
-        n, w = kalshi_history(a.cycle, fetcher, a.since, a.dry_run)
-        print(f"  kalshi:     {n} contract(s) queried, {w} date-artifact(s) written")
-        total_written += w
-    if "polymarket" in want:
-        n, w = polymarket_history(a.cycle, fetcher, a.since, a.dry_run)
-        print(f"  polymarket: {n} contract(s) queried, {w} date-artifact(s) written")
-        total_written += w
+    failed: list[str] = []
+    for src, fn in (("kalshi", kalshi_history),
+                    ("polymarket", polymarket_history)):
+        if src not in want:
+            continue
+        try:
+            n, w = fn(a.cycle, fetcher, a.since, a.dry_run)
+            print(f"  {src+':':12} {n} contract(s) queried, "
+                  f"{w} date-artifact(s) written")
+            total_written += w
+        except Exception:                                   # noqa: BLE001
+            failed.append(src)
+            print(f"\n  !! {src} FAILED — its traceback follows. Anything the "
+                  f"other source wrote is kept.\n")
+            traceback.print_exc()
 
     print(f"\n  {total_written} artifact(s) written. Existing captures were "
           f"left untouched.")
+    if failed:
+        print(f"  WARNING: {', '.join(failed)} failed. The artifacts above are "
+              f"still good and will be pushed; re-run for the rest.")
     if total_written and not a.dry_run:
         print(f"  next: python3 forecast/collect/parse.py --cycle {a.cycle} --all")
         print(f"        then aggregate and publish as usual")
-    return 0
+    # Non-zero only when the whole attempt was fruitless.
+    return 0 if total_written or a.dry_run else 1
 
 
 if __name__ == "__main__":
