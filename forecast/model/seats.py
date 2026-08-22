@@ -334,9 +334,41 @@ def main(argv=None) -> int:
                  "tide the index is recoverable by division, so that is a "
                  "licensing position rather than a technical one."),
     }
+    # TWO FILES, AND THE SPLIT IS THE PRIVACY BOUNDARY FOR THIS STEP.
+    #
+    # derived/ is committed and published. model_private/ is neither — the
+    # daily workflow adds derived/ by an explicit allowlist and never touches
+    # model_private/, which is the protection that actually holds.
+    #
+    # Until the generic-ballot aggregators were projected, every projection
+    # came from a source we may name — our two models and Ray Fair — so writing
+    # them all to derived/ was correct. It stopped being correct the moment
+    # Decision Desk HQ and VoteHub arrived: given the national tide a seat
+    # count inverts straight back to the margin that produced it, so publishing
+    # DDHQ's projection by name republishes DDHQ's gated margin in another
+    # unit, and publishing VoteHub's republishes a source we may not quote at
+    # all. aggregate.py drops those rows from the CSVs, which is why this was
+    # easy to miss: the CSVs were clean and this file was not.
+    #
+    # So the published copy carries only `individual` projections, and the full
+    # set — which aggregate.py needs, because a category AVERAGE may legally
+    # contain gated contributors subject to MIN_N — goes to model_private/.
+    priv = DATA / str(a.cycle) / "model_private"
+    priv.mkdir(parents=True, exist_ok=True)
+    (priv / "seat_projections.json").write_text(json.dumps(out, indent=2))
+
+    named = {k: v for k, v in projections.items()
+             if (v.get("publication") or "individual") == "individual"}
+    withheld = sorted(set(projections) - set(named))
     p = d / "seat_projections.json"
-    p.write_text(json.dumps(out, indent=2))
-    print(f"\n  wrote {p.relative_to(REPO)}   PUBLISHABLE (aggregates only)")
+    p.write_text(json.dumps({**out, "projections": named}, indent=2))
+    print(f"\n  wrote {(priv / 'seat_projections.json').relative_to(REPO)}   "
+          f"PRIVATE — all {len(projections)} projections, for aggregate.py")
+    print(f"  wrote {p.relative_to(REPO)}   PUBLISHABLE — "
+          f"{len(named)} nameable projection(s)")
+    if withheld:
+        print(f"    withheld from the published copy (gated sources, whose "
+              f"margin a seat count would give back): {withheld}")
     return 0
 
 

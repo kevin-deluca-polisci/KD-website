@@ -272,7 +272,16 @@ def class_model_rows(cycle: int) -> list[dict]:
     proprietary index. NEVER_PUBLISH would catch it downstream anyway; not
     writing it is the belt to that braces.
     """
-    p = DATA_DIR / str(cycle) / "derived" / "seat_projections.json"
+    # PREFER THE PRIVATE COPY. seats.py writes the full set to model_private/
+    # and a name-safe subset to derived/, because a seat count gives back the
+    # margin that made it and not every contributing source may be named. The
+    # averages computed here MAY legally contain gated contributors — that is
+    # what MIN_N is for — so this step needs all of them, and takes the
+    # published copy only as a fallback for a tree where the model step has not
+    # run.
+    priv = DATA_DIR / str(cycle) / "model_private" / "seat_projections.json"
+    pub = DATA_DIR / str(cycle) / "derived" / "seat_projections.json"
+    p = priv if priv.exists() else pub
     if not p.exists():
         return []
     proj = json.loads(p.read_text())
@@ -586,7 +595,51 @@ def audit(rows: list[dict], averages, by_source, suppressed) -> list[str]:
     return problems
 
 
-def would_shrink(cycle: int, averages: list[dict]) -> list[str]:
+def _known_cells(cycle: int, averages: list[dict],
+                 suppressed: list[dict] | None = None):
+    """What the archive KNOWS about a date, published or withheld.
+
+    Counting only published rows made the guard blind to the difference
+    between losing a day and covering one up. A cell that moves behind the
+    disclosure floor has not been lost — we still hold it, aggregate.py simply
+    may not show it — and MIN_N moves cells across that line for reasons that
+    have nothing to do with data going missing. Adding one gated forecaster to
+    a category full of open single-source cells re-tiers every one of them at a
+    stroke.
+
+    That is exactly what happened on 2026-08-21. The published baseline for
+    that date, 1,379 rows, was written by a run in which the wikipedia and
+    race_to_the_wh parsers were both crashing. Repairing them ADDED two
+    sources, one of them gated, which pushed a large block of professional
+    cells below the floor — so the repaired run published 11% fewer cells while
+    holding strictly more data, and the guard read a fix as a loss and refused.
+
+    So both sides of the comparison count published + suppressed. A genuine
+    lost day still trips it, because a day whose sources did not arrive has
+    neither.
+    """
+    d = DATA_DIR / str(cycle) / "derived"
+    have: dict[str, int] = defaultdict(int)
+    have_cats: dict[str, set] = defaultdict(set)
+    for name in ("category_averages.csv", "suppressed.csv"):
+        p = d / name
+        if not p.exists():
+            continue
+        with p.open(encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                have[r["snapshot_date"]] += 1
+                have_cats[r["snapshot_date"]].add(r["category"])
+
+    now: dict[str, int] = defaultdict(int)
+    now_cats: dict[str, set] = defaultdict(set)
+    for a in list(averages) + list(suppressed or ()):
+        now[a["snapshot_date"]] += 1
+        now_cats[a["snapshot_date"]].add(a["category"])
+    return have, have_cats, now, now_cats
+
+
+def would_shrink(cycle: int, averages: list[dict],
+                 suppressed: list[dict] | None = None) -> list[str]:
     """Snapshot dates this run would publish materially LESS of.
 
     THE HAZARD. raw/ is pushed to a separate private archive and parsed/ is
@@ -619,22 +672,10 @@ def would_shrink(cycle: int, averages: list[dict]) -> list[str]:
     safe move. Recover by cloning the raw archive and re-running parse.py
     --all, or by letting the daily Action do it where the whole store lives.
     """
-    p = DATA_DIR / str(cycle) / "derived" / "category_averages.csv"
-    if not p.exists():
+    have, have_cats, now, now_cats = _known_cells(
+        cycle, averages, suppressed)
+    if not have:
         return []
-
-    have: dict[str, int] = defaultdict(int)
-    have_cats: dict[str, set] = defaultdict(set)
-    with p.open(encoding="utf-8") as fh:
-        for r in csv.DictReader(fh):
-            have[r["snapshot_date"]] += 1
-            have_cats[r["snapshot_date"]].add(r["category"])
-
-    now: dict[str, int] = defaultdict(int)
-    now_cats: dict[str, set] = defaultdict(set)
-    for a in averages:
-        now[a["snapshot_date"]] += 1
-        now_cats[a["snapshot_date"]].add(a["category"])
 
     out = []
     for date in sorted(have):
@@ -651,27 +692,18 @@ def would_shrink(cycle: int, averages: list[dict]) -> list[str]:
     return out
 
 
-def small_drops(cycle: int, averages: list[dict]) -> list[str]:
+def small_drops(cycle: int, averages: list[dict],
+                suppressed: list[dict] | None = None) -> list[str]:
     """Dates that lose a few rows — allowed, but said out loud.
 
     This is what a parser correction looks like from here, and it should be
     visible in the run log rather than silent. If it appears on a day nobody
     changed a parser, that is worth a look.
     """
-    p = DATA_DIR / str(cycle) / "derived" / "category_averages.csv"
-    if not p.exists():
+    have, have_cats, now, now_cats = _known_cells(
+        cycle, averages, suppressed)
+    if not have:
         return []
-    have: dict[str, int] = defaultdict(int)
-    have_cats: dict[str, set] = defaultdict(set)
-    with p.open(encoding="utf-8") as fh:
-        for r in csv.DictReader(fh):
-            have[r["snapshot_date"]] += 1
-            have_cats[r["snapshot_date"]].add(r["category"])
-    now: dict[str, int] = defaultdict(int)
-    now_cats: dict[str, set] = defaultdict(set)
-    for a in averages:
-        now[a["snapshot_date"]] += 1
-        now_cats[a["snapshot_date"]].add(a["category"])
     out = []
     for date in sorted(have):
         before, after = have[date], now.get(date, 0)
@@ -742,8 +774,8 @@ def main(argv=None) -> int:
     averages, by_source, suppressed = aggregate(rows)
     ratings = ratings_panel(rows)
     problems = audit(rows, averages, by_source, suppressed)
-    shrunk = would_shrink(a.cycle, averages)
-    nibbles = small_drops(a.cycle, averages)
+    shrunk = would_shrink(a.cycle, averages, suppressed)
+    nibbles = small_drops(a.cycle, averages, suppressed)
 
     print("=" * 70)
     print(f"aggregate · cycle {a.cycle}")
