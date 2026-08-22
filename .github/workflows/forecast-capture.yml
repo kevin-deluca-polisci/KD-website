@@ -142,6 +142,10 @@ jobs:
           # D+10.5. A frozen number on a live page is worse than no number.
           python3 forecast/model/fundamentals.py --cycle "$CYCLE"
           python3 forecast/model/polling.py     --cycle "$CYCLE"
+          # academic.py reads the RAW generic ballot out of polling_model.json,
+          # so it has to come after polling.py. Run earlier it finds nothing,
+          # declines to run, and the academic column vanishes with no error.
+          python3 forecast/model/academic.py    --cycle "$CYCLE"
           # seats.py runs LAST of the models and reads the two JSONs the
           # steps above write. It pushes each tide through the same seat
           # machinery, which is what gives fundamentals and polling a seat
