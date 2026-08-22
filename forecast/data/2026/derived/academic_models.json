@@ -82,6 +82,159 @@
       "notes": [
         "no exposure term \u2014 this is the unconditioned referendum specification, and the gap against our fundamentals model IS the finding"
       ]
+    },
+    "academic_economic_pessimism": {
+      "name": "Economic pessimism (Lockerbie)",
+      "citation": "Lockerbie, 'The Challenge of Forecasting the 2024 Presidential and House Elections: Economic Pessimism and Election Outcomes', PS: Political Science & Politics, 2024",
+      "attribution": "Our implementation of Lockerbie's published House equation. The open-seat term's SIGN is our assumption, not his \u2014 see the sensitivity table.",
+      "category": "academic",
+      "publication": "individual",
+      "refit_on_our_history": false,
+      "margin_D": 12.94,
+      "margin_D_80_low": 7.77,
+      "margin_D_80_high": 18.06,
+      "inputs": {
+        "pct_expect_worse": 37.0,
+        "pct_expect_worse_source": "Michigan Surveys of Consumers, Table 8, June of the election year",
+        "open_seats": 60,
+        "year_direction": -1,
+        "year_direction_label": "a bad year for the president's party \u2014 the midterm rule",
+        "seats_before": 220
+      },
+      "diagnostics": {
+        "coefficients": {
+          "constant": 5.36,
+          "pct_expect_worse": -0.78,
+          "open_seats_signed": 0.41,
+          "r2": 0.42,
+          "r2_adj": 0.38,
+          "out_of_sample_mae_seats": 16.8,
+          "published_2024_forecast": -12
+        },
+        "pres_party_seat_change": -48.1,
+        "implied_D_seats": 263.1,
+        "inversion_extrapolated": true,
+        "curve_points_used": 8,
+        "sensitivity_month": [
+          {
+            "month": "Mar 2026",
+            "pct_expect_worse": 39.0,
+            "pres_party_seat_change": -49.7,
+            "is_specification": false
+          },
+          {
+            "month": "Apr 2026",
+            "pct_expect_worse": 41.0,
+            "pres_party_seat_change": -51.2,
+            "is_specification": false
+          },
+          {
+            "month": "May 2026",
+            "pct_expect_worse": 45.0,
+            "pres_party_seat_change": -54.3,
+            "is_specification": false
+          },
+          {
+            "month": "Jun 2026",
+            "pct_expect_worse": 37.0,
+            "pres_party_seat_change": -48.1,
+            "is_specification": true
+          }
+        ],
+        "midterm_rule": "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
+        "out_of_sample_mae_seats": 16.8,
+        "sensitivity_year_direction": [
+          {
+            "direction": -1,
+            "label": "a bad year for the president's party \u2014 the midterm rule",
+            "pres_party_seat_change": -48.1,
+            "implied_D_seats": 263.1
+          },
+          {
+            "direction": 0,
+            "label": "a neutral year",
+            "pres_party_seat_change": -23.5,
+            "implied_D_seats": 238.5
+          },
+          {
+            "direction": 1,
+            "label": "a good year for the president's party",
+            "pres_party_seat_change": 1.1,
+            "implied_D_seats": 213.9
+          }
+        ]
+      },
+      "notes": [
+        "forecasts SEAT CHANGE directly \u2014 the margin shown is our own seat curve run backwards from that seat count, and is not a number Lockerbie publishes",
+        "that seat count falls outside the range of tides the other models produced today, so the inversion is extrapolated rather than interpolated",
+        "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
+        "published out-of-sample mean absolute error is 16.8 seats \u2014 the interval is his, not ours, and it is very wide"
+      ]
+    },
+    "academic_political_history": {
+      "name": "Political history (Lewis-Beck & Quinlan)",
+      "citation": "Lewis-Beck & Quinlan, 'A Political History Forecast of the 2024 US Congressional Elections', PS: Political Science & Politics 58(2), 2025, Table 1",
+      "attribution": "Our implementation of their published Table 1 equations. Forecasts both chambers directly.",
+      "category": "academic",
+      "publication": "individual",
+      "refit_on_our_history": false,
+      "margin_D": 2.65,
+      "margin_D_80_low": null,
+      "margin_D_80_high": null,
+      "inputs": {
+        "dem_federal_dominance": 0,
+        "post_vra_1965": 1,
+        "post_1994_revolution": 1,
+        "dem_holdover_senate": 34,
+        "dem_governors": 24,
+        "strong_gop_senate_states": 14,
+        "dem_senate_retirements": 4
+      },
+      "diagnostics": {
+        "house_D_seats": 213.8,
+        "senate_D_seats": 49.3,
+        "house_coefficients": {
+          "constant": 208.999,
+          "dem_federal_dominance": -29.723,
+          "dem_governors": 2.9,
+          "strong_gop_senate_states": -2.254,
+          "dem_senate_retirements": -4.978,
+          "post_1994_revolution": -13.358
+        },
+        "senate_coefficients": {
+          "constant": 25.153,
+          "dem_federal_dominance": -5.057,
+          "dem_governors": 0.236,
+          "strong_gop_senate_states": -0.416,
+          "dem_holdover_senate": 0.851,
+          "post_vra_1965": -4.623
+        },
+        "house_fit": {
+          "n": 39,
+          "adj_r2": 0.74,
+          "rmse": 15.732,
+          "out_of_sample_mae": 12.0,
+          "calls_control": "87%"
+        },
+        "senate_fit": {
+          "n": 39,
+          "adj_r2": 0.72,
+          "rmse": 3.684,
+          "out_of_sample_mae": 2.7,
+          "calls_control": "72%"
+        },
+        "inversion_extrapolated": false,
+        "benchmark": {
+          "claim": "Democrats lose Senate control with a net loss of three seats; House a knife-edge race at 215 D seats",
+          "authors": "Lewis-Beck & Quinlan",
+          "for_cycle": "2024",
+          "note": "their 2024 forecast, quoted so our implementation can be sanity-checked against the published one"
+        }
+      },
+      "notes": [
+        "forecasts SEAT COUNTS directly from institutional facts \u2014 no polls, no economy, no popularity. The margin shown is our seat curve run backwards from its House number, not theirs",
+        "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it"
+      ]
     }
   },
   "not_implemented": {
@@ -93,7 +246,8 @@
         "state-level presidential approval estimates (MRP from national poll microdata)",
         "state-level economic series (FRED has state personal income and unemployment; we capture neither, and the paper's choice of series is unread)",
         "a specification for Senate races \u2014 the published DV is presidential vote by state"
-      ]
+      ],
+      "coefficients_published": null
     }
   }
 }

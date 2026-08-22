@@ -1,17 +1,17 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-22T13:31:07.407472+00:00",
+  "generated_at": "2026-08-22T16:00:54.215914+00:00",
   "latest_snapshot": "2026-08-22",
-  "snapshot_count": 8,
+  "snapshot_count": 92,
   "headline": [
     {
       "category": "academic",
-      "margin_D": 6.07,
-      "n_sources": 2,
-      "low": 3.86,
-      "high": 8.28,
+      "margin_D": 6.9325,
+      "n_sources": 4,
+      "low": 2.65,
+      "high": 12.94,
       "tier": "open",
-      "display": "thin",
+      "display": "ok",
       "sole_source": "",
       "as_of": "2026-08-22",
       "n_carried": 0
@@ -30,10 +30,10 @@
     },
     {
       "category": "market",
-      "margin_D": 7.6306,
+      "margin_D": 7.6193,
       "n_sources": 1,
-      "low": 7.6306,
-      "high": 7.6306,
+      "low": 7.6193,
+      "high": 7.6193,
       "tier": "open",
       "display": "single",
       "sole_source": "polymarket",
@@ -66,6 +66,348 @@
     }
   ],
   "series": {
+    "academic": [
+      [
+        "2025-01-01",
+        1.45
+      ],
+      [
+        "2025-01-15",
+        0.67
+      ],
+      [
+        "2025-01-22",
+        -0.44
+      ],
+      [
+        "2025-01-29",
+        -0.36
+      ],
+      [
+        "2025-02-05",
+        0.25
+      ],
+      [
+        "2025-02-12",
+        0.74
+      ],
+      [
+        "2025-02-19",
+        0.87
+      ],
+      [
+        "2025-02-26",
+        0.66
+      ],
+      [
+        "2025-03-05",
+        0.9
+      ],
+      [
+        "2025-03-12",
+        1.35
+      ],
+      [
+        "2025-03-19",
+        1.53
+      ],
+      [
+        "2025-03-26",
+        1.37
+      ],
+      [
+        "2025-04-02",
+        1.41
+      ],
+      [
+        "2025-04-09",
+        1.79
+      ],
+      [
+        "2025-04-16",
+        2.09
+      ],
+      [
+        "2025-04-23",
+        2.32
+      ],
+      [
+        "2025-04-30",
+        2.45
+      ],
+      [
+        "2025-05-07",
+        2.72
+      ],
+      [
+        "2025-05-14",
+        2.41
+      ],
+      [
+        "2025-05-21",
+        2.18
+      ],
+      [
+        "2025-05-28",
+        2.07
+      ],
+      [
+        "2025-06-04",
+        2.11
+      ],
+      [
+        "2025-06-11",
+        2.1
+      ],
+      [
+        "2025-06-18",
+        2.16
+      ],
+      [
+        "2025-06-25",
+        2.24
+      ],
+      [
+        "2025-07-02",
+        2.33
+      ],
+      [
+        "2025-07-09",
+        2.45
+      ],
+      [
+        "2025-07-16",
+        2.12
+      ],
+      [
+        "2025-07-23",
+        2.59
+      ],
+      [
+        "2025-07-30",
+        2.75
+      ],
+      [
+        "2025-08-06",
+        3.44
+      ],
+      [
+        "2025-08-13",
+        3.19
+      ],
+      [
+        "2025-08-20",
+        3.1
+      ],
+      [
+        "2025-08-27",
+        2.44
+      ],
+      [
+        "2025-09-03",
+        2.86
+      ],
+      [
+        "2025-09-10",
+        2.83
+      ],
+      [
+        "2025-09-17",
+        3.19
+      ],
+      [
+        "2025-09-24",
+        2.74
+      ],
+      [
+        "2025-10-01",
+        2.73
+      ],
+      [
+        "2025-10-08",
+        2.66
+      ],
+      [
+        "2025-10-15",
+        2.91
+      ],
+      [
+        "2025-10-22",
+        2.99
+      ],
+      [
+        "2025-10-29",
+        3.01
+      ],
+      [
+        "2025-11-05",
+        2.97
+      ],
+      [
+        "2025-11-12",
+        3.24
+      ],
+      [
+        "2025-11-19",
+        3.62
+      ],
+      [
+        "2025-11-26",
+        3.7
+      ],
+      [
+        "2025-12-03",
+        3.62
+      ],
+      [
+        "2025-12-10",
+        3.03
+      ],
+      [
+        "2025-12-17",
+        3.01
+      ],
+      [
+        "2025-12-24",
+        3.17
+      ],
+      [
+        "2025-12-31",
+        3.49
+      ],
+      [
+        "2026-01-07",
+        4.08
+      ],
+      [
+        "2026-01-14",
+        3.64
+      ],
+      [
+        "2026-01-21",
+        3.83
+      ],
+      [
+        "2026-01-28",
+        3.76
+      ],
+      [
+        "2026-02-04",
+        3.82
+      ],
+      [
+        "2026-02-11",
+        3.78
+      ],
+      [
+        "2026-02-18",
+        3.74
+      ],
+      [
+        "2026-02-25",
+        3.93
+      ],
+      [
+        "2026-03-04",
+        3.69
+      ],
+      [
+        "2026-03-11",
+        3.67
+      ],
+      [
+        "2026-03-18",
+        3.81
+      ],
+      [
+        "2026-03-25",
+        3.9
+      ],
+      [
+        "2026-04-01",
+        4.06
+      ],
+      [
+        "2026-04-08",
+        3.66
+      ],
+      [
+        "2026-04-15",
+        3.95
+      ],
+      [
+        "2026-04-22",
+        4.06
+      ],
+      [
+        "2026-04-29",
+        4.05
+      ],
+      [
+        "2026-05-06",
+        4.11
+      ],
+      [
+        "2026-05-13",
+        4.03
+      ],
+      [
+        "2026-05-20",
+        4.45
+      ],
+      [
+        "2026-05-27",
+        4.34
+      ],
+      [
+        "2026-06-03",
+        4.1
+      ],
+      [
+        "2026-06-10",
+        3.73
+      ],
+      [
+        "2026-06-17",
+        3.73
+      ],
+      [
+        "2026-06-24",
+        3.75
+      ],
+      [
+        "2026-07-01",
+        3.89
+      ],
+      [
+        "2026-07-08",
+        3.19
+      ],
+      [
+        "2026-07-15",
+        2.91
+      ],
+      [
+        "2026-07-22",
+        3.34
+      ],
+      [
+        "2026-07-29",
+        3.42
+      ],
+      [
+        "2026-08-05",
+        3.77
+      ],
+      [
+        "2026-08-12",
+        3.39
+      ],
+      [
+        "2026-08-22",
+        6.9325
+      ]
+    ],
     "fundamentals": [
       [
         "2025-12-23",
@@ -143,13 +485,7 @@
       ],
       [
         "2026-08-22",
-        7.6306
-      ]
-    ],
-    "academic": [
-      [
-        "2026-08-22",
-        6.07
+        7.6193
       ]
     ]
   },
@@ -617,6 +953,259 @@
       }
     ]
   },
+  "academic_models": {
+    "cycle": 2026,
+    "snapshot_date": "2026-08-22",
+    "days_to_election": 73,
+    "category": "academic",
+    "publication": "individual",
+    "models": {
+      "academic_bew": {
+        "name": "Generic ballot (Bafumi, Erikson & Wlezien)",
+        "citation": "Bafumi, Erikson & Wlezien, 'Balancing, Generic Polls and Midterm Congressional Elections', Journal of Politics 72(3), 2010",
+        "attribution": "Our implementation of BEW's published midterm equations, run on our generic-ballot average.",
+        "category": "academic",
+        "publication": "individual",
+        "refit_on_our_history": false,
+        "margin_D": 3.86,
+        "margin_D_80_low": -0.72,
+        "margin_D_80_high": 8.45,
+        "inputs": {
+          "generic_ballot_D": 6.5,
+          "generic_ballot_share_deviation": 3.25,
+          "generic_ballot_source": "margin_D_adjusted via polling_model.json",
+          "days_to_election": 73,
+          "president_party": "R",
+          "pres_party_coded": -1
+        },
+        "diagnostics": {
+          "vote_window_max_days": 120,
+          "vote_coefficients": {
+            "poll": 0.49,
+            "pres_party": -1.46,
+            "constant": -1.12,
+            "root_mse": 1.79
+          },
+          "seats_window_max_days": 120,
+          "seats_coefficients": {
+            "poll": 1.01,
+            "pres_party": -1.86,
+            "constant": -0.45,
+            "root_mse": 3.71
+          },
+          "bew_direct_D_seat_share": 54.69,
+          "bew_direct_D_seats": 237.9
+        },
+        "notes": [
+          "tide is BEW's vote equation; their separate seats equation is reported as a diagnostic and is not used downstream"
+        ]
+      },
+      "academic_referendum": {
+        "name": "Referendum (approval + income, no exposure)",
+        "citation": "Tufte, 'Determinants of the Outcomes of Midterm Congressional Elections', APSR 69(3), 1975; the modern version is Lewis-Beck & Tien",
+        "attribution": "Our fit of the referendum specification. NOT Lewis-Beck & Tien's published forecast.",
+        "category": "academic",
+        "publication": "individual",
+        "refit_on_our_history": true,
+        "margin_D": 8.28,
+        "margin_D_80_low": 0.13,
+        "margin_D_80_high": 16.43,
+        "inputs": {
+          "approval": 38.0,
+          "approval_source": "hand-set (Gallup basis); no live approval feed yet",
+          "income_growth": -0.096,
+          "income_source": "FRED income_growth_ytd as of 2026-08-22, 6 month(s) of the year in hand"
+        },
+        "diagnostics": {
+          "coefficients": {
+            "intercept": 44.9377,
+            "approval": 0.026,
+            "income_growth": 0.6831
+          },
+          "r2": 0.273,
+          "loeo_rmse": 3.18,
+          "fitted_on": "20 midterms, 1946-2022",
+          "pres_party_two_party_vote": 45.86,
+          "benchmark": {
+            "claim": "Republicans lose about 28 House seats and the House",
+            "authors": "Charles Tien and Michael S. Lewis-Beck",
+            "published": "2025-10-13",
+            "where": "LSE USAPP blog",
+            "note": "their DV is seat change, ours is vote share \u2014 the comparison is directional, not a reproduction"
+          }
+        },
+        "notes": [
+          "no exposure term \u2014 this is the unconditioned referendum specification, and the gap against our fundamentals model IS the finding"
+        ]
+      },
+      "academic_economic_pessimism": {
+        "name": "Economic pessimism (Lockerbie)",
+        "citation": "Lockerbie, 'The Challenge of Forecasting the 2024 Presidential and House Elections: Economic Pessimism and Election Outcomes', PS: Political Science & Politics, 2024",
+        "attribution": "Our implementation of Lockerbie's published House equation. The open-seat term's SIGN is our assumption, not his \u2014 see the sensitivity table.",
+        "category": "academic",
+        "publication": "individual",
+        "refit_on_our_history": false,
+        "margin_D": 12.94,
+        "margin_D_80_low": 7.77,
+        "margin_D_80_high": 18.06,
+        "inputs": {
+          "pct_expect_worse": 37.0,
+          "pct_expect_worse_source": "Michigan Surveys of Consumers, Table 8, June of the election year",
+          "open_seats": 60,
+          "year_direction": -1,
+          "year_direction_label": "a bad year for the president's party \u2014 the midterm rule",
+          "seats_before": 220
+        },
+        "diagnostics": {
+          "coefficients": {
+            "constant": 5.36,
+            "pct_expect_worse": -0.78,
+            "open_seats_signed": 0.41,
+            "r2": 0.42,
+            "r2_adj": 0.38,
+            "out_of_sample_mae_seats": 16.8,
+            "published_2024_forecast": -12
+          },
+          "pres_party_seat_change": -48.1,
+          "implied_D_seats": 263.1,
+          "inversion_extrapolated": true,
+          "curve_points_used": 8,
+          "sensitivity_month": [
+            {
+              "month": "Mar 2026",
+              "pct_expect_worse": 39.0,
+              "pres_party_seat_change": -49.7,
+              "is_specification": false
+            },
+            {
+              "month": "Apr 2026",
+              "pct_expect_worse": 41.0,
+              "pres_party_seat_change": -51.2,
+              "is_specification": false
+            },
+            {
+              "month": "May 2026",
+              "pct_expect_worse": 45.0,
+              "pres_party_seat_change": -54.3,
+              "is_specification": false
+            },
+            {
+              "month": "Jun 2026",
+              "pct_expect_worse": 37.0,
+              "pres_party_seat_change": -48.1,
+              "is_specification": true
+            }
+          ],
+          "midterm_rule": "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
+          "out_of_sample_mae_seats": 16.8,
+          "sensitivity_year_direction": [
+            {
+              "direction": -1,
+              "label": "a bad year for the president's party \u2014 the midterm rule",
+              "pres_party_seat_change": -48.1,
+              "implied_D_seats": 263.1
+            },
+            {
+              "direction": 0,
+              "label": "a neutral year",
+              "pres_party_seat_change": -23.5,
+              "implied_D_seats": 238.5
+            },
+            {
+              "direction": 1,
+              "label": "a good year for the president's party",
+              "pres_party_seat_change": 1.1,
+              "implied_D_seats": 213.9
+            }
+          ]
+        },
+        "notes": [
+          "forecasts SEAT CHANGE directly \u2014 the margin shown is our own seat curve run backwards from that seat count, and is not a number Lockerbie publishes",
+          "that seat count falls outside the range of tides the other models produced today, so the inversion is extrapolated rather than interpolated",
+          "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
+          "published out-of-sample mean absolute error is 16.8 seats \u2014 the interval is his, not ours, and it is very wide"
+        ]
+      },
+      "academic_political_history": {
+        "name": "Political history (Lewis-Beck & Quinlan)",
+        "citation": "Lewis-Beck & Quinlan, 'A Political History Forecast of the 2024 US Congressional Elections', PS: Political Science & Politics 58(2), 2025, Table 1",
+        "attribution": "Our implementation of their published Table 1 equations. Forecasts both chambers directly.",
+        "category": "academic",
+        "publication": "individual",
+        "refit_on_our_history": false,
+        "margin_D": 2.65,
+        "margin_D_80_low": null,
+        "margin_D_80_high": null,
+        "inputs": {
+          "dem_federal_dominance": 0,
+          "post_vra_1965": 1,
+          "post_1994_revolution": 1,
+          "dem_holdover_senate": 34,
+          "dem_governors": 24,
+          "strong_gop_senate_states": 14,
+          "dem_senate_retirements": 4
+        },
+        "diagnostics": {
+          "house_D_seats": 213.8,
+          "senate_D_seats": 49.3,
+          "house_coefficients": {
+            "constant": 208.999,
+            "dem_federal_dominance": -29.723,
+            "dem_governors": 2.9,
+            "strong_gop_senate_states": -2.254,
+            "dem_senate_retirements": -4.978,
+            "post_1994_revolution": -13.358
+          },
+          "senate_coefficients": {
+            "constant": 25.153,
+            "dem_federal_dominance": -5.057,
+            "dem_governors": 0.236,
+            "strong_gop_senate_states": -0.416,
+            "dem_holdover_senate": 0.851,
+            "post_vra_1965": -4.623
+          },
+          "house_fit": {
+            "n": 39,
+            "adj_r2": 0.74,
+            "rmse": 15.732,
+            "out_of_sample_mae": 12.0,
+            "calls_control": "87%"
+          },
+          "senate_fit": {
+            "n": 39,
+            "adj_r2": 0.72,
+            "rmse": 3.684,
+            "out_of_sample_mae": 2.7,
+            "calls_control": "72%"
+          },
+          "inversion_extrapolated": false,
+          "benchmark": {
+            "claim": "Democrats lose Senate control with a net loss of three seats; House a knife-edge race at 215 D seats",
+            "authors": "Lewis-Beck & Quinlan",
+            "for_cycle": "2024",
+            "note": "their 2024 forecast, quoted so our implementation can be sanity-checked against the published one"
+          }
+        },
+        "notes": [
+          "forecasts SEAT COUNTS directly from institutional facts \u2014 no polls, no economy, no popularity. The margin shown is our seat curve run backwards from its House number, not theirs",
+          "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it"
+        ]
+      }
+    },
+    "not_implemented": {
+      "academic_state_approval_economy": {
+        "name": "State approval + state economy (Enns et al.)",
+        "citation": "Enns, Lagodny, Colner & Kumar, 'Understanding Biden's Exit and the 2024 Election: The State Presidential Approval-State Economy Model', PS: Political Science & Politics, October 2024",
+        "attribution": "Not implemented. Listed so the gap is visible.",
+        "missing": [
+          "state-level presidential approval estimates (MRP from national poll microdata)",
+          "state-level economic series (FRED has state personal income and unemployment; we capture neither, and the paper's choice of series is unread)",
+          "a specification for Senate races \u2014 the published DV is presidential vote by state"
+        ],
+        "coefficients_published": null
+      }
+    }
+  },
   "seat_projections": {
     "snapshot_date": "2026-08-22",
     "sigma": 6.55,
@@ -829,6 +1418,426 @@
             240
           ],
           "prob_D_majority": 0.5077,
+          "majority_at": 218,
+          "pvi_source": "cook_pvi"
+        },
+        "category": "academic",
+        "publication": "individual",
+        "margin_published_elsewhere": false,
+        "as_of": "2026-08-22"
+      },
+      "academic_economic_pessimism": {
+        "tide_D": 12.94,
+        "senate": {
+          "n_races": 35,
+          "expected_D_seats_up": 18.86,
+          "D_seats_up_80pct": [
+            15,
+            22
+          ],
+          "expected_D_total": 52.86,
+          "D_total_80pct": [
+            49,
+            56
+          ],
+          "prob_D_50_plus": 0.8999,
+          "prob_D_51_plus": 0.7974
+        },
+        "races": {
+          "AK": {
+            "expected_margin_D": 0.04,
+            "pvi": -6.45,
+            "win_prob_D": 0.5024
+          },
+          "AL": {
+            "expected_margin_D": -16.68,
+            "pvi": -14.81,
+            "win_prob_D": 0.0054
+          },
+          "AR": {
+            "expected_margin_D": -17.68,
+            "pvi": -15.31,
+            "win_prob_D": 0.0035
+          },
+          "CO": {
+            "expected_margin_D": 24.88,
+            "pvi": 5.97,
+            "win_prob_D": 0.9999
+          },
+          "DE": {
+            "expected_margin_D": 28.96,
+            "pvi": 8.01,
+            "win_prob_D": 1.0
+          },
+          "FL": {
+            "expected_margin_D": 2.16,
+            "pvi": -5.39,
+            "win_prob_D": 0.6292
+          },
+          "GA": {
+            "expected_margin_D": 11.34,
+            "pvi": -0.8,
+            "win_prob_D": 0.9583
+          },
+          "IA": {
+            "expected_margin_D": 0.76,
+            "pvi": -6.09,
+            "win_prob_D": 0.5462
+          },
+          "ID": {
+            "expected_margin_D": -23.14,
+            "pvi": -18.04,
+            "win_prob_D": 0.0002
+          },
+          "IL": {
+            "expected_margin_D": 25.62,
+            "pvi": 6.34,
+            "win_prob_D": 1.0
+          },
+          "KS": {
+            "expected_margin_D": -3.12,
+            "pvi": -8.03,
+            "win_prob_D": 0.3169
+          },
+          "KY": {
+            "expected_margin_D": -16.94,
+            "pvi": -14.94,
+            "win_prob_D": 0.0049
+          },
+          "LA": {
+            "expected_margin_D": -8.56,
+            "pvi": -10.75,
+            "win_prob_D": 0.0956
+          },
+          "MA": {
+            "expected_margin_D": 40.92,
+            "pvi": 13.99,
+            "win_prob_D": 1.0
+          },
+          "ME": {
+            "expected_margin_D": 20.58,
+            "pvi": 3.82,
+            "win_prob_D": 0.9992
+          },
+          "MI": {
+            "expected_margin_D": 12.56,
+            "pvi": -0.19,
+            "win_prob_D": 0.9724
+          },
+          "MN": {
+            "expected_margin_D": 18.0,
+            "pvi": 2.53,
+            "win_prob_D": 0.997
+          },
+          "MS": {
+            "expected_margin_D": -8.62,
+            "pvi": -10.78,
+            "win_prob_D": 0.0941
+          },
+          "MT": {
+            "expected_margin_D": -6.7,
+            "pvi": -9.82,
+            "win_prob_D": 0.1532
+          },
+          "NC": {
+            "expected_margin_D": 10.14,
+            "pvi": -1.4,
+            "win_prob_D": 0.9392
+          },
+          "NE": {
+            "expected_margin_D": -7.6,
+            "pvi": -10.27,
+            "win_prob_D": 0.123
+          },
+          "NH": {
+            "expected_margin_D": 16.92,
+            "pvi": 1.99,
+            "win_prob_D": 0.9951
+          },
+          "NJ": {
+            "expected_margin_D": 21.48,
+            "pvi": 4.27,
+            "win_prob_D": 0.9995
+          },
+          "NM": {
+            "expected_margin_D": 20.3,
+            "pvi": 3.68,
+            "win_prob_D": 0.999
+          },
+          "OH": {
+            "expected_margin_D": 2.4,
+            "pvi": -5.27,
+            "win_prob_D": 0.643
+          },
+          "OK": {
+            "expected_margin_D": -21.74,
+            "pvi": -17.34,
+            "win_prob_D": 0.0005
+          },
+          "OR": {
+            "expected_margin_D": 28.24,
+            "pvi": 7.65,
+            "win_prob_D": 1.0
+          },
+          "RI": {
+            "expected_margin_D": 28.86,
+            "pvi": 7.96,
+            "win_prob_D": 1.0
+          },
+          "SC": {
+            "expected_margin_D": -3.62,
+            "pvi": -8.28,
+            "win_prob_D": 0.2902
+          },
+          "SD": {
+            "expected_margin_D": -16.2,
+            "pvi": -14.57,
+            "win_prob_D": 0.0067
+          },
+          "TN": {
+            "expected_margin_D": -15.58,
+            "pvi": -14.26,
+            "win_prob_D": 0.0087
+          },
+          "TX": {
+            "expected_margin_D": 1.1,
+            "pvi": -5.92,
+            "win_prob_D": 0.5667
+          },
+          "VA": {
+            "expected_margin_D": 19.92,
+            "pvi": 3.49,
+            "win_prob_D": 0.9988
+          },
+          "WV": {
+            "expected_margin_D": -28.98,
+            "pvi": -20.96,
+            "win_prob_D": 0.0
+          },
+          "WY": {
+            "expected_margin_D": -33.52,
+            "pvi": -23.23,
+            "win_prob_D": 0.0
+          }
+        },
+        "house": {
+          "n_districts": 435,
+          "expected_D_seats": 264.45,
+          "D_seats_80pct": [
+            234,
+            298
+          ],
+          "prob_D_majority": 0.9879,
+          "majority_at": 218,
+          "pvi_source": "cook_pvi"
+        },
+        "category": "academic",
+        "publication": "individual",
+        "margin_published_elsewhere": false,
+        "as_of": "2026-08-22"
+      },
+      "academic_political_history": {
+        "tide_D": 2.65,
+        "senate": {
+          "n_races": 35,
+          "expected_D_seats_up": 13.63,
+          "D_seats_up_80pct": [
+            11,
+            16
+          ],
+          "expected_D_total": 47.63,
+          "D_total_80pct": [
+            45,
+            50
+          ],
+          "prob_D_50_plus": 0.1797,
+          "prob_D_51_plus": 0.0835
+        },
+        "races": {
+          "AK": {
+            "expected_margin_D": -10.25,
+            "pvi": -6.45,
+            "win_prob_D": 0.0588
+          },
+          "AL": {
+            "expected_margin_D": -26.97,
+            "pvi": -14.81,
+            "win_prob_D": 0.0
+          },
+          "AR": {
+            "expected_margin_D": -27.97,
+            "pvi": -15.31,
+            "win_prob_D": 0.0
+          },
+          "CO": {
+            "expected_margin_D": 14.59,
+            "pvi": 5.97,
+            "win_prob_D": 0.987
+          },
+          "DE": {
+            "expected_margin_D": 18.67,
+            "pvi": 8.01,
+            "win_prob_D": 0.9978
+          },
+          "FL": {
+            "expected_margin_D": -8.13,
+            "pvi": -5.39,
+            "win_prob_D": 0.1073
+          },
+          "GA": {
+            "expected_margin_D": 1.05,
+            "pvi": -0.8,
+            "win_prob_D": 0.5637
+          },
+          "IA": {
+            "expected_margin_D": -9.53,
+            "pvi": -6.09,
+            "win_prob_D": 0.0728
+          },
+          "ID": {
+            "expected_margin_D": -33.43,
+            "pvi": -18.04,
+            "win_prob_D": 0.0
+          },
+          "IL": {
+            "expected_margin_D": 15.33,
+            "pvi": 6.34,
+            "win_prob_D": 0.9904
+          },
+          "KS": {
+            "expected_margin_D": -13.41,
+            "pvi": -8.03,
+            "win_prob_D": 0.0203
+          },
+          "KY": {
+            "expected_margin_D": -27.23,
+            "pvi": -14.94,
+            "win_prob_D": 0.0
+          },
+          "LA": {
+            "expected_margin_D": -18.85,
+            "pvi": -10.75,
+            "win_prob_D": 0.002
+          },
+          "MA": {
+            "expected_margin_D": 30.63,
+            "pvi": 13.99,
+            "win_prob_D": 1.0
+          },
+          "ME": {
+            "expected_margin_D": 10.29,
+            "pvi": 3.82,
+            "win_prob_D": 0.9419
+          },
+          "MI": {
+            "expected_margin_D": 2.27,
+            "pvi": -0.19,
+            "win_prob_D": 0.6355
+          },
+          "MN": {
+            "expected_margin_D": 7.71,
+            "pvi": 2.53,
+            "win_prob_D": 0.8804
+          },
+          "MS": {
+            "expected_margin_D": -18.91,
+            "pvi": -10.78,
+            "win_prob_D": 0.0019
+          },
+          "MT": {
+            "expected_margin_D": -16.99,
+            "pvi": -9.82,
+            "win_prob_D": 0.0047
+          },
+          "NC": {
+            "expected_margin_D": -0.15,
+            "pvi": -1.4,
+            "win_prob_D": 0.4909
+          },
+          "NE": {
+            "expected_margin_D": -17.89,
+            "pvi": -10.27,
+            "win_prob_D": 0.0032
+          },
+          "NH": {
+            "expected_margin_D": 6.63,
+            "pvi": 1.99,
+            "win_prob_D": 0.8443
+          },
+          "NJ": {
+            "expected_margin_D": 11.19,
+            "pvi": 4.27,
+            "win_prob_D": 0.9562
+          },
+          "NM": {
+            "expected_margin_D": 10.01,
+            "pvi": 3.68,
+            "win_prob_D": 0.9368
+          },
+          "OH": {
+            "expected_margin_D": -7.89,
+            "pvi": -5.27,
+            "win_prob_D": 0.1142
+          },
+          "OK": {
+            "expected_margin_D": -32.03,
+            "pvi": -17.34,
+            "win_prob_D": 0.0
+          },
+          "OR": {
+            "expected_margin_D": 17.95,
+            "pvi": 7.65,
+            "win_prob_D": 0.9969
+          },
+          "RI": {
+            "expected_margin_D": 18.57,
+            "pvi": 7.96,
+            "win_prob_D": 0.9977
+          },
+          "SC": {
+            "expected_margin_D": -13.91,
+            "pvi": -8.28,
+            "win_prob_D": 0.0168
+          },
+          "SD": {
+            "expected_margin_D": -26.49,
+            "pvi": -14.57,
+            "win_prob_D": 0.0
+          },
+          "TN": {
+            "expected_margin_D": -25.87,
+            "pvi": -14.26,
+            "win_prob_D": 0.0
+          },
+          "TX": {
+            "expected_margin_D": -9.19,
+            "pvi": -5.92,
+            "win_prob_D": 0.0803
+          },
+          "VA": {
+            "expected_margin_D": 9.63,
+            "pvi": 3.49,
+            "win_prob_D": 0.9293
+          },
+          "WV": {
+            "expected_margin_D": -39.27,
+            "pvi": -20.96,
+            "win_prob_D": 0.0
+          },
+          "WY": {
+            "expected_margin_D": -43.81,
+            "pvi": -23.23,
+            "win_prob_D": 0.0
+          }
+        },
+        "house": {
+          "n_districts": 435,
+          "expected_D_seats": 213.72,
+          "D_seats_80pct": [
+            193,
+            234
+          ],
+          "prob_D_majority": 0.3911,
           "majority_at": 218,
           "pvi_source": "cook_pvi"
         },
@@ -1690,31 +2699,115 @@
       "metric": "margin",
       "total": null,
       "dates": [
+        "2025-01-01",
+        "2025-01-15",
+        "2025-01-22",
+        "2025-01-29",
+        "2025-02-05",
+        "2025-02-12",
+        "2025-02-19",
+        "2025-02-26",
+        "2025-03-05",
+        "2025-03-12",
+        "2025-03-19",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-09",
+        "2025-04-16",
+        "2025-04-23",
+        "2025-04-30",
+        "2025-05-07",
+        "2025-05-14",
+        "2025-05-21",
+        "2025-05-28",
+        "2025-06-04",
+        "2025-06-11",
+        "2025-06-18",
+        "2025-06-25",
+        "2025-07-02",
+        "2025-07-09",
+        "2025-07-16",
+        "2025-07-23",
+        "2025-07-30",
+        "2025-08-06",
+        "2025-08-13",
+        "2025-08-20",
+        "2025-08-27",
+        "2025-09-03",
+        "2025-09-10",
+        "2025-09-17",
+        "2025-09-24",
+        "2025-10-01",
+        "2025-10-08",
+        "2025-10-15",
+        "2025-10-22",
+        "2025-10-29",
+        "2025-11-05",
+        "2025-11-12",
+        "2025-11-19",
+        "2025-11-26",
+        "2025-12-03",
+        "2025-12-10",
+        "2025-12-17",
         "2025-12-23",
+        "2025-12-24",
+        "2025-12-31",
+        "2026-01-07",
+        "2026-01-14",
+        "2026-01-21",
+        "2026-01-28",
+        "2026-02-04",
+        "2026-02-11",
+        "2026-02-18",
         "2026-02-20",
+        "2026-02-25",
+        "2026-03-04",
+        "2026-03-11",
+        "2026-03-18",
+        "2026-03-25",
+        "2026-04-01",
+        "2026-04-08",
+        "2026-04-15",
+        "2026-04-22",
+        "2026-04-29",
         "2026-04-30",
+        "2026-05-06",
+        "2026-05-13",
+        "2026-05-20",
+        "2026-05-27",
+        "2026-06-03",
+        "2026-06-10",
+        "2026-06-17",
+        "2026-06-24",
+        "2026-07-01",
+        "2026-07-08",
+        "2026-07-15",
+        "2026-07-22",
+        "2026-07-29",
         "2026-07-31",
+        "2026-08-05",
+        "2026-08-12",
         "2026-08-19",
         "2026-08-20",
         "2026-08-21",
         "2026-08-22"
       ],
-      "n_dates": 8,
-      "dense": false,
+      "n_dates": 92,
+      "dense": true,
       "date_ticks": [
         {
-          "date": "2025-12-23",
+          "date": "2025-01-01",
           "x": 0.0,
           "anchor": "start"
         },
         {
-          "date": "2026-04-30",
-          "x": 28.57,
+          "date": "2025-08-06",
+          "x": 32.97,
           "anchor": "middle"
         },
         {
-          "date": "2026-08-20",
-          "x": 71.43,
+          "date": "2026-02-25",
+          "x": 67.03,
           "anchor": "middle"
         },
         {
@@ -1726,131 +2819,52 @@
       "x_ticks": [
         {
           "v": 0,
-          "x": 20.5,
+          "x": 21.68,
           "label": "EVEN"
         },
         {
           "v": 5,
-          "x": 47.0,
+          "x": 46.83,
           "label": "D+5"
         },
         {
           "v": 10,
-          "x": 73.5,
+          "x": 71.98,
           "label": "D+10"
         },
         {
           "v": 15,
-          "x": 100.0,
+          "x": 97.13,
           "label": "D+15"
         }
       ],
       "y_ticks": [
         {
           "v": 0,
-          "y": 79.5,
+          "y": 78.32,
           "label": "EVEN"
         },
         {
           "v": 5,
-          "y": 53.0,
+          "y": 53.17,
           "label": "D+5"
         },
         {
           "v": 10,
-          "y": 26.5,
+          "y": 28.02,
           "label": "D+10"
         },
         {
           "v": 15,
-          "y": 0.0,
+          "y": 2.87,
           "label": "D+15"
         }
       ],
       "ref_y": null,
       "ref_label": "",
       "ref_value": null,
-      "zero_y": 79.5,
+      "zero_y": 78.32,
       "series": [
-        {
-          "key": "fundamentals",
-          "label": "Fundamentals",
-          "color": "#4a3aa7",
-          "color_dark": "#9085e9",
-          "points": [
-            {
-              "x": 0.0,
-              "y": 88.4,
-              "date": "2025-12-23",
-              "v": -1.68
-            },
-            {
-              "x": 14.29,
-              "y": 72.29,
-              "date": "2026-02-20",
-              "v": 1.36
-            },
-            {
-              "x": 28.57,
-              "y": 72.5,
-              "date": "2026-04-30",
-              "v": 1.32
-            },
-            {
-              "x": 42.86,
-              "y": 70.06,
-              "date": "2026-07-31",
-              "v": 1.78
-            },
-            {
-              "x": 57.14,
-              "y": 70.06,
-              "date": "2026-08-19",
-              "v": 1.78
-            },
-            {
-              "x": 71.43,
-              "y": 47.01,
-              "date": "2026-08-20",
-              "v": 6.13
-            },
-            {
-              "x": 85.71,
-              "y": 47.01,
-              "date": "2026-08-21",
-              "v": 6.13
-            },
-            {
-              "x": 100.0,
-              "y": 47.01,
-              "date": "2026-08-22",
-              "v": 6.13
-            }
-          ],
-          "polyline": "0.0,88.4 14.29,72.29 28.57,72.5 42.86,70.06 57.14,70.06 71.43,47.01 85.71,47.01 100.0,47.01",
-          "last": {
-            "x": 100.0,
-            "y": 47.01,
-            "date": "2026-08-22",
-            "v": 6.13
-          },
-          "band": {
-            "y_low": 70.06,
-            "y_high": 23.95,
-            "low": 1.78,
-            "high": 10.48,
-            "kind": "spread",
-            "n": 2
-          },
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 2,
-          "label_y": 55.06,
-          "label_nudged": true,
-          "sx": 52.99,
-          "sx_low": 29.94,
-          "sx_high": 76.05
-        },
         {
           "key": "polling",
           "label": "Polling",
@@ -1858,40 +2872,40 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 57.14,
-              "y": 45.13,
+              "x": 96.7,
+              "y": 45.7,
               "date": "2026-08-19",
               "v": 6.4841
             },
             {
-              "x": 71.43,
-              "y": 45.59,
+              "x": 97.8,
+              "y": 46.14,
               "date": "2026-08-20",
               "v": 6.3968
             },
             {
-              "x": 85.71,
-              "y": 47.06,
+              "x": 98.9,
+              "y": 47.54,
               "date": "2026-08-21",
               "v": 6.1197
             },
             {
               "x": 100.0,
-              "y": 46.69,
+              "y": 47.18,
               "date": "2026-08-22",
               "v": 6.1898
             }
           ],
-          "polyline": "57.14,45.13 71.43,45.59 85.71,47.06 100.0,46.69",
+          "polyline": "96.7,45.7 97.8,46.14 98.9,47.54 100.0,47.18",
           "last": {
             "x": 100.0,
-            "y": 46.69,
+            "y": 47.18,
             "date": "2026-08-22",
             "v": 6.1898
           },
           "band": {
-            "y_low": 48.23,
-            "y_high": 45.58,
+            "y_low": 48.64,
+            "y_high": 46.13,
             "low": 5.9,
             "high": 6.4,
             "kind": "spread",
@@ -1900,57 +2914,11 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 47.06,
-          "label_nudged": false,
-          "sx": 53.31,
-          "sx_low": 51.77,
-          "sx_high": 54.42
-        },
-        {
-          "key": "professional",
-          "label": "Professional",
-          "color": "#eda100",
-          "color_dark": "#c98500",
-          "points": [
-            {
-              "x": 57.14,
-              "y": 49.13,
-              "date": "2026-08-19",
-              "v": 5.73
-            },
-            {
-              "x": 71.43,
-              "y": 49.39,
-              "date": "2026-08-20",
-              "v": 5.68
-            },
-            {
-              "x": 85.71,
-              "y": 49.39,
-              "date": "2026-08-21",
-              "v": 5.68
-            },
-            {
-              "x": 100.0,
-              "y": 49.34,
-              "date": "2026-08-22",
-              "v": 5.69
-            }
-          ],
-          "polyline": "57.14,49.13 71.43,49.39 85.71,49.39 100.0,49.34",
-          "last": {
-            "x": 100.0,
-            "y": 49.34,
-            "date": "2026-08-22",
-            "v": 5.69
-          },
-          "band": null,
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 1,
-          "label_y": 63.06,
+          "label_y": 56.0,
           "label_nudged": true,
-          "sx": 50.66
+          "sx": 52.82,
+          "sx_low": 51.36,
+          "sx_high": 53.87
         },
         {
           "key": "market",
@@ -1959,32 +2927,698 @@
           "color_dark": "#d55181",
           "points": [
             {
-              "x": 85.71,
-              "y": 38.58,
+              "x": 98.9,
+              "y": 39.49,
               "date": "2026-08-21",
               "v": 7.7204
             },
             {
               "x": 100.0,
-              "y": 39.06,
+              "y": 40.0,
               "date": "2026-08-22",
-              "v": 7.6306
+              "v": 7.6193
             }
           ],
-          "polyline": "85.71,38.58 100.0,39.06",
+          "polyline": "98.9,39.49 100.0,40.0",
           "last": {
             "x": 100.0,
-            "y": 39.06,
+            "y": 40.0,
             "date": "2026-08-22",
-            "v": 7.6306
+            "v": 7.6193
           },
           "band": null,
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 1,
-          "label_y": 39.06,
+          "label_y": 40.0,
           "label_nudged": false,
-          "sx": 60.94
+          "sx": 60.0
+        },
+        {
+          "key": "fundamentals",
+          "label": "Fundamentals",
+          "color": "#4a3aa7",
+          "color_dark": "#9085e9",
+          "points": [
+            {
+              "x": 54.95,
+              "y": 86.76,
+              "date": "2025-12-23",
+              "v": -1.68
+            },
+            {
+              "x": 65.93,
+              "y": 71.48,
+              "date": "2026-02-20",
+              "v": 1.36
+            },
+            {
+              "x": 78.02,
+              "y": 71.68,
+              "date": "2026-04-30",
+              "v": 1.32
+            },
+            {
+              "x": 93.41,
+              "y": 69.36,
+              "date": "2026-07-31",
+              "v": 1.78
+            },
+            {
+              "x": 96.7,
+              "y": 69.36,
+              "date": "2026-08-19",
+              "v": 1.78
+            },
+            {
+              "x": 97.8,
+              "y": 47.49,
+              "date": "2026-08-20",
+              "v": 6.13
+            },
+            {
+              "x": 98.9,
+              "y": 47.49,
+              "date": "2026-08-21",
+              "v": 6.13
+            },
+            {
+              "x": 100.0,
+              "y": 47.49,
+              "date": "2026-08-22",
+              "v": 6.13
+            }
+          ],
+          "polyline": "54.95,86.76 65.93,71.48 78.02,71.68 93.41,69.36 96.7,69.36 97.8,47.49 98.9,47.49 100.0,47.49",
+          "last": {
+            "x": 100.0,
+            "y": 47.49,
+            "date": "2026-08-22",
+            "v": 6.13
+          },
+          "band": {
+            "y_low": 69.36,
+            "y_high": 25.61,
+            "low": 1.78,
+            "high": 10.48,
+            "kind": "spread",
+            "n": 2
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 2,
+          "label_y": 64.0,
+          "label_nudged": true,
+          "sx": 52.51,
+          "sx_low": 30.64,
+          "sx_high": 74.39
+        },
+        {
+          "key": "professional",
+          "label": "Professional",
+          "color": "#eda100",
+          "color_dark": "#c98500",
+          "points": [
+            {
+              "x": 96.7,
+              "y": 49.5,
+              "date": "2026-08-19",
+              "v": 5.73
+            },
+            {
+              "x": 97.8,
+              "y": 49.75,
+              "date": "2026-08-20",
+              "v": 5.68
+            },
+            {
+              "x": 98.9,
+              "y": 49.75,
+              "date": "2026-08-21",
+              "v": 5.68
+            },
+            {
+              "x": 100.0,
+              "y": 49.7,
+              "date": "2026-08-22",
+              "v": 5.69
+            }
+          ],
+          "polyline": "96.7,49.5 97.8,49.75 98.9,49.75 100.0,49.7",
+          "last": {
+            "x": 100.0,
+            "y": 49.7,
+            "date": "2026-08-22",
+            "v": 5.69
+          },
+          "band": null,
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 1,
+          "label_y": 72.0,
+          "label_nudged": true,
+          "sx": 50.3
+        },
+        {
+          "key": "academic",
+          "label": "Academic",
+          "color": "#0077a8",
+          "color_dark": "#2f9fbd",
+          "points": [
+            {
+              "x": 0.0,
+              "y": 71.02,
+              "date": "2025-01-01",
+              "v": 1.45
+            },
+            {
+              "x": 1.1,
+              "y": 74.95,
+              "date": "2025-01-15",
+              "v": 0.67
+            },
+            {
+              "x": 2.2,
+              "y": 80.53,
+              "date": "2025-01-22",
+              "v": -0.44
+            },
+            {
+              "x": 3.3,
+              "y": 80.13,
+              "date": "2025-01-29",
+              "v": -0.36
+            },
+            {
+              "x": 4.4,
+              "y": 77.06,
+              "date": "2025-02-05",
+              "v": 0.25
+            },
+            {
+              "x": 5.49,
+              "y": 74.59,
+              "date": "2025-02-12",
+              "v": 0.74
+            },
+            {
+              "x": 6.59,
+              "y": 73.94,
+              "date": "2025-02-19",
+              "v": 0.87
+            },
+            {
+              "x": 7.69,
+              "y": 75.0,
+              "date": "2025-02-26",
+              "v": 0.66
+            },
+            {
+              "x": 8.79,
+              "y": 73.79,
+              "date": "2025-03-05",
+              "v": 0.9
+            },
+            {
+              "x": 9.89,
+              "y": 71.53,
+              "date": "2025-03-12",
+              "v": 1.35
+            },
+            {
+              "x": 10.99,
+              "y": 70.62,
+              "date": "2025-03-19",
+              "v": 1.53
+            },
+            {
+              "x": 12.09,
+              "y": 71.43,
+              "date": "2025-03-26",
+              "v": 1.37
+            },
+            {
+              "x": 13.19,
+              "y": 71.22,
+              "date": "2025-04-02",
+              "v": 1.41
+            },
+            {
+              "x": 14.29,
+              "y": 69.31,
+              "date": "2025-04-09",
+              "v": 1.79
+            },
+            {
+              "x": 15.38,
+              "y": 67.8,
+              "date": "2025-04-16",
+              "v": 2.09
+            },
+            {
+              "x": 16.48,
+              "y": 66.65,
+              "date": "2025-04-23",
+              "v": 2.32
+            },
+            {
+              "x": 17.58,
+              "y": 65.99,
+              "date": "2025-04-30",
+              "v": 2.45
+            },
+            {
+              "x": 18.68,
+              "y": 64.64,
+              "date": "2025-05-07",
+              "v": 2.72
+            },
+            {
+              "x": 19.78,
+              "y": 66.19,
+              "date": "2025-05-14",
+              "v": 2.41
+            },
+            {
+              "x": 20.88,
+              "y": 67.35,
+              "date": "2025-05-21",
+              "v": 2.18
+            },
+            {
+              "x": 21.98,
+              "y": 67.9,
+              "date": "2025-05-28",
+              "v": 2.07
+            },
+            {
+              "x": 23.08,
+              "y": 67.7,
+              "date": "2025-06-04",
+              "v": 2.11
+            },
+            {
+              "x": 24.18,
+              "y": 67.75,
+              "date": "2025-06-11",
+              "v": 2.1
+            },
+            {
+              "x": 25.27,
+              "y": 67.45,
+              "date": "2025-06-18",
+              "v": 2.16
+            },
+            {
+              "x": 26.37,
+              "y": 67.05,
+              "date": "2025-06-25",
+              "v": 2.24
+            },
+            {
+              "x": 27.47,
+              "y": 66.6,
+              "date": "2025-07-02",
+              "v": 2.33
+            },
+            {
+              "x": 28.57,
+              "y": 65.99,
+              "date": "2025-07-09",
+              "v": 2.45
+            },
+            {
+              "x": 29.67,
+              "y": 67.65,
+              "date": "2025-07-16",
+              "v": 2.12
+            },
+            {
+              "x": 30.77,
+              "y": 65.29,
+              "date": "2025-07-23",
+              "v": 2.59
+            },
+            {
+              "x": 31.87,
+              "y": 64.48,
+              "date": "2025-07-30",
+              "v": 2.75
+            },
+            {
+              "x": 32.97,
+              "y": 61.01,
+              "date": "2025-08-06",
+              "v": 3.44
+            },
+            {
+              "x": 34.07,
+              "y": 62.27,
+              "date": "2025-08-13",
+              "v": 3.19
+            },
+            {
+              "x": 35.16,
+              "y": 62.72,
+              "date": "2025-08-20",
+              "v": 3.1
+            },
+            {
+              "x": 36.26,
+              "y": 66.04,
+              "date": "2025-08-27",
+              "v": 2.44
+            },
+            {
+              "x": 37.36,
+              "y": 63.93,
+              "date": "2025-09-03",
+              "v": 2.86
+            },
+            {
+              "x": 38.46,
+              "y": 64.08,
+              "date": "2025-09-10",
+              "v": 2.83
+            },
+            {
+              "x": 39.56,
+              "y": 62.27,
+              "date": "2025-09-17",
+              "v": 3.19
+            },
+            {
+              "x": 40.66,
+              "y": 64.53,
+              "date": "2025-09-24",
+              "v": 2.74
+            },
+            {
+              "x": 41.76,
+              "y": 64.59,
+              "date": "2025-10-01",
+              "v": 2.73
+            },
+            {
+              "x": 42.86,
+              "y": 64.94,
+              "date": "2025-10-08",
+              "v": 2.66
+            },
+            {
+              "x": 43.96,
+              "y": 63.68,
+              "date": "2025-10-15",
+              "v": 2.91
+            },
+            {
+              "x": 45.05,
+              "y": 63.28,
+              "date": "2025-10-22",
+              "v": 2.99
+            },
+            {
+              "x": 46.15,
+              "y": 63.18,
+              "date": "2025-10-29",
+              "v": 3.01
+            },
+            {
+              "x": 47.25,
+              "y": 63.38,
+              "date": "2025-11-05",
+              "v": 2.97
+            },
+            {
+              "x": 48.35,
+              "y": 62.02,
+              "date": "2025-11-12",
+              "v": 3.24
+            },
+            {
+              "x": 49.45,
+              "y": 60.11,
+              "date": "2025-11-19",
+              "v": 3.62
+            },
+            {
+              "x": 50.55,
+              "y": 59.71,
+              "date": "2025-11-26",
+              "v": 3.7
+            },
+            {
+              "x": 51.65,
+              "y": 60.11,
+              "date": "2025-12-03",
+              "v": 3.62
+            },
+            {
+              "x": 52.75,
+              "y": 63.08,
+              "date": "2025-12-10",
+              "v": 3.03
+            },
+            {
+              "x": 53.85,
+              "y": 63.18,
+              "date": "2025-12-17",
+              "v": 3.01
+            },
+            {
+              "x": 56.04,
+              "y": 62.37,
+              "date": "2025-12-24",
+              "v": 3.17
+            },
+            {
+              "x": 57.14,
+              "y": 60.76,
+              "date": "2025-12-31",
+              "v": 3.49
+            },
+            {
+              "x": 58.24,
+              "y": 57.8,
+              "date": "2026-01-07",
+              "v": 4.08
+            },
+            {
+              "x": 59.34,
+              "y": 60.01,
+              "date": "2026-01-14",
+              "v": 3.64
+            },
+            {
+              "x": 60.44,
+              "y": 59.05,
+              "date": "2026-01-21",
+              "v": 3.83
+            },
+            {
+              "x": 61.54,
+              "y": 59.4,
+              "date": "2026-01-28",
+              "v": 3.76
+            },
+            {
+              "x": 62.64,
+              "y": 59.1,
+              "date": "2026-02-04",
+              "v": 3.82
+            },
+            {
+              "x": 63.74,
+              "y": 59.3,
+              "date": "2026-02-11",
+              "v": 3.78
+            },
+            {
+              "x": 64.84,
+              "y": 59.51,
+              "date": "2026-02-18",
+              "v": 3.74
+            },
+            {
+              "x": 67.03,
+              "y": 58.55,
+              "date": "2026-02-25",
+              "v": 3.93
+            },
+            {
+              "x": 68.13,
+              "y": 59.76,
+              "date": "2026-03-04",
+              "v": 3.69
+            },
+            {
+              "x": 69.23,
+              "y": 59.86,
+              "date": "2026-03-11",
+              "v": 3.67
+            },
+            {
+              "x": 70.33,
+              "y": 59.15,
+              "date": "2026-03-18",
+              "v": 3.81
+            },
+            {
+              "x": 71.43,
+              "y": 58.7,
+              "date": "2026-03-25",
+              "v": 3.9
+            },
+            {
+              "x": 72.53,
+              "y": 57.9,
+              "date": "2026-04-01",
+              "v": 4.06
+            },
+            {
+              "x": 73.63,
+              "y": 59.91,
+              "date": "2026-04-08",
+              "v": 3.66
+            },
+            {
+              "x": 74.73,
+              "y": 58.45,
+              "date": "2026-04-15",
+              "v": 3.95
+            },
+            {
+              "x": 75.82,
+              "y": 57.9,
+              "date": "2026-04-22",
+              "v": 4.06
+            },
+            {
+              "x": 76.92,
+              "y": 57.95,
+              "date": "2026-04-29",
+              "v": 4.05
+            },
+            {
+              "x": 79.12,
+              "y": 57.64,
+              "date": "2026-05-06",
+              "v": 4.11
+            },
+            {
+              "x": 80.22,
+              "y": 58.05,
+              "date": "2026-05-13",
+              "v": 4.03
+            },
+            {
+              "x": 81.32,
+              "y": 55.93,
+              "date": "2026-05-20",
+              "v": 4.45
+            },
+            {
+              "x": 82.42,
+              "y": 56.49,
+              "date": "2026-05-27",
+              "v": 4.34
+            },
+            {
+              "x": 83.52,
+              "y": 57.69,
+              "date": "2026-06-03",
+              "v": 4.1
+            },
+            {
+              "x": 84.62,
+              "y": 59.56,
+              "date": "2026-06-10",
+              "v": 3.73
+            },
+            {
+              "x": 85.71,
+              "y": 59.56,
+              "date": "2026-06-17",
+              "v": 3.73
+            },
+            {
+              "x": 86.81,
+              "y": 59.46,
+              "date": "2026-06-24",
+              "v": 3.75
+            },
+            {
+              "x": 87.91,
+              "y": 58.75,
+              "date": "2026-07-01",
+              "v": 3.89
+            },
+            {
+              "x": 89.01,
+              "y": 62.27,
+              "date": "2026-07-08",
+              "v": 3.19
+            },
+            {
+              "x": 90.11,
+              "y": 63.68,
+              "date": "2026-07-15",
+              "v": 2.91
+            },
+            {
+              "x": 91.21,
+              "y": 61.52,
+              "date": "2026-07-22",
+              "v": 3.34
+            },
+            {
+              "x": 92.31,
+              "y": 61.11,
+              "date": "2026-07-29",
+              "v": 3.42
+            },
+            {
+              "x": 94.51,
+              "y": 59.35,
+              "date": "2026-08-05",
+              "v": 3.77
+            },
+            {
+              "x": 95.6,
+              "y": 61.27,
+              "date": "2026-08-12",
+              "v": 3.39
+            },
+            {
+              "x": 100.0,
+              "y": 43.45,
+              "date": "2026-08-22",
+              "v": 6.9325
+            }
+          ],
+          "polyline": "0.0,71.02 1.1,74.95 2.2,80.53 3.3,80.13 4.4,77.06 5.49,74.59 6.59,73.94 7.69,75.0 8.79,73.79 9.89,71.53 10.99,70.62 12.09,71.43 13.19,71.22 14.29,69.31 15.38,67.8 16.48,66.65 17.58,65.99 18.68,64.64 19.78,66.19 20.88,67.35 21.98,67.9 23.08,67.7 24.18,67.75 25.27,67.45 26.37,67.05 27.47,66.6 28.57,65.99 29.67,67.65 30.77,65.29 31.87,64.48 32.97,61.01 34.07,62.27 35.16,62.72 36.26,66.04 37.36,63.93 38.46,64.08 39.56,62.27 40.66,64.53 41.76,64.59 42.86,64.94 43.96,63.68 45.05,63.28 46.15,63.18 47.25,63.38 48.35,62.02 49.45,60.11 50.55,59.71 51.65,60.11 52.75,63.08 53.85,63.18 56.04,62.37 57.14,60.76 58.24,57.8 59.34,60.01 60.44,59.05 61.54,59.4 62.64,59.1 63.74,59.3 64.84,59.51 67.03,58.55 68.13,59.76 69.23,59.86 70.33,59.15 71.43,58.7 72.53,57.9 73.63,59.91 74.73,58.45 75.82,57.9 76.92,57.95 79.12,57.64 80.22,58.05 81.32,55.93 82.42,56.49 83.52,57.69 84.62,59.56 85.71,59.56 86.81,59.46 87.91,58.75 89.01,62.27 90.11,63.68 91.21,61.52 92.31,61.11 94.51,59.35 95.6,61.27 100.0,43.45",
+          "last": {
+            "x": 100.0,
+            "y": 43.45,
+            "date": "2026-08-22",
+            "v": 6.9325
+          },
+          "band": {
+            "y_low": 64.99,
+            "y_high": 13.24,
+            "low": 2.65,
+            "high": 12.94,
+            "kind": "spread",
+            "n": 4
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 4,
+          "label_y": 48.0,
+          "label_nudged": true,
+          "sx": 56.55,
+          "sx_low": 35.01,
+          "sx_high": 86.76
         }
       ]
     },
@@ -1996,18 +3630,112 @@
       "metric": "seats",
       "total": 435,
       "dates": [
+        "2025-01-01",
+        "2025-01-15",
+        "2025-01-22",
+        "2025-01-29",
+        "2025-02-05",
+        "2025-02-12",
+        "2025-02-19",
+        "2025-02-26",
+        "2025-03-05",
+        "2025-03-12",
+        "2025-03-19",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-09",
+        "2025-04-16",
+        "2025-04-23",
+        "2025-04-30",
+        "2025-05-07",
+        "2025-05-14",
+        "2025-05-21",
+        "2025-05-28",
+        "2025-06-04",
+        "2025-06-11",
+        "2025-06-18",
+        "2025-06-25",
+        "2025-07-02",
+        "2025-07-09",
+        "2025-07-16",
+        "2025-07-23",
+        "2025-07-30",
+        "2025-08-06",
+        "2025-08-13",
+        "2025-08-20",
+        "2025-08-27",
+        "2025-09-03",
+        "2025-09-10",
+        "2025-09-17",
+        "2025-09-24",
+        "2025-10-01",
+        "2025-10-08",
+        "2025-10-15",
+        "2025-10-22",
+        "2025-10-29",
+        "2025-11-05",
+        "2025-11-12",
+        "2025-11-19",
+        "2025-11-26",
+        "2025-12-03",
+        "2025-12-10",
+        "2025-12-17",
+        "2025-12-24",
+        "2025-12-31",
+        "2026-01-07",
+        "2026-01-14",
+        "2026-01-21",
+        "2026-01-28",
+        "2026-02-04",
+        "2026-02-11",
+        "2026-02-18",
+        "2026-02-25",
+        "2026-03-04",
+        "2026-03-11",
+        "2026-03-18",
+        "2026-03-25",
+        "2026-04-01",
+        "2026-04-08",
+        "2026-04-15",
+        "2026-04-22",
+        "2026-04-29",
+        "2026-05-06",
+        "2026-05-13",
+        "2026-05-20",
+        "2026-05-27",
+        "2026-06-03",
+        "2026-06-10",
+        "2026-06-17",
+        "2026-06-24",
+        "2026-07-01",
+        "2026-07-08",
+        "2026-07-15",
+        "2026-07-22",
+        "2026-07-29",
+        "2026-08-05",
+        "2026-08-12",
         "2026-08-19",
         "2026-08-20",
         "2026-08-21",
         "2026-08-22"
       ],
-      "n_dates": 4,
-      "dense": false,
+      "n_dates": 88,
+      "dense": true,
       "date_ticks": [
         {
-          "date": "2026-08-19",
+          "date": "2025-01-01",
           "x": 0.0,
           "anchor": "start"
+        },
+        {
+          "date": "2025-07-30",
+          "x": 33.33,
+          "anchor": "middle"
+        },
+        {
+          "date": "2026-02-18",
+          "x": 66.67,
+          "anchor": "middle"
         },
         {
           "date": "2026-08-22",
@@ -2017,102 +3745,53 @@
       ],
       "x_ticks": [
         {
-          "v": 200,
-          "x": 0.0,
+          "v": 200.0,
+          "x": 11.55,
           "label": "200"
         },
         {
-          "v": 220,
-          "x": 33.33,
-          "label": "220"
+          "v": 225.0,
+          "x": 40.73,
+          "label": "225"
         },
         {
-          "v": 240,
-          "x": 66.67,
-          "label": "240"
+          "v": 250.0,
+          "x": 69.9,
+          "label": "250"
         },
         {
-          "v": 260,
-          "x": 100.0,
-          "label": "260"
+          "v": 275.0,
+          "x": 99.08,
+          "label": "275"
         }
       ],
       "y_ticks": [
         {
-          "v": 200,
-          "y": 100.0,
+          "v": 200.0,
+          "y": 88.45,
           "label": "200"
         },
         {
-          "v": 220,
-          "y": 66.67,
-          "label": "220"
+          "v": 225.0,
+          "y": 59.27,
+          "label": "225"
         },
         {
-          "v": 240,
-          "y": 33.33,
-          "label": "240"
+          "v": 250.0,
+          "y": 30.1,
+          "label": "250"
         },
         {
-          "v": 260,
-          "y": 0.0,
-          "label": "260"
+          "v": 275.0,
+          "y": 0.92,
+          "label": "275"
         }
       ],
-      "ref_y": 70.0,
+      "ref_y": 67.44,
       "ref_label": "218 \u2014 a majority",
       "ref_value": 218,
       "zero_y": null,
       "series": [
-        {
-          "key": "fundamentals",
-          "label": "Fundamentals",
-          "color": "#4a3aa7",
-          "color_dark": "#9085e9",
-          "points": [
-            {
-              "x": 33.33,
-              "y": 16.45,
-              "date": "2026-08-20",
-              "v": 250.13
-            },
-            {
-              "x": 66.67,
-              "y": 49.7,
-              "date": "2026-08-21",
-              "v": 230.18
-            },
-            {
-              "x": 100.0,
-              "y": 49.7,
-              "date": "2026-08-22",
-              "v": 230.18
-            }
-          ],
-          "polyline": "33.33,16.45 66.67,49.7 100.0,49.7",
-          "last": {
-            "x": 100.0,
-            "y": 49.7,
-            "date": "2026-08-22",
-            "v": 230.18
-          },
-          "band": {
-            "y_low": 82.95,
-            "y_high": 16.45,
-            "low": 210.23,
-            "high": 250.13,
-            "kind": "spread",
-            "n": 2
-          },
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 2,
-          "label_y": 49.7,
-          "label_nudged": false,
-          "sx": 50.3,
-          "sx_low": 17.05,
-          "sx_high": 83.55
-        },
         {
           "key": "polling",
           "label": "Polling",
@@ -2120,34 +3799,34 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 33.33,
-              "y": 56.03,
+              "x": 97.7,
+              "y": 57.66,
               "date": "2026-08-20",
               "v": 226.38
             },
             {
-              "x": 66.67,
-              "y": 49.85,
+              "x": 98.85,
+              "y": 53.33,
               "date": "2026-08-21",
               "v": 230.09
             },
             {
               "x": 100.0,
-              "y": 51.37,
+              "y": 54.39,
               "date": "2026-08-22",
               "v": 229.18
             }
           ],
-          "polyline": "33.33,56.03 66.67,49.85 100.0,51.37",
+          "polyline": "97.7,57.66 98.85,53.33 100.0,54.39",
           "last": {
             "x": 100.0,
-            "y": 51.37,
+            "y": 54.39,
             "date": "2026-08-22",
             "v": 229.18
           },
           "band": {
-            "y_low": 54.38,
-            "y_high": 49.85,
+            "y_low": 56.51,
+            "y_high": 53.33,
             "low": 227.37,
             "high": 230.09,
             "kind": "spread",
@@ -2156,57 +3835,11 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 75.7,
+          "label_y": 87.95,
           "label_nudged": true,
-          "sx": 48.63,
-          "sx_low": 45.62,
-          "sx_high": 50.15
-        },
-        {
-          "key": "professional",
-          "label": "Professional",
-          "color": "#eda100",
-          "color_dark": "#c98500",
-          "points": [
-            {
-              "x": 0.0,
-              "y": 15.35,
-              "date": "2026-08-19",
-              "v": 250.79
-            },
-            {
-              "x": 33.33,
-              "y": 15.83,
-              "date": "2026-08-20",
-              "v": 250.5
-            },
-            {
-              "x": 66.67,
-              "y": 16.08,
-              "date": "2026-08-21",
-              "v": 250.35
-            },
-            {
-              "x": 100.0,
-              "y": 16.05,
-              "date": "2026-08-22",
-              "v": 250.37
-            }
-          ],
-          "polyline": "0.0,15.35 33.33,15.83 66.67,16.08 100.0,16.05",
-          "last": {
-            "x": 100.0,
-            "y": 16.05,
-            "date": "2026-08-22",
-            "v": 250.37
-          },
-          "band": null,
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 1,
-          "label_y": 16.05,
-          "label_nudged": false,
-          "sx": 83.95
+          "sx": 45.61,
+          "sx_low": 43.49,
+          "sx_high": 46.67
         },
         {
           "key": "market",
@@ -2215,22 +3848,22 @@
           "color_dark": "#d55181",
           "points": [
             {
-              "x": 66.67,
-              "y": 50.05,
+              "x": 98.85,
+              "y": 53.47,
               "date": "2026-08-21",
               "v": 229.97
             },
             {
               "x": 100.0,
-              "y": 49.98,
+              "y": 53.42,
               "date": "2026-08-22",
               "v": 230.01
             }
           ],
-          "polyline": "66.67,50.05 100.0,49.98",
+          "polyline": "98.85,53.47 100.0,53.42",
           "last": {
             "x": 100.0,
-            "y": 49.98,
+            "y": 53.42,
             "date": "2026-08-22",
             "v": 230.01
           },
@@ -2238,9 +3871,645 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": "1",
-          "label_y": 62.7,
+          "label_y": 74.95,
           "label_nudged": true,
-          "sx": 50.02
+          "sx": 46.58
+        },
+        {
+          "key": "fundamentals",
+          "label": "Fundamentals",
+          "color": "#4a3aa7",
+          "color_dark": "#9085e9",
+          "points": [
+            {
+              "x": 97.7,
+              "y": 29.95,
+              "date": "2026-08-20",
+              "v": 250.13
+            },
+            {
+              "x": 98.85,
+              "y": 53.23,
+              "date": "2026-08-21",
+              "v": 230.18
+            },
+            {
+              "x": 100.0,
+              "y": 53.23,
+              "date": "2026-08-22",
+              "v": 230.18
+            }
+          ],
+          "polyline": "97.7,29.95 98.85,53.23 100.0,53.23",
+          "last": {
+            "x": 100.0,
+            "y": 53.23,
+            "date": "2026-08-22",
+            "v": 230.18
+          },
+          "band": {
+            "y_low": 76.51,
+            "y_high": 29.95,
+            "low": 210.23,
+            "high": 250.13,
+            "kind": "spread",
+            "n": 2
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 2,
+          "label_y": 61.95,
+          "label_nudged": true,
+          "sx": 46.77,
+          "sx_low": 23.49,
+          "sx_high": 70.05
+        },
+        {
+          "key": "professional",
+          "label": "Professional",
+          "color": "#eda100",
+          "color_dark": "#c98500",
+          "points": [
+            {
+              "x": 96.55,
+              "y": 29.18,
+              "date": "2026-08-19",
+              "v": 250.79
+            },
+            {
+              "x": 97.7,
+              "y": 29.51,
+              "date": "2026-08-20",
+              "v": 250.5
+            },
+            {
+              "x": 98.85,
+              "y": 29.69,
+              "date": "2026-08-21",
+              "v": 250.35
+            },
+            {
+              "x": 100.0,
+              "y": 29.67,
+              "date": "2026-08-22",
+              "v": 250.37
+            }
+          ],
+          "polyline": "96.55,29.18 97.7,29.51 98.85,29.69 100.0,29.67",
+          "last": {
+            "x": 100.0,
+            "y": 29.67,
+            "date": "2026-08-22",
+            "v": 250.37
+          },
+          "band": null,
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 1,
+          "label_y": 29.67,
+          "label_nudged": false,
+          "sx": 70.33
+        },
+        {
+          "key": "academic",
+          "label": "Academic",
+          "color": "#0077a8",
+          "color_dark": "#2f9fbd",
+          "points": [
+            {
+              "x": 0.0,
+              "y": 78.04,
+              "date": "2025-01-01",
+              "v": 208.92
+            },
+            {
+              "x": 1.15,
+              "y": 81.63,
+              "date": "2025-01-15",
+              "v": 205.84
+            },
+            {
+              "x": 2.3,
+              "y": 86.76,
+              "date": "2025-01-22",
+              "v": 201.44
+            },
+            {
+              "x": 3.45,
+              "y": 86.39,
+              "date": "2025-01-29",
+              "v": 201.76
+            },
+            {
+              "x": 4.6,
+              "y": 83.57,
+              "date": "2025-02-05",
+              "v": 204.18
+            },
+            {
+              "x": 5.75,
+              "y": 81.32,
+              "date": "2025-02-12",
+              "v": 206.11
+            },
+            {
+              "x": 6.9,
+              "y": 80.71,
+              "date": "2025-02-19",
+              "v": 206.63
+            },
+            {
+              "x": 8.05,
+              "y": 81.68,
+              "date": "2025-02-26",
+              "v": 205.8
+            },
+            {
+              "x": 9.2,
+              "y": 80.58,
+              "date": "2025-03-05",
+              "v": 206.74
+            },
+            {
+              "x": 10.34,
+              "y": 78.51,
+              "date": "2025-03-12",
+              "v": 208.51
+            },
+            {
+              "x": 11.49,
+              "y": 77.66,
+              "date": "2025-03-19",
+              "v": 209.24
+            },
+            {
+              "x": 12.64,
+              "y": 78.42,
+              "date": "2025-03-26",
+              "v": 208.59
+            },
+            {
+              "x": 13.79,
+              "y": 78.22,
+              "date": "2025-04-02",
+              "v": 208.76
+            },
+            {
+              "x": 14.94,
+              "y": 76.45,
+              "date": "2025-04-09",
+              "v": 210.28
+            },
+            {
+              "x": 16.09,
+              "y": 75.06,
+              "date": "2025-04-16",
+              "v": 211.47
+            },
+            {
+              "x": 17.24,
+              "y": 73.99,
+              "date": "2025-04-23",
+              "v": 212.39
+            },
+            {
+              "x": 18.39,
+              "y": 73.38,
+              "date": "2025-04-30",
+              "v": 212.91
+            },
+            {
+              "x": 19.54,
+              "y": 72.12,
+              "date": "2025-05-07",
+              "v": 213.99
+            },
+            {
+              "x": 20.69,
+              "y": 73.57,
+              "date": "2025-05-14",
+              "v": 212.75
+            },
+            {
+              "x": 21.84,
+              "y": 74.64,
+              "date": "2025-05-21",
+              "v": 211.83
+            },
+            {
+              "x": 22.99,
+              "y": 75.15,
+              "date": "2025-05-28",
+              "v": 211.39
+            },
+            {
+              "x": 24.14,
+              "y": 74.97,
+              "date": "2025-06-04",
+              "v": 211.55
+            },
+            {
+              "x": 25.29,
+              "y": 75.01,
+              "date": "2025-06-11",
+              "v": 211.51
+            },
+            {
+              "x": 26.44,
+              "y": 74.73,
+              "date": "2025-06-18",
+              "v": 211.75
+            },
+            {
+              "x": 27.59,
+              "y": 74.36,
+              "date": "2025-06-25",
+              "v": 212.07
+            },
+            {
+              "x": 28.74,
+              "y": 73.94,
+              "date": "2025-07-02",
+              "v": 212.43
+            },
+            {
+              "x": 29.89,
+              "y": 73.38,
+              "date": "2025-07-09",
+              "v": 212.91
+            },
+            {
+              "x": 31.03,
+              "y": 74.92,
+              "date": "2025-07-16",
+              "v": 211.59
+            },
+            {
+              "x": 32.18,
+              "y": 72.73,
+              "date": "2025-07-23",
+              "v": 213.47
+            },
+            {
+              "x": 33.33,
+              "y": 71.98,
+              "date": "2025-07-30",
+              "v": 214.11
+            },
+            {
+              "x": 34.48,
+              "y": 68.7,
+              "date": "2025-08-06",
+              "v": 216.92
+            },
+            {
+              "x": 35.63,
+              "y": 69.9,
+              "date": "2025-08-13",
+              "v": 215.89
+            },
+            {
+              "x": 36.78,
+              "y": 70.32,
+              "date": "2025-08-20",
+              "v": 215.53
+            },
+            {
+              "x": 37.93,
+              "y": 73.43,
+              "date": "2025-08-27",
+              "v": 212.87
+            },
+            {
+              "x": 39.08,
+              "y": 71.47,
+              "date": "2025-09-03",
+              "v": 214.55
+            },
+            {
+              "x": 40.23,
+              "y": 71.61,
+              "date": "2025-09-10",
+              "v": 214.43
+            },
+            {
+              "x": 41.38,
+              "y": 69.9,
+              "date": "2025-09-17",
+              "v": 215.89
+            },
+            {
+              "x": 42.53,
+              "y": 72.03,
+              "date": "2025-09-24",
+              "v": 214.07
+            },
+            {
+              "x": 43.68,
+              "y": 72.07,
+              "date": "2025-10-01",
+              "v": 214.03
+            },
+            {
+              "x": 44.83,
+              "y": 72.4,
+              "date": "2025-10-08",
+              "v": 213.75
+            },
+            {
+              "x": 45.98,
+              "y": 71.23,
+              "date": "2025-10-15",
+              "v": 214.75
+            },
+            {
+              "x": 47.13,
+              "y": 70.86,
+              "date": "2025-10-22",
+              "v": 215.07
+            },
+            {
+              "x": 48.28,
+              "y": 70.75,
+              "date": "2025-10-29",
+              "v": 215.16
+            },
+            {
+              "x": 49.43,
+              "y": 70.94,
+              "date": "2025-11-05",
+              "v": 215.0
+            },
+            {
+              "x": 50.57,
+              "y": 69.66,
+              "date": "2025-11-12",
+              "v": 216.1
+            },
+            {
+              "x": 51.72,
+              "y": 67.84,
+              "date": "2025-11-19",
+              "v": 217.66
+            },
+            {
+              "x": 52.87,
+              "y": 67.44,
+              "date": "2025-11-26",
+              "v": 218.0
+            },
+            {
+              "x": 54.02,
+              "y": 67.84,
+              "date": "2025-12-03",
+              "v": 217.66
+            },
+            {
+              "x": 55.17,
+              "y": 70.66,
+              "date": "2025-12-10",
+              "v": 215.24
+            },
+            {
+              "x": 56.32,
+              "y": 70.75,
+              "date": "2025-12-17",
+              "v": 215.16
+            },
+            {
+              "x": 57.47,
+              "y": 70.0,
+              "date": "2025-12-24",
+              "v": 215.81
+            },
+            {
+              "x": 58.62,
+              "y": 68.47,
+              "date": "2025-12-31",
+              "v": 217.12
+            },
+            {
+              "x": 59.77,
+              "y": 65.62,
+              "date": "2026-01-07",
+              "v": 219.56
+            },
+            {
+              "x": 60.92,
+              "y": 67.74,
+              "date": "2026-01-14",
+              "v": 217.74
+            },
+            {
+              "x": 62.07,
+              "y": 66.82,
+              "date": "2026-01-21",
+              "v": 218.53
+            },
+            {
+              "x": 63.22,
+              "y": 67.16,
+              "date": "2026-01-28",
+              "v": 218.24
+            },
+            {
+              "x": 64.37,
+              "y": 66.87,
+              "date": "2026-02-04",
+              "v": 218.49
+            },
+            {
+              "x": 65.52,
+              "y": 67.05,
+              "date": "2026-02-11",
+              "v": 218.33
+            },
+            {
+              "x": 66.67,
+              "y": 67.25,
+              "date": "2026-02-18",
+              "v": 218.16
+            },
+            {
+              "x": 67.82,
+              "y": 66.34,
+              "date": "2026-02-25",
+              "v": 218.94
+            },
+            {
+              "x": 68.97,
+              "y": 67.49,
+              "date": "2026-03-04",
+              "v": 217.96
+            },
+            {
+              "x": 70.11,
+              "y": 67.59,
+              "date": "2026-03-11",
+              "v": 217.87
+            },
+            {
+              "x": 71.26,
+              "y": 66.91,
+              "date": "2026-03-18",
+              "v": 218.45
+            },
+            {
+              "x": 72.41,
+              "y": 66.48,
+              "date": "2026-03-25",
+              "v": 218.82
+            },
+            {
+              "x": 73.56,
+              "y": 65.71,
+              "date": "2026-04-01",
+              "v": 219.48
+            },
+            {
+              "x": 74.71,
+              "y": 67.64,
+              "date": "2026-04-08",
+              "v": 217.83
+            },
+            {
+              "x": 75.86,
+              "y": 66.25,
+              "date": "2026-04-15",
+              "v": 219.02
+            },
+            {
+              "x": 77.01,
+              "y": 65.71,
+              "date": "2026-04-22",
+              "v": 219.48
+            },
+            {
+              "x": 78.16,
+              "y": 65.76,
+              "date": "2026-04-29",
+              "v": 219.44
+            },
+            {
+              "x": 79.31,
+              "y": 65.47,
+              "date": "2026-05-06",
+              "v": 219.69
+            },
+            {
+              "x": 80.46,
+              "y": 65.85,
+              "date": "2026-05-13",
+              "v": 219.36
+            },
+            {
+              "x": 81.61,
+              "y": 63.81,
+              "date": "2026-05-20",
+              "v": 221.11
+            },
+            {
+              "x": 82.76,
+              "y": 64.35,
+              "date": "2026-05-27",
+              "v": 220.65
+            },
+            {
+              "x": 83.91,
+              "y": 65.51,
+              "date": "2026-06-03",
+              "v": 219.65
+            },
+            {
+              "x": 85.06,
+              "y": 67.3,
+              "date": "2026-06-10",
+              "v": 218.12
+            },
+            {
+              "x": 86.21,
+              "y": 67.3,
+              "date": "2026-06-17",
+              "v": 218.12
+            },
+            {
+              "x": 87.36,
+              "y": 67.21,
+              "date": "2026-06-24",
+              "v": 218.2
+            },
+            {
+              "x": 88.51,
+              "y": 66.53,
+              "date": "2026-07-01",
+              "v": 218.78
+            },
+            {
+              "x": 89.66,
+              "y": 69.9,
+              "date": "2026-07-08",
+              "v": 215.89
+            },
+            {
+              "x": 90.8,
+              "y": 71.23,
+              "date": "2026-07-15",
+              "v": 214.75
+            },
+            {
+              "x": 91.95,
+              "y": 69.18,
+              "date": "2026-07-22",
+              "v": 216.51
+            },
+            {
+              "x": 93.1,
+              "y": 68.81,
+              "date": "2026-07-29",
+              "v": 216.83
+            },
+            {
+              "x": 94.25,
+              "y": 67.1,
+              "date": "2026-08-05",
+              "v": 218.29
+            },
+            {
+              "x": 95.4,
+              "y": 68.95,
+              "date": "2026-08-12",
+              "v": 216.71
+            },
+            {
+              "x": 100.0,
+              "y": 48.95,
+              "date": "2026-08-22",
+              "v": 233.8425
+            }
+          ],
+          "polyline": "0.0,78.04 1.15,81.63 2.3,86.76 3.45,86.39 4.6,83.57 5.75,81.32 6.9,80.71 8.05,81.68 9.2,80.58 10.34,78.51 11.49,77.66 12.64,78.42 13.79,78.22 14.94,76.45 16.09,75.06 17.24,73.99 18.39,73.38 19.54,72.12 20.69,73.57 21.84,74.64 22.99,75.15 24.14,74.97 25.29,75.01 26.44,74.73 27.59,74.36 28.74,73.94 29.89,73.38 31.03,74.92 32.18,72.73 33.33,71.98 34.48,68.7 35.63,69.9 36.78,70.32 37.93,73.43 39.08,71.47 40.23,71.61 41.38,69.9 42.53,72.03 43.68,72.07 44.83,72.4 45.98,71.23 47.13,70.86 48.28,70.75 49.43,70.94 50.57,69.66 51.72,67.84 52.87,67.44 54.02,67.84 55.17,70.66 56.32,70.75 57.47,70.0 58.62,68.47 59.77,65.62 60.92,67.74 62.07,66.82 63.22,67.16 64.37,66.87 65.52,67.05 66.67,67.25 67.82,66.34 68.97,67.49 70.11,67.59 71.26,66.91 72.41,66.48 73.56,65.71 74.71,67.64 75.86,66.25 77.01,65.71 78.16,65.76 79.31,65.47 80.46,65.85 81.61,63.81 82.76,64.35 83.91,65.51 85.06,67.3 86.21,67.3 87.36,67.21 88.51,66.53 89.66,69.9 90.8,71.23 91.95,69.18 93.1,68.81 94.25,67.1 95.4,68.95 100.0,48.95",
+          "last": {
+            "x": 100.0,
+            "y": 48.95,
+            "date": "2026-08-22",
+            "v": 233.8425
+          },
+          "band": {
+            "y_low": 72.43,
+            "y_high": 13.24,
+            "low": 213.72,
+            "high": 264.45,
+            "kind": "spread",
+            "n": 4
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 4,
+          "label_y": 48.95,
+          "label_nudged": false,
+          "sx": 51.05,
+          "sx_low": 27.57,
+          "sx_high": 86.76
         }
       ]
     },
@@ -2252,18 +4521,112 @@
       "metric": "prob",
       "total": null,
       "dates": [
+        "2025-01-01",
+        "2025-01-15",
+        "2025-01-22",
+        "2025-01-29",
+        "2025-02-05",
+        "2025-02-12",
+        "2025-02-19",
+        "2025-02-26",
+        "2025-03-05",
+        "2025-03-12",
+        "2025-03-19",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-09",
+        "2025-04-16",
+        "2025-04-23",
+        "2025-04-30",
+        "2025-05-07",
+        "2025-05-14",
+        "2025-05-21",
+        "2025-05-28",
+        "2025-06-04",
+        "2025-06-11",
+        "2025-06-18",
+        "2025-06-25",
+        "2025-07-02",
+        "2025-07-09",
+        "2025-07-16",
+        "2025-07-23",
+        "2025-07-30",
+        "2025-08-06",
+        "2025-08-13",
+        "2025-08-20",
+        "2025-08-27",
+        "2025-09-03",
+        "2025-09-10",
+        "2025-09-17",
+        "2025-09-24",
+        "2025-10-01",
+        "2025-10-08",
+        "2025-10-15",
+        "2025-10-22",
+        "2025-10-29",
+        "2025-11-05",
+        "2025-11-12",
+        "2025-11-19",
+        "2025-11-26",
+        "2025-12-03",
+        "2025-12-10",
+        "2025-12-17",
+        "2025-12-24",
+        "2025-12-31",
+        "2026-01-07",
+        "2026-01-14",
+        "2026-01-21",
+        "2026-01-28",
+        "2026-02-04",
+        "2026-02-11",
+        "2026-02-18",
+        "2026-02-25",
+        "2026-03-04",
+        "2026-03-11",
+        "2026-03-18",
+        "2026-03-25",
+        "2026-04-01",
+        "2026-04-08",
+        "2026-04-15",
+        "2026-04-22",
+        "2026-04-29",
+        "2026-05-06",
+        "2026-05-13",
+        "2026-05-20",
+        "2026-05-27",
+        "2026-06-03",
+        "2026-06-10",
+        "2026-06-17",
+        "2026-06-24",
+        "2026-07-01",
+        "2026-07-08",
+        "2026-07-15",
+        "2026-07-22",
+        "2026-07-29",
+        "2026-08-05",
+        "2026-08-12",
         "2026-08-19",
         "2026-08-20",
         "2026-08-21",
         "2026-08-22"
       ],
-      "n_dates": 4,
-      "dense": false,
+      "n_dates": 88,
+      "dense": true,
       "date_ticks": [
         {
-          "date": "2026-08-19",
+          "date": "2025-01-01",
           "x": 0.0,
           "anchor": "start"
+        },
+        {
+          "date": "2025-07-30",
+          "x": 33.33,
+          "anchor": "middle"
+        },
+        {
+          "date": "2026-02-18",
+          "x": 66.67,
+          "anchor": "middle"
         },
         {
           "date": "2026-08-22",
@@ -2273,18 +4636,23 @@
       ],
       "x_ticks": [
         {
+          "v": 0.0,
+          "x": 0.0,
+          "label": "0%"
+        },
+        {
           "v": 0.25,
-          "x": 6.52,
+          "x": 25.0,
           "label": "25%"
         },
         {
           "v": 0.5,
-          "x": 37.68,
+          "x": 50.0,
           "label": "50%"
         },
         {
           "v": 0.75,
-          "x": 68.84,
+          "x": 75.0,
           "label": "75%"
         },
         {
@@ -2295,18 +4663,23 @@
       ],
       "y_ticks": [
         {
+          "v": 0.0,
+          "y": 100.0,
+          "label": "0%"
+        },
+        {
           "v": 0.25,
-          "y": 93.48,
+          "y": 75.0,
           "label": "25%"
         },
         {
           "v": 0.5,
-          "y": 62.32,
+          "y": 50.0,
           "label": "50%"
         },
         {
           "v": 0.75,
-          "y": 31.16,
+          "y": 25.0,
           "label": "75%"
         },
         {
@@ -2315,60 +4688,11 @@
           "label": "100%"
         }
       ],
-      "ref_y": 62.32,
+      "ref_y": 50.0,
       "ref_label": "even",
       "ref_value": 0.5,
       "zero_y": null,
       "series": [
-        {
-          "key": "fundamentals",
-          "label": "Fundamentals",
-          "color": "#4a3aa7",
-          "color_dark": "#9085e9",
-          "points": [
-            {
-              "x": 33.33,
-              "y": 6.34,
-              "date": "2026-08-20",
-              "v": 0.9491
-            },
-            {
-              "x": 66.67,
-              "y": 46.03,
-              "date": "2026-08-21",
-              "v": 0.6307
-            },
-            {
-              "x": 100.0,
-              "y": 46.03,
-              "date": "2026-08-22",
-              "v": 0.6307
-            }
-          ],
-          "polyline": "33.33,6.34 66.67,46.03 100.0,46.03",
-          "last": {
-            "x": 100.0,
-            "y": 46.03,
-            "date": "2026-08-22",
-            "v": 0.6307
-          },
-          "band": {
-            "y_low": 85.71,
-            "y_high": 6.34,
-            "low": 0.3123,
-            "high": 0.9491,
-            "kind": "spread",
-            "n": 2
-          },
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 2,
-          "label_y": 55.64,
-          "label_nudged": true,
-          "sx": 53.97,
-          "sx_low": 14.29,
-          "sx_high": 93.66
-        },
         {
           "key": "polling",
           "label": "Polling",
@@ -2376,34 +4700,34 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 33.33,
-              "y": 40.35,
+              "x": 97.7,
+              "y": 32.37,
               "date": "2026-08-20",
               "v": 0.6763
             },
             {
-              "x": 66.67,
-              "y": 31.76,
+              "x": 98.85,
+              "y": 25.48,
               "date": "2026-08-21",
               "v": 0.7452
             },
             {
               "x": 100.0,
-              "y": 33.78,
+              "y": 27.1,
               "date": "2026-08-22",
               "v": 0.729
             }
           ],
-          "polyline": "33.33,40.35 66.67,31.76 100.0,33.78",
+          "polyline": "97.7,32.37 98.85,25.48 100.0,27.1",
           "last": {
             "x": 100.0,
-            "y": 33.78,
+            "y": 27.1,
             "date": "2026-08-22",
             "v": 0.729
           },
           "band": {
-            "y_low": 37.82,
-            "y_high": 31.76,
+            "y_low": 30.34,
+            "y_high": 25.48,
             "low": 0.6966,
             "high": 0.7452,
             "kind": "spread",
@@ -2412,57 +4736,11 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 42.64,
+          "label_y": 39.35,
           "label_nudged": true,
-          "sx": 66.22,
-          "sx_low": 62.18,
-          "sx_high": 68.24
-        },
-        {
-          "key": "professional",
-          "label": "Professional",
-          "color": "#eda100",
-          "color_dark": "#c98500",
-          "points": [
-            {
-              "x": 0.0,
-              "y": 16.38,
-              "date": "2026-08-19",
-              "v": 0.8686
-            },
-            {
-              "x": 33.33,
-              "y": 16.5,
-              "date": "2026-08-20",
-              "v": 0.8676
-            },
-            {
-              "x": 66.67,
-              "y": 16.64,
-              "date": "2026-08-21",
-              "v": 0.8665
-            },
-            {
-              "x": 100.0,
-              "y": 16.64,
-              "date": "2026-08-22",
-              "v": 0.8665
-            }
-          ],
-          "polyline": "0.0,16.38 33.33,16.5 66.67,16.64 100.0,16.64",
-          "last": {
-            "x": 100.0,
-            "y": 16.64,
-            "date": "2026-08-22",
-            "v": 0.8665
-          },
-          "band": null,
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 1,
-          "label_y": 16.64,
-          "label_nudged": false,
-          "sx": 83.36
+          "sx": 72.9,
+          "sx_low": 69.66,
+          "sx_high": 74.52
         },
         {
           "key": "market",
@@ -2471,40 +4749,40 @@
           "color_dark": "#d55181",
           "points": [
             {
-              "x": 0.0,
-              "y": 15.58,
+              "x": 96.55,
+              "y": 12.5,
               "date": "2026-08-19",
               "v": 0.875
             },
             {
-              "x": 33.33,
-              "y": 14.33,
+              "x": 97.7,
+              "y": 11.5,
               "date": "2026-08-20",
               "v": 0.885
             },
             {
-              "x": 66.67,
-              "y": 21.38,
+              "x": 98.85,
+              "y": 17.15,
               "date": "2026-08-21",
               "v": 0.8285
             },
             {
               "x": 100.0,
-              "y": 19.09,
+              "y": 15.32,
               "date": "2026-08-22",
               "v": 0.8468
             }
           ],
-          "polyline": "0.0,15.58 33.33,14.33 66.67,21.38 100.0,19.09",
+          "polyline": "96.55,12.5 97.7,11.5 98.85,17.15 100.0,15.32",
           "last": {
             "x": 100.0,
-            "y": 19.09,
+            "y": 15.32,
             "date": "2026-08-22",
             "v": 0.8468
           },
           "band": {
-            "y_low": 22.43,
-            "y_high": 15.75,
+            "y_low": 18.0,
+            "y_high": 12.64,
             "low": 0.82,
             "high": 0.8736,
             "kind": "spread",
@@ -2513,11 +4791,647 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 2,
-          "label_y": 29.64,
+          "label_y": 26.35,
           "label_nudged": true,
-          "sx": 80.91,
-          "sx_low": 77.57,
-          "sx_high": 84.25
+          "sx": 84.68,
+          "sx_low": 82.0,
+          "sx_high": 87.36
+        },
+        {
+          "key": "fundamentals",
+          "label": "Fundamentals",
+          "color": "#4a3aa7",
+          "color_dark": "#9085e9",
+          "points": [
+            {
+              "x": 97.7,
+              "y": 5.09,
+              "date": "2026-08-20",
+              "v": 0.9491
+            },
+            {
+              "x": 98.85,
+              "y": 36.93,
+              "date": "2026-08-21",
+              "v": 0.6307
+            },
+            {
+              "x": 100.0,
+              "y": 36.93,
+              "date": "2026-08-22",
+              "v": 0.6307
+            }
+          ],
+          "polyline": "97.7,5.09 98.85,36.93 100.0,36.93",
+          "last": {
+            "x": 100.0,
+            "y": 36.93,
+            "date": "2026-08-22",
+            "v": 0.6307
+          },
+          "band": {
+            "y_low": 68.77,
+            "y_high": 5.09,
+            "low": 0.3123,
+            "high": 0.9491,
+            "kind": "spread",
+            "n": 2
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 2,
+          "label_y": 65.35,
+          "label_nudged": true,
+          "sx": 63.07,
+          "sx_low": 31.23,
+          "sx_high": 94.91
+        },
+        {
+          "key": "professional",
+          "label": "Professional",
+          "color": "#eda100",
+          "color_dark": "#c98500",
+          "points": [
+            {
+              "x": 96.55,
+              "y": 13.14,
+              "date": "2026-08-19",
+              "v": 0.8686
+            },
+            {
+              "x": 97.7,
+              "y": 13.24,
+              "date": "2026-08-20",
+              "v": 0.8676
+            },
+            {
+              "x": 98.85,
+              "y": 13.35,
+              "date": "2026-08-21",
+              "v": 0.8665
+            },
+            {
+              "x": 100.0,
+              "y": 13.35,
+              "date": "2026-08-22",
+              "v": 0.8665
+            }
+          ],
+          "polyline": "96.55,13.14 97.7,13.24 98.85,13.35 100.0,13.35",
+          "last": {
+            "x": 100.0,
+            "y": 13.35,
+            "date": "2026-08-22",
+            "v": 0.8665
+          },
+          "band": null,
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 1,
+          "label_y": 13.35,
+          "label_nudged": false,
+          "sx": 86.65
+        },
+        {
+          "key": "academic",
+          "label": "Academic",
+          "color": "#0077a8",
+          "color_dark": "#2f9fbd",
+          "points": [
+            {
+              "x": 0.0,
+              "y": 71.61,
+              "date": "2025-01-01",
+              "v": 0.2839
+            },
+            {
+              "x": 1.15,
+              "y": 77.88,
+              "date": "2025-01-15",
+              "v": 0.2212
+            },
+            {
+              "x": 2.3,
+              "y": 85.22,
+              "date": "2025-01-22",
+              "v": 0.1478
+            },
+            {
+              "x": 3.45,
+              "y": 84.76,
+              "date": "2025-01-29",
+              "v": 0.1524
+            },
+            {
+              "x": 4.6,
+              "y": 80.79,
+              "date": "2025-02-05",
+              "v": 0.1921
+            },
+            {
+              "x": 5.75,
+              "y": 77.42,
+              "date": "2025-02-12",
+              "v": 0.2258
+            },
+            {
+              "x": 6.9,
+              "y": 76.35,
+              "date": "2025-02-19",
+              "v": 0.2365
+            },
+            {
+              "x": 8.05,
+              "y": 77.95,
+              "date": "2025-02-26",
+              "v": 0.2205
+            },
+            {
+              "x": 9.2,
+              "y": 76.09,
+              "date": "2025-03-05",
+              "v": 0.2391
+            },
+            {
+              "x": 10.34,
+              "y": 72.54,
+              "date": "2025-03-12",
+              "v": 0.2746
+            },
+            {
+              "x": 11.49,
+              "y": 70.93,
+              "date": "2025-03-19",
+              "v": 0.2907
+            },
+            {
+              "x": 12.64,
+              "y": 72.34,
+              "date": "2025-03-26",
+              "v": 0.2766
+            },
+            {
+              "x": 13.79,
+              "y": 71.97,
+              "date": "2025-04-02",
+              "v": 0.2803
+            },
+            {
+              "x": 14.94,
+              "y": 68.66,
+              "date": "2025-04-09",
+              "v": 0.3134
+            },
+            {
+              "x": 16.09,
+              "y": 66.13,
+              "date": "2025-04-16",
+              "v": 0.3387
+            },
+            {
+              "x": 17.24,
+              "y": 64.0,
+              "date": "2025-04-23",
+              "v": 0.36
+            },
+            {
+              "x": 18.39,
+              "y": 62.8,
+              "date": "2025-04-30",
+              "v": 0.372
+            },
+            {
+              "x": 19.54,
+              "y": 60.24,
+              "date": "2025-05-07",
+              "v": 0.3976
+            },
+            {
+              "x": 20.69,
+              "y": 63.1,
+              "date": "2025-05-14",
+              "v": 0.369
+            },
+            {
+              "x": 21.84,
+              "y": 65.34,
+              "date": "2025-05-21",
+              "v": 0.3466
+            },
+            {
+              "x": 22.99,
+              "y": 66.27,
+              "date": "2025-05-28",
+              "v": 0.3373
+            },
+            {
+              "x": 24.14,
+              "y": 65.92,
+              "date": "2025-06-04",
+              "v": 0.3408
+            },
+            {
+              "x": 25.29,
+              "y": 66.03,
+              "date": "2025-06-11",
+              "v": 0.3397
+            },
+            {
+              "x": 26.44,
+              "y": 65.46,
+              "date": "2025-06-18",
+              "v": 0.3454
+            },
+            {
+              "x": 27.59,
+              "y": 64.79,
+              "date": "2025-06-25",
+              "v": 0.3521
+            },
+            {
+              "x": 28.74,
+              "y": 63.9,
+              "date": "2025-07-02",
+              "v": 0.361
+            },
+            {
+              "x": 29.89,
+              "y": 62.8,
+              "date": "2025-07-09",
+              "v": 0.372
+            },
+            {
+              "x": 31.03,
+              "y": 65.81,
+              "date": "2025-07-16",
+              "v": 0.3419
+            },
+            {
+              "x": 32.18,
+              "y": 61.38,
+              "date": "2025-07-23",
+              "v": 0.3862
+            },
+            {
+              "x": 33.33,
+              "y": 59.97,
+              "date": "2025-07-30",
+              "v": 0.4003
+            },
+            {
+              "x": 34.48,
+              "y": 53.42,
+              "date": "2025-08-06",
+              "v": 0.4658
+            },
+            {
+              "x": 35.63,
+              "y": 55.83,
+              "date": "2025-08-13",
+              "v": 0.4417
+            },
+            {
+              "x": 36.78,
+              "y": 56.69,
+              "date": "2025-08-20",
+              "v": 0.4331
+            },
+            {
+              "x": 37.93,
+              "y": 62.84,
+              "date": "2025-08-27",
+              "v": 0.3716
+            },
+            {
+              "x": 39.08,
+              "y": 58.92,
+              "date": "2025-09-03",
+              "v": 0.4108
+            },
+            {
+              "x": 40.23,
+              "y": 59.25,
+              "date": "2025-09-10",
+              "v": 0.4075
+            },
+            {
+              "x": 41.38,
+              "y": 55.83,
+              "date": "2025-09-17",
+              "v": 0.4417
+            },
+            {
+              "x": 42.53,
+              "y": 60.04,
+              "date": "2025-09-24",
+              "v": 0.3996
+            },
+            {
+              "x": 43.68,
+              "y": 60.15,
+              "date": "2025-10-01",
+              "v": 0.3985
+            },
+            {
+              "x": 44.83,
+              "y": 60.77,
+              "date": "2025-10-08",
+              "v": 0.3923
+            },
+            {
+              "x": 45.98,
+              "y": 58.53,
+              "date": "2025-10-15",
+              "v": 0.4147
+            },
+            {
+              "x": 47.13,
+              "y": 57.78,
+              "date": "2025-10-22",
+              "v": 0.4222
+            },
+            {
+              "x": 48.28,
+              "y": 57.56,
+              "date": "2025-10-29",
+              "v": 0.4244
+            },
+            {
+              "x": 49.43,
+              "y": 57.96,
+              "date": "2025-11-05",
+              "v": 0.4204
+            },
+            {
+              "x": 50.57,
+              "y": 55.44,
+              "date": "2025-11-12",
+              "v": 0.4456
+            },
+            {
+              "x": 51.72,
+              "y": 51.67,
+              "date": "2025-11-19",
+              "v": 0.4833
+            },
+            {
+              "x": 52.87,
+              "y": 50.86,
+              "date": "2025-11-26",
+              "v": 0.4914
+            },
+            {
+              "x": 54.02,
+              "y": 51.67,
+              "date": "2025-12-03",
+              "v": 0.4833
+            },
+            {
+              "x": 55.17,
+              "y": 57.4,
+              "date": "2025-12-10",
+              "v": 0.426
+            },
+            {
+              "x": 56.32,
+              "y": 57.56,
+              "date": "2025-12-17",
+              "v": 0.4244
+            },
+            {
+              "x": 57.47,
+              "y": 56.02,
+              "date": "2025-12-24",
+              "v": 0.4398
+            },
+            {
+              "x": 58.62,
+              "y": 52.93,
+              "date": "2025-12-31",
+              "v": 0.4707
+            },
+            {
+              "x": 59.77,
+              "y": 47.11,
+              "date": "2026-01-07",
+              "v": 0.5289
+            },
+            {
+              "x": 60.92,
+              "y": 51.51,
+              "date": "2026-01-14",
+              "v": 0.4849
+            },
+            {
+              "x": 62.07,
+              "y": 49.57,
+              "date": "2026-01-21",
+              "v": 0.5043
+            },
+            {
+              "x": 63.22,
+              "y": 50.24,
+              "date": "2026-01-28",
+              "v": 0.4976
+            },
+            {
+              "x": 64.37,
+              "y": 49.66,
+              "date": "2026-02-04",
+              "v": 0.5034
+            },
+            {
+              "x": 65.52,
+              "y": 50.05,
+              "date": "2026-02-11",
+              "v": 0.4995
+            },
+            {
+              "x": 66.67,
+              "y": 50.41,
+              "date": "2026-02-18",
+              "v": 0.4959
+            },
+            {
+              "x": 67.82,
+              "y": 48.52,
+              "date": "2026-02-25",
+              "v": 0.5148
+            },
+            {
+              "x": 68.97,
+              "y": 51.01,
+              "date": "2026-03-04",
+              "v": 0.4899
+            },
+            {
+              "x": 70.11,
+              "y": 51.16,
+              "date": "2026-03-11",
+              "v": 0.4884
+            },
+            {
+              "x": 71.26,
+              "y": 49.74,
+              "date": "2026-03-18",
+              "v": 0.5026
+            },
+            {
+              "x": 72.41,
+              "y": 48.88,
+              "date": "2026-03-25",
+              "v": 0.5112
+            },
+            {
+              "x": 73.56,
+              "y": 47.28,
+              "date": "2026-04-01",
+              "v": 0.5272
+            },
+            {
+              "x": 74.71,
+              "y": 51.28,
+              "date": "2026-04-08",
+              "v": 0.4872
+            },
+            {
+              "x": 75.86,
+              "y": 48.34,
+              "date": "2026-04-15",
+              "v": 0.5166
+            },
+            {
+              "x": 77.01,
+              "y": 47.28,
+              "date": "2026-04-22",
+              "v": 0.5272
+            },
+            {
+              "x": 78.16,
+              "y": 47.32,
+              "date": "2026-04-29",
+              "v": 0.5268
+            },
+            {
+              "x": 79.31,
+              "y": 46.79,
+              "date": "2026-05-06",
+              "v": 0.5321
+            },
+            {
+              "x": 80.46,
+              "y": 47.51,
+              "date": "2026-05-13",
+              "v": 0.5249
+            },
+            {
+              "x": 81.61,
+              "y": 43.67,
+              "date": "2026-05-20",
+              "v": 0.5633
+            },
+            {
+              "x": 82.76,
+              "y": 44.66,
+              "date": "2026-05-27",
+              "v": 0.5534
+            },
+            {
+              "x": 83.91,
+              "y": 46.88,
+              "date": "2026-06-03",
+              "v": 0.5312
+            },
+            {
+              "x": 85.06,
+              "y": 50.52,
+              "date": "2026-06-10",
+              "v": 0.4948
+            },
+            {
+              "x": 86.21,
+              "y": 50.52,
+              "date": "2026-06-17",
+              "v": 0.4948
+            },
+            {
+              "x": 87.36,
+              "y": 50.32,
+              "date": "2026-06-24",
+              "v": 0.4968
+            },
+            {
+              "x": 88.51,
+              "y": 48.95,
+              "date": "2026-07-01",
+              "v": 0.5105
+            },
+            {
+              "x": 89.66,
+              "y": 55.83,
+              "date": "2026-07-08",
+              "v": 0.4417
+            },
+            {
+              "x": 90.8,
+              "y": 58.53,
+              "date": "2026-07-15",
+              "v": 0.4147
+            },
+            {
+              "x": 91.95,
+              "y": 54.43,
+              "date": "2026-07-22",
+              "v": 0.4557
+            },
+            {
+              "x": 93.1,
+              "y": 53.63,
+              "date": "2026-07-29",
+              "v": 0.4637
+            },
+            {
+              "x": 94.25,
+              "y": 50.14,
+              "date": "2026-08-05",
+              "v": 0.4986
+            },
+            {
+              "x": 95.4,
+              "y": 53.93,
+              "date": "2026-08-12",
+              "v": 0.4607
+            },
+            {
+              "x": 100.0,
+              "y": 31.28,
+              "date": "2026-08-22",
+              "v": 0.6872
+            }
+          ],
+          "polyline": "0.0,71.61 1.15,77.88 2.3,85.22 3.45,84.76 4.6,80.79 5.75,77.42 6.9,76.35 8.05,77.95 9.2,76.09 10.34,72.54 11.49,70.93 12.64,72.34 13.79,71.97 14.94,68.66 16.09,66.13 17.24,64.0 18.39,62.8 19.54,60.24 20.69,63.1 21.84,65.34 22.99,66.27 24.14,65.92 25.29,66.03 26.44,65.46 27.59,64.79 28.74,63.9 29.89,62.8 31.03,65.81 32.18,61.38 33.33,59.97 34.48,53.42 35.63,55.83 36.78,56.69 37.93,62.84 39.08,58.92 40.23,59.25 41.38,55.83 42.53,60.04 43.68,60.15 44.83,60.77 45.98,58.53 47.13,57.78 48.28,57.56 49.43,57.96 50.57,55.44 51.72,51.67 52.87,50.86 54.02,51.67 55.17,57.4 56.32,57.56 57.47,56.02 58.62,52.93 59.77,47.11 60.92,51.51 62.07,49.57 63.22,50.24 64.37,49.66 65.52,50.05 66.67,50.41 67.82,48.52 68.97,51.01 70.11,51.16 71.26,49.74 72.41,48.88 73.56,47.28 74.71,51.28 75.86,48.34 77.01,47.28 78.16,47.32 79.31,46.79 80.46,47.51 81.61,43.67 82.76,44.66 83.91,46.88 85.06,50.52 86.21,50.52 87.36,50.32 88.51,48.95 89.66,55.83 90.8,58.53 91.95,54.43 93.1,53.63 94.25,50.14 95.4,53.93 100.0,31.28",
+          "last": {
+            "x": 100.0,
+            "y": 31.28,
+            "date": "2026-08-22",
+            "v": 0.6872
+          },
+          "band": {
+            "y_low": 60.89,
+            "y_high": 1.21,
+            "low": 0.3911,
+            "high": 0.9879,
+            "kind": "spread",
+            "n": 4
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 4,
+          "label_y": 52.35,
+          "label_nudged": true,
+          "sx": 68.72,
+          "sx_low": 39.11,
+          "sx_high": 98.79
         }
       ]
     },
@@ -2529,18 +5443,112 @@
       "metric": "seats",
       "total": 100,
       "dates": [
+        "2025-01-01",
+        "2025-01-15",
+        "2025-01-22",
+        "2025-01-29",
+        "2025-02-05",
+        "2025-02-12",
+        "2025-02-19",
+        "2025-02-26",
+        "2025-03-05",
+        "2025-03-12",
+        "2025-03-19",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-09",
+        "2025-04-16",
+        "2025-04-23",
+        "2025-04-30",
+        "2025-05-07",
+        "2025-05-14",
+        "2025-05-21",
+        "2025-05-28",
+        "2025-06-04",
+        "2025-06-11",
+        "2025-06-18",
+        "2025-06-25",
+        "2025-07-02",
+        "2025-07-09",
+        "2025-07-16",
+        "2025-07-23",
+        "2025-07-30",
+        "2025-08-06",
+        "2025-08-13",
+        "2025-08-20",
+        "2025-08-27",
+        "2025-09-03",
+        "2025-09-10",
+        "2025-09-17",
+        "2025-09-24",
+        "2025-10-01",
+        "2025-10-08",
+        "2025-10-15",
+        "2025-10-22",
+        "2025-10-29",
+        "2025-11-05",
+        "2025-11-12",
+        "2025-11-19",
+        "2025-11-26",
+        "2025-12-03",
+        "2025-12-10",
+        "2025-12-17",
+        "2025-12-24",
+        "2025-12-31",
+        "2026-01-07",
+        "2026-01-14",
+        "2026-01-21",
+        "2026-01-28",
+        "2026-02-04",
+        "2026-02-11",
+        "2026-02-18",
+        "2026-02-25",
+        "2026-03-04",
+        "2026-03-11",
+        "2026-03-18",
+        "2026-03-25",
+        "2026-04-01",
+        "2026-04-08",
+        "2026-04-15",
+        "2026-04-22",
+        "2026-04-29",
+        "2026-05-06",
+        "2026-05-13",
+        "2026-05-20",
+        "2026-05-27",
+        "2026-06-03",
+        "2026-06-10",
+        "2026-06-17",
+        "2026-06-24",
+        "2026-07-01",
+        "2026-07-08",
+        "2026-07-15",
+        "2026-07-22",
+        "2026-07-29",
+        "2026-08-05",
+        "2026-08-12",
         "2026-08-19",
         "2026-08-20",
         "2026-08-21",
         "2026-08-22"
       ],
-      "n_dates": 4,
-      "dense": false,
+      "n_dates": 88,
+      "dense": true,
       "date_ticks": [
         {
-          "date": "2026-08-19",
+          "date": "2025-01-01",
           "x": 0.0,
           "anchor": "start"
+        },
+        {
+          "date": "2025-07-30",
+          "x": 33.33,
+          "anchor": "middle"
+        },
+        {
+          "date": "2026-02-18",
+          "x": 66.67,
+          "anchor": "middle"
         },
         {
           "date": "2026-08-22",
@@ -2550,102 +5558,43 @@
       ],
       "x_ticks": [
         {
-          "v": 45.0,
-          "x": 0.0,
+          "v": 45,
+          "x": 7.92,
           "label": "45"
         },
         {
-          "v": 47.5,
-          "x": 29.45,
-          "label": "48"
-        },
-        {
-          "v": 50.0,
-          "x": 58.89,
+          "v": 50,
+          "x": 53.96,
           "label": "50"
         },
         {
-          "v": 52.5,
-          "x": 88.34,
-          "label": "52"
+          "v": 55,
+          "x": 100.0,
+          "label": "55"
         }
       ],
       "y_ticks": [
         {
-          "v": 45.0,
-          "y": 100.0,
+          "v": 45,
+          "y": 92.08,
           "label": "45"
         },
         {
-          "v": 47.5,
-          "y": 70.55,
-          "label": "48"
-        },
-        {
-          "v": 50.0,
-          "y": 41.11,
+          "v": 50,
+          "y": 46.04,
           "label": "50"
         },
         {
-          "v": 52.5,
-          "y": 11.66,
-          "label": "52"
+          "v": 55,
+          "y": 0.0,
+          "label": "55"
         }
       ],
-      "ref_y": 29.33,
+      "ref_y": 36.83,
       "ref_label": "51 \u2014 a majority",
       "ref_value": 51,
       "zero_y": null,
       "series": [
-        {
-          "key": "fundamentals",
-          "label": "Fundamentals",
-          "color": "#4a3aa7",
-          "color_dark": "#9085e9",
-          "points": [
-            {
-              "x": 33.33,
-              "y": 23.79,
-              "date": "2026-08-20",
-              "v": 51.47
-            },
-            {
-              "x": 66.67,
-              "y": 48.82,
-              "date": "2026-08-21",
-              "v": 49.345
-            },
-            {
-              "x": 100.0,
-              "y": 48.82,
-              "date": "2026-08-22",
-              "v": 49.345
-            }
-          ],
-          "polyline": "33.33,23.79 66.67,48.82 100.0,48.82",
-          "last": {
-            "x": 100.0,
-            "y": 48.82,
-            "date": "2026-08-22",
-            "v": 49.345
-          },
-          "band": {
-            "y_low": 73.85,
-            "y_high": 23.79,
-            "low": 47.22,
-            "high": 51.47,
-            "kind": "spread",
-            "n": 2
-          },
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 2,
-          "label_y": 55.64,
-          "label_nudged": true,
-          "sx": 51.18,
-          "sx_low": 26.15,
-          "sx_high": 76.21
-        },
         {
           "key": "polling",
           "label": "Polling",
@@ -2653,34 +5602,34 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 33.33,
-              "y": 52.41,
+              "x": 97.7,
+              "y": 54.88,
               "date": "2026-08-20",
               "v": 49.04
             },
             {
-              "x": 66.67,
-              "y": 47.7,
+              "x": 98.85,
+              "y": 51.2,
               "date": "2026-08-21",
               "v": 49.44
             },
             {
               "x": 100.0,
-              "y": 48.85,
+              "y": 52.09,
               "date": "2026-08-22",
               "v": 49.3425
             }
           ],
-          "polyline": "33.33,52.41 66.67,47.7 100.0,48.85",
+          "polyline": "97.7,54.88 98.85,51.2 100.0,52.09",
           "last": {
             "x": 100.0,
-            "y": 48.85,
+            "y": 52.09,
             "date": "2026-08-22",
             "v": 49.3425
           },
           "band": {
-            "y_low": 51.12,
-            "y_high": 47.7,
+            "y_low": 53.87,
+            "y_high": 51.2,
             "low": 49.15,
             "high": 49.44,
             "kind": "spread",
@@ -2689,57 +5638,11 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 68.64,
+          "label_y": 86.24000000000001,
           "label_nudged": true,
-          "sx": 51.15,
-          "sx_low": 48.88,
-          "sx_high": 52.3
-        },
-        {
-          "key": "professional",
-          "label": "Professional",
-          "color": "#eda100",
-          "color_dark": "#c98500",
-          "points": [
-            {
-              "x": 0.0,
-              "y": 24.26,
-              "date": "2026-08-19",
-              "v": 51.43
-            },
-            {
-              "x": 33.33,
-              "y": 23.56,
-              "date": "2026-08-20",
-              "v": 51.49
-            },
-            {
-              "x": 66.67,
-              "y": 24.85,
-              "date": "2026-08-21",
-              "v": 51.38
-            },
-            {
-              "x": 100.0,
-              "y": 24.85,
-              "date": "2026-08-22",
-              "v": 51.38
-            }
-          ],
-          "polyline": "0.0,24.26 33.33,23.56 66.67,24.85 100.0,24.85",
-          "last": {
-            "x": 100.0,
-            "y": 24.85,
-            "date": "2026-08-22",
-            "v": 51.38
-          },
-          "band": null,
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 1,
-          "label_y": 24.85,
-          "label_nudged": false,
-          "sx": 75.15
+          "sx": 47.91,
+          "sx_low": 46.13,
+          "sx_high": 48.8
         },
         {
           "key": "market",
@@ -2748,22 +5651,22 @@
           "color_dark": "#d55181",
           "points": [
             {
-              "x": 66.67,
-              "y": 42.64,
+              "x": 98.85,
+              "y": 47.24,
               "date": "2026-08-21",
               "v": 49.87
             },
             {
               "x": 100.0,
-              "y": 42.64,
+              "y": 47.24,
               "date": "2026-08-22",
               "v": 49.87
             }
           ],
-          "polyline": "66.67,42.64 100.0,42.64",
+          "polyline": "98.85,47.24 100.0,47.24",
           "last": {
             "x": 100.0,
-            "y": 42.64,
+            "y": 47.24,
             "date": "2026-08-22",
             "v": 49.87
           },
@@ -2771,9 +5674,645 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": "1",
-          "label_y": 42.64,
+          "label_y": 47.24,
           "label_nudged": false,
-          "sx": 57.36
+          "sx": 52.76
+        },
+        {
+          "key": "fundamentals",
+          "label": "Fundamentals",
+          "color": "#4a3aa7",
+          "color_dark": "#9085e9",
+          "points": [
+            {
+              "x": 97.7,
+              "y": 32.5,
+              "date": "2026-08-20",
+              "v": 51.47
+            },
+            {
+              "x": 98.85,
+              "y": 52.07,
+              "date": "2026-08-21",
+              "v": 49.345
+            },
+            {
+              "x": 100.0,
+              "y": 52.07,
+              "date": "2026-08-22",
+              "v": 49.345
+            }
+          ],
+          "polyline": "97.7,32.5 98.85,52.07 100.0,52.07",
+          "last": {
+            "x": 100.0,
+            "y": 52.07,
+            "date": "2026-08-22",
+            "v": 49.345
+          },
+          "band": {
+            "y_low": 71.64,
+            "y_high": 32.5,
+            "low": 47.22,
+            "high": 51.47,
+            "kind": "spread",
+            "n": 2
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 2,
+          "label_y": 73.24000000000001,
+          "label_nudged": true,
+          "sx": 47.93,
+          "sx_low": 28.36,
+          "sx_high": 67.5
+        },
+        {
+          "key": "professional",
+          "label": "Professional",
+          "color": "#eda100",
+          "color_dark": "#c98500",
+          "points": [
+            {
+              "x": 96.55,
+              "y": 32.87,
+              "date": "2026-08-19",
+              "v": 51.43
+            },
+            {
+              "x": 97.7,
+              "y": 32.32,
+              "date": "2026-08-20",
+              "v": 51.49
+            },
+            {
+              "x": 98.85,
+              "y": 33.33,
+              "date": "2026-08-21",
+              "v": 51.38
+            },
+            {
+              "x": 100.0,
+              "y": 33.33,
+              "date": "2026-08-22",
+              "v": 51.38
+            }
+          ],
+          "polyline": "96.55,32.87 97.7,32.32 98.85,33.33 100.0,33.33",
+          "last": {
+            "x": 100.0,
+            "y": 33.33,
+            "date": "2026-08-22",
+            "v": 51.38
+          },
+          "band": null,
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 1,
+          "label_y": 33.33,
+          "label_nudged": false,
+          "sx": 66.67
+        },
+        {
+          "key": "academic",
+          "label": "Academic",
+          "color": "#0077a8",
+          "color_dark": "#2f9fbd",
+          "points": [
+            {
+              "x": 0.0,
+              "y": 73.11,
+              "date": "2025-01-01",
+              "v": 47.06
+            },
+            {
+              "x": 1.15,
+              "y": 76.52,
+              "date": "2025-01-15",
+              "v": 46.69
+            },
+            {
+              "x": 2.3,
+              "y": 81.58,
+              "date": "2025-01-22",
+              "v": 46.14
+            },
+            {
+              "x": 3.45,
+              "y": 81.22,
+              "date": "2025-01-29",
+              "v": 46.18
+            },
+            {
+              "x": 4.6,
+              "y": 78.45,
+              "date": "2025-02-05",
+              "v": 46.48
+            },
+            {
+              "x": 5.75,
+              "y": 76.15,
+              "date": "2025-02-12",
+              "v": 46.73
+            },
+            {
+              "x": 6.9,
+              "y": 75.6,
+              "date": "2025-02-19",
+              "v": 46.79
+            },
+            {
+              "x": 8.05,
+              "y": 76.52,
+              "date": "2025-02-26",
+              "v": 46.69
+            },
+            {
+              "x": 9.2,
+              "y": 75.51,
+              "date": "2025-03-05",
+              "v": 46.8
+            },
+            {
+              "x": 10.34,
+              "y": 73.48,
+              "date": "2025-03-12",
+              "v": 47.02
+            },
+            {
+              "x": 11.49,
+              "y": 72.74,
+              "date": "2025-03-19",
+              "v": 47.1
+            },
+            {
+              "x": 12.64,
+              "y": 73.39,
+              "date": "2025-03-26",
+              "v": 47.03
+            },
+            {
+              "x": 13.79,
+              "y": 73.2,
+              "date": "2025-04-02",
+              "v": 47.05
+            },
+            {
+              "x": 14.94,
+              "y": 71.55,
+              "date": "2025-04-09",
+              "v": 47.23
+            },
+            {
+              "x": 16.09,
+              "y": 70.26,
+              "date": "2025-04-16",
+              "v": 47.37
+            },
+            {
+              "x": 17.24,
+              "y": 69.24,
+              "date": "2025-04-23",
+              "v": 47.48
+            },
+            {
+              "x": 18.39,
+              "y": 68.69,
+              "date": "2025-04-30",
+              "v": 47.54
+            },
+            {
+              "x": 19.54,
+              "y": 67.5,
+              "date": "2025-05-07",
+              "v": 47.67
+            },
+            {
+              "x": 20.69,
+              "y": 68.88,
+              "date": "2025-05-14",
+              "v": 47.52
+            },
+            {
+              "x": 21.84,
+              "y": 69.89,
+              "date": "2025-05-21",
+              "v": 47.41
+            },
+            {
+              "x": 22.99,
+              "y": 70.35,
+              "date": "2025-05-28",
+              "v": 47.36
+            },
+            {
+              "x": 24.14,
+              "y": 70.17,
+              "date": "2025-06-04",
+              "v": 47.38
+            },
+            {
+              "x": 25.29,
+              "y": 70.17,
+              "date": "2025-06-11",
+              "v": 47.38
+            },
+            {
+              "x": 26.44,
+              "y": 69.98,
+              "date": "2025-06-18",
+              "v": 47.4
+            },
+            {
+              "x": 27.59,
+              "y": 69.61,
+              "date": "2025-06-25",
+              "v": 47.44
+            },
+            {
+              "x": 28.74,
+              "y": 69.24,
+              "date": "2025-07-02",
+              "v": 47.48
+            },
+            {
+              "x": 29.89,
+              "y": 68.69,
+              "date": "2025-07-09",
+              "v": 47.54
+            },
+            {
+              "x": 31.03,
+              "y": 70.17,
+              "date": "2025-07-16",
+              "v": 47.38
+            },
+            {
+              "x": 32.18,
+              "y": 68.05,
+              "date": "2025-07-23",
+              "v": 47.61
+            },
+            {
+              "x": 33.33,
+              "y": 67.4,
+              "date": "2025-07-30",
+              "v": 47.68
+            },
+            {
+              "x": 34.48,
+              "y": 64.46,
+              "date": "2025-08-06",
+              "v": 48.0
+            },
+            {
+              "x": 35.63,
+              "y": 65.47,
+              "date": "2025-08-13",
+              "v": 47.89
+            },
+            {
+              "x": 36.78,
+              "y": 65.93,
+              "date": "2025-08-20",
+              "v": 47.84
+            },
+            {
+              "x": 37.93,
+              "y": 68.78,
+              "date": "2025-08-27",
+              "v": 47.53
+            },
+            {
+              "x": 39.08,
+              "y": 66.94,
+              "date": "2025-09-03",
+              "v": 47.73
+            },
+            {
+              "x": 40.23,
+              "y": 67.03,
+              "date": "2025-09-10",
+              "v": 47.72
+            },
+            {
+              "x": 41.38,
+              "y": 65.47,
+              "date": "2025-09-17",
+              "v": 47.89
+            },
+            {
+              "x": 42.53,
+              "y": 67.4,
+              "date": "2025-09-24",
+              "v": 47.68
+            },
+            {
+              "x": 43.68,
+              "y": 67.5,
+              "date": "2025-10-01",
+              "v": 47.67
+            },
+            {
+              "x": 44.83,
+              "y": 67.77,
+              "date": "2025-10-08",
+              "v": 47.64
+            },
+            {
+              "x": 45.98,
+              "y": 66.67,
+              "date": "2025-10-15",
+              "v": 47.76
+            },
+            {
+              "x": 47.13,
+              "y": 66.39,
+              "date": "2025-10-22",
+              "v": 47.79
+            },
+            {
+              "x": 48.28,
+              "y": 66.3,
+              "date": "2025-10-29",
+              "v": 47.8
+            },
+            {
+              "x": 49.43,
+              "y": 66.39,
+              "date": "2025-11-05",
+              "v": 47.79
+            },
+            {
+              "x": 50.57,
+              "y": 65.29,
+              "date": "2025-11-12",
+              "v": 47.91
+            },
+            {
+              "x": 51.72,
+              "y": 63.63,
+              "date": "2025-11-19",
+              "v": 48.09
+            },
+            {
+              "x": 52.87,
+              "y": 63.26,
+              "date": "2025-11-26",
+              "v": 48.13
+            },
+            {
+              "x": 54.02,
+              "y": 63.63,
+              "date": "2025-12-03",
+              "v": 48.09
+            },
+            {
+              "x": 55.17,
+              "y": 66.21,
+              "date": "2025-12-10",
+              "v": 47.81
+            },
+            {
+              "x": 56.32,
+              "y": 66.3,
+              "date": "2025-12-17",
+              "v": 47.8
+            },
+            {
+              "x": 57.47,
+              "y": 65.56,
+              "date": "2025-12-24",
+              "v": 47.88
+            },
+            {
+              "x": 58.62,
+              "y": 64.27,
+              "date": "2025-12-31",
+              "v": 48.02
+            },
+            {
+              "x": 59.77,
+              "y": 61.69,
+              "date": "2026-01-07",
+              "v": 48.3
+            },
+            {
+              "x": 60.92,
+              "y": 63.54,
+              "date": "2026-01-14",
+              "v": 48.1
+            },
+            {
+              "x": 62.07,
+              "y": 62.71,
+              "date": "2026-01-21",
+              "v": 48.19
+            },
+            {
+              "x": 63.22,
+              "y": 63.08,
+              "date": "2026-01-28",
+              "v": 48.15
+            },
+            {
+              "x": 64.37,
+              "y": 62.8,
+              "date": "2026-02-04",
+              "v": 48.18
+            },
+            {
+              "x": 65.52,
+              "y": 62.98,
+              "date": "2026-02-11",
+              "v": 48.16
+            },
+            {
+              "x": 66.67,
+              "y": 63.17,
+              "date": "2026-02-18",
+              "v": 48.14
+            },
+            {
+              "x": 67.82,
+              "y": 62.34,
+              "date": "2026-02-25",
+              "v": 48.23
+            },
+            {
+              "x": 68.97,
+              "y": 63.35,
+              "date": "2026-03-04",
+              "v": 48.12
+            },
+            {
+              "x": 70.11,
+              "y": 63.44,
+              "date": "2026-03-11",
+              "v": 48.11
+            },
+            {
+              "x": 71.26,
+              "y": 62.8,
+              "date": "2026-03-18",
+              "v": 48.18
+            },
+            {
+              "x": 72.41,
+              "y": 62.43,
+              "date": "2026-03-25",
+              "v": 48.22
+            },
+            {
+              "x": 73.56,
+              "y": 61.79,
+              "date": "2026-04-01",
+              "v": 48.29
+            },
+            {
+              "x": 74.71,
+              "y": 63.44,
+              "date": "2026-04-08",
+              "v": 48.11
+            },
+            {
+              "x": 75.86,
+              "y": 62.25,
+              "date": "2026-04-15",
+              "v": 48.24
+            },
+            {
+              "x": 77.01,
+              "y": 61.79,
+              "date": "2026-04-22",
+              "v": 48.29
+            },
+            {
+              "x": 78.16,
+              "y": 61.88,
+              "date": "2026-04-29",
+              "v": 48.28
+            },
+            {
+              "x": 79.31,
+              "y": 61.6,
+              "date": "2026-05-06",
+              "v": 48.31
+            },
+            {
+              "x": 80.46,
+              "y": 61.88,
+              "date": "2026-05-13",
+              "v": 48.28
+            },
+            {
+              "x": 81.61,
+              "y": 60.13,
+              "date": "2026-05-20",
+              "v": 48.47
+            },
+            {
+              "x": 82.76,
+              "y": 60.68,
+              "date": "2026-05-27",
+              "v": 48.41
+            },
+            {
+              "x": 83.91,
+              "y": 61.69,
+              "date": "2026-06-03",
+              "v": 48.3
+            },
+            {
+              "x": 85.06,
+              "y": 63.17,
+              "date": "2026-06-10",
+              "v": 48.14
+            },
+            {
+              "x": 86.21,
+              "y": 63.17,
+              "date": "2026-06-17",
+              "v": 48.14
+            },
+            {
+              "x": 87.36,
+              "y": 63.08,
+              "date": "2026-06-24",
+              "v": 48.15
+            },
+            {
+              "x": 88.51,
+              "y": 62.52,
+              "date": "2026-07-01",
+              "v": 48.21
+            },
+            {
+              "x": 89.66,
+              "y": 65.47,
+              "date": "2026-07-08",
+              "v": 47.89
+            },
+            {
+              "x": 90.8,
+              "y": 66.67,
+              "date": "2026-07-15",
+              "v": 47.76
+            },
+            {
+              "x": 91.95,
+              "y": 64.92,
+              "date": "2026-07-22",
+              "v": 47.95
+            },
+            {
+              "x": 93.1,
+              "y": 64.55,
+              "date": "2026-07-29",
+              "v": 47.99
+            },
+            {
+              "x": 94.25,
+              "y": 62.98,
+              "date": "2026-08-05",
+              "v": 48.16
+            },
+            {
+              "x": 95.4,
+              "y": 64.64,
+              "date": "2026-08-12",
+              "v": 47.98
+            },
+            {
+              "x": 100.0,
+              "y": 48.32,
+              "date": "2026-08-22",
+              "v": 49.7525
+            }
+          ],
+          "polyline": "0.0,73.11 1.15,76.52 2.3,81.58 3.45,81.22 4.6,78.45 5.75,76.15 6.9,75.6 8.05,76.52 9.2,75.51 10.34,73.48 11.49,72.74 12.64,73.39 13.79,73.2 14.94,71.55 16.09,70.26 17.24,69.24 18.39,68.69 19.54,67.5 20.69,68.88 21.84,69.89 22.99,70.35 24.14,70.17 25.29,70.17 26.44,69.98 27.59,69.61 28.74,69.24 29.89,68.69 31.03,70.17 32.18,68.05 33.33,67.4 34.48,64.46 35.63,65.47 36.78,65.93 37.93,68.78 39.08,66.94 40.23,67.03 41.38,65.47 42.53,67.4 43.68,67.5 44.83,67.77 45.98,66.67 47.13,66.39 48.28,66.3 49.43,66.39 50.57,65.29 51.72,63.63 52.87,63.26 54.02,63.63 55.17,66.21 56.32,66.3 57.47,65.56 58.62,64.27 59.77,61.69 60.92,63.54 62.07,62.71 63.22,63.08 64.37,62.8 65.52,62.98 66.67,63.17 67.82,62.34 68.97,63.35 70.11,63.44 71.26,62.8 72.41,62.43 73.56,61.79 74.71,63.44 75.86,62.25 77.01,61.79 78.16,61.88 79.31,61.6 80.46,61.88 81.61,60.13 82.76,60.68 83.91,61.69 85.06,63.17 86.21,63.17 87.36,63.08 88.51,62.52 89.66,65.47 90.8,66.67 91.95,64.92 93.1,64.55 94.25,62.98 95.4,64.64 100.0,48.32",
+          "last": {
+            "x": 100.0,
+            "y": 48.32,
+            "date": "2026-08-22",
+            "v": 49.7525
+          },
+          "band": {
+            "y_low": 67.86,
+            "y_high": 19.71,
+            "low": 47.63,
+            "high": 52.86,
+            "kind": "spread",
+            "n": 4
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 4,
+          "label_y": 60.24,
+          "label_nudged": true,
+          "sx": 51.68,
+          "sx_low": 32.14,
+          "sx_high": 80.29
         }
       ]
     },
@@ -2785,18 +6324,112 @@
       "metric": "prob",
       "total": null,
       "dates": [
+        "2025-01-01",
+        "2025-01-15",
+        "2025-01-22",
+        "2025-01-29",
+        "2025-02-05",
+        "2025-02-12",
+        "2025-02-19",
+        "2025-02-26",
+        "2025-03-05",
+        "2025-03-12",
+        "2025-03-19",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-09",
+        "2025-04-16",
+        "2025-04-23",
+        "2025-04-30",
+        "2025-05-07",
+        "2025-05-14",
+        "2025-05-21",
+        "2025-05-28",
+        "2025-06-04",
+        "2025-06-11",
+        "2025-06-18",
+        "2025-06-25",
+        "2025-07-02",
+        "2025-07-09",
+        "2025-07-16",
+        "2025-07-23",
+        "2025-07-30",
+        "2025-08-06",
+        "2025-08-13",
+        "2025-08-20",
+        "2025-08-27",
+        "2025-09-03",
+        "2025-09-10",
+        "2025-09-17",
+        "2025-09-24",
+        "2025-10-01",
+        "2025-10-08",
+        "2025-10-15",
+        "2025-10-22",
+        "2025-10-29",
+        "2025-11-05",
+        "2025-11-12",
+        "2025-11-19",
+        "2025-11-26",
+        "2025-12-03",
+        "2025-12-10",
+        "2025-12-17",
+        "2025-12-24",
+        "2025-12-31",
+        "2026-01-07",
+        "2026-01-14",
+        "2026-01-21",
+        "2026-01-28",
+        "2026-02-04",
+        "2026-02-11",
+        "2026-02-18",
+        "2026-02-25",
+        "2026-03-04",
+        "2026-03-11",
+        "2026-03-18",
+        "2026-03-25",
+        "2026-04-01",
+        "2026-04-08",
+        "2026-04-15",
+        "2026-04-22",
+        "2026-04-29",
+        "2026-05-06",
+        "2026-05-13",
+        "2026-05-20",
+        "2026-05-27",
+        "2026-06-03",
+        "2026-06-10",
+        "2026-06-17",
+        "2026-06-24",
+        "2026-07-01",
+        "2026-07-08",
+        "2026-07-15",
+        "2026-07-22",
+        "2026-07-29",
+        "2026-08-05",
+        "2026-08-12",
         "2026-08-19",
         "2026-08-20",
         "2026-08-21",
         "2026-08-22"
       ],
-      "n_dates": 4,
-      "dense": false,
+      "n_dates": 88,
+      "dense": true,
       "date_ticks": [
         {
-          "date": "2026-08-19",
+          "date": "2025-01-01",
           "x": 0.0,
           "anchor": "start"
+        },
+        {
+          "date": "2025-07-30",
+          "x": 33.33,
+          "anchor": "middle"
+        },
+        {
+          "date": "2026-02-18",
+          "x": 66.67,
+          "anchor": "middle"
         },
         {
           "date": "2026-08-22",
@@ -2811,24 +6444,24 @@
           "label": "0%"
         },
         {
-          "v": 0.2,
+          "v": 0.25,
           "x": 25.0,
-          "label": "20%"
+          "label": "25%"
         },
         {
-          "v": 0.4,
+          "v": 0.5,
           "x": 50.0,
-          "label": "40%"
+          "label": "50%"
         },
         {
-          "v": 0.6,
+          "v": 0.75,
           "x": 75.0,
-          "label": "60%"
+          "label": "75%"
         },
         {
-          "v": 0.8,
+          "v": 1.0,
           "x": 100.0,
-          "label": "80%"
+          "label": "100%"
         }
       ],
       "y_ticks": [
@@ -2838,80 +6471,31 @@
           "label": "0%"
         },
         {
-          "v": 0.2,
+          "v": 0.25,
           "y": 75.0,
-          "label": "20%"
+          "label": "25%"
         },
         {
-          "v": 0.4,
+          "v": 0.5,
           "y": 50.0,
-          "label": "40%"
+          "label": "50%"
         },
         {
-          "v": 0.6,
+          "v": 0.75,
           "y": 25.0,
-          "label": "60%"
+          "label": "75%"
         },
         {
-          "v": 0.8,
+          "v": 1.0,
           "y": 0.0,
-          "label": "80%"
+          "label": "100%"
         }
       ],
-      "ref_y": 37.5,
+      "ref_y": 50.0,
       "ref_label": "even",
       "ref_value": 0.5,
       "zero_y": null,
       "series": [
-        {
-          "key": "fundamentals",
-          "label": "Fundamentals",
-          "color": "#4a3aa7",
-          "color_dark": "#9085e9",
-          "points": [
-            {
-              "x": 33.33,
-              "y": 22.39,
-              "date": "2026-08-20",
-              "v": 0.6209
-            },
-            {
-              "x": 66.67,
-              "y": 57.64,
-              "date": "2026-08-21",
-              "v": 0.3389
-            },
-            {
-              "x": 100.0,
-              "y": 57.64,
-              "date": "2026-08-22",
-              "v": 0.3389
-            }
-          ],
-          "polyline": "33.33,22.39 66.67,57.64 100.0,57.64",
-          "last": {
-            "x": 100.0,
-            "y": 57.64,
-            "date": "2026-08-22",
-            "v": 0.3389
-          },
-          "band": {
-            "y_low": 92.89,
-            "y_high": 22.39,
-            "low": 0.0569,
-            "high": 0.6209,
-            "kind": "spread",
-            "n": 2
-          },
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 2,
-          "label_y": 57.64,
-          "label_nudged": false,
-          "sx": 42.36,
-          "sx_low": 7.11,
-          "sx_high": 77.61
-        },
         {
           "key": "polling",
           "label": "Polling",
@@ -2919,34 +6503,34 @@
           "color_dark": "#199e70",
           "points": [
             {
-              "x": 33.33,
-              "y": 71.25,
+              "x": 97.7,
+              "y": 77.0,
               "date": "2026-08-20",
               "v": 0.23
             },
             {
-              "x": 66.67,
-              "y": 63.71,
+              "x": 98.85,
+              "y": 70.97,
               "date": "2026-08-21",
               "v": 0.2903
             },
             {
               "x": 100.0,
-              "y": 65.6,
+              "y": 72.48,
               "date": "2026-08-22",
               "v": 0.2752
             }
           ],
-          "polyline": "33.33,71.25 66.67,63.71 100.0,65.6",
+          "polyline": "97.7,77.0 98.85,70.97 100.0,72.48",
           "last": {
             "x": 100.0,
-            "y": 65.6,
+            "y": 72.48,
             "date": "2026-08-22",
             "v": 0.2752
           },
           "band": {
-            "y_low": 69.29,
-            "y_high": 63.71,
+            "y_low": 75.43,
+            "y_high": 70.97,
             "low": 0.2457,
             "high": 0.2903,
             "kind": "spread",
@@ -2955,57 +6539,11 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 4,
-          "label_y": 70.64,
+          "label_y": 89.87,
           "label_nudged": true,
-          "sx": 34.4,
-          "sx_low": 30.71,
-          "sx_high": 36.29
-        },
-        {
-          "key": "professional",
-          "label": "Professional",
-          "color": "#eda100",
-          "color_dark": "#c98500",
-          "points": [
-            {
-              "x": 0.0,
-              "y": 22.46,
-              "date": "2026-08-19",
-              "v": 0.6203
-            },
-            {
-              "x": 33.33,
-              "y": 20.16,
-              "date": "2026-08-20",
-              "v": 0.6387
-            },
-            {
-              "x": 66.67,
-              "y": 22.23,
-              "date": "2026-08-21",
-              "v": 0.6222
-            },
-            {
-              "x": 100.0,
-              "y": 22.12,
-              "date": "2026-08-22",
-              "v": 0.623
-            }
-          ],
-          "polyline": "0.0,22.46 33.33,20.16 66.67,22.23 100.0,22.12",
-          "last": {
-            "x": 100.0,
-            "y": 22.12,
-            "date": "2026-08-22",
-            "v": 0.623
-          },
-          "band": null,
-          "last_date": "2026-08-22",
-          "stale": false,
-          "n_sources": 1,
-          "label_y": 22.12,
-          "label_nudged": false,
-          "sx": 77.88
+          "sx": 27.52,
+          "sx_low": 24.57,
+          "sx_high": 29.03
         },
         {
           "key": "market",
@@ -3014,40 +6552,40 @@
           "color_dark": "#d55181",
           "points": [
             {
-              "x": 0.0,
-              "y": 36.88,
+              "x": 96.55,
+              "y": 49.5,
               "date": "2026-08-19",
               "v": 0.505
             },
             {
-              "x": 33.33,
-              "y": 36.88,
+              "x": 97.7,
+              "y": 49.5,
               "date": "2026-08-20",
               "v": 0.505
             },
             {
-              "x": 66.67,
-              "y": 39.79,
+              "x": 98.85,
+              "y": 51.83,
               "date": "2026-08-21",
               "v": 0.4817
             },
             {
               "x": 100.0,
-              "y": 38.44,
+              "y": 50.75,
               "date": "2026-08-22",
               "v": 0.4925
             }
           ],
-          "polyline": "0.0,36.88 33.33,36.88 66.67,39.79 100.0,38.44",
+          "polyline": "96.55,49.5 97.7,49.5 98.85,51.83 100.0,50.75",
           "last": {
             "x": 100.0,
-            "y": 38.44,
+            "y": 50.75,
             "date": "2026-08-22",
             "v": 0.4925
           },
           "band": {
-            "y_low": 40.0,
-            "y_high": 36.88,
+            "y_low": 52.0,
+            "y_high": 49.5,
             "low": 0.48,
             "high": 0.505,
             "kind": "spread",
@@ -3056,11 +6594,647 @@
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 2,
-          "label_y": 38.44,
+          "label_y": 50.75,
           "label_nudged": false,
-          "sx": 61.56,
-          "sx_low": 60.0,
-          "sx_high": 63.12
+          "sx": 49.25,
+          "sx_low": 48.0,
+          "sx_high": 50.5
+        },
+        {
+          "key": "fundamentals",
+          "label": "Fundamentals",
+          "color": "#4a3aa7",
+          "color_dark": "#9085e9",
+          "points": [
+            {
+              "x": 97.7,
+              "y": 37.91,
+              "date": "2026-08-20",
+              "v": 0.6209
+            },
+            {
+              "x": 98.85,
+              "y": 66.11,
+              "date": "2026-08-21",
+              "v": 0.3389
+            },
+            {
+              "x": 100.0,
+              "y": 66.11,
+              "date": "2026-08-22",
+              "v": 0.3389
+            }
+          ],
+          "polyline": "97.7,37.91 98.85,66.11 100.0,66.11",
+          "last": {
+            "x": 100.0,
+            "y": 66.11,
+            "date": "2026-08-22",
+            "v": 0.3389
+          },
+          "band": {
+            "y_low": 94.31,
+            "y_high": 37.91,
+            "low": 0.0569,
+            "high": 0.6209,
+            "kind": "spread",
+            "n": 2
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 2,
+          "label_y": 76.87,
+          "label_nudged": true,
+          "sx": 33.89,
+          "sx_low": 5.69,
+          "sx_high": 62.09
+        },
+        {
+          "key": "professional",
+          "label": "Professional",
+          "color": "#eda100",
+          "color_dark": "#c98500",
+          "points": [
+            {
+              "x": 96.55,
+              "y": 37.97,
+              "date": "2026-08-19",
+              "v": 0.6203
+            },
+            {
+              "x": 97.7,
+              "y": 36.13,
+              "date": "2026-08-20",
+              "v": 0.6387
+            },
+            {
+              "x": 98.85,
+              "y": 37.78,
+              "date": "2026-08-21",
+              "v": 0.6222
+            },
+            {
+              "x": 100.0,
+              "y": 37.7,
+              "date": "2026-08-22",
+              "v": 0.623
+            }
+          ],
+          "polyline": "96.55,37.97 97.7,36.13 98.85,37.78 100.0,37.7",
+          "last": {
+            "x": 100.0,
+            "y": 37.7,
+            "date": "2026-08-22",
+            "v": 0.623
+          },
+          "band": null,
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 1,
+          "label_y": 37.7,
+          "label_nudged": false,
+          "sx": 62.3
+        },
+        {
+          "key": "academic",
+          "label": "Academic",
+          "color": "#0077a8",
+          "color_dark": "#2f9fbd",
+          "points": [
+            {
+              "x": 0.0,
+              "y": 95.06,
+              "date": "2025-01-01",
+              "v": 0.0494
+            },
+            {
+              "x": 1.15,
+              "y": 96.67,
+              "date": "2025-01-15",
+              "v": 0.0333
+            },
+            {
+              "x": 2.3,
+              "y": 98.02,
+              "date": "2025-01-22",
+              "v": 0.0198
+            },
+            {
+              "x": 3.45,
+              "y": 97.93,
+              "date": "2025-01-29",
+              "v": 0.0207
+            },
+            {
+              "x": 4.6,
+              "y": 97.29,
+              "date": "2025-02-05",
+              "v": 0.0271
+            },
+            {
+              "x": 5.75,
+              "y": 96.57,
+              "date": "2025-02-12",
+              "v": 0.0343
+            },
+            {
+              "x": 6.9,
+              "y": 96.36,
+              "date": "2025-02-19",
+              "v": 0.0364
+            },
+            {
+              "x": 8.05,
+              "y": 96.68,
+              "date": "2025-02-26",
+              "v": 0.0332
+            },
+            {
+              "x": 9.2,
+              "y": 96.3,
+              "date": "2025-03-05",
+              "v": 0.037
+            },
+            {
+              "x": 10.34,
+              "y": 95.31,
+              "date": "2025-03-12",
+              "v": 0.0469
+            },
+            {
+              "x": 11.49,
+              "y": 94.94,
+              "date": "2025-03-19",
+              "v": 0.0506
+            },
+            {
+              "x": 12.64,
+              "y": 95.26,
+              "date": "2025-03-26",
+              "v": 0.0474
+            },
+            {
+              "x": 13.79,
+              "y": 95.14,
+              "date": "2025-04-02",
+              "v": 0.0486
+            },
+            {
+              "x": 14.94,
+              "y": 94.29,
+              "date": "2025-04-09",
+              "v": 0.0571
+            },
+            {
+              "x": 16.09,
+              "y": 93.45,
+              "date": "2025-04-16",
+              "v": 0.0655
+            },
+            {
+              "x": 17.24,
+              "y": 92.79,
+              "date": "2025-04-23",
+              "v": 0.0721
+            },
+            {
+              "x": 18.39,
+              "y": 92.36,
+              "date": "2025-04-30",
+              "v": 0.0764
+            },
+            {
+              "x": 19.54,
+              "y": 91.39,
+              "date": "2025-05-07",
+              "v": 0.0861
+            },
+            {
+              "x": 20.69,
+              "y": 92.51,
+              "date": "2025-05-14",
+              "v": 0.0749
+            },
+            {
+              "x": 21.84,
+              "y": 93.22,
+              "date": "2025-05-21",
+              "v": 0.0678
+            },
+            {
+              "x": 22.99,
+              "y": 93.5,
+              "date": "2025-05-28",
+              "v": 0.065
+            },
+            {
+              "x": 24.14,
+              "y": 93.4,
+              "date": "2025-06-04",
+              "v": 0.066
+            },
+            {
+              "x": 25.29,
+              "y": 93.41,
+              "date": "2025-06-11",
+              "v": 0.0659
+            },
+            {
+              "x": 26.44,
+              "y": 93.27,
+              "date": "2025-06-18",
+              "v": 0.0673
+            },
+            {
+              "x": 27.59,
+              "y": 93.07,
+              "date": "2025-06-25",
+              "v": 0.0693
+            },
+            {
+              "x": 28.74,
+              "y": 92.76,
+              "date": "2025-07-02",
+              "v": 0.0724
+            },
+            {
+              "x": 29.89,
+              "y": 92.36,
+              "date": "2025-07-09",
+              "v": 0.0764
+            },
+            {
+              "x": 31.03,
+              "y": 93.37,
+              "date": "2025-07-16",
+              "v": 0.0663
+            },
+            {
+              "x": 32.18,
+              "y": 91.86,
+              "date": "2025-07-23",
+              "v": 0.0814
+            },
+            {
+              "x": 33.33,
+              "y": 91.28,
+              "date": "2025-07-30",
+              "v": 0.0872
+            },
+            {
+              "x": 34.48,
+              "y": 88.79,
+              "date": "2025-08-06",
+              "v": 0.1121
+            },
+            {
+              "x": 35.63,
+              "y": 89.64,
+              "date": "2025-08-13",
+              "v": 0.1036
+            },
+            {
+              "x": 36.78,
+              "y": 89.99,
+              "date": "2025-08-20",
+              "v": 0.1001
+            },
+            {
+              "x": 37.93,
+              "y": 92.42,
+              "date": "2025-08-27",
+              "v": 0.0758
+            },
+            {
+              "x": 39.08,
+              "y": 90.91,
+              "date": "2025-09-03",
+              "v": 0.0909
+            },
+            {
+              "x": 40.23,
+              "y": 91.01,
+              "date": "2025-09-10",
+              "v": 0.0899
+            },
+            {
+              "x": 41.38,
+              "y": 89.64,
+              "date": "2025-09-17",
+              "v": 0.1036
+            },
+            {
+              "x": 42.53,
+              "y": 91.32,
+              "date": "2025-09-24",
+              "v": 0.0868
+            },
+            {
+              "x": 43.68,
+              "y": 91.37,
+              "date": "2025-10-01",
+              "v": 0.0863
+            },
+            {
+              "x": 44.83,
+              "y": 91.59,
+              "date": "2025-10-08",
+              "v": 0.0841
+            },
+            {
+              "x": 45.98,
+              "y": 90.68,
+              "date": "2025-10-15",
+              "v": 0.0932
+            },
+            {
+              "x": 47.13,
+              "y": 90.35,
+              "date": "2025-10-22",
+              "v": 0.0965
+            },
+            {
+              "x": 48.28,
+              "y": 90.28,
+              "date": "2025-10-29",
+              "v": 0.0972
+            },
+            {
+              "x": 49.43,
+              "y": 90.4,
+              "date": "2025-11-05",
+              "v": 0.096
+            },
+            {
+              "x": 50.57,
+              "y": 89.44,
+              "date": "2025-11-12",
+              "v": 0.1056
+            },
+            {
+              "x": 51.72,
+              "y": 87.97,
+              "date": "2025-11-19",
+              "v": 0.1203
+            },
+            {
+              "x": 52.87,
+              "y": 87.55,
+              "date": "2025-11-26",
+              "v": 0.1245
+            },
+            {
+              "x": 54.02,
+              "y": 87.97,
+              "date": "2025-12-03",
+              "v": 0.1203
+            },
+            {
+              "x": 55.17,
+              "y": 90.23,
+              "date": "2025-12-10",
+              "v": 0.0977
+            },
+            {
+              "x": 56.32,
+              "y": 90.28,
+              "date": "2025-12-17",
+              "v": 0.0972
+            },
+            {
+              "x": 57.47,
+              "y": 89.76,
+              "date": "2025-12-24",
+              "v": 0.1024
+            },
+            {
+              "x": 58.62,
+              "y": 88.57,
+              "date": "2025-12-31",
+              "v": 0.1143
+            },
+            {
+              "x": 59.77,
+              "y": 85.89,
+              "date": "2026-01-07",
+              "v": 0.1411
+            },
+            {
+              "x": 60.92,
+              "y": 87.84,
+              "date": "2026-01-14",
+              "v": 0.1216
+            },
+            {
+              "x": 62.07,
+              "y": 87.02,
+              "date": "2026-01-21",
+              "v": 0.1298
+            },
+            {
+              "x": 63.22,
+              "y": 87.25,
+              "date": "2026-01-28",
+              "v": 0.1275
+            },
+            {
+              "x": 64.37,
+              "y": 87.06,
+              "date": "2026-02-04",
+              "v": 0.1294
+            },
+            {
+              "x": 65.52,
+              "y": 87.17,
+              "date": "2026-02-11",
+              "v": 0.1283
+            },
+            {
+              "x": 66.67,
+              "y": 87.38,
+              "date": "2026-02-18",
+              "v": 0.1262
+            },
+            {
+              "x": 67.82,
+              "y": 86.54,
+              "date": "2026-02-25",
+              "v": 0.1346
+            },
+            {
+              "x": 68.97,
+              "y": 87.59,
+              "date": "2026-03-04",
+              "v": 0.1241
+            },
+            {
+              "x": 70.11,
+              "y": 87.7,
+              "date": "2026-03-11",
+              "v": 0.123
+            },
+            {
+              "x": 71.26,
+              "y": 87.1,
+              "date": "2026-03-18",
+              "v": 0.129
+            },
+            {
+              "x": 72.41,
+              "y": 86.72,
+              "date": "2026-03-25",
+              "v": 0.1328
+            },
+            {
+              "x": 73.56,
+              "y": 85.95,
+              "date": "2026-04-01",
+              "v": 0.1405
+            },
+            {
+              "x": 74.71,
+              "y": 87.76,
+              "date": "2026-04-08",
+              "v": 0.1224
+            },
+            {
+              "x": 75.86,
+              "y": 86.42,
+              "date": "2026-04-15",
+              "v": 0.1358
+            },
+            {
+              "x": 77.01,
+              "y": 85.95,
+              "date": "2026-04-22",
+              "v": 0.1405
+            },
+            {
+              "x": 78.16,
+              "y": 86.0,
+              "date": "2026-04-29",
+              "v": 0.14
+            },
+            {
+              "x": 79.31,
+              "y": 85.75,
+              "date": "2026-05-06",
+              "v": 0.1425
+            },
+            {
+              "x": 80.46,
+              "y": 86.07,
+              "date": "2026-05-13",
+              "v": 0.1393
+            },
+            {
+              "x": 81.61,
+              "y": 84.04,
+              "date": "2026-05-20",
+              "v": 0.1596
+            },
+            {
+              "x": 82.76,
+              "y": 84.66,
+              "date": "2026-05-27",
+              "v": 0.1534
+            },
+            {
+              "x": 83.91,
+              "y": 85.79,
+              "date": "2026-06-03",
+              "v": 0.1421
+            },
+            {
+              "x": 85.06,
+              "y": 87.42,
+              "date": "2026-06-10",
+              "v": 0.1258
+            },
+            {
+              "x": 86.21,
+              "y": 87.42,
+              "date": "2026-06-17",
+              "v": 0.1258
+            },
+            {
+              "x": 87.36,
+              "y": 87.3,
+              "date": "2026-06-24",
+              "v": 0.127
+            },
+            {
+              "x": 88.51,
+              "y": 86.74,
+              "date": "2026-07-01",
+              "v": 0.1326
+            },
+            {
+              "x": 89.66,
+              "y": 89.64,
+              "date": "2026-07-08",
+              "v": 0.1036
+            },
+            {
+              "x": 90.8,
+              "y": 90.68,
+              "date": "2026-07-15",
+              "v": 0.0932
+            },
+            {
+              "x": 91.95,
+              "y": 89.11,
+              "date": "2026-07-22",
+              "v": 0.1089
+            },
+            {
+              "x": 93.1,
+              "y": 88.86,
+              "date": "2026-07-29",
+              "v": 0.1114
+            },
+            {
+              "x": 94.25,
+              "y": 87.21,
+              "date": "2026-08-05",
+              "v": 0.1279
+            },
+            {
+              "x": 95.4,
+              "y": 89.0,
+              "date": "2026-08-12",
+              "v": 0.11
+            },
+            {
+              "x": 100.0,
+              "y": 63.87,
+              "date": "2026-08-22",
+              "v": 0.3613
+            }
+          ],
+          "polyline": "0.0,95.06 1.15,96.67 2.3,98.02 3.45,97.93 4.6,97.29 5.75,96.57 6.9,96.36 8.05,96.68 9.2,96.3 10.34,95.31 11.49,94.94 12.64,95.26 13.79,95.14 14.94,94.29 16.09,93.45 17.24,92.79 18.39,92.36 19.54,91.39 20.69,92.51 21.84,93.22 22.99,93.5 24.14,93.4 25.29,93.41 26.44,93.27 27.59,93.07 28.74,92.76 29.89,92.36 31.03,93.37 32.18,91.86 33.33,91.28 34.48,88.79 35.63,89.64 36.78,89.99 37.93,92.42 39.08,90.91 40.23,91.01 41.38,89.64 42.53,91.32 43.68,91.37 44.83,91.59 45.98,90.68 47.13,90.35 48.28,90.28 49.43,90.4 50.57,89.44 51.72,87.97 52.87,87.55 54.02,87.97 55.17,90.23 56.32,90.28 57.47,89.76 58.62,88.57 59.77,85.89 60.92,87.84 62.07,87.02 63.22,87.25 64.37,87.06 65.52,87.17 66.67,87.38 67.82,86.54 68.97,87.59 70.11,87.7 71.26,87.1 72.41,86.72 73.56,85.95 74.71,87.76 75.86,86.42 77.01,85.95 78.16,86.0 79.31,85.75 80.46,86.07 81.61,84.04 82.76,84.66 83.91,85.79 85.06,87.42 86.21,87.42 87.36,87.3 88.51,86.74 89.66,89.64 90.8,90.68 91.95,89.11 93.1,88.86 94.25,87.21 95.4,89.0 100.0,63.87",
+          "last": {
+            "x": 100.0,
+            "y": 63.87,
+            "date": "2026-08-22",
+            "v": 0.3613
+          },
+          "band": {
+            "y_low": 91.65,
+            "y_high": 20.26,
+            "low": 0.0835,
+            "high": 0.7974,
+            "kind": "spread",
+            "n": 4
+          },
+          "last_date": "2026-08-22",
+          "stale": false,
+          "n_sources": 4,
+          "label_y": 63.87,
+          "label_nudged": false,
+          "sx": 36.13,
+          "sx_low": 8.35,
+          "sx_high": 79.74
         }
       ]
     },
@@ -7407,6 +11581,12 @@
             "x": 44.83
           },
           {
+            "key": "academic",
+            "label": "Academic",
+            "seats": 49.8,
+            "x": 45.81
+          },
+          {
             "key": "professional",
             "label": "Professional",
             "seats": 51.4,
@@ -8176,6 +12356,12 @@
             "x": 43.8
           },
           {
+            "key": "academic",
+            "label": "Academic",
+            "seats": 233.8,
+            "x": 50.64
+          },
+          {
             "key": "professional",
             "label": "Professional",
             "seats": 250.4,
@@ -8224,14 +12410,54 @@
         "sole_source": "",
         "house_margin": 6.1898,
         "house_margin_withheld": false,
+        "house_margin_spread": {
+          "min": 5.9,
+          "max": 6.4,
+          "range": 0.5,
+          "sd": 0.251,
+          "n": 4,
+          "all_open": false
+        },
         "house_seats": 229.18,
         "house_seats_withheld": false,
+        "house_seats_spread": {
+          "min": 227.37,
+          "max": 230.09,
+          "range": 2.72,
+          "sd": 1.226,
+          "n": 4,
+          "all_open": false
+        },
         "house_prob": 0.729,
         "house_prob_withheld": false,
+        "house_prob_spread": {
+          "min": 0.697,
+          "max": 0.745,
+          "range": 0.049,
+          "sd": 0.022,
+          "n": 4,
+          "all_open": false
+        },
         "senate_seats": 49.3425,
         "senate_seats_withheld": false,
+        "senate_seats_spread": {
+          "min": 49.15,
+          "max": 49.44,
+          "range": 0.29,
+          "sd": 0.131,
+          "n": 4,
+          "all_open": false
+        },
         "senate_prob": 0.2752,
-        "senate_prob_withheld": false
+        "senate_prob_withheld": false,
+        "senate_prob_spread": {
+          "min": 0.246,
+          "max": 0.29,
+          "range": 0.045,
+          "sd": 0.02,
+          "n": 4,
+          "all_open": false
+        }
       },
       {
         "category": "market",
@@ -8240,16 +12466,35 @@
         "senate_seats_80": null,
         "n_sources": 2,
         "sole_source": "polymarket",
-        "house_margin": 7.6306,
+        "house_margin": 7.6193,
         "house_margin_withheld": false,
+        "house_margin_spread": null,
         "house_seats": null,
         "house_seats_withheld": false,
+        "house_seats_spread": null,
         "house_prob": 0.8468,
         "house_prob_withheld": false,
+        "house_prob_spread": {
+          "min": 0.82,
+          "max": 0.874,
+          "range": 0.054,
+          "sd": 0.038,
+          "n": 2,
+          "all_open": true
+        },
         "senate_seats": null,
         "senate_seats_withheld": false,
+        "senate_seats_spread": null,
         "senate_prob": 0.4925,
-        "senate_prob_withheld": false
+        "senate_prob_withheld": false,
+        "senate_prob_spread": {
+          "min": 0.48,
+          "max": 0.505,
+          "range": 0.025,
+          "sd": 0.018,
+          "n": 2,
+          "all_open": true
+        }
       },
       {
         "category": "fundamentals",
@@ -8260,14 +12505,54 @@
         "sole_source": "",
         "house_margin": 6.13,
         "house_margin_withheld": false,
+        "house_margin_spread": {
+          "min": 1.78,
+          "max": 10.48,
+          "range": 8.7,
+          "sd": 6.152,
+          "n": 2,
+          "all_open": true
+        },
         "house_seats": 230.18,
         "house_seats_withheld": false,
+        "house_seats_spread": {
+          "min": 210.23,
+          "max": 250.13,
+          "range": 39.9,
+          "sd": 28.214,
+          "n": 2,
+          "all_open": true
+        },
         "house_prob": 0.6307,
         "house_prob_withheld": false,
+        "house_prob_spread": {
+          "min": 0.312,
+          "max": 0.949,
+          "range": 0.637,
+          "sd": 0.45,
+          "n": 2,
+          "all_open": true
+        },
         "senate_seats": 49.345,
         "senate_seats_withheld": false,
+        "senate_seats_spread": {
+          "min": 47.22,
+          "max": 51.47,
+          "range": 4.25,
+          "sd": 3.005,
+          "n": 2,
+          "all_open": true
+        },
         "senate_prob": 0.3389,
-        "senate_prob_withheld": false
+        "senate_prob_withheld": false,
+        "senate_prob_spread": {
+          "min": 0.057,
+          "max": 0.621,
+          "range": 0.564,
+          "sd": 0.399,
+          "n": 2,
+          "all_open": true
+        }
       },
       {
         "category": "professional",
@@ -8278,37 +12563,82 @@
         "sole_source": "grant_williams",
         "house_margin": 5.69,
         "house_margin_withheld": false,
+        "house_margin_spread": null,
         "house_seats": 250.37,
         "house_seats_withheld": false,
+        "house_seats_spread": null,
         "house_prob": 0.8665,
         "house_prob_withheld": false,
+        "house_prob_spread": null,
         "senate_seats": 51.38,
         "senate_seats_withheld": false,
+        "senate_seats_spread": null,
         "senate_prob": 0.623,
-        "senate_prob_withheld": false
+        "senate_prob_withheld": false,
+        "senate_prob_spread": null
       },
       {
         "category": "academic",
         "label": "Academic",
         "house_seats_80": null,
         "senate_seats_80": null,
-        "n_sources": 2,
+        "n_sources": 4,
         "sole_source": "",
-        "house_margin": 6.07,
+        "house_margin": 6.9325,
         "house_margin_withheld": false,
-        "house_seats": 228.6,
+        "house_margin_spread": {
+          "min": 2.65,
+          "max": 12.94,
+          "range": 10.29,
+          "sd": 4.679,
+          "n": 4,
+          "all_open": true
+        },
+        "house_seats": 233.8425,
         "house_seats_withheld": false,
-        "house_prob": 0.6849,
+        "house_seats_spread": {
+          "min": 213.72,
+          "max": 264.45,
+          "range": 50.73,
+          "sd": 23.053,
+          "n": 4,
+          "all_open": true
+        },
+        "house_prob": 0.6872,
         "house_prob_withheld": false,
-        "senate_seats": 49.26,
+        "house_prob_spread": {
+          "min": 0.391,
+          "max": 0.988,
+          "range": 0.597,
+          "sd": 0.283,
+          "n": 4,
+          "all_open": true
+        },
+        "senate_seats": 49.7525,
         "senate_seats_withheld": false,
-        "senate_prob": 0.2822,
-        "senate_prob_withheld": false
+        "senate_seats_spread": {
+          "min": 47.63,
+          "max": 52.86,
+          "range": 5.23,
+          "sd": 2.373,
+          "n": 4,
+          "all_open": true
+        },
+        "senate_prob": 0.3613,
+        "senate_prob_withheld": false,
+        "senate_prob_spread": {
+          "min": 0.084,
+          "max": 0.797,
+          "range": 0.714,
+          "sd": 0.33,
+          "n": 4,
+          "all_open": true
+        }
       }
     ],
     "across_families": {
       "house_margin": {
-        "value": 6.34,
+        "value": 6.51,
         "n_categories": 5,
         "categories": [
           "polling",
@@ -8319,11 +12649,11 @@
         ],
         "spread": [
           5.69,
-          7.63
+          7.62
         ]
       },
       "house_seats": {
-        "value": 234.58,
+        "value": 235.89,
         "n_categories": 4,
         "categories": [
           "polling",
@@ -8332,7 +12662,7 @@
           "academic"
         ],
         "spread": [
-          228.6,
+          229.18,
           250.37
         ]
       },
@@ -8352,7 +12682,7 @@
         ]
       },
       "senate_seats": {
-        "value": 49.83,
+        "value": 49.95,
         "n_categories": 4,
         "categories": [
           "polling",
@@ -8361,12 +12691,12 @@
           "academic"
         ],
         "spread": [
-          49.26,
+          49.34,
           51.38
         ]
       },
       "senate_prob": {
-        "value": 0.4,
+        "value": 0.42,
         "n_categories": 5,
         "categories": [
           "polling",
@@ -8415,10 +12745,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 34.05,
+            "margin": 34.9125,
             "prob": 1.0,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8454,10 +12784,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 22.09,
-            "prob": 0.9993,
+            "margin": 22.9525,
+            "prob": 0.9991,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8493,10 +12823,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 21.99,
-            "prob": 0.9993,
+            "margin": 22.8525,
+            "prob": 0.9991,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8532,10 +12862,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 21.37,
-            "prob": 0.999,
+            "margin": 22.2325,
+            "prob": 0.9988,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8571,10 +12901,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 18.75,
-            "prob": 0.9968,
+            "margin": 19.6125,
+            "prob": 0.996,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8610,10 +12940,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 18.01,
-            "prob": 0.9955,
+            "margin": 18.8725,
+            "prob": 0.9945,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8649,10 +12979,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 14.61,
-            "prob": 0.9829,
+            "margin": 15.4725,
+            "prob": 0.9804,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8688,10 +13018,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 13.71,
-            "prob": 0.9765,
+            "margin": 14.5725,
+            "prob": 0.9735,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8727,10 +13057,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 13.43,
-            "prob": 0.9741,
+            "margin": 14.2925,
+            "prob": 0.971,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8766,10 +13096,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 13.05,
-            "prob": 0.9706,
+            "margin": 13.9125,
+            "prob": 0.9673,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8805,10 +13135,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 11.13,
-            "prob": 0.9463,
+            "margin": 11.9925,
+            "prob": 0.9425,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8844,10 +13174,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 10.05,
-            "prob": 0.9268,
+            "margin": 10.9125,
+            "prob": 0.9233,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8883,10 +13213,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 5.69,
-            "prob": 0.7943,
+            "margin": 6.5525,
+            "prob": 0.7991,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8922,10 +13252,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 4.47,
-            "prob": 0.7406,
+            "margin": 5.3325,
+            "prob": 0.7508,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -8961,10 +13291,10 @@
             "n": 1
           },
           "academic": {
-            "margin": 3.27,
-            "prob": 0.6815,
+            "margin": 4.1325,
+            "prob": 0.6983,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9000,10 +13330,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -4.47,
-            "prob": 0.2595,
+            "margin": -3.6075,
+            "prob": 0.319,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9022,7 +13352,7 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.0975,
+            "prob": 0.0875,
             "withheld": false,
             "n": 2
           },
@@ -9039,14 +13369,14 @@
             "n": 1
           },
           "academic": {
-            "margin": -4.71,
-            "prob": 0.2484,
+            "margin": -3.8475,
+            "prob": 0.3083,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
-        "prob_spread": 0.2438
+        "prob_spread": 0.2689
       },
       {
         "state": "TX",
@@ -9078,10 +13408,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -5.77,
-            "prob": 0.2025,
+            "margin": -4.9075,
+            "prob": 0.263,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9117,10 +13447,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -6.11,
-            "prob": 0.1889,
+            "margin": -5.2475,
+            "prob": 0.2492,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9156,10 +13486,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -6.83,
-            "prob": 0.162,
+            "margin": -5.9675,
+            "prob": 0.2213,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9195,10 +13525,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -9.99,
-            "prob": 0.0744,
+            "margin": -9.1275,
+            "prob": 0.1215,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9234,10 +13564,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -10.49,
-            "prob": 0.0647,
+            "margin": -9.6275,
+            "prob": 0.1091,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9273,10 +13603,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -13.57,
-            "prob": 0.0247,
+            "margin": -12.7075,
+            "prob": 0.0518,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9312,10 +13642,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -14.47,
-            "prob": 0.018,
+            "margin": -13.6075,
+            "prob": 0.0406,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9351,10 +13681,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -15.43,
-            "prob": 0.0126,
+            "margin": -14.5675,
+            "prob": 0.0307,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9390,10 +13720,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -15.49,
-            "prob": 0.0123,
+            "margin": -14.6275,
+            "prob": 0.0302,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9429,10 +13759,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -22.45,
-            "prob": 0.0006,
+            "margin": -21.5875,
+            "prob": 0.0024,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9468,10 +13798,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -23.07,
-            "prob": 0.0004,
+            "margin": -22.2075,
+            "prob": 0.0019,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9507,10 +13837,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -23.55,
-            "prob": 0.0003,
+            "margin": -22.6875,
+            "prob": 0.0015,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9546,10 +13876,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -23.81,
-            "prob": 0.0003,
+            "margin": -22.9475,
+            "prob": 0.0014,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9585,10 +13915,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -24.55,
-            "prob": 0.0001,
+            "margin": -23.6875,
+            "prob": 0.0009,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9624,10 +13954,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -28.61,
-            "prob": 0.0,
+            "margin": -27.7475,
+            "prob": 0.0001,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9663,10 +13993,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -30.01,
-            "prob": 0.0,
+            "margin": -29.1475,
+            "prob": 0.0001,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9702,10 +14032,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -35.85,
+            "margin": -34.9875,
             "prob": 0.0,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9741,10 +14071,10 @@
             "n": 1
           },
           "academic": {
-            "margin": -40.39,
+            "margin": -39.5275,
             "prob": 0.0,
             "withheld": false,
-            "n": 2
+            "n": 4
           }
         },
         "n_cats": 5,
@@ -9784,8 +14114,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.162,
-              "x": 16.2
+              "prob": 0.2213,
+              "x": 22.13
             }
           ],
           "n_cats": 5,
@@ -9824,8 +14154,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.2025,
-              "x": 20.25
+              "prob": 0.263,
+              "x": 26.3
             }
           ],
           "n_cats": 5,
@@ -9864,8 +14194,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.2595,
-              "x": 25.95
+              "prob": 0.319,
+              "x": 31.9
             }
           ],
           "n_cats": 5,
@@ -9904,8 +14234,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.9765,
-              "x": 97.65
+              "prob": 0.9735,
+              "x": 97.35
             }
           ],
           "n_cats": 5,
@@ -9944,8 +14274,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.1889,
-              "x": 18.89
+              "prob": 0.2492,
+              "x": 24.92
             }
           ],
           "n_cats": 5,
@@ -9984,8 +14314,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.6815,
-              "x": 68.15
+              "prob": 0.6983,
+              "x": 69.83
             }
           ],
           "n_cats": 5,
@@ -10006,8 +14336,8 @@
             {
               "key": "market",
               "label": "Markets",
-              "prob": 0.0975,
-              "x": 9.75
+              "prob": 0.0875,
+              "x": 8.75
             },
             {
               "key": "fundamentals",
@@ -10024,14 +14354,14 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.2484,
-              "x": 24.84
+              "prob": 0.3083,
+              "x": 30.83
             }
           ],
           "n_cats": 5,
           "x_lo": 3.94,
-          "x_hi": 28.32,
-          "spread": 24.4
+          "x_hi": 30.83,
+          "spread": 26.9
         },
         {
           "state": "GA",
@@ -10064,8 +14394,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.7406,
-              "x": 74.06
+              "prob": 0.7508,
+              "x": 75.08
             }
           ],
           "n_cats": 5,
@@ -10104,8 +14434,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.7943,
-              "x": 79.43
+              "prob": 0.7991,
+              "x": 79.91
             }
           ],
           "n_cats": 5,
@@ -10144,8 +14474,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.0647,
-              "x": 6.47
+              "prob": 0.1091,
+              "x": 10.91
             }
           ],
           "n_cats": 5,
@@ -10184,8 +14514,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.0123,
-              "x": 1.23
+              "prob": 0.0302,
+              "x": 3.02
             }
           ],
           "n_cats": 5,
@@ -10224,8 +14554,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.0126,
-              "x": 1.26
+              "prob": 0.0307,
+              "x": 3.07
             }
           ],
           "n_cats": 5,
@@ -10264,8 +14594,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.0247,
-              "x": 2.47
+              "prob": 0.0518,
+              "x": 5.18
             }
           ],
           "n_cats": 5,
@@ -10304,8 +14634,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.0744,
-              "x": 7.44
+              "prob": 0.1215,
+              "x": 12.15
             }
           ],
           "n_cats": 5,
@@ -10344,8 +14674,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.018,
-              "x": 1.8
+              "prob": 0.0406,
+              "x": 4.06
             }
           ],
           "n_cats": 5,
@@ -10384,8 +14714,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.9706,
-              "x": 97.06
+              "prob": 0.9673,
+              "x": 96.73
             }
           ],
           "n_cats": 5,
@@ -10424,8 +14754,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.9463,
-              "x": 94.63
+              "prob": 0.9425,
+              "x": 94.25
             }
           ],
           "n_cats": 5,
@@ -10464,8 +14794,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.9268,
-              "x": 92.68
+              "prob": 0.9233,
+              "x": 92.33
             }
           ],
           "n_cats": 5,
@@ -10504,8 +14834,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.9741,
-              "x": 97.41
+              "prob": 0.971,
+              "x": 97.1
             }
           ],
           "n_cats": 5,
@@ -10544,8 +14874,8 @@
             {
               "key": "academic",
               "label": "Academic",
-              "prob": 0.9829,
-              "x": 98.29
+              "prob": 0.9804,
+              "x": 98.04
             }
           ],
           "n_cats": 5,
@@ -10617,13 +14947,258 @@
     ],
     "categories_missing_per_race": []
   },
+  "movement": {
+    "as_of": "2026-08-22",
+    "horizons": [
+      "30d",
+      "90d",
+      "all"
+    ],
+    "horizon_labels": {
+      "30d": "30 days",
+      "90d": "90 days",
+      "all": "since it began"
+    },
+    "rows": [
+      {
+        "category": "polling",
+        "label": "Polling",
+        "metrics": {
+          "house_margin": {
+            "now": 6.19,
+            "changes": {
+              "all": {
+                "from": 6.48,
+                "from_date": "2026-08-19",
+                "delta": -0.29,
+                "days_actual": 3,
+                "mixed_recipe": false
+              }
+            }
+          },
+          "house_seats": {
+            "now": 229.18,
+            "changes": {
+              "all": {
+                "from": 226.38,
+                "from_date": "2026-08-20",
+                "delta": 2.8,
+                "days_actual": 2,
+                "mixed_recipe": false
+              }
+            }
+          },
+          "senate_seats": {
+            "now": 49.34,
+            "changes": {
+              "all": {
+                "from": 49.04,
+                "from_date": "2026-08-20",
+                "delta": 0.3,
+                "days_actual": 2,
+                "mixed_recipe": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "category": "market",
+        "label": "Markets",
+        "metrics": {
+          "house_margin": {
+            "now": 7.62,
+            "changes": {
+              "all": {
+                "from": 7.72,
+                "from_date": "2026-08-21",
+                "delta": -0.1,
+                "days_actual": 1,
+                "mixed_recipe": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "category": "fundamentals",
+        "label": "Fundamentals",
+        "metrics": {
+          "house_margin": {
+            "now": 6.13,
+            "changes": {
+              "all": {
+                "from": -1.68,
+                "from_date": "2025-12-23",
+                "delta": 7.81,
+                "days_actual": 242,
+                "mixed_recipe": false
+              }
+            }
+          },
+          "house_seats": {
+            "now": 230.18,
+            "changes": {
+              "all": {
+                "from": 250.13,
+                "from_date": "2026-08-20",
+                "delta": -19.95,
+                "days_actual": 2,
+                "mixed_recipe": false
+              }
+            }
+          },
+          "senate_seats": {
+            "now": 49.34,
+            "changes": {
+              "all": {
+                "from": 51.47,
+                "from_date": "2026-08-20",
+                "delta": -2.12,
+                "days_actual": 2,
+                "mixed_recipe": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "category": "professional",
+        "label": "Professional",
+        "metrics": {
+          "house_margin": {
+            "now": 5.69,
+            "changes": {
+              "all": {
+                "from": 5.73,
+                "from_date": "2026-08-19",
+                "delta": -0.04,
+                "days_actual": 3,
+                "mixed_recipe": false
+              }
+            }
+          },
+          "house_seats": {
+            "now": 250.37,
+            "changes": {
+              "all": {
+                "from": 250.79,
+                "from_date": "2026-08-19",
+                "delta": -0.42,
+                "days_actual": 3,
+                "mixed_recipe": false
+              }
+            }
+          },
+          "senate_seats": {
+            "now": 51.38,
+            "changes": {
+              "all": {
+                "from": 51.43,
+                "from_date": "2026-08-19",
+                "delta": -0.05,
+                "days_actual": 3,
+                "mixed_recipe": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "category": "academic",
+        "label": "Academic",
+        "metrics": {
+          "house_margin": {
+            "now": 6.93,
+            "changes": {
+              "30d": {
+                "from": 3.34,
+                "from_date": "2026-07-22",
+                "delta": 3.59,
+                "days_actual": 31,
+                "mixed_recipe": true
+              },
+              "90d": {
+                "from": 4.45,
+                "from_date": "2026-05-20",
+                "delta": 2.48,
+                "days_actual": 94,
+                "mixed_recipe": true
+              },
+              "all": {
+                "from": 1.45,
+                "from_date": "2025-01-01",
+                "delta": 5.48,
+                "days_actual": 598,
+                "mixed_recipe": true
+              }
+            }
+          },
+          "house_seats": {
+            "now": 233.84,
+            "changes": {
+              "30d": {
+                "from": 216.51,
+                "from_date": "2026-07-22",
+                "delta": 17.33,
+                "days_actual": 31,
+                "mixed_recipe": true
+              },
+              "90d": {
+                "from": 221.11,
+                "from_date": "2026-05-20",
+                "delta": 12.73,
+                "days_actual": 94,
+                "mixed_recipe": true
+              },
+              "all": {
+                "from": 208.92,
+                "from_date": "2025-01-01",
+                "delta": 24.92,
+                "days_actual": 598,
+                "mixed_recipe": true
+              }
+            }
+          },
+          "senate_seats": {
+            "now": 49.75,
+            "changes": {
+              "30d": {
+                "from": 47.95,
+                "from_date": "2026-07-22",
+                "delta": 1.8,
+                "days_actual": 31,
+                "mixed_recipe": true
+              },
+              "90d": {
+                "from": 48.47,
+                "from_date": "2026-05-20",
+                "delta": 1.28,
+                "days_actual": 94,
+                "mixed_recipe": true
+              },
+              "all": {
+                "from": 47.06,
+                "from_date": "2025-01-01",
+                "delta": 2.69,
+                "days_actual": 598,
+                "mixed_recipe": true
+              }
+            }
+          }
+        }
+      }
+    ],
+    "capture_start": "2026-08-19",
+    "note": "Each change is measured against the newest published value at or before that date \u2014 never an interpolation \u2014 and the date actually used is shown. A family with no value that far back gets no figure rather than a zero."
+  },
   "model_index": {
     "polymarket": {
       "senate_win_prob_D": 0.505,
       "senate_win_prob_R": 0.495,
       "house_win_prob_D": 0.875,
       "house_win_prob_R": 0.125,
-      "house_margin_D": 7.6306
+      "house_margin_D": 7.6193
     },
     "grant_williams": {
       "house_margin_D": 5.69,
@@ -10651,6 +15226,20 @@
       "house_win_prob_D": 0.5077,
       "senate_seats_D": 48.2,
       "senate_win_prob_D": 0.1309
+    },
+    "academic_economic_pessimism": {
+      "house_margin_D": 12.94,
+      "house_seats_D": 264.45,
+      "house_win_prob_D": 0.9879,
+      "senate_seats_D": 52.86,
+      "senate_win_prob_D": 0.7974
+    },
+    "academic_political_history": {
+      "house_margin_D": 2.65,
+      "house_seats_D": 213.72,
+      "house_win_prob_D": 0.3911,
+      "senate_seats_D": 47.63,
+      "senate_win_prob_D": 0.0835
     },
     "academic_referendum": {
       "house_margin_D": 8.28,
