@@ -417,43 +417,12 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
         if not cursor or not series:
             break
 
-    # SERIES DISCOVERY CANNOT SEE. Kalshi's /series index is not a complete list
-    # of its series. KXDHOUSESEATS — the seat-count ladder, the only place any
-    # exchange quotes a DISTRIBUTION over seat counts rather than a single
-    # control price — is absent from it: /series?category=Politics returns 2,211
-    # series without it, /series?category=Elections returns 79 without it, and
-    # neither response carries a cursor to page past. The series endpoint answers
-    # for it directly (category "Elections", tags House / House Combos) and
-    # /markets?series_ticker=KXDHOUSESEATS returns the full open ladder. So the
-    # series exists and is tradeable; it is simply not indexed.
-    #
-    # Discovery exists because Kalshi renames series mid-cycle and a hardcoded
-    # ticker list guarantees silent data loss. That reasoning is intact — this is
-    # the opposite failure and needs the opposite remedy. `series_always` is
-    # fetched whether or not discovery found it. Keep the list short: every entry
-    # is one we have checked by hand.
-    #
-    # RESOLVED BEFORE THE PRUNE BELOW, which keeps only what `matched` names and
-    # would otherwise delete these artifacts on the very run that wrote them.
-    always = [t for t in (cfg.get("series_always") or []) if t]
-    unseen = sorted(set(always) - set(matched))
-    if unseen:
-        notes.append(f"series_always: {len(unseen)} ticker(s) discovery did not "
-                     f"list, fetching anyway: {unseen}")
-    # `discovered` is what the INDEX actually returned, and it is what the prune
-    # below is allowed to reason about. Pruning on the extended list would let a
-    # run in which discovery failed outright still look non-empty — the always
-    # list alone — and empty the day's directory of everything else, which is the
-    # exact failure the prune's own guard was written to prevent.
-    discovered = list(matched)
-    matched.extend(always)
-
     # Prune market files for series we no longer collect. Idempotent overwrite
     # replaces same-named artifacts but never removes retired ones, so tightening
     # the filter left 265 stale files behind that the parser then re-read every
     # day forever. Only prune when discovery actually succeeded — a failed run
     # must never be able to empty the directory.
-    if discovered and not fetcher.dry_run:
+    if matched and not fetcher.dry_run:
         keep = {store._slugify(f"markets-{t}") for t in set(matched)}
         day = store.root / src["id"] / store.snapshot_date
         removed = 0
@@ -479,32 +448,15 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
         notes.append(f"NEAR MISS — election-shaped but unmatched: {shaped[:8]}")
 
     # Capture markets for each matched series.
-    empty_always: list[str] = []
     for ticker in sorted(set(matched)):
         url = f"{base}/markets?{urllib.parse.urlencode({'series_ticker': ticker, 'limit': 1000})}"
         try:
             body, meta = fetcher.get(url)
             b += store.write(src["id"], f"markets-{ticker}", body, meta)
             n += 1
-            if ticker in set(always):
-                try:
-                    if not (json.loads(body).get("markets") or []):
-                        empty_always.append(ticker)
-                except (json.JSONDecodeError, AttributeError):
-                    empty_always.append(ticker)
         except Exception as e:
             # Isolate per-ticker failures. One dead series must not abort the run.
             notes.append(f"market fetch failed for {ticker}: {e}")
-
-    if empty_always:
-        # A ticker we asked for BY NAME came back with nothing. Discovery cannot
-        # catch a rename here — that is the whole reason these are hardcoded — so
-        # this note is the only warning we will get, and it must not read like
-        # ordinary quiet. Check the ticker against kalshi.com before assuming the
-        # markets simply closed.
-        notes.append(f"series_always returned NO MARKETS for {empty_always} — "
-                     f"renamed or delisted? These are hardcoded tickers; "
-                     f"discovery will not find the replacement on its own.")
 
     return n, b, notes
 
@@ -525,59 +477,21 @@ def handle_polymarket(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tupl
         except Exception as e:
             notes.append(f"slug {slug} failed: {e}")
 
-    # The active-event list, PAGED.
-    #
-    # The previous version asked for limit=500 in one request. Polymarket caps
-    # the page at 100 and returns 100 without complaining, so every run
-    # collected the first hundred active events and stopped — which happened to
-    # be the governors, and is why no per-state Senate market was ever in the
-    # archive. A silent cap is the worst kind: the response is a valid 200 with
-    # plausible content, so nothing downstream had any way to notice.
-    #
-    # Two stopping rules, and the second one matters more than it looks. Stop
-    # when a page comes back short, which is the normal end of the list. Also
-    # stop when a page is byte-identical to the one before it, because an API
-    # that ignores `offset` would otherwise loop until max_pages, storing the
-    # same multi-megabyte body over and over into an archive that is already
-    # the largest thing on disk.
+    # ONE snapshot of the active-event list. The previous version issued one
+    # request per "search term" but never actually sent the term as a query, so
+    # it stored the same multi-megabyte response several times over.
     if cfg.get("snapshot_active_events"):
-        limit = min(int(cfg.get("page_limit", 100)), 100)
-        max_pages = int(cfg.get("max_pages", 8))
-        prev_digest = None
-        pages = 0
-        for page in range(max_pages):
-            params = {"limit": limit, "offset": page * limit,
-                      "active": "true", "closed": "false"}
-            url = f"{base}/events?{urllib.parse.urlencode(params)}"
-            try:
-                body, meta = fetcher.get(url)
-            except Exception as e:
-                notes.append(f"active-events page {page} failed: {e}")
-                break
-
-            digest = hashlib.sha256(body).hexdigest()
-            if digest == prev_digest:
-                notes.append(f"active-events page {page} repeated page "
-                             f"{page - 1} byte for byte — offset looks ignored, "
-                             f"stopping")
-                break
-            prev_digest = digest
-
-            b += store.write(src["id"], f"active-events-{page:02d}", body, meta)
+        params = {"limit": cfg.get("page_limit", 500),
+                  "active": "true", "closed": "false"}
+        url = f"{base}/events?{urllib.parse.urlencode(params)}"
+        try:
+            body, meta = fetcher.get(url)
+            b += store.write(src["id"], "active-events", body, meta)
             n += 1
-            pages += 1
+        except Exception as e:
+            notes.append(f"active-events snapshot failed: {e}")
 
-            try:
-                count = len(json.loads(body))
-            except Exception:
-                count = limit          # unparseable: keep going, the parser will shout
-            if count < limit:
-                break
-        else:
-            notes.append(f"active-events hit max_pages={max_pages} and the list "
-                         f"had not ended — raise it or narrow the query")
-        notes.append(f"active-events: {pages} page(s) of up to {limit}")
-
+    notes.append("per-seat market coverage was unverified in the audit; check the stored events")
     return n, b, notes
 
 
@@ -1013,8 +927,15 @@ def self_test(registry: dict) -> int:
         check(bool(s.get("id")), "a source is missing an id")
         check(s.get("method") in HANDLERS or s.get("method") == "manual",
               f"{sid}: unknown method {s.get('method')!r}")
+        # "academic" is here for completeness rather than because a registry
+        # entry uses it today: the academic models are computed in
+        # model/academic.py from inputs other sources already supply, so they
+        # never pass through capture at all. If one ever does need fetching —
+        # a replication archive, a posted coefficient table — it must not be
+        # the self-test that stops it.
         check(s.get("category") in
-              {"fundamentals", "polling", "professional", "market", "expert_ordinal"},
+              {"fundamentals", "academic", "polling", "professional", "market",
+               "expert_ordinal"},
               f"{sid}: unexpected category {s.get('category')!r}")
         check(s.get("license") in {"permitted", "permission_pending", "prohibited"},
               f"{sid}: unexpected license {s.get('license')!r}")

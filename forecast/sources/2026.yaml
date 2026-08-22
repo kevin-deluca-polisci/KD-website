@@ -680,10 +680,53 @@ sources:
     declared_inputs: []
     license: permission_pending
     robots_checked: 2026-08-19
-    config: {urls: []}
+    url_checked: 2026-08-22
+    config:
+      # The forecast page itself, captured for provenance: it carries the
+      # methodology text and the chart ids, and if those ids change we want the
+      # day they changed in the archive rather than a mystery 404.
+      article: https://www.theargumentmag.com/p/split-ticket-2026-midterms-model
+      # Datawrapper chart ids as of 2026-08-22, read off the article.
+      datawrapper:
+        house_map: u9EZf
+        house_table: Cy0fK          # per-district probabilities and margins
+        house_control: 5UEYH
+        house_seats: 2OrV2
+        house_scenarios: gKHb7
+        senate_map: g4hHM
+        senate_table: Hus3x         # per-state probabilities and margins
+        senate_control: toEMi
+        senate_seats: GhLiF
+        senate_scenarios: X2WrG
+      urls: []                       # built at capture time — see notes
     notes: >
-      Paywalled at The Argument. Datawrapper tables expose per-race CSV via
-      "Get the Data", but upstream access is gated. Available via Wikipedia.
+      Split Ticket now publishes inside The Argument, which changes the
+      licence question rather than settling it: the model is behind a
+      subscription publication, and paying for access has never been permission
+      to redistribute. publication stays `private` and license stays
+      permission_pending until somebody answers a letter.
+      ALREADY REACHING US, at the national level only. Wikipedia's
+      poll-aggregation table lists Split Ticket's generic-ballot average and the
+      parser attributes it back at this same private tier. What is NOT reaching
+      us, and what this entry is for, is the RACE-LEVEL forecast — which is
+      precisely what the professional category is short of.
+      THE CSV ROUTE, verified 2026-08-22 as far as it can be from here. The
+      Datawrapper charts expose their underlying data at
+      https://datawrapper.dwcdn.net/<id>/<version>/dataset.csv — note the
+      VERSION segment. The unversioned path 404s; /1/dataset.csv returns data.
+      That version increments when they republish a chart, so a hardcoded /1/
+      WILL break silently the first time they update the forecast, which is the
+      worst failure mode this project has: a stale number that still looks
+      live. The capture step must read the chart page at
+      https://datawrapper.dwcdn.net/<id>/ and take the version from it rather
+      than assuming one, and the parser must refuse a payload whose row count
+      collapses.
+      NOT YET ENABLED. The route exists; the permission does not. Enabling this
+      captures race-level forecasts from a paid publication into the private
+      archive, which is defensible under the project's own rule — collect
+      privately, publish only aggregates — but it is a bigger step than the
+      aggregator rows we take off Wikipedia, and it should be taken knowingly
+      rather than as a side effect of a registry edit.
 
   - id: sabato
     name: Sabato's Crystal Ball
@@ -955,12 +998,13 @@ sources:
     name: CNalysis
     category: professional
     method: http
-    enabled: false                 # no 2026 product exists yet — see notes
+    enabled: false                 # CLOSED — the organisation shut down
     cadence: daily
     publication: aggregate_only    # free to read; no republication grant
     license: permitted
     robots_checked: 2026-08-21
     url_checked: 2026-08-21
+    closed: 2026-08-22             # not "waiting" — there is nothing to wait for
     declared_inputs: []
     config:
       urls:
@@ -969,19 +1013,22 @@ sources:
         - name: senate
           url: https://projects.cnalysis.com/26g/senate
     notes: >
-      DISABLED 2026-08-21, and the honest reason is that these two URLs were
-      registered without ever being fetched. Both 404. The project index at
-      projects.cnalysis.com lists only the 23-24 cycle; the path pattern is
-      /<cycle>/<office> and there is no 2026 cycle on it. CNalysis has not
-      published a 2026 forecast yet, so there is nothing to capture and a daily
-      attempt would fail every morning — which is worse than being switched
-      off, because an alarm that always fires is one nobody reads.
-      ROUTE BACK IN: re-check the index for a 2026 path (probably /25-26/senate
-      and /25-26/house, by their own convention), point the URLs at whatever is
-      actually there, set enabled: true, and let the bytes accumulate for a day
-      before writing the parser. Worth the trouble: CNalysis is NOT one of the
-      twelve raters already reaching us through Wikipedia, so it would be a
-      genuinely new opinion rather than a second copy of one we hold.
+      CLOSED 2026-08-22. This entry used to say "no 2026 product exists yet"
+      and listed a route back in. That was wrong about the reason and therefore
+      wrong about the remedy: CNalysis shut down in 2025 and is not forecasting
+      the midterms. There is no page coming and the 404s were the end of the
+      story, not the start of one.
+      WHY THE DISTINCTION IS WORTH A FIELD OF ITS OWN. A source that is
+      disabled-and-waiting is a standing invitation to re-check, and every
+      re-check costs somebody a few minutes and a small amount of hope. A
+      source that is CLOSED should be re-checked never. Recording which is
+      which is most of what these notes are for.
+      WHAT WAS LOST: CNalysis was not one of the twelve raters reaching us
+      through Wikipedia, so this is a genuinely absent opinion rather than a
+      duplicate we can shrug at — one fewer route toward the three gated
+      contributors the professional category needs to clear MIN_N.
+      The URLs and config stay rather than being deleted, so that anyone
+      reading this entry later can see exactly what was tried.
   - id: jhk_forecasts
     name: JHK Forecasts
     category: professional
@@ -1017,16 +1064,22 @@ sources:
     publication: aggregate_only
     license: permitted
     robots_checked: 2026-08-21
-    url_checked: 2026-08-21
+    url_checked: 2026-08-22        # re-checked by hand; still nothing for 2026
     declared_inputs: []
     config:
       urls:
         - name: ratings
           url: https://elections-daily.com/2026-senate-ratings/
     notes: >
-      DISABLED 2026-08-21. The URL was a guess and it 404s. Their ratings hub
-      at /election-ratings/ still shows the 2024 cycle, with archives back to
-      2020 and nothing for 2026; there is no page to capture.
-      ROUTE BACK IN: watch /election-ratings/ for a 2026 section. Like
-      CNalysis, Elections Daily is not among the twelve raters Wikipedia
-      already gives us, so it would add a real opinion and not a duplicate.
+      DISABLED 2026-08-21, re-checked 2026-08-22 and still nothing. The URL was
+      a guess and it 404s. Their ratings hub at /election-ratings/ shows the
+      2024 cycle, with archives back to 2020 and no 2026 section; there is no
+      page to capture.
+      STILL WAITING, unlike CNalysis on this same list — Elections Daily is a
+      going concern that has not published this cycle's ratings yet, not an
+      operation that closed. That is the difference the `closed:` field records,
+      and it is why this entry keeps its route back in and CNalysis does not.
+      ROUTE BACK IN: watch /election-ratings/ for a 2026 section. Elections
+      Daily is not among the twelve raters Wikipedia already gives us, so it
+      would add a real opinion and not a duplicate. Worth a monthly look rather
+      than a daily fetch; a daily fetch against a 404 is an alarm nobody reads.

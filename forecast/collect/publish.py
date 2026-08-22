@@ -7,7 +7,7 @@ no access to parsed/ or raw/ by construction, so it cannot leak even if
 someone later edits it carelessly.
 """
 from __future__ import annotations
-import argparse, csv, json, sys, datetime as dt
+import argparse, csv, json, statistics, sys, datetime as dt
 from collections import defaultdict
 from pathlib import Path
 
@@ -40,7 +40,7 @@ def rd(p):
 
 
 # ---------------------------------------------------------------------------
-# The four-category spread.
+# The category spread.
 #
 # Per race, what each FAMILY of forecast says — not one named forecaster
 # against another. That framing was wrong twice over. It implied a benchmark
@@ -52,11 +52,37 @@ def rd(p):
 # already the published tier: aggregate.py decides what may appear in one and
 # refuses to write if the answer is nothing. Nothing here re-derives that
 # judgment, and nothing here can name a forecaster the aggregator withheld.
+#
+# THE ORDER IS AN ARGUMENT, so it is worth stating what the argument is.
+#
+# Left to right, the row runs from LEAST modelled to MOST modelled:
+#
+#   Polling        someone asked people and reported the answer. The only
+#                  step between the respondent and the cell is an average.
+#   Markets        no model either, but a price is not a raw response — it is
+#                  many people's beliefs, already aggregated by money, and it
+#                  reflects whatever those people read this morning.
+#   Fundamentals   our first actual model: three variables, one equation, no
+#                  polls at all.
+#   Professional   people who forecast for a living, combining polls with
+#                  fundamentals, race ratings and candidate quality.
+#   Academic       published specifications with the most machinery of all,
+#                  and the most explicit assumptions to argue with.
+#
+# The reader can therefore ask one question of the whole row — does adding
+# modelling move the number, and in which direction — which is a better
+# question than any single cell answers on its own.
+#
+# A NOTE FOR WHOEVER EDITS THIS NEXT. This list is the render order and nothing
+# else: no averaging, no weighting and no privacy decision reads it. Reordering
+# it is safe. Removing a name from it silently drops that family from the page,
+# which is not.
 # ---------------------------------------------------------------------------
 
-CATEGORY_ORDER = ["fundamentals", "polling", "professional", "market"]
-CATEGORY_LABEL = {"fundamentals": "Fundamentals", "polling": "Polling",
-                  "professional": "Professional", "market": "Markets"}
+CATEGORY_ORDER = ["polling", "market", "fundamentals", "professional", "academic"]
+CATEGORY_LABEL = {"polling": "Polling", "market": "Markets",
+                  "fundamentals": "Fundamentals", "professional": "Professional",
+                  "academic": "Academic"}
 
 
 def build_model_index(d: Path, latest: str) -> dict:
@@ -264,6 +290,67 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
                 "senate_seats", "senate_prob")):
             national.append(row)
 
+    # ---- the across-family average -------------------------------------
+    #
+    # ONE VOTE PER FAMILY, not one per contributor. Polling currently holds
+    # four aggregators and fundamentals holds one model; averaging contributors
+    # would make the headline number four-fifths polling and call it a
+    # consensus of everything. The families are the unit this site reasons in,
+    # so the families are what get averaged.
+    #
+    # THE SUBTRACTION PROBLEM, which is why this is not simply a mean of the
+    # rows above. A category can be withheld — below MIN_N, or holding only
+    # gated contributors. If we averaged the withheld cell in and published the
+    # result beside the categories that ARE shown, the withheld one comes
+    # straight back out: with k families averaged and k-1 visible, the hidden
+    # one is k*mean - sum(visible). Exactly. That is the disclosure floor
+    # defeated by arithmetic a reader can do in their head, and it would be our
+    # own new code that did it.
+    #
+    # So the average runs over the VISIBLE cells only, and says how many it
+    # used. A number computed from four families is honestly a number computed
+    # from four families; it is not a consensus of five with one kept quiet.
+    def _across(key: str) -> dict:
+        vals, used = [], []
+        for row in national:
+            if row.get(key + "_withheld"):
+                continue
+            v = row.get(key)
+            if v is None:
+                continue
+            vals.append(float(v))
+            used.append(row["category"])
+        if not vals:
+            return {"value": None, "n_categories": 0, "categories": [],
+                    "spread": None}
+        return {
+            "value": round(statistics.fmean(vals), 2),
+            "n_categories": len(vals),
+            "categories": used,
+            # The spread, not a confidence interval. These are point forecasts
+            # from unrelated methods; the distance between them is disagreement
+            # between families, which is a different thing from any one model's
+            # uncertainty and must never be drawn as an error bar.
+            "spread": [round(min(vals), 2), round(max(vals), 2)]
+                      if len(vals) > 1 else None,
+        }
+
+    across = {k: _across(k) for k in
+              ("house_margin", "house_seats", "house_prob",
+               "senate_seats", "senate_prob")}
+    across["label"] = "All families"
+    across["basis"] = ("unweighted mean of the family averages that are "
+                       "published today; a family withheld below the "
+                       "disclosure floor is left out rather than averaged in, "
+                       "because averaging it in would let a reader recover it "
+                       "by subtraction")
+    withheld_families = sorted({row["category"] for row in national
+                                if any(row.get(k + "_withheld") for k in
+                                       ("house_margin", "house_seats",
+                                        "house_prob", "senate_seats",
+                                        "senate_prob"))})
+    across["families_withheld"] = withheld_families
+
     # ---- per race: the Senate, one row per seat ----
     races = []
     for r in (senate or {}).get("races", []):
@@ -299,6 +386,7 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
     missing = [c for c in CATEGORY_ORDER if c not in covered]
     return {
         "national": national,
+        "across_families": across,
         "races": races,
         "plot": _spread_plot(races),
         "categories": CATEGORY_ORDER,

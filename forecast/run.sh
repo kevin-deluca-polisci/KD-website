@@ -179,13 +179,21 @@ fi
 # ---- 3. our fundamentals model --------------------------------------------
 if run_stage model; then
   banner "3/5  models"
-  # All four, in dependency order, and all of them every run. This stage
-  # used to be fundamentals alone, which quietly meant a local run.sh
-  # published a fresh fundamentals number beside a stale polling one.
-  # seats.py is last: it reads what the two model steps just wrote.
+  # All of them, in dependency order, every run. This stage used to be
+  # fundamentals alone, which quietly meant a local run.sh published a fresh
+  # fundamentals number beside a stale polling one.
+  #
+  # academic.py sits AFTER polling.py and BEFORE seats.py, and the placement is
+  # not cosmetic. BEW reads the RAW generic ballot out of polling_model.json,
+  # so running it any earlier feeds it yesterday's poll or nothing at all — and
+  # "nothing at all" is the quiet failure, because the model simply declines to
+  # run and the academic category goes missing from the page without an error.
+  #
+  # seats.py is last: it reads what every step above just wrote.
   python3 forecast/model/state_pvi.py    --cycle "$CYCLE" || FAILED+=("state_pvi")
   python3 forecast/model/fundamentals.py --cycle "$CYCLE" || FAILED+=("fundamentals")
   python3 forecast/model/polling.py      --cycle "$CYCLE" || FAILED+=("polling")
+  python3 forecast/model/academic.py     --cycle "$CYCLE" || FAILED+=("academic")
   python3 forecast/model/seats.py        --cycle "$CYCLE" || FAILED+=("seats")
 fi
 

@@ -18,8 +18,10 @@ machinery, and record what falls out.
 
     fundamentals tide   from fundamentals_model.json   (approval, income, seats)
     polling tide        from polling_model.json        (generic ballot, shrunk)
+    academic tides      from academic_models.json      (published specifications)
+    outside tides       from the parsed rows           (Fair, the aggregators)
 
-Everything downstream of the tide is IDENTICAL between the two runs — same
+Everything downstream of the tide is IDENTICAL between the runs — same
 state lean, same sigma, same simulation, same seed. That is deliberate. Any
 difference between the fundamentals and polling seat counts is a difference in
 the tide and nothing else, which is exactly the comparison the site is for. If
@@ -262,6 +264,37 @@ def main(argv=None) -> int:
             # seats and contributes no margin.
             tides["class_polling"] = ("polling", float(m[tide_key]),
                                       "individual", True)
+
+    # ACADEMIC MODELS. Published specifications we reimplemented, run on our
+    # own inputs — see model/academic.py for why these are a family of their
+    # own rather than more fundamentals.
+    #
+    # They enter here rather than through external_tides() because they are not
+    # captured: nobody fetched them, there is no raw byte behind them, and no
+    # parsed row carries their margin. They are computed here on the day, the
+    # same as our own two models, so they take the same route our own two
+    # models take.
+    #
+    # margin_elsewhere is False. An academic model's tide exists nowhere else
+    # as a row, so — unlike an aggregator read off Wikipedia — its margin has
+    # to be contributed here or it never appears at all.
+    #
+    # Tier is read from the file rather than asserted, for the same reason the
+    # category is: if a model is ever added whose licence is not ours to give,
+    # this loop must not be the thing that quietly publishes it.
+    am = d / "academic_models.json"
+    if am.exists():
+        acad = json.loads(am.read_text())
+        for key, m in (acad.get("models") or {}).items():
+            if m.get("margin_D") is None:
+                continue
+            tides[key] = (m.get("category") or "academic", float(m["margin_D"]),
+                          m.get("publication") or "individual", False)
+        skipped = acad.get("not_implemented") or {}
+        if skipped:
+            print(f"  academic: {len(skipped)} model(s) declared but not run "
+                  f"({', '.join(sorted(skipped))}) — see academic_models.json "
+                  f"for what each one is missing")
 
     # Outside models that publish a national margin and nothing else. Fair
     # gives a two-party House vote share and stops there; the seat count that
