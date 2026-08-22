@@ -118,6 +118,20 @@ LABELS = {
 # the table disagree about what order the reader is being asked to think in.
 ORDER = ["polling", "market", "fundamentals", "professional", "academic"]
 
+# Time windows the tracker offers, and the one it opens on.
+#
+# 60 DAYS IS THE DEFAULT rather than 30 or everything. Thirty is too few points
+# to read a trend from while the backfilled series are weekly — four dots is a
+# shape, not a line. Everything is the wrong default for the opposite reason:
+# it spans January 2025 to today, so the axis has to contain every value any
+# method has held in twenty months and the recent weeks flatten into nothing.
+# Sixty shows roughly eight backfilled points plus every captured day, which is
+# enough to see movement without burying it.
+RANGES = [("30", 30), ("60", 60), ("all", None)]
+RANGE_LABELS = {"30": "30 days", "60": "60 days", "all": "All"}
+RANGE_DEFAULT = "60"
+RANGE_DEFAULT_DAYS = 60
+
 
 def _rd(p: Path) -> list[dict]:
     return list(csv.DictReader(p.open(encoding="utf-8"))) if p.exists() else []
@@ -347,10 +361,37 @@ def _nice_ticks(lo: float, hi: float, n: int = 4) -> list[float]:
     return ticks
 
 
-def build_panel(rows: list[dict], panel: str) -> dict | None:
+def build_panel(rows: list[dict], panel: str,
+                window_days: int | None = None) -> dict | None:
+    """One panel's geometry. `window_days` trims to the most recent N days.
+
+    THE WINDOW IS WHY THE AXIS CAN BE TIGHT. Fitting the scale to the data was
+    only half the problem: once the backfill gave some series six hundred days,
+    the honest full-range axis had to span every value any method has held
+    since January 2025, and the last fortnight — the part anyone is actually
+    reading — was compressed into a band a few pixels tall. Trimming the dates
+    first makes the axis narrow because the DATA is narrow, which is a better
+    fix than squeezing the frame around a wide series.
+
+    Panels are built once per window and the page hides all but one, the same
+    way the chamber and metric toggles already work. The arithmetic stays in
+    Python; the template only shows and hides.
+    """
     rs = [r for r in rows if r["panel"] == panel]
     if not rs:
         return None
+    if window_days is not None:
+        all_dates = sorted({r["snapshot_date"] for r in rs})
+        if all_dates:
+            import datetime as _dt
+            cutoff = (_dt.date.fromisoformat(all_dates[-1])
+                      - _dt.timedelta(days=window_days)).isoformat()
+            trimmed = [r for r in rs if r["snapshot_date"] >= cutoff]
+            # A window that would empty the panel is ignored rather than
+            # rendered blank: better to show the whole short series than an
+            # empty frame captioned "last 30 days".
+            if trimmed:
+                rs = trimmed
     dates = sorted({r["snapshot_date"] for r in rs})
     vals = [_f(r["value"]) for r in rs if _f(r["value"]) is not None]
     # Only the LAST point's interval widens the axis, because only the last
@@ -372,17 +413,55 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
     # drawing. Forcing 218 into view when every series sits near 250 would push
     # the interesting part of the chart into the top third; leaving it out when
     # a series is about to cross it would hide the only thing that matters.
+    # THE AXIS IS AS TIGHT AS THE DATA ALLOWS, and that is a deliberate change
+    # from the generous version this replaced.
+    #
+    # This chart exists to show how far apart the methods are. A House seats
+    # axis running 190-274 for data that lives between 201 and 263 spends a
+    # quarter of its height on emptiness, and every gap between series shrinks
+    # in proportion. The old settings padded by 18% of the span on each side
+    # and then let the tick rounding widen it again — two independent reasons
+    # for the plot to be bigger than its data.
+    #
+    # Now: one seat of headroom on a seats panel, one point on a probability
+    # panel, and the ticks are fitted INSIDE the domain rather than allowed to
+    # stretch it. The proportional term stays small so that a genuinely wide
+    # spread is not squeezed against the frame.
+    data_lo, data_hi = lo, hi
     ref = view.get("reference")
-    if ref is not None and lo - (hi - lo) * 0.6 <= ref <= hi + (hi - lo) * 0.6:
-        lo, hi = min(lo, ref), max(hi, ref)
-    pad = max((hi - lo) * 0.18,
-              {"pct": 0.5, "prob": 0.04, "seats": 2.0}.get(unit, 0.5))
+
+    # THE REFERENCE LINE NO LONGER GETS TO WIDEN THE AXIS MUCH. 218 seats is
+    # the most meaningful annotation on a seats chart and it used to be pulled
+    # into view from up to 60% of the span away, which on a tight axis means
+    # dragging the whole plot sideways to draw one line. It now joins only when
+    # it is genuinely near the data; otherwise it is dropped and the panel says
+    # so, which is more honest than a chart silently missing its own baseline.
+    ref_offscreen = False
+    if ref is not None:
+        span = max(hi - lo, 1e-9)
+        if lo - span * 0.2 <= ref <= hi + span * 0.2:
+            lo, hi = min(lo, ref), max(hi, ref)
+        else:
+            ref_offscreen = True
+
+    # One seat, one point, three tenths of a margin point. The proportional
+    # term is only a floor for very wide ranges and is deliberately tiny — it
+    # exists so a series sitting exactly at the extreme still has room for its
+    # direct label, not to give the plot breathing space it does not need.
+    pad = max((hi - lo) * 0.02,
+              {"pct": 0.3, "prob": 0.01, "seats": 1.0}.get(unit, 0.3))
     lo, hi = lo - pad, hi + pad
     if unit == "prob":
         lo, hi = max(0.0, lo), min(1.0, hi)
-    ticks = _nice_ticks(lo, hi)
-    if ticks:
-        lo, hi = min(lo, ticks[0]), max(hi, ticks[-1])
+    # A flat series would otherwise give a zero-height domain and a division by
+    # zero in Y(). One point of room either side is enough to draw a line.
+    if hi - lo < 1e-6:
+        step = {"prob": 0.01, "seats": 1.0}.get(unit, 0.3)
+        lo, hi = lo - step, hi + step
+    # Ticks are FITTED, not stretched to. Anything outside the domain would
+    # render off-canvas anyway, so it is dropped rather than allowed to pull
+    # the axis out to meet it.
+    ticks = [t for t in _nice_ticks(lo, hi) if lo <= t <= hi]
 
     def X(d):
         # A single date sits in the middle rather than at x=0, where it would
@@ -499,6 +578,10 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
         "total": view.get("total"),
         "dates": dates, "n_dates": len(dates), "dense": dense,
         "date_ticks": date_ticks,
+        # The plotted domain, exported so a change to the padding can be
+        # checked against the data it is supposed to frame rather than against
+        # the tick labels, which are a subset of it.
+        "y_domain": [round(lo, 4), round(hi, 4)],
         "x_ticks": [{"v": t, "x": round((t - lo) / (hi - lo) * 100, 2),
                      "label": fmt(t)} for t in ticks],
         "y_ticks": [{"v": t, "y": round(Y(t), 2), "label": fmt(t)} for t in ticks],
@@ -508,6 +591,11 @@ def build_panel(rows: list[dict], panel: str) -> dict | None:
         "ref_y": (round(Y(ref), 2) if ref is not None and lo < ref < hi else None),
         "ref_label": view.get("reference_label", ""),
         "ref_value": ref,
+        # True when the reference exists but sits too far from the data to be
+        # worth widening the axis for. The template says which side it is on
+        # rather than leaving the reader to wonder where the majority line went.
+        "ref_offscreen": ref_offscreen,
+        "ref_below": bool(ref is not None and ref < data_lo),
         "zero_y": round(Y(0.0), 2) if unit == "pct" and lo < 0 < hi else None,
         "series": series,
     }
@@ -922,8 +1010,17 @@ def build_ratings_spread(derived: Path, snapshot: str, chamber: str,
 
 def build(derived: Path, snapshot: str, rebuild: bool = False) -> dict:
     rows = update_timeline(derived, snapshot, rebuild)
-    out = {p: build_panel(rows, p) for p in PANELS}
+    out = {p: build_panel(rows, p, RANGE_DEFAULT_DAYS) for p in PANELS}
     out["views"] = VIEWS
+    # Every panel at every window. Three windows times five panels is fifteen
+    # small dicts of coordinates — a few kilobytes of text — which is the price
+    # of letting the reader change the time range without a round trip or any
+    # geometry in the browser.
+    out["ranges"] = {key: {p: build_panel(rows, p, days) for p in PANELS}
+                     for key, days in RANGES}
+    out["range_keys"] = [k for k, _ in RANGES]
+    out["range_labels"] = RANGE_LABELS
+    out["range_default"] = RANGE_DEFAULT
     # Governors ride along here and nowhere else. They are not modelled — a
     # national tide carried through partisan lean describes them badly — so
     # there is no forecast of ours to put beside them. What there IS is a

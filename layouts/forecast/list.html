@@ -38,13 +38,26 @@
         <button type="button" data-value="seats" aria-selected="true">Democratic seats</button>
         <button type="button" data-value="prob" aria-selected="false">Chance of a majority</button>
       </div>
+      {{/* Third dimension. The toggle script reads every .seg[data-dim] and
+           matches it against data-<dim> on the panels, so this needed no
+           JavaScript — only panels carrying a data-range attribute. */}}
+      <span class="seglabel">Range</span>
+      <div class="seg" data-dim="range">
+        {{- range $rk := $ch.range_keys }}
+        <button type="button" data-value="{{ $rk }}"
+                aria-selected="{{ if eq $rk $ch.range_default }}true{{ else }}false{{ end }}">{{ index $ch.range_labels $rk }}</button>
+        {{- end }}
+      </div>
     </div>
 
     <div data-group="tracker">
+    {{- range $rk := $ch.range_keys }}
+    {{- $rset := index $ch.ranges $rk }}
     {{- range $vk := (slice "house_seats" "house_prob" "senate_seats" "senate_prob") }}
-    {{- $pan := index $ch $vk }}
+    {{- $pan := index $rset $vk }}
     {{- if $pan }}
-    <div data-panel data-chamber="{{ $pan.chamber }}" data-metric="{{ $pan.metric }}">
+    <div data-panel data-chamber="{{ $pan.chamber }}" data-metric="{{ $pan.metric }}"
+         data-range="{{ $rk }}">
       <p class="sub">{{ $pan.label }}{{ with $pan.total }}, of {{ . }}{{ end }}.
          {{ if eq $pan.chamber "senate" }}A majority needs 51: a 50–50 tie is broken
          by the vice-president, who is a Republican this cycle.{{ end }}</p>
@@ -124,6 +137,15 @@
          average below the disclosure floor —
          <a href="/forecast/methods/#disclosure">why</a>.</p>
       {{- end }}
+      {{/* The axis is fitted to the data now, so the majority line is not
+           always on it. Saying which side it is on beats leaving a reader to
+           wonder why the most important line on a seats chart is missing. */}}
+      {{- if $pan.ref_offscreen }}
+      <p class="thin-note">{{ $pan.ref_label }} is off this scale — every
+         series sits {{ if $pan.ref_below }}above{{ else }}below{{ end }} it.
+         The axis is fitted to the forecasts so the distances between them stay
+         readable.</p>
+      {{- end }}
       {{- if lt $pan.n_dates 3 }}
       <p class="thin-note">Collection began {{ index $pan.dates 0 }}. With
          {{ $pan.n_dates }} snapshot{{ if ne $pan.n_dates 1 }}s{{ end }} there is no
@@ -172,6 +194,7 @@
            source said on each date.</p>
       </details>
     </div>
+    {{- end }}
     {{- end }}
     {{- end }}
       <p data-empty class="muted" hidden>No series for that combination yet.</p>
