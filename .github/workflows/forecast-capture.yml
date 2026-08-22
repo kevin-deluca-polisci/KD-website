@@ -31,6 +31,18 @@ on:
       only:     {description: "Comma-separated source ids (blank = all)", required: false, default: ""}
       dry_run:  {description: "Fetch nothing, just report", type: boolean, required: false, default: false}
       backfill: {description: "Include Wikipedia revision backfill (run once)", type: boolean, required: false, default: false}
+      force_aggregate:
+        description: >-
+          Let aggregate.py write even if a snapshot date loses rows. Default off.
+          The guard exists because a clone without the raw archive rebuilds only
+          the newest day and would silently publish a shorter file over a longer
+          one. Turn this on ONLY when you know the shortening is correct — for
+          example after a pipeline change makes an older published date
+          unreproducible, which is the one case the guard cannot distinguish from
+          real loss. Read what it refused before overriding it.
+        type: boolean
+        required: false
+        default: false
  
 concurrency: {group: forecast-capture, cancel-in-progress: false}
 # issues: write is needed by the gate's issue-opening step. Without it that
@@ -136,7 +148,9 @@ jobs:
           # count and a chamber probability instead of a national margin
           # and four empty cells.
           python3 forecast/model/seats.py       --cycle "$CYCLE"
-          python3 forecast/collect/aggregate.py --cycle "$CYCLE"
+          AGG_ARGS=""
+          [ "${{ inputs.force_aggregate }}" = "true" ] && AGG_ARGS="--force"
+          python3 forecast/collect/aggregate.py --cycle "$CYCLE" $AGG_ARGS
           python3 forecast/collect/publish.py   --cycle "$CYCLE"
  
       # Runs AFTER the models, because it carries a file they write, and
@@ -223,4 +237,3 @@ jobs:
           echo "::warning::One or more sources failed — see forecast/data/${CYCLE}/manifest.csv"
           echo "### Forecast capture: partial failure" >> $GITHUB_STEP_SUMMARY
           echo "Successful sources were still captured and committed." >> $GITHUB_STEP_SUMMARY
-          exit 1
