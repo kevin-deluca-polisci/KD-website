@@ -73,6 +73,100 @@ KALSHI_PERIOD_MINUTES = 1440
 POLY_FIDELITY_MINUTES = 1440
 
 
+# ---------------------------------------------------------------------------
+# Shape tolerance
+# ---------------------------------------------------------------------------
+# WRITTEN BLIND, so written to survive being wrong. The first version of this
+# module hard-coded the response shape from the API docs and produced zero
+# artifacts against the real endpoint, with no way to tell whether the fetch
+# had failed, the key was named something else, or the price sat one level
+# deeper. A backfill that silently writes nothing is the same failure mode as
+# the Kalshi capture it was meant to repair.
+#
+# So: find the list wherever it is, find the price whatever it is called, and
+# print the shape of the first response from each source so the next run
+# reports the truth instead of a zero.
+
+_SHAPE_REPORTED: set = set()
+
+
+def _report_shape(source: str, ident: str, payload, body: bytes,
+                  found: list | None = None) -> None:
+    """Print the shape of the FIRST response per source, once."""
+    if source in _SHAPE_REPORTED:
+        return
+    _SHAPE_REPORTED.add(source)
+    print(f"    [shape] {source} first response for {ident}")
+    if payload is None:
+        print(f"    [shape]   not JSON; {len(body or b'')} bytes, "
+              f"starts {str((body or b'')[:80])}")
+        return
+    if isinstance(payload, dict):
+        print(f"    [shape]   top-level keys: {sorted(payload.keys())}")
+    else:
+        print(f"    [shape]   top level is {type(payload).__name__}")
+    if found:
+        print(f"    [shape]   list of {len(found)}; first element keys: "
+              f"{sorted(found[0].keys()) if isinstance(found[0], dict) else type(found[0])}")
+        if isinstance(found[0], dict):
+            for k, v in found[0].items():
+                if isinstance(v, dict):
+                    print(f"    [shape]     {k} -> {sorted(v.keys())}")
+    else:
+        print(f"    [shape]   no list of dicts found in the payload")
+
+
+def _first_list(payload) -> list:
+    """The first list-of-dicts in the payload, wherever it hides."""
+    if isinstance(payload, list):
+        return [x for x in payload if isinstance(x, dict)]
+    if not isinstance(payload, dict):
+        return []
+    # Named candidates first so a well-behaved response is taken literally.
+    for k in ("candlesticks", "candles", "history", "data", "results"):
+        v = payload.get(k)
+        if isinstance(v, list) and v and isinstance(v[0], dict):
+            return v
+    for v in payload.values():
+        if isinstance(v, list) and v and isinstance(v[0], dict):
+            return v
+    return []
+
+
+# Kalshi has moved price fields around: the markets endpoint now returns
+# `yes_bid_dollars` alongside the older `yes_bid`, and candlesticks nest a
+# price object whose exact name has changed between API versions. Rather than
+# guess again, prefer the most specific thing we recognise and fall back to
+# any plausible numeric.
+_PRICE_KEYS = ("price", "yes_price", "yes_ask", "yes_bid", "close_price")
+_SUB_KEYS = ("close", "mean", "last", "value")
+
+
+def _candle_price(c: dict) -> float | None:
+    """A yes-price in CENTS from one candle, whatever shape it arrived in."""
+    def _cents(v):
+        if not isinstance(v, (int, float)):
+            return None
+        # Dollar-denominated fields arrive as 0-1; the parser wants cents.
+        return float(v) * 100.0 if 0.0 <= float(v) <= 1.0 else float(v)
+
+    for k in _PRICE_KEYS:
+        node = c.get(k)
+        if isinstance(node, dict):
+            for sk in _SUB_KEYS:
+                got = _cents(node.get(sk))
+                if got is not None:
+                    return got
+        got = _cents(node)
+        if got is not None:
+            return got
+    for k in ("last_price", "last_price_dollars", "close"):
+        got = _cents(c.get(k))
+        if got is not None:
+            return got
+    return None
+
+
 def _newest_capture_day(cycle: int, source: str) -> Path | None:
     base = DATA / str(cycle) / "raw" / source
     if not base.is_dir():
@@ -158,25 +252,20 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
             if dry or not body:
                 continue
             try:
-                candles = (json.loads(body) or {}).get("candlesticks") or []
+                payload = json.loads(body) or {}
             except json.JSONDecodeError:
+                _report_shape("kalshi", ticker, None, body)
+                continue
+            candles = _first_list(payload)
+            _report_shape("kalshi", ticker, payload, body, candles)
+            if not candles:
                 continue
             for c in candles:
-                ts = c.get("end_period_ts") or c.get("ts")
+                ts = (c.get("end_period_ts") or c.get("ts")
+                      or c.get("timestamp") or c.get("period_end_ts"))
                 if ts is None:
                     continue
-                # Kalshi reports the yes price in cents under a few shapes
-                # depending on how the bar closed. Preferring the mid keeps
-                # this consistent with the live parser's _price().
-                px = None
-                for path in (("price", "close"), ("yes_ask", "close"),
-                             ("yes_bid", "close")):
-                    node = c
-                    for k in path:
-                        node = (node or {}).get(k) if isinstance(node, dict) else None
-                    if isinstance(node, (int, float)):
-                        px = node
-                        break
+                px = _candle_price(c)
                 if px is None:
                     continue                        # rule 2: no price, no row
                 d0 = dt.datetime.fromtimestamp(ts, dt.timezone.utc).date().isoformat()
@@ -248,8 +337,14 @@ def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int,
                 if dry or not body:
                     continue
                 try:
-                    hist = (json.loads(body) or {}).get("history") or []
+                    payload = json.loads(body) or {}
                 except json.JSONDecodeError:
+                    _report_shape("polymarket", m.get("question", "?"), None, body)
+                    continue
+                hist = _first_list(payload)
+                _report_shape("polymarket", m.get("question", "?"), payload,
+                              body, hist)
+                if not hist:
                     continue
                 # One bar per day: the last observation on each date.
                 per_day: dict[str, float] = {}
