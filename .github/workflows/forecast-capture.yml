@@ -33,7 +33,7 @@ on:
       backfill: {description: "Include Wikipedia revision backfill (run once)", type: boolean, required: false, default: false}
       force_aggregate:
         description: >-
-          Let aggregate.py write even if a snapshot date loses rows. Default off.
+          Force aggregate. Let aggregate.py write even if a snapshot date loses rows. Default off.
           The guard exists because a clone without the raw archive rebuilds only
           the newest day and would silently publish a shorter file over a longer
           one. Turn this on ONLY when you know the shortening is correct — for
@@ -43,7 +43,18 @@ on:
         type: boolean
         required: false
         default: false
- 
+      
+      backfill_academic:
+        description: >-
+          Recompute the academic models over the whole poll record and project
+          each date. One-off, not for the daily run: it reconstructs the generic
+          ballot from Silver's poll-level file back to Jan 2025 and runs one
+          Monte Carlo per point, so it adds several minutes. Safe to repeat —
+          it rebuilds from the archive rather than appending.
+        type: boolean
+        required: false
+        default: false
+        
 concurrency: {group: forecast-capture, cancel-in-progress: false}
 # issues: write is needed by the gate's issue-opening step. Without it that
 # step fails with 'Resource not accessible by integration' — and it only runs
@@ -145,13 +156,17 @@ jobs:
           # academic.py reads the RAW generic ballot out of polling_model.json,
           # so it has to come after polling.py. Run earlier it finds nothing,
           # declines to run, and the academic column vanishes with no error.
-          python3 forecast/model/academic.py    --cycle "$CYCLE"
+          ACAD_ARGS=""
+          [ "${{ inputs.backfill_academic }}" = "true" ] && ACAD_ARGS="--backfill"
+          python3 forecast/model/academic.py    --cycle "$CYCLE" $ACAD_ARGS          
           # seats.py runs LAST of the models and reads the two JSONs the
           # steps above write. It pushes each tide through the same seat
           # machinery, which is what gives fundamentals and polling a seat
           # count and a chamber probability instead of a national margin
           # and four empty cells.
-          python3 forecast/model/seats.py       --cycle "$CYCLE"
+          SEAT_ARGS=""
+          [ "${{ inputs.backfill_academic }}" = "true" ] && SEAT_ARGS="--backfill-academic"
+          python3 forecast/model/seats.py       --cycle "$CYCLE" $SEAT_ARGS          
           AGG_ARGS=""
           [ "${{ inputs.force_aggregate }}" = "true" ] && AGG_ARGS="--force"
           python3 forecast/collect/aggregate.py --cycle "$CYCLE" $AGG_ARGS
