@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-22T18:06:36.936169+00:00",
+  "generated_at": "2026-08-22T18:30:54.925370+00:00",
   "latest_snapshot": "2026-08-22",
   "snapshot_count": 92,
   "headline": [
@@ -30,10 +30,10 @@
     },
     {
       "category": "market",
-      "margin_D": 7.6754,
+      "margin_D": 7.6729,
       "n_sources": 2,
-      "low": 7.6151,
-      "high": 7.7358,
+      "low": 7.6188,
+      "high": 7.7269,
       "tier": "open",
       "display": "thin",
       "sole_source": "",
@@ -501,7 +501,7 @@
       ],
       [
         "2026-08-22",
-        7.6754
+        7.6729
       ]
     ]
   },
@@ -2927,34 +2927,34 @@
             },
             {
               "x": 100.0,
-              "y": 46.31,
+              "y": 46.34,
               "date": "2026-08-22",
-              "v": 7.6754
+              "v": 7.6729
             }
           ],
-          "polyline": "91.67,45.92 100.0,46.31",
+          "polyline": "91.67,45.92 100.0,46.34",
           "last": {
             "x": 100.0,
-            "y": 46.31,
+            "y": 46.34,
             "date": "2026-08-22",
-            "v": 7.6754
+            "v": 7.6729
           },
           "band": {
-            "y_low": 46.84,
-            "y_high": 45.79,
-            "low": 7.6151,
-            "high": 7.7358,
+            "y_low": 46.8,
+            "y_high": 45.87,
+            "low": 7.6188,
+            "high": 7.7269,
             "kind": "spread",
             "n": 2
           },
           "last_date": "2026-08-22",
           "stale": false,
           "n_sources": 2,
-          "label_y": 46.31,
+          "label_y": 46.34,
           "label_nudged": false,
-          "sx": 53.69,
-          "sx_low": 53.16,
-          "sx_high": 54.21
+          "sx": 53.66,
+          "sx_low": 53.2,
+          "sx_high": 54.13
         },
         {
           "key": "fundamentals",
@@ -5017,34 +5017,34 @@
                 },
                 {
                   "x": 100.0,
-                  "y": 46.31,
+                  "y": 46.34,
                   "date": "2026-08-22",
-                  "v": 7.6754
+                  "v": 7.6729
                 }
               ],
-              "polyline": "85.71,45.92 100.0,46.31",
+              "polyline": "85.71,45.92 100.0,46.34",
               "last": {
                 "x": 100.0,
-                "y": 46.31,
+                "y": 46.34,
                 "date": "2026-08-22",
-                "v": 7.6754
+                "v": 7.6729
               },
               "band": {
-                "y_low": 46.84,
-                "y_high": 45.79,
-                "low": 7.6151,
-                "high": 7.7358,
+                "y_low": 46.8,
+                "y_high": 45.87,
+                "low": 7.6188,
+                "high": 7.7269,
                 "kind": "spread",
                 "n": 2
               },
               "last_date": "2026-08-22",
               "stale": false,
               "n_sources": 2,
-              "label_y": 46.31,
+              "label_y": 46.34,
               "label_nudged": false,
-              "sx": 53.69,
-              "sx_low": 53.16,
-              "sx_high": 54.21
+              "sx": 53.66,
+              "sx_low": 53.2,
+              "sx_high": 54.13
             },
             {
               "key": "fundamentals",
@@ -6746,34 +6746,34 @@
                 },
                 {
                   "x": 100.0,
-                  "y": 46.31,
+                  "y": 46.34,
                   "date": "2026-08-22",
-                  "v": 7.6754
+                  "v": 7.6729
                 }
               ],
-              "polyline": "91.67,45.92 100.0,46.31",
+              "polyline": "91.67,45.92 100.0,46.34",
               "last": {
                 "x": 100.0,
-                "y": 46.31,
+                "y": 46.34,
                 "date": "2026-08-22",
-                "v": 7.6754
+                "v": 7.6729
               },
               "band": {
-                "y_low": 46.84,
-                "y_high": 45.79,
-                "low": 7.6151,
-                "high": 7.7358,
+                "y_low": 46.8,
+                "y_high": 45.87,
+                "low": 7.6188,
+                "high": 7.7269,
                 "kind": "spread",
                 "n": 2
               },
               "last_date": "2026-08-22",
               "stale": false,
               "n_sources": 2,
-              "label_y": 46.31,
+              "label_y": 46.34,
               "label_nudged": false,
-              "sx": 53.69,
-              "sx_low": 53.16,
-              "sx_high": 54.21
+              "sx": 53.66,
+              "sx_low": 53.2,
+              "sx_high": 54.13
             },
             {
               "key": "fundamentals",
@@ -8864,34 +8864,34 @@
                 },
                 {
                   "x": 100.0,
-                  "y": 35.63,
+                  "y": 35.65,
                   "date": "2026-08-22",
-                  "v": 7.6754
+                  "v": 7.6729
                 }
               ],
-              "polyline": "98.9,35.33 100.0,35.63",
+              "polyline": "98.9,35.33 100.0,35.65",
               "last": {
                 "x": 100.0,
-                "y": 35.63,
+                "y": 35.65,
                 "date": "2026-08-22",
-                "v": 7.6754
+                "v": 7.6729
               },
               "band": {
-                "y_low": 36.03,
-                "y_high": 35.23,
-                "low": 7.6151,
-                "high": 7.7358,
+                "y_low": 36.01,
+                "y_high": 35.29,
+                "low": 7.6188,
+                "high": 7.7269,
                 "kind": "spread",
                 "n": 2
               },
               "last_date": "2026-08-22",
               "stale": false,
               "n_sources": 2,
-              "label_y": 35.63,
+              "label_y": 35.65,
               "label_nudged": false,
-              "sx": 64.37,
-              "sx_low": 63.97,
-              "sx_high": 64.77
+              "sx": 64.35,
+              "sx_low": 63.99,
+              "sx_high": 64.71
             },
             {
               "key": "fundamentals",
@@ -20404,13 +20404,13 @@
         "senate_seats_80": null,
         "n_sources": 3,
         "sole_source": "kalshi",
-        "house_margin": 7.6754,
+        "house_margin": 7.6729,
         "house_margin_withheld": false,
         "house_margin_spread": {
-          "min": 7.615,
-          "max": 7.736,
-          "range": 0.121,
-          "sd": 0.085,
+          "min": 7.619,
+          "max": 7.727,
+          "range": 0.108,
+          "sd": 0.076,
           "n": 2,
           "all_open": true
         },
@@ -20594,7 +20594,7 @@
         ],
         "spread": [
           5.69,
-          7.68
+          7.67
         ]
       },
       "house_seats": {
@@ -21416,7 +21416,7 @@
           },
           "market": {
             "margin": null,
-            "prob": 0.6,
+            "prob": 0.59,
             "withheld": false,
             "n": 1
           },
@@ -21440,7 +21440,7 @@
           }
         },
         "n_cats": 5,
-        "prob_spread": 0.4577
+        "prob_spread": 0.4477
       },
       {
         "state": "KS",
@@ -22043,8 +22043,8 @@
             {
               "key": "market",
               "label": "Markets",
-              "prob": 0.6,
-              "x": 60.0
+              "prob": 0.59,
+              "x": 59.0
             },
             {
               "key": "fundamentals",
@@ -22067,8 +22067,8 @@
           ],
           "n_cats": 5,
           "x_lo": 14.23,
-          "x_hi": 60.0,
-          "spread": 45.8
+          "x_hi": 59.0,
+          "spread": 44.8
         },
         {
           "state": "TX",
@@ -22868,7 +22868,7 @@
         }
       ],
       "n_rows": 20,
-      "widest": 45.8,
+      "widest": 44.8,
       "median_spread": 18.3
     },
     "categories": [
@@ -22982,12 +22982,12 @@
         "label": "Markets",
         "metrics": {
           "house_margin": {
-            "now": 7.68,
+            "now": 7.67,
             "changes": {
               "all": {
                 "from": 7.72,
                 "from_date": "2026-08-21",
-                "delta": -0.04,
+                "delta": -0.05,
                 "days_actual": 1,
                 "mixed_recipe": false
               }
@@ -23197,14 +23197,14 @@
       "house_win_prob_D": 0.7907,
       "senate_seats_D": 49.87,
       "senate_win_prob_D": 0.4698,
-      "house_margin_D": 7.7358
+      "house_margin_D": 7.7269
     },
     "polymarket": {
       "senate_win_prob_D": 0.505,
       "senate_win_prob_R": 0.495,
       "house_win_prob_D": 0.875,
       "house_win_prob_R": 0.125,
-      "house_margin_D": 7.6151
+      "house_margin_D": 7.6188
     },
     "grant_williams": {
       "house_margin_D": 5.69,
