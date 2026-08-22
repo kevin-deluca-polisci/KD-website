@@ -287,6 +287,18 @@ def class_model_rows(cycle: int) -> list[dict]:
     # may be weeks old. seats.py records which, and it travels with the number
     # rather than being re-derived here from the source's name.
     as_of = {"d": date}
+    # THE LICENCE COMES FROM THE PROJECTION, NOT FROM THIS FILE.
+    #
+    # Every projection used to be stamped `individual`, which was true while
+    # the only tides were our own two models and Ray Fair, all three of them
+    # publishable by name. It stopped being true the moment the generic-ballot
+    # aggregators were projected: Decision Desk HQ and RealClearPolling permit
+    # the category average and not per-forecaster republication, and a seat
+    # count inverts straight back to the margin that produced it. Stamping
+    # those `individual` would have published a gated forecaster's number in
+    # another unit and left MIN_N counting zero gated contributors on a cell
+    # that was made entirely of them.
+    tier = {"p": "individual"}
 
     def emit(source_id, cat, race_id, chamber, state, district, quantity,
              value, unit):
@@ -294,10 +306,11 @@ def class_model_rows(cycle: int) -> list[dict]:
             return
         rows.append({
             "snapshot_date": date, "source_id": source_id,
-            "category": cat, "publication": "individual",
+            "category": cat,
             "race_id": race_id, "chamber": chamber, "state": state,
             "district": district, "quantity": quantity,
             "value": float(value), "unit": unit,
+            "publication": tier["p"],
             "as_of": as_of["d"],
             "captured_at": "", "raw_sha256": "", "raw_path": "",
         })
@@ -307,8 +320,15 @@ def class_model_rows(cycle: int) -> list[dict]:
         if not cat:
             continue
         as_of["d"] = model.get("as_of") or date
+        tier["p"] = model.get("publication") or "individual"
         senate, house = model.get("senate") or {}, model.get("house") or {}
-        if source_id not in MARGIN_FROM_ELSEWHERE:
+        # Whether this model's margin is already a row in its own right. The
+        # projection says so itself now; MARGIN_FROM_ELSEWHERE remains as the
+        # answer for payloads written before seats.py carried the flag.
+        elsewhere = model.get("margin_published_elsewhere")
+        if elsewhere is None:
+            elsewhere = source_id in MARGIN_FROM_ELSEWHERE
+        if not elsewhere:
             emit(source_id, cat, NATL_HOUSE, "national", "", "", "margin_D",
                  model.get("tide_D"), "margin")
         emit(source_id, cat, NATL_HOUSE, "national", "", "", "seats_D",

@@ -68,9 +68,34 @@ HOUSE_PUBLIC_FIELDS = ("n_districts", "expected_D_seats", "D_seats_80pct",
                        "prob_D_218_plus", "pvi_source", "districts")
 # Sources that publish a national House margin and leave the seat count to
 # whoever wants one. Mapped to the category their forecast belongs to.
-EXTERNAL_TIDES = {
-    "fair": "fundamentals",
+# Outside sources that publish a NATIONAL MARGIN and no seat count. Each one's
+# margin is pushed through the same partisan lean our own models use, and the
+# resulting seat counts are averaged in aggregate.py alongside everyone else's.
+#
+# WHY THIS IS A SET AND NOT A MAPPING. It used to map source -> category, which
+# meant the category was asserted twice: once by the parser that read the row
+# and once here. Those two can disagree, and the row is the one that knows —
+# Wikipedia's aggregator table stamps `category="polling"` on The Economist's
+# generic-ballot average even though the Economist is registered as a
+# professional forecaster, because a generic-ballot number IS polling whoever
+# publishes it. So the category, the licence tier and the date all travel with
+# the row and nothing is restated here.
+#
+# WHY SILVER BULLETIN IS NOT ON THIS LIST. class_polling's tide is the generic
+# ballot carried through, which is to say it is Silver Bulletin's average.
+# Adding Silver Bulletin here would push that same number through the seat
+# machinery a second time and put one aggregator into the polling seat average
+# twice. aggregate.py already refuses the equivalent double-count on the margin
+# side; this is the same trap one layer down.
+EXTERNAL_TIDE_SOURCES = {
+    "fair",
+    # Generic-ballot aggregators, read off Wikipedia's aggregator table and
+    # attributed to their owners. Each publishes a national margin and stops
+    # there, which is exactly Fair's situation.
+    "ddhq", "rcp", "race_to_the_wh", "economist",
+    "votehub", "fiftyplusone", "split_ticket",
 }
+
 # Spelled the same way the parsers spell it.
 NATL_HOUSE = "NATL_HOUSE_2026"
 
@@ -83,8 +108,8 @@ HOUSE_MAJORITY = 218
 TIDE_MAX_AGE_DAYS = 200
 
 
-def external_tides(cycle: int, today: str) -> dict[str, tuple[str, float, str]]:
-    """source_id -> (category, margin_D, as_of) for each EXTERNAL_TIDES source.
+def external_tides(cycle: int, today: str) -> dict[str, dict]:
+    """source_id -> {category, margin, as_of, publication} for outside tides.
 
     THE MOST RECENT PUBLISHED VALUE ANYWHERE IN THE ARCHIVE, not the value in
     today's parsed file.
@@ -93,37 +118,50 @@ def external_tides(cycle: int, today: str) -> dict[str, tuple[str, float, str]]:
     for a source that publishes daily and silently wrong for one that does not.
     Fair posts a mid-term prediction a few times a year and the parser
     back-dates each to its publication day, so his rows live in
-    parsed/2026-07-31.csv and nowhere near today's file. The scan found
-    nothing, no Fair tide was ever built, no Fair seat projection was ever
-    written, and the fundamentals category on the site was our own model alone
-    every single day since he was added — the one thing adding him was supposed
-    to prevent.
+    parsed/2026-07-31.csv and nowhere near today's file.
+
+    THE TIER TRAVELS WITH THE TIDE, AND IT HAS TO. Given the national tide a
+    seat count inverts straight back to the margin that produced it. Publishing
+    a seat projection by name for a source whose licence permits only category
+    averages would therefore hand back that source's gated number and walk
+    around the disclosure floor entirely. Fair is `individual` and may be
+    named; Decision Desk HQ is `aggregate_only` and may not. Carrying the row's
+    own publication field is what keeps the floor meaningful.
 
     Sorted filenames mean a later date overwrites an earlier one, so what
     survives per source is its newest prediction.
     """
-    out: dict[str, tuple[str, float, str]] = {}
+    out: dict[str, dict] = {}
     for f in sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv"))):
         with open(f, encoding="utf-8") as fh:
             for r in csv.DictReader(fh):
-                if (r.get("source_id") in EXTERNAL_TIDES
+                if (r.get("source_id") in EXTERNAL_TIDE_SOURCES
                         and r.get("race_id") == NATL_HOUSE
                         and r.get("quantity") == "margin_D"):
                     try:
                         v = float(r["value"])
                     except (TypeError, ValueError):
                         continue
-                    out[r["source_id"]] = (EXTERNAL_TIDES[r["source_id"]], v,
-                                           r["snapshot_date"])
+                    out[r["source_id"]] = {
+                        "category": r.get("category") or "",
+                        "margin": v,
+                        "as_of": r["snapshot_date"],
+                        "publication": r.get("publication") or "private",
+                    }
 
     fresh = {}
-    for sid, (cat, v, as_of) in out.items():
-        age = (dt.date.fromisoformat(today) - dt.date.fromisoformat(as_of)).days
+    for sid, t in out.items():
+        if not t["category"]:
+            print(f"  {sid}: margin row carries no category — skipping rather "
+                  f"than guessing which panel it belongs in")
+            continue
+        age = (dt.date.fromisoformat(today)
+               - dt.date.fromisoformat(t["as_of"])).days
         if age > TIDE_MAX_AGE_DAYS:
-            print(f"  {sid}: last published {as_of} ({age} days ago) — past "
+            print(f"  {sid}: last published {t['as_of']} ({age} days ago) — past "
                   f"{TIDE_MAX_AGE_DAYS}, not projecting a seat count from it")
             continue
-        fresh[sid] = (cat, v, as_of)
+        fresh[sid] = t
     return fresh
 
 
@@ -203,7 +241,10 @@ def main(argv=None) -> int:
     if fm.exists():
         m = json.loads(fm.read_text())
         if m.get("margin_D") is not None:
-            tides["class_fundamentals"] = ("fundamentals", float(m["margin_D"]))
+            # Ours. Its tide exists nowhere else as a row, so it is the one
+            # projection that also contributes the margin.
+            tides["class_fundamentals"] = ("fundamentals", float(m["margin_D"]),
+                                           "individual", False)
 
     pm = d / "polling_model.json"
     if pm.exists():
@@ -216,7 +257,11 @@ def main(argv=None) -> int:
         tide_key = ("nowcast_tide_D" if m.get("nowcast_tide_D") is not None
                     else "election_day_tide_D")
         if m.get(tide_key) is not None:
-            tides["class_polling"] = ("polling", float(m[tide_key]))
+            # Ours, but its tide IS the generic ballot, which reaches the
+            # polling margin through the aggregators' own rows. It projects
+            # seats and contributes no margin.
+            tides["class_polling"] = ("polling", float(m[tide_key]),
+                                      "individual", True)
 
     # Outside models that publish a national margin and nothing else. Fair
     # gives a two-party House vote share and stops there; the seat count that
@@ -225,12 +270,15 @@ def main(argv=None) -> int:
     # from the parsed rows for the snapshot rather than from derived/, because
     # these arrive through capture and parse like any other source.
     tide_as_of: dict[str, str] = {}
-    for sid, (cat, v, as_of) in external_tides(a.cycle, date).items():
-        tides[sid] = (cat, v)
-        tide_as_of[sid] = as_of
-        if as_of != date:
-            print(f"  {sid}: using the prediction published {as_of} — his "
-                  f"current one, and there is no newer")
+    for sid, t in external_tides(a.cycle, date).items():
+        # An outside tide's margin is ALREADY a parsed row in its category, so
+        # its projection must contribute seats only. Emitting the margin again
+        # here would put the same aggregator into the polling mean twice.
+        tides[sid] = (t["category"], t["margin"], t["publication"], True)
+        tide_as_of[sid] = t["as_of"]
+        if t["as_of"] != date:
+            print(f"  {sid}: using the margin published {t['as_of']} — its "
+                  f"most recent, and there is no newer")
 
     if not tides:
         print("  no tides available — run fundamentals.py and polling.py first")
@@ -242,12 +290,20 @@ def main(argv=None) -> int:
     print("=" * 68)
 
     projections = {}
-    for name, (category, tide) in sorted(tides.items()):
+    for name, (category, tide, tier, margin_elsewhere) in sorted(tides.items()):
         p = project(tide, pvi, states, rows, sigma, a.holdover_d)
         # The category travels WITH the projection. aggregate.py files each
         # one under it, so adding a model is a registry entry plus a line in
-        # EXTERNAL_TIDES and nothing downstream has to learn its name.
+        # EXTERNAL_TIDE_SOURCES and nothing downstream has to learn its name.
         p["category"] = category
+        # The LICENCE travels with it too. A seat count inverts back to the
+        # tide that made it, so a projection built from a gated source's margin
+        # is that source's number in another coat and carries its tier.
+        p["publication"] = tier
+        # Whether this source's margin is already a row in its own right. If it
+        # is, this projection contributes seats and no margin, or the same
+        # forecaster lands in the category mean twice.
+        p["margin_published_elsewhere"] = bool(margin_elsewhere)
         # When this model last spoke. Ours speak today by construction; an
         # external tide may be weeks old, and aggregate.py copies this onto the
         # rows it emits so the seat count carries the same date stamp as the
