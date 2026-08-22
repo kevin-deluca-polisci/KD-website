@@ -130,12 +130,14 @@ sources:
       populated election series is KXGENERICBALLOTVOTEHUB, and that is a weekly
       ladder of "Above X%" threshold contracts with no prices in the /markets
       response (they would need the orderbook endpoint), so it is not parsed yet.
-      CONSEQUENCE: Kalshi currently contributes ZERO rows, and the parser returns
-      an empty list rather than raising — that is the honest report, not a bug.
-      Capture continues daily because the empty response is itself worth
-      archiving: the day they open those markets, the archive shows exactly when.
-      The market category therefore rests on Polymarket alone for now, which the
-      display flag correctly reports as a single source.
+      This note used to end "CONSEQUENCE: Kalshi contributes ZERO rows" and
+      that has been WRONG since 2026-08-21. The chamber-control shells are still
+      empty, but the SEAT and MARGIN ladders are not, and they were never in the
+      series index — see series_always. Kalshi now supplies the only
+      market-implied seat distribution and the only market-implied national
+      margin on the site: House 229.8 seats and D+7.72, Senate 49.9, as of
+      2026-08-22. Capture of the empty shells continues, because the day they
+      open, the archive shows exactly when.
 
   - id: polymarket
     name: Polymarket
@@ -185,9 +187,53 @@ sources:
     name: Grant Williams 2026 Midterms Forecast
     category: professional
     method: http
-    enabled: true
+    enabled: true                  # STILL COLLECTED DAILY. See publication.
     cadence: daily
-    publication: individual        # MIT licensed
+    publication: private
+    # WAS `individual` (MIT licensed, so we may republish him race by race).
+    # Changed 2026-08-22, and NOT for a licence reason: his seat numbers carry
+    # a units error we can demonstrate, and this archive should not publish a
+    # number it can show to be wrong.
+    #
+    # THE DIAGNOSTIC, so a future reader can re-check it rather than trust it.
+    # Regressing his own published district margins on the Cook PVI he ships
+    # beside them:
+    #
+    #     House    posterior_margin = 5.690 + 1.114 x PVI    R2 = 0.978
+    #     Senate   posterior_margin = 6.141 + 1.199 x PVI    R2 = 0.949
+    #
+    # An R2 of 0.978 across 435 districts means that line IS his district
+    # model; polling enters only 8 of them. Cook PVI is a SHARE deviation, so
+    # the unit-consistent multiplier is 2.0 — a district three points more
+    # Democratic in share is six points more Democratic in margin. Our own
+    # seats.py uses exactly 2.0, and his state PVIs agree with ours in scale
+    # (AL -15 vs -14.81, CO +5 vs +5.97, DE +7 vs +8.01), so this is one
+    # multiplier on the same index and not two different indices.
+    #
+    # A coefficient of 1.11 compresses every district 45% toward the national
+    # environment, which in a D+5.7 year converts a large block of R-leaning
+    # seats into D-favoured ones. Re-running HIS districts with HIS uncertainty
+    # and only the coefficient changed: 2.0 gives 226.9 expected D seats, 1.7
+    # gives 233.3, his 1.114 gives 256.5 against his published 250.79. The
+    # whole 23-seat gap between him and every other estimate on the site is
+    # that one number.
+    #
+    # WHAT IS NOT WRONG. His national margin (D+5.73) comes from a separate
+    # hierarchical model and is untouched by this. His file is also internally
+    # consistent to the decimal — the seat distribution, the district
+    # probabilities and the summary all agree — which is the only reason the
+    # error was diagnosable from outside at all.
+    #
+    # WHY STILL COLLECTED. His outputs/ is gitignored and Pages overwrites each
+    # run, so this archive is the only record his forecast ever existed. That
+    # is worth more, not less, when a model turns out to have a fault in it:
+    # the series is the evidence. `private` keeps every row for class use and
+    # for the post-election release, and out of the daily published tier.
+    #
+    # HIS OWN FILE SAYS SO TOO, in a smaller way: metadata.model_status has
+    # read "degraded" since 2026-08-19, with warnings that two FRED inputs are
+    # degraded. Nothing here parses that field. It is in raw/ for anyone who
+    # wants it.
     declared_inputs: [silver_bulletin]   # takes polling input from Silver Bulletin
     license: permitted
     robots_checked: 2026-08-19

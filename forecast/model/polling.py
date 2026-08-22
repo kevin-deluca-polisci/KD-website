@@ -608,7 +608,10 @@ def backfill_history(cycle: int, step_days: int = 7) -> dict:
     # moving, which is the truth about a week with no new polling.
     end_date = dt.date.fromisoformat(
         (newest_parsed_date_for(cycle) or dt.date.today().isoformat()))
-    cur = first + dt.timedelta(days=academic.RECONSTRUCT_WINDOW_DAYS)
+    # A full window in, and never before the site's common start date. See
+    # academic.SERIES_START for why that date and why nothing is deleted for it.
+    cur = max(first + dt.timedelta(days=academic.RECONSTRUCT_WINDOW_DAYS),
+              dt.date.fromisoformat(academic.SERIES_START))
     out: dict[str, dict] = {}
     empty = 0
     while cur <= end_date:

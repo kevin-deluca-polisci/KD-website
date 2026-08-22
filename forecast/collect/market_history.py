@@ -770,8 +770,10 @@ def polymarket_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int,
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     ap.add_argument("--cycle", type=int, default=2026)
-    ap.add_argument("--since", default="2025-01-01",
-                    help="earliest date to reconstruct (default 2025-01-01)")
+    ap.add_argument("--since", default="2025-01-20",
+                    help="earliest date to reconstruct (default 2025-01-20, "
+                         "inauguration day — where every series on the site "
+                         "starts; see model/academic.py SERIES_START)")
     ap.add_argument("--only", default="",
                     help="kalshi, polymarket, or blank for both")
     ap.add_argument("--dry-run", action="store_true",

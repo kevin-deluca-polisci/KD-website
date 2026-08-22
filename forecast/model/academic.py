@@ -59,6 +59,28 @@ import polling       # noqa: E402  — for generic_ballot(), reused not reimplem
 
 ELECTION_DAY = "2026-11-03"
 
+# The first date any series on the site begins: inauguration day, the start of
+# the term these midterms are a referendum on.
+#
+# It is a choice about the FRAME rather than about the data. The poll record
+# runs back further than this and the reconstruction could too, but a line that
+# starts in December 2024 invites the reader to compare a forecast of this
+# midterm against a period when the administration it judges had not taken
+# office. Every family starting on the same day also means the chart's left
+# edge is one date rather than five, so a family that begins later is visibly
+# late rather than merely differently scaled.
+#
+# NOTHING IS DELETED FOR THIS. Earlier dates stay in the archive — in raw/, in
+# parsed/, and in the published category_averages.csv — and only the site's
+# series start here. A frame is a display decision and must not be able to
+# destroy evidence.
+#
+# collect/charts.py carries the same constant for the display side and the two
+# must agree. It is repeated rather than imported because model/ and collect/
+# share no module, and a cross-directory import for one string would be a
+# worse dependency than a duplicated line with this comment attached.
+SERIES_START = "2025-01-20"
+
 # 2026: Republican president. BEW code this +1 for a Democratic president and
 # -1 for a Republican one. Everything in this file that needs the president's
 # party reads it from here rather than hard-coding a sign at the point of use,
@@ -1145,8 +1167,13 @@ def backfill(cycle: int, approval: float, include_referendum: bool,
     print(f"  poll record: {len(polls)} polls, {first_poll} to {last_poll}")
 
     # Start a full window in, so the first point is an average over a full
-    # window rather than over whichever one poll happens to be earliest.
-    d0 = first_poll + dt.timedelta(days=RECONSTRUCT_WINDOW_DAYS)
+    # window rather than over whichever one poll happens to be earliest — and
+    # never before SERIES_START, which is where every series on the site
+    # begins. Taking the later of the two also puts the first point exactly on
+    # inauguration day rather than wherever the weekly grid happened to land
+    # after it.
+    d0 = max(first_poll + dt.timedelta(days=RECONSTRUCT_WINDOW_DAYS),
+             dt.date.fromisoformat(SERIES_START))
     today = dt.date.fromisoformat(newest_parsed_date(cycle)
                                   or dt.date.today().isoformat())
     end = min(last_poll, today)

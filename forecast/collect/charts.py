@@ -49,6 +49,23 @@ TIMELINE_FIELDS = ["snapshot_date", "series", "panel", "unit",
 # the accumulated history looking like data.
 PANELS = ("margin", "house_seats", "house_prob", "senate_seats", "senate_prob")
 
+# Where every series on the site begins: inauguration day, the start of the
+# term these midterms are a referendum on. See model/academic.py, which carries
+# the same constant on the generation side and must agree with this one.
+#
+# THIS IS A FRAME, NOT A DELETION. Dates before it stay in raw/, in parsed/ and
+# in the published category_averages.csv; they are simply not drawn. Applying
+# it here rather than in aggregate.py is deliberate — the archive keeps
+# everything it ever computed, and only the chart takes a view about where the
+# story starts.
+#
+# It is enforced in two places for one reason: the generation floor decides
+# where NEW points begin, and this one drops points an earlier version already
+# wrote. timeline.csv accumulates and its self-healing pass is additive, so
+# without the pruning below, two rows from January 2025 would sit at the left
+# edge of the chart forever.
+SERIES_START = "2025-01-20"
+
 # Chamber x metric, which is what the tracker toggles between. Kept here rather
 # than in the template so the axis labels and the units travel with the data.
 VIEWS = {
@@ -191,6 +208,13 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
         ("NATL_HOUSE_2026", "margin_D"): "margin",
     }
     for r in _rd(derived / "category_averages.csv"):
+        # THE FRAME, APPLIED WHERE THE ROWS ARE MADE. This function reads the
+        # whole averages file rather than one date — its rows carry their own
+        # snapshot_date and the caller keys on it — so a floor applied only at
+        # the caller is undone the moment the caller calls this again. See
+        # SERIES_START.
+        if r.get("snapshot_date", "") < SERIES_START:
+            continue
         cat, q = r["category"], r["quantity"]
         # THE TIMELINE PLOTS THE CHAINED LEVEL, NOT THE SIMPLE MEAN.
         #
@@ -262,7 +286,8 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
 
 def _all_snapshot_dates(derived: Path) -> list[str]:
     return sorted({r["snapshot_date"] for r in _rd(derived / "category_averages.csv")
-                   if r.get("snapshot_date")})
+                   if r.get("snapshot_date")
+                   and r["snapshot_date"] >= SERIES_START})
 
 
 def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list[dict]:
@@ -296,7 +321,7 @@ def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list
     """
     path = derived / "timeline.csv"
     rows = {(r["snapshot_date"], r["series"], r["panel"]): r for r in _rd(path)
-            if r["panel"] in PANELS}
+            if r["panel"] in PANELS and r["snapshot_date"] >= SERIES_START}
     if rebuild:
         # FORCE: every date, existing rows overwritten from the averages.
         dates = _all_snapshot_dates(derived)
@@ -324,6 +349,45 @@ def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list
             print(f"  timeline: {len(missing)} date(s) present in the averages "
                   f"and absent here — filling them in "
                   f"({missing[0]} to {missing[-1]})")
+
+    # AND IT PRUNES, WHICH IS NEW AND IS THE OTHER HALF OF SELF-HEALING.
+    #
+    # Filling holes was only ever half the job. A family can also STOP being
+    # published — a licence changes, a source is withdrawn, a contributor drops
+    # below the disclosure floor — and an append-only file has no way to say so.
+    # Its last few points simply stay on the chart, at the right-hand edge,
+    # looking like the newest thing we know rather than the last thing we knew.
+    #
+    # Grant Williams is the case this exists for. He was withdrawn from the
+    # published tier on 2026-08-22, aggregate.py stopped emitting a professional
+    # average that same run, and without this the professional line would have
+    # gone on being drawn from four stale rows indefinitely.
+    #
+    # THE RULE, and it is narrow on purpose: a row is dropped only when the
+    # averages HAVE that date and do not have that series on it. A date the
+    # averages do not cover at all is left completely alone, because those rows
+    # cannot be recomputed and a past run may have seen inputs we no longer
+    # hold — which is the objection the additive-only note above records, and it
+    # still stands for exactly those rows.
+    #
+    # What makes this safe rather than reckless is upstream: aggregate.py
+    # refuses to write a category_averages.csv that loses a category from a date
+    # unless someone passes --force. So a series can only disappear from the
+    # averages deliberately, and this follows that decision rather than making
+    # one of its own.
+    truth = {(r["snapshot_date"], r["series"], r["panel"])
+             for r in collect_today(derived, snapshot)}
+    covered = set(_all_snapshot_dates(derived))
+    stale = [k for k in rows if k[0] in covered and k not in truth]
+    if stale:
+        by_series: dict[str, int] = {}
+        for _d0, series, _p in stale:
+            by_series[series] = by_series.get(series, 0) + 1
+        print("  timeline: dropping " + ", ".join(
+            f"{n} stale {s} row(s)" for s, n in sorted(by_series.items()))
+            + " no longer present in the averages")
+        for k in stale:
+            rows.pop(k, None)
     for d0 in dates:
         for r in collect_today(derived, d0):
             rows[(r["snapshot_date"], r["series"], r["panel"])] = r

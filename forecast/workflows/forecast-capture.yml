@@ -20,9 +20,9 @@
 #   2. Create a fine-grained PAT with Contents:write on that repo only
 #   3. Add it here as the RAW_ARCHIVE_TOKEN secret
 #   4. Set RAW_ARCHIVE_REPO below
-
+ 
 name: Forecast capture (daily)
-
+ 
 on:
   schedule:
     - cron: "0 11 * * *"
@@ -31,35 +31,68 @@ on:
       only:     {description: "Comma-separated source ids (blank = all)", required: false, default: ""}
       dry_run:  {description: "Fetch nothing, just report", type: boolean, required: false, default: false}
       backfill: {description: "Include Wikipedia revision backfill (run once)", type: boolean, required: false, default: false}
+      force_aggregate:
+        description: >-
+          Force aggregate. Let aggregate.py write even if a snapshot date loses rows. Default off.
+          The guard exists because a clone without the raw archive rebuilds only
+          the newest day and would silently publish a shorter file over a longer
+          one. Turn this on ONLY when you know the shortening is correct — for
+          example after a pipeline change makes an older published date
+          unreproducible, which is the one case the guard cannot distinguish from
+          real loss. Read what it refused before overriding it.
+        type: boolean
+        required: false
+        default: false
+      
+      backfill_academic:
+        description: >-
+          Recompute the academic models over the whole poll record and project
+          each date. One-off, not for the daily run: it reconstructs the generic
+          ballot from Silver's poll-level file back to Jan 2025 and runs one
+          Monte Carlo per point, so it adds several minutes. Safe to repeat —
+          it rebuilds from the archive rather than appending.
+        type: boolean
+        required: false
+        default: false
 
+      backfill_markets:
+        description: >-
+          Reconstruct market price history from Kalshi candlesticks and
+          Polymarket prices-history, into the private raw archive. One-off.
+          Never overwrites a real capture. Run this only after a capture has
+          confirmed the seat ladders are fetchable.
+        type: boolean
+        required: false
+        default: false
+        
 concurrency: {group: forecast-capture, cancel-in-progress: false}
 # issues: write is needed by the gate's issue-opening step. Without it that
 # step fails with 'Resource not accessible by integration' — and it only runs
 # when something has ALREADY gone wrong, so the failure would surface exactly
 # when the alarm was supposed to.
 permissions: {contents: write, issues: write}
-
+ 
 env:
   RAW_ARCHIVE_REPO: kevin-deluca-polisci/plsc2219-raw
   CYCLE: "2026"
-
+ 
 jobs:
   capture:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v6
-
+ 
       - uses: actions/setup-python@v6
         with: {python-version: "3.11"}
-
+ 
       - run: pip install -r forecast/collect/requirements.txt
-
+ 
       - name: Validate registry
         # Fails fast on a malformed registry, and refuses to run at all if a
         # source marked `prohibited` has been enabled.
         run: python3 forecast/collect/capture.py --self-test
-
+ 
       - name: Restore the private raw archive
         if: inputs.dry_run != true
         run: |
@@ -70,7 +103,19 @@ jobs:
           if [ -d "/tmp/rawrepo/${CYCLE}/raw" ]; then
             cp -r "/tmp/rawrepo/${CYCLE}/raw" "forecast/data/${CYCLE}/raw"
           fi
-
+          # Private DERIVED state, restored for the same reason as raw/: the
+          # runner is destroyed after every job, and this cannot be recomputed.
+          # Today it holds seat_projections_history.json — every day's seat
+          # projections, written down on the day. polling_model.json and
+          # fundamentals_model.json are overwritten on every run, so the inputs
+          # that produced Tuesday's projection are gone by Wednesday; the only
+          # copy is the one saved at the time. Without this restore the history
+          # starts empty on every run, every projection lands on the newest
+          # date, and each rebuild strips them from every earlier one.
+          if [ -d "/tmp/rawrepo/${CYCLE}/model_private" ]; then
+            cp -r "/tmp/rawrepo/${CYCLE}/model_private" "forecast/data/${CYCLE}/model_private"
+          fi
+ 
       - name: Capture
         id: capture
         continue-on-error: true   # a failed source must not block committing the rest
@@ -80,7 +125,18 @@ jobs:
           [ "${{ inputs.dry_run }}" = "true" ]  && ARGS="$ARGS --dry-run"
           [ "${{ inputs.backfill }}" = "true" ] && ARGS="$ARGS --backfill"
           python3 forecast/collect/capture.py --cycle "$CYCLE" $ARGS
-
+      - name: Backfill market history
+        # The test is in the SHELL, not in `if:`. A workflow_dispatch boolean
+        # arrives here as the string 'true', so `inputs.x == true` compares a
+        # string against a boolean and is always false — the step silently
+        # never runs. Every other boolean in this file uses this form.
+        if: inputs.dry_run != true
+        run: |
+          if [ "${{ inputs.backfill_markets }}" = "true" ]; then
+            python3 forecast/collect/market_history.py --cycle "$CYCLE"
+          else
+            echo "backfill_markets not set — skipping market history"
+          fi
       - name: Push raw to the private archive
         if: inputs.dry_run != true
         run: |
@@ -117,21 +173,57 @@ jobs:
           # the published figure at D+9.5 while the model itself had moved to
           # D+10.5. A frozen number on a live page is worse than no number.
           python3 forecast/model/fundamentals.py --cycle "$CYCLE"
-          python3 forecast/model/polling.py     --cycle "$CYCLE"
+          POLL_ARGS=""
+          [ "${{ inputs.backfill_academic }}" = "true" ] && POLL_ARGS="--backfill"
+          python3 forecast/model/polling.py     --cycle "$CYCLE" $POLL_ARGS          
+          # academic.py reads the RAW generic ballot out of polling_model.json,
+          # so it has to come after polling.py. Run earlier it finds nothing,
+          # declines to run, and the academic column vanishes with no error.
+          ACAD_ARGS=""
+          [ "${{ inputs.backfill_academic }}" = "true" ] && ACAD_ARGS="--backfill"
+          python3 forecast/model/academic.py    --cycle "$CYCLE" $ACAD_ARGS          
           # seats.py runs LAST of the models and reads the two JSONs the
           # steps above write. It pushes each tide through the same seat
           # machinery, which is what gives fundamentals and polling a seat
           # count and a chamber probability instead of a national margin
           # and four empty cells.
-          python3 forecast/model/seats.py       --cycle "$CYCLE"
-          python3 forecast/collect/aggregate.py --cycle "$CYCLE"
+          SEAT_ARGS=""
+          [ "${{ inputs.backfill_academic }}" = "true" ] && SEAT_ARGS="--backfill-academic"
+          python3 forecast/model/seats.py       --cycle "$CYCLE" $SEAT_ARGS          
+          AGG_ARGS=""
+          [ "${{ inputs.force_aggregate }}" = "true" ] && AGG_ARGS="--force"
+          python3 forecast/collect/aggregate.py --cycle "$CYCLE" $AGG_ARGS
           python3 forecast/collect/publish.py   --cycle "$CYCLE"
-
+ 
+      # Runs AFTER the models, because it carries a file they write, and
+      # BEFORE the public commit, so a failure here is loud rather than
+      # arriving after the site has already been updated. The raw push earlier
+      # in this job cannot do it: at that point the models have not run.
+      - name: Push private model state to the archive
+        if: inputs.dry_run != true
+        run: |
+          [ -d "forecast/data/${CYCLE}/model_private" ] || exit 0
+          mkdir -p "/tmp/rawrepo/${CYCLE}/model_private"
+          # NOT --delete, unlike the raw push. raw/ is an authoritative mirror
+          # of what was captured; this directory ACCUMULATES, and a run that
+          # fails before the models write must not be able to empty it.
+          rsync -a "forecast/data/${CYCLE}/model_private/" \
+                   "/tmp/rawrepo/${CYCLE}/model_private/"
+          cd /tmp/rawrepo
+          git config user.name  "forecast-archive[bot]"
+          git config user.email "forecast-archive@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet && { echo "no change to private model state"; exit 0; }
+          git commit -m "model: private state $(date -u +%Y-%m-%d)"
+          git remote add origin \
+            "https://x-access-token:${{ secrets.RAW_ARCHIVE_TOKEN }}@github.com/${RAW_ARCHIVE_REPO}.git" 2>/dev/null || true
+          git push origin HEAD:main
+ 
       - name: Sanity gate
         if: inputs.dry_run != true
         id: sanity
         run: python3 forecast/collect/sanity.py --cycle "$CYCLE"
-
+ 
       - name: Commit the public tier only
         if: inputs.dry_run != true
         run: |
@@ -151,7 +243,7 @@ jobs:
             git pull --rebase --autostash origin "${{ github.ref_name }}" && break; sleep 5
           done
           git push
-
+ 
       # A failed gate must be visible, not buried in a red X on a cron job
       # nobody watches.
       - name: Open an issue if the gate blocked publication
@@ -180,11 +272,10 @@ jobs:
                 owner: context.repo.owner, repo: context.repo.repo,
                 title, body, labels: ['forecast-gate']});
             }
-
+ 
       - name: Report partial failure
         if: steps.capture.outcome == 'failure'
         run: |
           echo "::warning::One or more sources failed — see forecast/data/${CYCLE}/manifest.csv"
           echo "### Forecast capture: partial failure" >> $GITHUB_STEP_SUMMARY
           echo "Successful sources were still captured and committed." >> $GITHUB_STEP_SUMMARY
-          exit 1

@@ -326,6 +326,12 @@ def build_movement(avgs: list[dict], latest: str) -> dict | None:
     for r in avgs:
         if r["race_id"] not in (NATL_HOUSE, NATL_SENATE):
             continue
+        # The same frame the chart uses. "Since it began" is a claim about the
+        # line the reader is looking at, so it has to be measured from the same
+        # first point — otherwise the card reports a move from a date the chart
+        # does not draw. See charts.SERIES_START.
+        if r["snapshot_date"] < charts.SERIES_START:
+            continue
         if r["quantity"] not in ("margin_D", "seats_D", "win_prob_D"):
             continue
         try:
@@ -677,7 +683,12 @@ def main(argv=None) -> int:
     academic = json.loads((d / "academic_models.json").read_text()) \
                if (d / "academic_models.json").exists() else None
 
-    dates = sorted({r["snapshot_date"] for r in avgs}) or [
+    # Snapshot dates the SITE shows, which is what the "N snapshots" counter in
+    # the nav is a count of. Dates before the common start are still in the
+    # archive and still in the published averages; they are outside the frame,
+    # so counting them would advertise a history the chart does not draw.
+    dates = sorted({r["snapshot_date"] for r in avgs
+                    if r["snapshot_date"] >= charts.SERIES_START}) or [
         dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")]
     latest = dates[-1]
 
