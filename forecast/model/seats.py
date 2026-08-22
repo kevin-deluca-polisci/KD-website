@@ -357,6 +357,35 @@ def main(argv=None) -> int:
     priv.mkdir(parents=True, exist_ok=True)
     (priv / "seat_projections.json").write_text(json.dumps(out, indent=2))
 
+    # AND AN APPEND-ONLY HISTORY, FOR THE SAME REASON collect/charts.py KEEPS
+    # ONE.
+    #
+    # This file holds today's projections and only today's. aggregate.py reads
+    # it and stamps every row with the one snapshot_date inside — so on a full
+    # rebuild, every class-model and external-tide row lands on the newest day
+    # and vanishes from all the earlier ones. The archive could therefore never
+    # accumulate a history of our own models' seat counts: each run quietly
+    # took them off yesterday and put them on today. It is visible in the
+    # guard's own output, which reported 2026-08-19 "losing categories
+    # fundamentals, polling" on a day when nothing had gone missing at all —
+    # those categories had no other contributor on that date, so moving the
+    # projections forward emptied them.
+    #
+    # A projection cannot be recomputed for a past date: polling_model.json and
+    # fundamentals_model.json are overwritten every run, so the inputs that
+    # produced Tuesday's number are gone by Wednesday. The only way to keep it
+    # is to write it down on the day, which is what this does. Idempotent on
+    # the snapshot date, so re-running a day replaces it rather than duplicating.
+    hist_p = priv / "seat_projections_history.json"
+    try:
+        hist = json.loads(hist_p.read_text()) if hist_p.exists() else {}
+    except json.JSONDecodeError:
+        hist = {}
+    hist[date] = out
+    hist_p.write_text(json.dumps(hist, indent=1, sort_keys=True))
+    print(f"  wrote {hist_p.relative_to(REPO)}   PRIVATE — "
+          f"{len(hist)} date(s) of projections retained")
+
     named = {k: v for k, v in projections.items()
              if (v.get("publication") or "individual") == "individual"}
     withheld = sorted(set(projections) - set(named))

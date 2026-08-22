@@ -279,23 +279,44 @@ def class_model_rows(cycle: int) -> list[dict]:
     # what MIN_N is for — so this step needs all of them, and takes the
     # published copy only as a fallback for a tree where the model step has not
     # run.
-    priv = DATA_DIR / str(cycle) / "model_private" / "seat_projections.json"
+    base = DATA_DIR / str(cycle) / "model_private"
+    hist_p = base / "seat_projections_history.json"
+    priv = base / "seat_projections.json"
     pub = DATA_DIR / str(cycle) / "derived" / "seat_projections.json"
-    p = priv if priv.exists() else pub
-    if not p.exists():
-        return []
-    proj = json.loads(p.read_text())
-    date = proj.get("snapshot_date")
-    if not date:
-        return []
+
+    # EVERY DATE WE HAVE, NOT JUST THE NEWEST ONE.
+    #
+    # This used to read a single seat_projections.json and stamp its one
+    # snapshot_date on every row it emitted, so a full rebuild moved the class
+    # models and the external tides onto the newest day and took them off all
+    # the earlier ones. The archive could not accumulate them. seats.py now
+    # keeps an append-only history and this reads the whole thing; the single
+    # files remain as the fallback for a tree where the history has not been
+    # written yet.
+    days: dict[str, dict] = {}
+    if hist_p.exists():
+        try:
+            days = json.loads(hist_p.read_text())
+        except json.JSONDecodeError:
+            days = {}
+    if not days:
+        p = priv if priv.exists() else pub
+        if not p.exists():
+            return []
+        one = json.loads(p.read_text())
+        if not one.get("snapshot_date"):
+            return []
+        days = {one["snapshot_date"]: one}
 
     rows: list[dict] = []
 
-    # Set per projection, read by emit(). These rows are dated TODAY because
-    # the projection was computed today, but the tide behind an external model
-    # may be weeks old. seats.py records which, and it travels with the number
-    # rather than being re-derived here from the source's name.
-    as_of = {"d": date}
+    # Set per date and per projection, read by emit(). A row is stamped with
+    # the day its projection was COMPUTED; `as_of` is the day the tide behind
+    # it was published, which for an external model may be weeks earlier.
+    # seats.py records both and they travel with the number rather than being
+    # re-derived here from the source's name.
+    day = {"d": ""}
+    as_of = {"d": ""}
     # THE LICENCE COMES FROM THE PROJECTION, NOT FROM THIS FILE.
     #
     # Every projection used to be stamped `individual`, which was true while
@@ -314,7 +335,7 @@ def class_model_rows(cycle: int) -> list[dict]:
         if value is None:
             return
         rows.append({
-            "snapshot_date": date, "source_id": source_id,
+            "snapshot_date": day["d"], "source_id": source_id,
             "category": cat,
             "race_id": race_id, "chamber": chamber, "state": state,
             "district": district, "quantity": quantity,
@@ -324,40 +345,42 @@ def class_model_rows(cycle: int) -> list[dict]:
             "captured_at": "", "raw_sha256": "", "raw_path": "",
         })
 
-    for source_id, model in (proj.get("projections") or {}).items():
-        cat = model.get("category")
-        if not cat:
-            continue
-        as_of["d"] = model.get("as_of") or date
-        tier["p"] = model.get("publication") or "individual"
-        senate, house = model.get("senate") or {}, model.get("house") or {}
-        # Whether this model's margin is already a row in its own right. The
-        # projection says so itself now; MARGIN_FROM_ELSEWHERE remains as the
-        # answer for payloads written before seats.py carried the flag.
-        elsewhere = model.get("margin_published_elsewhere")
-        if elsewhere is None:
-            elsewhere = source_id in MARGIN_FROM_ELSEWHERE
-        if not elsewhere:
-            emit(source_id, cat, NATL_HOUSE, "national", "", "", "margin_D",
-                 model.get("tide_D"), "margin")
-        emit(source_id, cat, NATL_HOUSE, "national", "", "", "seats_D",
-             house.get("expected_D_seats"), "seats")
-        emit(source_id, cat, NATL_HOUSE, "national", "", "", "win_prob_D",
-             house.get("prob_D_majority"), "prob")
-        emit(source_id, cat, NATL_SENATE, "national", "", "", "seats_D",
-             senate.get("expected_D_total"), "seats")
-        # 51+ is a majority. 50+ is a tie the vice-president breaks, and every
-        # outside forecast and market this is averaged against prices the
-        # majority, so averaging our 50+ against their 51+ would compare two
-        # different events and call the difference disagreement.
-        emit(source_id, cat, NATL_SENATE, "national", "", "", "win_prob_D",
-             senate.get("prob_D_51_plus"), "prob")
-        for st, r in (model.get("races") or {}).items():
-            rid = f"SEN_{st}_2026"
-            emit(source_id, cat, rid, "senate", st, "", "margin_D",
-                 r.get("expected_margin_D"), "margin")
-            emit(source_id, cat, rid, "senate", st, "", "win_prob_D",
-                 r.get("win_prob_D"), "prob")
+    for date, proj in sorted(days.items()):
+      day["d"] = date
+      for source_id, model in (proj.get("projections") or {}).items():
+          cat = model.get("category")
+          if not cat:
+              continue
+          as_of["d"] = model.get("as_of") or date
+          tier["p"] = model.get("publication") or "individual"
+          senate, house = model.get("senate") or {}, model.get("house") or {}
+          # Whether this model's margin is already a row in its own right. The
+          # projection says so itself now; MARGIN_FROM_ELSEWHERE remains as the
+          # answer for payloads written before seats.py carried the flag.
+          elsewhere = model.get("margin_published_elsewhere")
+          if elsewhere is None:
+              elsewhere = source_id in MARGIN_FROM_ELSEWHERE
+          if not elsewhere:
+              emit(source_id, cat, NATL_HOUSE, "national", "", "", "margin_D",
+                   model.get("tide_D"), "margin")
+          emit(source_id, cat, NATL_HOUSE, "national", "", "", "seats_D",
+               house.get("expected_D_seats"), "seats")
+          emit(source_id, cat, NATL_HOUSE, "national", "", "", "win_prob_D",
+               house.get("prob_D_majority"), "prob")
+          emit(source_id, cat, NATL_SENATE, "national", "", "", "seats_D",
+               senate.get("expected_D_total"), "seats")
+          # 51+ is a majority. 50+ is a tie the vice-president breaks, and every
+          # outside forecast and market this is averaged against prices the
+          # majority, so averaging our 50+ against their 51+ would compare two
+          # different events and call the difference disagreement.
+          emit(source_id, cat, NATL_SENATE, "national", "", "", "win_prob_D",
+               senate.get("prob_D_51_plus"), "prob")
+          for st, r in (model.get("races") or {}).items():
+              rid = f"SEN_{st}_2026"
+              emit(source_id, cat, rid, "senate", st, "", "margin_D",
+                   r.get("expected_margin_D"), "margin")
+              emit(source_id, cat, rid, "senate", st, "", "win_prob_D",
+                   r.get("win_prob_D"), "prob")
     return rows
 
 
