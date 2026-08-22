@@ -133,35 +133,84 @@ def _first_list(payload) -> list:
     return []
 
 
-# Kalshi has moved price fields around: the markets endpoint now returns
-# `yes_bid_dollars` alongside the older `yes_bid`, and candlesticks nest a
-# price object whose exact name has changed between API versions. Rather than
-# guess again, prefer the most specific thing we recognise and fall back to
-# any plausible numeric.
-_PRICE_KEYS = ("price", "yes_price", "yes_ask", "yes_bid", "close_price")
-_SUB_KEYS = ("close", "mean", "last", "value")
+# THE ACTUAL SHAPE, read off a real response rather than guessed at.
+#
+#   {'end_period_ts', 'open_interest_fp', 'price', 'volume_fp',
+#    'yes_ask', 'yes_bid'}
+#     price   -> {}                       <- EMPTY on these contracts
+#     yes_ask -> {'close_dollars', 'high_dollars', 'low_dollars', 'open_dollars'}
+#     yes_bid -> {'close_dollars', 'high_dollars', 'low_dollars', 'open_dollars'}
+#
+# Two things defeated the first attempt, and both are worth naming because
+# either alone would have been enough.
+#
+# `price` EXISTS BUT IS EMPTY. A lookup that tests `if "price" in candle` finds
+# it, walks into a dict with no keys, and comes back with nothing — which is
+# indistinguishable from a missing field unless you look. Preferring it was
+# reasonable and wrong.
+#
+# THE SUB-KEYS ARE DOLLAR-DENOMINATED AND SUFFIXED. Not `close` but
+# `close_dollars`, carrying 0-1 rather than 0-100. Kalshi has been moving the
+# whole API this way — the markets endpoint now returns `yes_bid_dollars`
+# beside the older `yes_bid` — so the suffix is the direction of travel and not
+# a quirk of candlesticks.
+#
+# THE MID, NOT ONE SIDE. collect/parsers/kalshi.py prices a live market as the
+# midpoint of bid and ask. A backfilled bar taken from the ask alone would sit
+# systematically above the live series it joins, putting a step at the join
+# that is a change of method wearing the clothes of a change of price. Taking
+# the mid here keeps the two halves of the series measuring the same thing.
+_BID_ASK = ("yes_bid", "yes_ask")
+_CLOSE_KEYS = ("close_dollars", "close", "mean_dollars", "mean",
+               "last_dollars", "last")
+
+
+def _leg_close(c: dict, leg: str) -> float | None:
+    node = c.get(leg)
+    if not isinstance(node, dict):
+        return _as_cents(node)
+    for k in _CLOSE_KEYS:
+        got = _as_cents(node.get(k))
+        if got is not None:
+            return got
+    return None
+
+
+def _as_cents(v) -> float | None:
+    """Kalshi quotes either cents (0-100) or dollars (0-1). Normalise to cents.
+
+    The 0-1 test is a heuristic and it has one real failure mode: a genuine
+    cents price of exactly 0 or 1 reads as dollars and is multiplied by a
+    hundred. At those extremes the contract is at the very edge of its range,
+    the mid will be dominated by the other leg, and a bucket priced at 1 cent
+    contributes almost nothing to a normalised ladder. Worth knowing about;
+    not worth a more elaborate rule that would need its own explanation.
+    """
+    if not isinstance(v, (int, float)) or isinstance(v, bool):
+        return None
+    v = float(v)
+    return v * 100.0 if 0.0 <= v <= 1.0 else v
 
 
 def _candle_price(c: dict) -> float | None:
-    """A yes-price in CENTS from one candle, whatever shape it arrived in."""
-    def _cents(v):
-        if not isinstance(v, (int, float)):
-            return None
-        # Dollar-denominated fields arrive as 0-1; the parser wants cents.
-        return float(v) * 100.0 if 0.0 <= float(v) <= 1.0 else float(v)
-
-    for k in _PRICE_KEYS:
-        node = c.get(k)
-        if isinstance(node, dict):
-            for sk in _SUB_KEYS:
-                got = _cents(node.get(sk))
-                if got is not None:
-                    return got
-        got = _cents(node)
-        if got is not None:
-            return got
+    """A yes-price in CENTS from one candle: the bid/ask mid where both exist."""
+    bid, ask = (_leg_close(c, leg) for leg in _BID_ASK)
+    if bid is not None and ask is not None:
+        return (bid + ask) / 2.0
+    if bid is not None:
+        return bid
+    if ask is not None:
+        return ask
+    # `price` last, and only if it actually holds something — on the seat
+    # ladders it is an empty dict.
+    node = c.get("price")
+    if isinstance(node, dict):
+        for k in _CLOSE_KEYS:
+            got = _as_cents(node.get(k))
+            if got is not None:
+                return got
     for k in ("last_price", "last_price_dollars", "close"):
-        got = _cents(c.get(k))
+        got = _as_cents(c.get(k))
         if got is not None:
             return got
     return None
