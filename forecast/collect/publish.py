@@ -648,6 +648,12 @@ def _spread_plot(races: list[dict]) -> dict | None:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cycle", type=int, default=2026)
+    ap.add_argument("--rebuild-timeline", action="store_true",
+                    help="replay every snapshot date in category_averages.csv "
+                         "into timeline.csv instead of adding only today. Use "
+                         "after a backfill gives a category history the chart "
+                         "has never been told about. Cheap — pure CSV, no "
+                         "simulation — and safe to repeat.")
     a = ap.parse_args(argv)
     d = DATA / str(a.cycle) / "derived"
 
@@ -790,7 +796,7 @@ def main(argv=None) -> int:
     # as a spread instead — charts.build_ratings_spread. Same data, and the
     # count has since grown to 4,206 rows across twelve raters, which is well
     # past what any table was going to carry.
-    chart_data = charts.build(d, latest)
+    chart_data = charts.build(d, latest, a.rebuild_timeline)
     chart_data["ladders"] = build_ladders(senate, proj, avgs, latest)
     spread = build_spread(d, latest, proj, avgs, supp, senate)
     movement = build_movement(avgs, latest)

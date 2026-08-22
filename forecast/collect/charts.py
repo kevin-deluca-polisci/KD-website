@@ -227,13 +227,73 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
     return out
 
 
-def update_timeline(derived: Path, snapshot: str) -> list[dict]:
-    """Merge today's rows into timeline.csv. Idempotent on (date, series, panel)."""
+def _all_snapshot_dates(derived: Path) -> list[str]:
+    return sorted({r["snapshot_date"] for r in _rd(derived / "category_averages.csv")
+                   if r.get("snapshot_date")})
+
+
+def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list[dict]:
+    """Merge today's rows into timeline.csv. Idempotent on (date, series, panel).
+
+    WHY REBUILD EXISTS, and it is a real gap rather than a convenience.
+
+    This file accumulates. Every run adds one date and leaves the rest alone,
+    which is exactly right for a tracker whose past cannot be recomputed. But
+    it means the timeline can only ever know about dates on which a run
+    happened — and when a category acquires HISTORY by some other route, the
+    chart is the last thing to hear about it and never catches up on its own.
+
+    That is precisely what the academic backfill did. academic.py reconstructs
+    BEW back to January 2025 from the poll-level record, seats.py projects each
+    of those dates, and aggregate.py writes them all into
+    category_averages.csv. The comparison table saw them immediately. The
+    "what has moved" card saw them immediately, because it reads the averages
+    directly. The chart saw one point, because timeline.csv had only ever been
+    told about today — so the site simultaneously reported a 598-day academic
+    history in one card and a single dot in the panel above it.
+
+    Rebuild replays collect_today() over every date the averages know about.
+    It is pure CSV work with no simulation behind it, so it costs a second and
+    is safe to re-run: each date's row is derived from that date's published
+    averages, which is where the authority lives anyway.
+
+    Not the default. On an ordinary day the accumulate-forward path is correct
+    and cheaper, and a rebuild would quietly rewrite rows that a past run wrote
+    from data we may no longer hold.
+    """
     path = derived / "timeline.csv"
     rows = {(r["snapshot_date"], r["series"], r["panel"]): r for r in _rd(path)
             if r["panel"] in PANELS}
-    for r in collect_today(derived, snapshot):
-        rows[(r["snapshot_date"], r["series"], r["panel"])] = r
+    if rebuild:
+        # FORCE: every date, existing rows overwritten from the averages.
+        dates = _all_snapshot_dates(derived)
+        print(f"  timeline: rebuilding from {len(dates)} snapshot date(s) in "
+              f"category_averages.csv")
+    else:
+        # SELF-HEALING BY DEFAULT, and additively. Today's date always, plus
+        # any date the averages know about that this file has never recorded.
+        #
+        # The academic backfill is the case this exists for, and leaving it to
+        # a flag somebody has to remember was not good enough: the site spent a
+        # day reporting a 598-day academic history in one card and a single dot
+        # in the chart above it, because the two read different files and only
+        # one of them had been told. A gap that a cheap CSV pass can close
+        # should not wait for a human to notice it.
+        #
+        # ADDITIVE ONLY. Dates already in timeline.csv are left exactly as the
+        # run that wrote them left them, because that run may have seen inputs
+        # we no longer hold. This fills holes; it does not revise history. The
+        # --rebuild-timeline flag is there for when revision is what you want.
+        known = {d0 for d0, _s, _p in rows}
+        missing = [d0 for d0 in _all_snapshot_dates(derived) if d0 not in known]
+        dates = [snapshot] + missing
+        if missing:
+            print(f"  timeline: {len(missing)} date(s) present in the averages "
+                  f"and absent here — filling them in "
+                  f"({missing[0]} to {missing[-1]})")
+    for d0 in dates:
+        for r in collect_today(derived, d0):
+            rows[(r["snapshot_date"], r["series"], r["panel"])] = r
     ordered = sorted(rows.values(), key=lambda r: (r["panel"], r["snapshot_date"],
                                                    ORDER.index(r["series"])
                                                    if r["series"] in ORDER else 9))
@@ -841,8 +901,8 @@ def build_ratings_spread(derived: Path, snapshot: str, chamber: str,
     }
 
 
-def build(derived: Path, snapshot: str) -> dict:
-    rows = update_timeline(derived, snapshot)
+def build(derived: Path, snapshot: str, rebuild: bool = False) -> dict:
+    rows = update_timeline(derived, snapshot, rebuild)
     out = {p: build_panel(rows, p) for p in PANELS}
     out["views"] = VIEWS
     # Governors ride along here and nowhere else. They are not modelled — a
