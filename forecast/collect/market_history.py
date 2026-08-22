@@ -52,6 +52,7 @@ TWO RULES IT WILL NOT BREAK
 from __future__ import annotations
 
 import argparse
+import collections
 import datetime as dt
 import json
 import sys
@@ -216,12 +217,26 @@ def _candle_price(c: dict) -> float | None:
     return None
 
 
-def _newest_capture_day(cycle: int, source: str) -> Path | None:
+def _capture_days(cycle: int, source: str) -> list[Path]:
+    """Every captured day, oldest first.
+
+    NOT JUST THE NEWEST, which is what this used to read and which made the
+    result depend on which day happened to be last. A capture day holds only
+    the series that were fetchable that morning: 2026-08-19 carries 99
+    contracts, 2026-08-20 carries 10, and the seat ladders appear on neither
+    because they were not being fetched until series_always was implemented.
+    Reading one day therefore backfilled whatever that day happened to know
+    about, and a probe run against a thin day looked like a broken script.
+
+    Taking the union across days means a contract seen on ANY day gets its
+    history fetched, which is what we actually want — a market that closed in
+    June is exactly the kind of thing worth recovering, and it will never
+    appear in the newest capture.
+    """
     base = DATA / str(cycle) / "raw" / source
     if not base.is_dir():
-        return None
-    days = sorted(d for d in base.iterdir() if d.is_dir())
-    return days[-1] if days else None
+        return []
+    return sorted(d for d in base.iterdir() if d.is_dir())
 
 
 def _write(cycle: int, source: str, date: str, name: str,
@@ -255,8 +270,8 @@ def _write(cycle: int, source: str, date: str, name: str,
 
 def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int]:
     """Rebuild markets-<SERIES>.json for every past date we can price."""
-    day = _newest_capture_day(cycle, "kalshi")
-    if day is None:
+    days = _capture_days(cycle, "kalshi")
+    if not days:
         print("  kalshi: no capture to learn contract identities from — run "
               "capture.py first")
         return 0, 0
@@ -277,18 +292,30 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
     rebuilt: dict[str, dict[str, list]] = defaultdict(lambda: defaultdict(list))
     n_contracts = 0
 
-    for f in sorted(day.glob("markets-*.json")):
-        if f.name.endswith(".meta.json"):
-            continue
-        series = f.name[len("markets-"):-len(".json")]
-        try:
-            markets = (json.loads(f.read_text()) or {}).get("markets") or []
-        except json.JSONDecodeError:
-            continue
-        for m in markets:
-            ticker = m.get("ticker")
-            if not ticker:
+    # (series, ticker) -> market dict, unioned across every captured day.
+    contracts: dict[tuple, dict] = {}
+    for day in days:
+        for f in sorted(day.glob("markets-*.json")):
+            if f.name.endswith(".meta.json"):
                 continue
+            series = f.name[len("markets-"):-len(".json")]
+            try:
+                markets = (json.loads(f.read_text()) or {}).get("markets") or []
+            except json.JSONDecodeError:
+                continue
+            for m in markets:
+                if m.get("ticker"):
+                    contracts[(series, m["ticker"])] = m
+    print(f"    {len(contracts)} distinct contract(s) across {len(days)} "
+          f"capture day(s)")
+
+    # COUNTERS AT EVERY STAGE. Twice now this module has reported "0 written"
+    # without saying whether the fetch failed, the candles were empty, the
+    # price was unreadable, or every date already existed. Those need different
+    # fixes and the summary could not tell them apart.
+    stats = collections.Counter()
+    for (series, ticker), m in sorted(contracts.items()):
+        if True:
             n_contracts += 1
             q = urllib.parse.urlencode({"start_ts": start_ts, "end_ts": end_ts,
                                         "period_interval": KALSHI_PERIOD_MINUTES})
@@ -297,8 +324,10 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
                 body, _meta = fetcher.get(url)
             except Exception as e:                      # noqa: BLE001
                 print(f"    {ticker}: {type(e).__name__} — skipped")
+                stats["fetch_failed"] += 1
                 continue
             if dry or not body:
+                stats["no_body"] += 1
                 continue
             try:
                 payload = json.loads(body) or {}
@@ -308,15 +337,20 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
             candles = _first_list(payload)
             _report_shape("kalshi", ticker, payload, body, candles)
             if not candles:
+                stats["no_candles"] += 1
                 continue
             for c in candles:
                 ts = (c.get("end_period_ts") or c.get("ts")
                       or c.get("timestamp") or c.get("period_end_ts"))
+                stats["candles"] += 1
                 if ts is None:
+                    stats["no_timestamp"] += 1
                     continue
                 px = _candle_price(c)
                 if px is None:
-                    continue                        # rule 2: no price, no row
+                    stats["no_price"] += 1
+                    continue      # rule 2: no price, no row
+                stats["priced"] += 1
                 d0 = dt.datetime.fromtimestamp(ts, dt.timezone.utc).date().isoformat()
                 rebuilt[series][d0].append({
                     "ticker": ticker,
@@ -328,12 +362,18 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
     written = 0
     for series, by_date in rebuilt.items():
         for d0, markets in by_date.items():
+            stats["dates"] += 1
             if _write(cycle, "kalshi", d0, f"markets-{series}",
                       {"cursor": "", "markets": markets},
                       {"endpoint": f"{base}/series/{series}/markets/"
                                    f"{{ticker}}/candlesticks",
                        "contracts": len(markets)}, dry):
                 written += 1
+            else:
+                stats["skipped_exists"] += 1
+    if stats:
+        print("    kalshi stages: " + ", ".join(f"{k}={v}" for k, v in
+                                                sorted(stats.items())))
     return n_contracts, written
 
 
