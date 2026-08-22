@@ -180,16 +180,28 @@ def _leg_close(c: dict, leg: str) -> float | None:
 def _as_cents(v) -> float | None:
     """Kalshi quotes either cents (0-100) or dollars (0-1). Normalise to cents.
 
-    The 0-1 test is a heuristic and it has one real failure mode: a genuine
-    cents price of exactly 0 or 1 reads as dollars and is multiplied by a
-    hundred. At those extremes the contract is at the very edge of its range,
-    the mid will be dominated by the other leg, and a bucket priced at 1 cent
-    contributes almost nothing to a normalised ladder. Worth knowing about;
-    not worth a more elaborate rule that would need its own explanation.
+    STRINGS COUNT. This rejected them, which is why 8,996 candles in a row
+    reported "no price" while the shape report cheerfully listed
+    `yes_bid -> close_dollars` right above it. Kalshi sends its prices as
+    JSON strings — collect/parsers/kalshi.py has known this since it was
+    written ("Kalshi yes_bid/yes_ask are strings") and this module did not.
+    Two readers of the same API, one of which had already learned the lesson.
+
+    The 0-1 test is a heuristic with one real failure mode: a genuine cents
+    price of exactly 0 or 1 reads as dollars and is multiplied by a hundred. At
+    those extremes the contract is at the edge of its range, the mid is
+    dominated by the other leg, and a bucket priced at 1 cent contributes
+    almost nothing to a normalised ladder. Worth knowing; not worth a more
+    elaborate rule that would need its own explanation.
     """
-    if not isinstance(v, (int, float)) or isinstance(v, bool):
+    if isinstance(v, bool) or v is None:
         return None
-    v = float(v)
+    try:
+        v = float(v)                      # accepts "0.34" as well as 0.34
+    except (TypeError, ValueError):
+        return None
+    if v != v:                            # NaN
+        return None
     return v * 100.0 if 0.0 <= v <= 1.0 else v
 
 
