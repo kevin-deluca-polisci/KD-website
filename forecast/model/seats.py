@@ -211,6 +211,13 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Seat projections from each tide.")
     ap.add_argument("--cycle", type=int, default=2026)
     ap.add_argument("--holdover-d", type=int, default=polling.HOLDOVER_D_DEFAULT)
+    ap.add_argument("--backfill-academic", action="store_true",
+                    help="project every date in model_private/"
+                         "academic_models_history.json, not just today. Slow "
+                         "(seconds per date per model) and intended as a "
+                         "one-off after academic.py --backfill. Only academic "
+                         "keys are written; a date's captured projections are "
+                         "left alone.")
     a = ap.parse_args(argv)
 
     d = DATA / str(a.cycle) / "derived"
@@ -415,6 +422,71 @@ def main(argv=None) -> int:
     except json.JSONDecodeError:
         hist = {}
     hist[date] = out
+
+    # ---- academic backfill --------------------------------------------------
+    #
+    # THE ONE EXCEPTION to "a projection cannot be recomputed for a past date",
+    # and it is worth being precise about why, because the paragraph above is
+    # otherwise a rule this block appears to break.
+    #
+    # It cannot be recomputed for OUR models because their inputs are gone:
+    # polling_model.json and fundamentals_model.json are overwritten every run.
+    # The academic models have no such problem. BEW's only moving input is the
+    # generic ballot, and every archived date's generic ballot is still sitting
+    # in parsed/<date>.csv. academic.py --backfill reads those files and writes
+    # the resulting tides to academic_models_history.json; this loop pushes each
+    # one through the same seat machinery as everything else.
+    #
+    # WHAT IS ASSUMED, and it is not nothing: the district baselines and the
+    # holdover Senate seats are TODAY'S, applied to a past tide. Those do not
+    # move during a cycle — the baselines come from the 2024 returns and the
+    # holdovers are fixed by which classes are up — so the assumption is sound
+    # for 2026 and would NOT be sound across a redistricting. Each backfilled
+    # projection is stamped so the page can say which is which.
+    #
+    # Deliberately behind a flag. It is roughly four seconds per date per model
+    # at N_SIMS=20000, so a full archive is tens of minutes — fine as a one-off,
+    # wrong as part of the daily run. Existing dates are updated in place rather
+    # than duplicated, and a date's own captured projections are preserved:
+    # only the academic keys are touched.
+    if a.backfill_academic:
+        ah_p = priv / "academic_models_history.json"
+        if not ah_p.exists():
+            print("  --backfill-academic: no academic_models_history.json — "
+                  "run  python3 forecast/model/academic.py --backfill  first")
+        else:
+            ah = json.loads(ah_p.read_text())
+            todo = sorted(d0 for d0 in ah if d0 != date)
+            print(f"\n  backfilling academic projections for {len(todo)} "
+                  f"date(s) — about {len(todo) * 4}s, one Monte Carlo per "
+                  f"model per date")
+            filled = 0
+            for i, d0 in enumerate(todo, 1):
+                day = hist.get(d0) or {"snapshot_date": d0, "projections": {}}
+                day.setdefault("projections", {})
+                for key, m in (ah[d0].get("models") or {}).items():
+                    if m.get("margin_D") is None:
+                        continue
+                    p0 = project(float(m["margin_D"]), pvi, states, rows,
+                                 sigma, a.holdover_d)
+                    p0["category"] = m.get("category") or "academic"
+                    p0["publication"] = m.get("publication") or "individual"
+                    # Its margin is not a parsed row on that date — nobody
+                    # captured it, we computed it — so this projection has to
+                    # contribute the margin or the backfilled line has seats
+                    # and no tide behind it.
+                    p0["margin_published_elsewhere"] = False
+                    p0["as_of"] = d0
+                    p0["provenance"] = m.get("provenance") or "backfilled"
+                    day["projections"][key] = p0
+                    filled += 1
+                day["snapshot_date"] = d0
+                hist[d0] = day
+                if i % 20 == 0 or i == len(todo):
+                    print(f"    {i}/{len(todo)} dates")
+            print(f"  backfilled {filled} academic projection(s) across "
+                  f"{len(todo)} date(s)")
+
     hist_p.write_text(json.dumps(hist, indent=1, sort_keys=True))
     print(f"  wrote {hist_p.relative_to(REPO)}   PRIVATE — "
           f"{len(hist)} date(s) of projections retained")

@@ -1,10 +1,26 @@
 {{/* One mark per method category, as a SHAPE and not only a colour.
 
-     The comparison charts put four categories on one line. Colour alone
+     The comparison charts put every category on one line. Colour alone
      separates them on screen and nowhere else: printed, screenshotted into a
-     slide, or read by the ~8% of men with red-green colour deficiency, four
+     slide, or read by the ~8% of men with red-green colour deficiency, five
      hues collapse toward two. Shape survives all of that, and the legend uses
      the same partial as the chart so the two can never drift apart.
+
+     SHAPE IS LOAD-BEARING NOW, NOT BELT-AND-BRACES. With four categories the
+     hues cleared every separation check on their own and shape was insurance.
+     With five they do not: in dark mode the best available teal for academic
+     sits 11.8 from polling's green, under the 15-point floor, and market and
+     polling have been ΔE 1.6 apart under deuteranopia since before academic
+     existed. The argument for these shapes is now that the chart would be
+     ambiguous without them. See the COLORS comment in charts.py.
+
+     EVERY CATEGORY IS NAMED EXPLICITLY. Fundamentals used to fall through to
+     the else branch, which was fine while it was the only one that did — and
+     stopped being fine the moment academic was added, because both would have
+     drawn the same diamond and the two families whose numbers most need
+     telling apart would have been the two that looked identical. The fallback
+     now draws a hollow ring, which is deliberately ugly: an unrecognised
+     category should look like a bug rather than like data.
 
      Expects: x, y (centre, in viewBox units), key (category), fill. */}}
 {{- $x := .x }}{{ $y := .y }}{{ $k := .key }}{{ $f := .fill }}
@@ -14,6 +30,18 @@
 <rect x="{{ sub $x 3.8 }}" y="{{ sub $y 3.8 }}" width="7.6" height="7.6" fill="{{ $f }}"/>
 {{- else if eq $k "market" -}}
 <path d="M {{ $x }} {{ sub $y 4.8 }} L {{ add $x 4.8 }} {{ add $y 3.9 }} L {{ sub $x 4.8 }} {{ add $y 3.9 }} Z" fill="{{ $f }}"/>
-{{- else -}}
+{{- else if eq $k "fundamentals" -}}
 <path d="M {{ $x }} {{ sub $y 5.2 }} L {{ add $x 5.2 }} {{ $y }} L {{ $x }} {{ add $y 5.2 }} L {{ sub $x 5.2 }} {{ $y }} Z" fill="{{ $f }}"/>
+{{- else if eq $k "academic" -}}
+{{/* A cross. Chosen because it is the one shape here with no filled interior
+     mass at its centre, so it stays legible overlapping a diamond or a circle
+     at the same x — which is exactly what happens on the per-race rows when
+     two methods agree. */}}
+<path d="M {{ sub $x 5.0 }} {{ sub $y 1.7 }} H {{ sub $x 1.7 }} V {{ sub $y 5.0 }}
+         H {{ add $x 1.7 }} V {{ sub $y 1.7 }} H {{ add $x 5.0 }}
+         V {{ add $y 1.7 }} H {{ add $x 1.7 }} V {{ add $y 5.0 }}
+         H {{ sub $x 1.7 }} V {{ add $y 1.7 }} H {{ sub $x 5.0 }} Z" fill="{{ $f }}"/>
+{{- else -}}
+<circle cx="{{ $x }}" cy="{{ $y }}" r="4.4" fill="none"
+        stroke="{{ $f }}" stroke-width="1.6" stroke-dasharray="2 2"/>
 {{- end -}}

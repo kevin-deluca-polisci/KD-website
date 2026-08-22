@@ -127,14 +127,73 @@ def _cat_cells(avgs: list[dict], latest: str) -> dict:
             v = float(r["mean"])
         except (TypeError, ValueError):
             continue
+        def _num(field):
+            try:
+                return float(r[field])
+            except (KeyError, TypeError, ValueError):
+                return None
+
+        # MIN, MAX AND SD COME ALONG NOW. aggregate.py has always written them;
+        # nothing read them, so the comparison table could say "Polling, 4
+        # sources" without saying whether those four agreed to a tenth of a
+        # point or spanned five. Those are completely different claims and the
+        # table was making the weaker one look like the stronger.
+        #
+        # This carries no disclosure risk that the mean does not already carry.
+        # A range over a category that clears MIN_N still names nobody, and
+        # min/max are the same aggregate over the same contributors. The one
+        # place it WOULD leak is a two-source category, where min and max are
+        # the two contributors exactly — so the renderer must not print a range
+        # for n < 3, and _spread_of() below is where that rule lives.
         out[(r["race_id"], r["quantity"], r["category"])] = {
             "value": v, "n": int(r["n_sources"]),
             "n_gated": int(r.get("n_gated") or 0),
+            "min": _num("min"), "max": _num("max"), "sd": _num("sd"),
             "display": r.get("display", "ok"),
             "sole_source": r.get("sole_source", ""),
             "withheld": False,
         }
     return out
+
+
+# How many contributors a category needs before its RANGE may be shown.
+#
+# Three, when any contributor is GATED. With n=2 the min and the max ARE the
+# two contributors: printing them republishes both forecasts individually under
+# a label that promises an aggregate, which is the disclosure floor defeated by
+# a different route than the one MIN_N guards.
+#
+# THE GATE IS ON GATED CONTRIBUTORS, NOT ON THE HEADCOUNT, and getting that
+# backwards costs the site the most interesting number it has. Academic holds
+# exactly two models, both of them ours, both already published by name in
+# academic_models.json with their coefficients and their citations. A range
+# over two things a reader can already look up individually reveals nothing —
+# and refusing to print it would have hidden the fact that the two academic
+# models sit four points apart while the four polling aggregators sit within
+# one, which is the single most informative comparison on the page.
+#
+# So: a range needs two contributors, and needs three only when one of them is
+# gated. This is related to MIN_N in aggregate.py and is deliberately NOT the
+# same rule — MIN_N asks "may we publish an average at all", this asks "does
+# the range hand back an individual forecast we may not show".
+SPREAD_MIN_N_GATED = 3
+
+
+def _spread_of(cell: dict | None) -> dict | None:
+    """min/max/sd for a cell, or None where a range would name people."""
+    if not cell or cell.get("withheld"):
+        return None
+    n = int(cell.get("n") or 0)
+    n_gated = int(cell.get("n_gated") or 0)
+    lo, hi = cell.get("min"), cell.get("max")
+    if n < 2 or lo is None or hi is None:
+        return None
+    if n_gated and n < SPREAD_MIN_N_GATED:
+        return None
+    return {"min": round(lo, 3), "max": round(hi, 3),
+            "range": round(hi - lo, 3),
+            "sd": round(cell["sd"], 3) if cell.get("sd") is not None else None,
+            "n": n, "all_open": n_gated == 0}
 
 
 def _withheld_cells(supp: list[dict], latest: str) -> set:
@@ -215,6 +274,144 @@ def build_ladders(senate: dict | None, proj: dict | None,
     return out
 
 
+# ---------------------------------------------------------------------------
+# Movement — where each family was, and where it is now
+# ---------------------------------------------------------------------------
+# A tracker that only ever shows today's number answers "what do they think"
+# and never "what changed", which is the question a reader coming back next
+# week actually has. The timeline answers it visually; this answers it in
+# words, which is what you can read on a phone or paste into a lecture.
+#
+# THREE RULES, all of them about not inventing a comparison.
+#
+# 1. NEVER INTERPOLATE. The baseline is the newest published value at or
+#    before the target date, and the card states the date it actually used. A
+#    30-day change measured from 34 days ago is fine and honest; a 30-day
+#    change measured from a number we made up by drawing a line between two
+#    real ones is not.
+#
+# 2. NO BASELINE, NO DELTA. If a family has nothing on or before the target,
+#    it gets no cell. A family that started collecting last week has not moved
+#    zero over ninety days; it has no ninety-day movement, which is different.
+#
+# 3. FLAG A CHANGE OF RECIPE. The academic family's history before the generic
+#    ballot started being captured is RECONSTRUCTED from Silver's poll-level
+#    file using raw poll margins, while everything from the capture onward uses
+#    his house-effect-adjusted average. Those are different recipes, measured
+#    at about half a point apart. A delta that straddles that join is part
+#    movement and part method, and this says so rather than letting the reader
+#    assume it is all news.
+MOVEMENT_HORIZONS = [("30d", 30), ("90d", 90)]
+
+# How far past a horizon the baseline may sit before the cell is dropped.
+#
+# Rule 1 says take the newest value at or before the target and report the date
+# actually used. On a dense series that is right: a 30-day change measured from
+# 34 days ago is a 30-day change. On a SPARSE one it is not. A family whose
+# only earlier value is eighteen months old would otherwise have that number
+# printed under a "30 days" heading with a small "(568d)" beside it, and small
+# print does not undo a wrong heading.
+#
+# So the baseline must land within the horizon plus this much slack, which is
+# sized for the backfill's weekly grid plus a missed run or two. Past that the
+# family has no movement at that horizon, which is a true statement, unlike the
+# alternative.
+MOVEMENT_TOLERANCE_DAYS = 21
+
+
+def build_movement(avgs: list[dict], latest: str) -> dict | None:
+    """Per category: today, and the change over each horizon."""
+    # (category, quantity) -> {date: (value, n, n_gated)}
+    hist: dict[tuple, dict] = defaultdict(dict)
+    for r in avgs:
+        if r["race_id"] not in (NATL_HOUSE, NATL_SENATE):
+            continue
+        if r["quantity"] not in ("margin_D", "seats_D", "win_prob_D"):
+            continue
+        try:
+            v = float(r["mean"])
+        except (TypeError, ValueError):
+            continue
+        key = (r["category"], r["race_id"], r["quantity"])
+        hist[key][r["snapshot_date"]] = v
+
+    if not hist:
+        return None
+
+    latest_d = dt.date.fromisoformat(latest)
+
+    # When the polling category first published anything. Academic values from
+    # before this date were reconstructed rather than captured — see rule 3.
+    poll_dates = sorted(d0 for (cat, _r, _q), days in hist.items()
+                        if cat == "polling" for d0 in days)
+    capture_start = poll_dates[0] if poll_dates else None
+
+    def at_or_before(days: dict, target: dt.date) -> tuple[str, float] | None:
+        got = [d0 for d0 in days if dt.date.fromisoformat(d0) <= target]
+        if not got:
+            return None
+        d0 = max(got)
+        return d0, days[d0]
+
+    rows = []
+    for cat in CATEGORY_ORDER:
+        entry = {"category": cat, "label": CATEGORY_LABEL[cat], "metrics": {}}
+        for race, qty, name in (
+            (NATL_HOUSE, "margin_D", "house_margin"),
+            (NATL_HOUSE, "seats_D", "house_seats"),
+            (NATL_SENATE, "seats_D", "senate_seats"),
+        ):
+            days = hist.get((cat, race, qty))
+            if not days or latest not in days:
+                continue
+            now = days[latest]
+            m = {"now": round(now, 2), "changes": {}}
+            for label, n in MOVEMENT_HORIZONS:
+                got = at_or_before(days, latest_d - dt.timedelta(days=n))
+                if got is None:
+                    continue
+                d0, v0 = got
+                gap = (latest_d - dt.date.fromisoformat(d0)).days
+                if gap > n + MOVEMENT_TOLERANCE_DAYS:
+                    continue
+                m["changes"][label] = {
+                    "from": round(v0, 2), "from_date": d0,
+                    "delta": round(now - v0, 2),
+                    "days_actual": (latest_d - dt.date.fromisoformat(d0)).days,
+                    "mixed_recipe": bool(cat == "academic" and capture_start
+                                         and d0 < capture_start),
+                }
+            # Since the series began. Not a horizon — it is however long this
+            # family has been on the site, which differs per family and is
+            # worth showing precisely because it differs.
+            first = min(days)
+            if first != latest:
+                m["changes"]["all"] = {
+                    "from": round(days[first], 2), "from_date": first,
+                    "delta": round(now - days[first], 2),
+                    "days_actual": (latest_d - dt.date.fromisoformat(first)).days,
+                    "mixed_recipe": bool(cat == "academic" and capture_start
+                                         and first < capture_start),
+                }
+            if m["changes"]:
+                entry["metrics"][name] = m
+        if entry["metrics"]:
+            rows.append(entry)
+
+    return {
+        "as_of": latest,
+        "horizons": [lbl for lbl, _ in MOVEMENT_HORIZONS] + ["all"],
+        "horizon_labels": {"30d": "30 days", "90d": "90 days",
+                           "all": "since it began"},
+        "rows": rows,
+        "capture_start": capture_start,
+        "note": ("Each change is measured against the newest published value at "
+                 "or before that date — never an interpolation — and the date "
+                 "actually used is shown. A family with no value that far back "
+                 "gets no figure rather than a zero."),
+    }
+
+
 def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
                  supp: list[dict], senate: dict | None) -> dict | None:
     """National and per-race, four categories each."""
@@ -276,6 +473,7 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
             got = cat_cell(race, qty, cat)
             row[key] = (got or {}).get("value")
             row[key + "_withheld"] = bool((got or {}).get("withheld"))
+            row[key + "_spread"] = _spread_of(got)
             if got and got.get("sole_source"):
                 row["sole_source"] = got["sole_source"]
             if got and got.get("n"):
@@ -461,6 +659,17 @@ def main(argv=None) -> int:
               if (d / "polling_model.json").exists() else None
     proj = json.loads((d / "seat_projections.json").read_text()) \
            if (d / "seat_projections.json").exists() else None
+    # Carried whole, including `not_implemented`. The methods page states each
+    # academic model's coefficients, citation and inputs, and this file's
+    # standing rule is that a figure on that page is never hardcoded — a
+    # hardcoded number goes stale silently. Shipping the model's own payload is
+    # what lets the page name a coefficient and stay honest when it changes.
+    #
+    # The unimplemented ones travel too, deliberately. A methods page that
+    # lists only what we managed to build reads as a complete account of the
+    # literature, which it is very much not.
+    academic = json.loads((d / "academic_models.json").read_text()) \
+               if (d / "academic_models.json").exists() else None
 
     dates = sorted({r["snapshot_date"] for r in avgs}) or [
         dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")]
@@ -584,6 +793,7 @@ def main(argv=None) -> int:
     chart_data = charts.build(d, latest)
     chart_data["ladders"] = build_ladders(senate, proj, avgs, latest)
     spread = build_spread(d, latest, proj, avgs, supp, senate)
+    movement = build_movement(avgs, latest)
     model_index = build_model_index(d, latest)
 
     out = {
@@ -595,6 +805,7 @@ def main(argv=None) -> int:
         "series": {k: sorted(v) for k, v in series.items()},
         "fundamentals_model": model,
         "polling_model": senate,
+        "academic_models": academic,
         # Without the district arrays. All 435 of them tripled the size of a
         # file every visitor downloads, to feed a chart that draws 45 — and the
         # full set is already published in derived/seat_projections.json for
@@ -606,6 +817,7 @@ def main(argv=None) -> int:
         }),
         "charts": chart_data,
         "spread": spread,
+        "movement": movement,
         "model_index": model_index,
         "suppressed_cells": len(supp),
         "display_note": (

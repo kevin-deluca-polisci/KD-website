@@ -29,6 +29,7 @@ document.documentElement.className+=" js";})();
     --D:#1c5fa8; --R:#b02a2a;
     --c-fundamentals:#4a3aa7; --c-polling:#008300;
     --c-professional:#eda100; --c-market:#e87ba4;
+    --c-academic:#0077a8;
     --grid:#e6e6e2; --warn-bg:#fff8e6; --warn-line:#d9a520; --warn-ink:#7a5c00;
     --alert-bg:#fdecea; --alert-line:#b02a2a; --alert-ink:#7a1c1c;
   }
@@ -43,6 +44,7 @@ document.documentElement.className+=" js";})();
       --D:#79aef0; --R:#e57373;
       --c-fundamentals:#9085e9; --c-polling:#199e70;
       --c-professional:#c98500; --c-market:#d55181;
+      --c-academic:#2f9fbd;
       --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
       --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
     }
@@ -54,6 +56,7 @@ document.documentElement.className+=" js";})();
     --D:#79aef0; --R:#e57373;
     --c-fundamentals:#9085e9; --c-polling:#199e70;
     --c-professional:#c98500; --c-market:#d55181;
+    --c-academic:#2f9fbd;
     --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
     --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
   }
@@ -212,6 +215,15 @@ document.documentElement.className+=" js";})();
   .swatch.polling{background:var(--c-polling)}
   .swatch.professional{background:var(--c-professional)}
   .swatch.market{background:var(--c-market)}
+  .swatch.academic{background:var(--c-academic)}
+
+  /* The across-families row of the comparison table. Set apart by a rule and
+     weight rather than by a fill, because it is a summary of the rows above
+     and not a sixth method — a coloured band would have put it on the same
+     footing as the families it averages. */
+  tr.totalrow td{border-top:2px solid var(--border-strong);
+                 padding-top:.55rem;font-weight:600}
+  tr.totalrow td .muted{font-weight:400}
   .swatch.ink{background:var(--ink)}
   .swatch.range{background:var(--ink-3);opacity:.4}
   .thin-note{font-size:.85em;color:var(--ink-3);margin-top:12px;font-style:italic}

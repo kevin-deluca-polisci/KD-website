@@ -22,7 +22,10 @@
 <div class="wrap viz">
 
   <div class="card">
-    <h2>Four ways of forecasting, one chart</h2>
+    {{/* Counted, not asserted. This said "Four ways" as a literal and went
+         on saying it after academic became the fifth — the chart below draws
+         whatever series exist, so the heading has to as well. */}}
+    <h2>{{ len $d.charts.margin.series }} ways of forecasting, one chart</h2>
 
     <div class="segs" data-toggle-group="tracker">
       <span class="seglabel">Chamber</span>
@@ -262,6 +265,61 @@
     </div>
   </div>
 
+  {{/* WHAT CHANGED, in words. The chart above answers this visually, but only
+       if you can see the whole line and remember where it started. This is the
+       same question for someone reading on a phone, or lifting one sentence
+       into a lecture. Every figure is computed in publish.py — build_movement()
+       carries the three rules it follows about not inventing a comparison, and
+       the asterisk below is the third of them. */}}
+  {{- with $d.movement }}
+  {{- $mv := . }}
+  <div class="card">
+    <h2>What has moved</h2>
+    <p class="sub">Change in the national House margin, in points. Measured
+       against the newest published value at or before each date, never an
+       interpolation. A family with nothing that far back gets no figure rather
+       than a zero.</p>
+    <table>
+      <tr><th>Method</th><th class="num">Today</th>
+        {{- range $mv.horizons }}<th class="num">{{ index $mv.horizon_labels . }}</th>{{ end }}</tr>
+      {{- $mixed := false }}
+      {{- range $mv.rows }}
+      {{- $m := .metrics.house_margin }}
+      {{- if $m }}
+      <tr>
+        <td><strong>{{ .label }}</strong></td>
+        <td class="num {{ if gt $m.now 0.0 }}D{{ else }}R{{ end }}">
+          {{- if gt $m.now 0.0 }}D+{{ printf "%.1f" $m.now }}{{ else }}R+{{ printf "%.1f" (mul $m.now -1) }}{{ end }}</td>
+        {{- range $h := $mv.horizons }}
+        {{- $c := index $m.changes $h }}
+        <td class="num">
+          {{- if $c }}
+          {{- if $c.mixed_recipe }}{{ $mixed = true }}{{ end }}
+          <span title="from {{ printf "%.1f" $c.from }} on {{ $c.from_date }} — {{ $c.days_actual }} days ago{{ if $c.mixed_recipe }}; spans the reconstruction join{{ end }}">
+            {{- if gt $c.delta 0.0 }}+{{ printf "%.1f" $c.delta }} D
+            {{- else if lt $c.delta 0.0 }}+{{ printf "%.1f" (mul $c.delta -1) }} R
+            {{- else }}0.0{{ end }}{{ if $c.mixed_recipe }}<sup>*</sup>{{ end }}</span>
+          {{- else }}<span class="muted">—</span>{{ end }}</td>
+        {{- end }}
+      </tr>
+      {{- end }}
+      {{- end }}
+    </table>
+    <p class="thin-note">Each cell says which way the margin moved, not which
+       party is ahead — “+1.2 D” means the Democratic margin grew by 1.2 points
+       from whatever it was. Hover any figure for the date it was measured
+       from.</p>
+    {{- if $mixed }}
+    <p class="thin-note"><sup>*</sup> This comparison reaches back past
+       {{ $mv.capture_start }}, when we started capturing the generic ballot
+       daily. Academic figures before that date are reconstructed from the
+       poll-level record using raw poll margins, while everything after uses the
+       house-effect-adjusted average — about half a point apart. Part of a
+       change that spans the join is a change of recipe rather than of polls.
+       <a href="/forecast/methods/#academic">How the reconstruction works →</a></p>
+    {{- end }}
+  </div>
+  {{- end }}
   <div class="card">
     <h2>The models on this site</h2>
     <p class="sub">Built in PLSC 2219 from public-domain inputs and published in

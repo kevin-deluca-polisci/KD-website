@@ -22,14 +22,18 @@
 
   {{- with $s }}
   <div class="card">
-    <h2>The whole country, four ways</h2>
+    <h2>The whole country, {{ len .national }} ways</h2>
     <p class="sub">A blank cell is a question that method does not answer.
-       “Withheld” is a number we hold but may not publish yet.</p>
+       “Withheld” is a number we hold but may not publish yet.
+       The last column is the spread <em>inside</em> each family: how far apart
+       its own members are on the House margin. A family with one member has
+       no spread to report.</p>
     <table>
       <tr><th>Method</th>
           <th class="num">House margin</th><th class="num">House seats</th>
           <th class="num">P(D House)</th>
-          <th class="num">Senate seats</th><th class="num">P(D Senate)</th></tr>
+          <th class="num">Senate seats</th><th class="num">P(D Senate)</th>
+          <th class="num">Internal spread</th></tr>
       {{- range .national }}
       <tr>
         {{/* No "class model" tag. Every category here is now an average of
@@ -46,12 +50,57 @@
         <td class="num">{{ with .house_prob }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}{{ if .house_prob_withheld }}<span class="muted">withheld</span>{{ else }}—{{ end }}{{ end }}</td>
         <td class="num">{{ with .senate_seats }}{{ printf "%.0f" . }}{{ else }}{{ if .senate_seats_withheld }}<span class="muted">withheld</span>{{ else }}—{{ end }}{{ end }}</td>
         <td class="num">{{ with .senate_prob }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}{{ if .senate_prob_withheld }}<span class="muted">withheld</span>{{ else }}—{{ end }}{{ end }}</td>
+        {{/* The RANGE, not the standard deviation. An sd over two or four
+             values is a statistic with almost no sampling behind it, and
+             printing one implies a distribution these point forecasts do not have.
+             "D+3.9 to D+8.3" is what the file actually knows. */}}
+        <td class="num">{{- with .house_margin_spread }}
+          <span title="{{ .n }} members, {{ printf "%.1f" .range }} points apart">
+            {{ if gt .min 0.0 }}D+{{ printf "%.1f" .min }}{{ else }}R+{{ printf "%.1f" (mul .min -1) }}{{ end }}
+            to
+            {{ if gt .max 0.0 }}D+{{ printf "%.1f" .max }}{{ else }}R+{{ printf "%.1f" (mul .max -1) }}{{ end }}
+          </span>
+          {{- else }}<span class="muted">—</span>{{ end }}</td>
       </tr>
+      {{- end }}
+
+      {{- with .across_families }}
+      {{- with .house_margin }}
+      <tr class="totalrow">
+        <td><strong>{{ $s.across_families.label }}</strong>
+          <span class="muted">· {{ .n_categories }} famil{{ if eq .n_categories 1 }}y{{ else }}ies{{ end }}</span></td>
+        <td class="num {{ if gt .value 0.0 }}D{{ else }}R{{ end }}">
+          {{- if gt .value 0.0 }}D+{{ printf "%.1f" .value }}{{ else }}R+{{ printf "%.1f" (mul .value -1) }}{{ end }}</td>
+        <td class="num">{{ with $s.across_families.house_seats.value }}{{ printf "%.0f" . }}{{ else }}—{{ end }}</td>
+        <td class="num">{{ with $s.across_families.house_prob.value }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td>
+        <td class="num">{{ with $s.across_families.senate_seats.value }}{{ printf "%.0f" . }}{{ else }}—{{ end }}</td>
+        <td class="num">{{ with $s.across_families.senate_prob.value }}{{ printf "%.0f%%" (mul . 100) }}{{ else }}—{{ end }}</td>
+        <td class="num">{{- with .spread }}
+          {{ if gt (index . 0) 0.0 }}D+{{ printf "%.1f" (index . 0) }}{{ else }}R+{{ printf "%.1f" (mul (index . 0) -1) }}{{ end }}
+          to
+          {{ if gt (index . 1) 0.0 }}D+{{ printf "%.1f" (index . 1) }}{{ else }}R+{{ printf "%.1f" (mul (index . 1) -1) }}{{ end }}
+          {{- else }}—{{ end }}</td>
+      </tr>
+      {{- end }}
       {{- end }}
     </table>
     <p class="thin-note">Every Senate probability is the chance of <em>control</em>,
        which needs 51 seats. House seats are chamber totals out of 435; Senate
        seats out of 100.</p>
+    {{- with .across_families }}
+    <p class="thin-note"><strong>{{ .label }}</strong> weights each family once,
+       not each forecaster once — otherwise polling’s several aggregators would
+       decide a number the whole table is supposed to share.
+       {{ if .families_withheld }}A family whose number is withheld today is
+       left out of it rather than averaged in, because averaging it in would
+       let you recover it by subtraction.{{ end }}
+       The spread beside it is the distance between the families, which is
+       disagreement about method — a different thing from any one model’s own
+       uncertainty, and never drawn as an error bar.</p>
+    {{- end }}
+    <p class="thin-note">A family’s internal spread is shown once it has two
+       members, or three where any of them is a forecast we may not republish
+       individually — at two, the range would be the two forecasts.</p>
   </div>
   {{- end }}
 

@@ -69,11 +69,37 @@ VIEWS = {
 }
 
 # entity -> (light, dark). Fixed. Never reassign by position.
+#
+# ACADEMIC'S TEAL WAS CHOSEN BY THE VALIDATOR, NOT BY EYE, and the result is
+# worth writing down because it constrains what may be added later.
+#
+# In LIGHT mode #0077a8 clears every check against the existing four on an
+# all-pairs test: worst normal-vision separation 18.4, worst CVD 9.1 protan,
+# inside the lightness band, above the chroma floor. That one is clean.
+#
+# In DARK mode it is NOT clean, and no fifth hue is. The dark ramp's lightness
+# band is roughly L 0.48-0.67, four hues already occupy it, and a sweep of the
+# full hue circle at three lightnesses and three chromas found nothing that
+# clears the 15-point normal-vision floor against all four. #2f9fbd is the best
+# available and sits 11.8 from polling's green. That is below the floor, so
+# COLOUR ALONE DOES NOT SEPARATE THESE SERIES IN DARK MODE and the charts must
+# not ask it to: every series is directly labelled at its last point, every
+# comparison mark carries a distinct SHAPE from glyph.html, and a table view
+# ships alongside. Those are the secondary encodings that make the pair legal.
+#
+# ALREADY BROKEN BEFORE ACADEMIC ARRIVED, and someone should fix it: in dark
+# mode #d55181 (market) and #199e70 (polling) are ΔE 1.6 apart under
+# deuteranopia — indistinguishable, not merely close. Academic did not cause
+# this and cannot fix it; it needs one of those two hues re-stepped.
+#
+# THE REAL CONCLUSION: five is the ceiling for this ramp. A sixth category must
+# come with a re-stepped dark palette or it must not come as a hue at all.
 COLORS = {
     "fundamentals": ("#4a3aa7", "#9085e9"),
     "polling":      ("#008300", "#199e70"),
     "professional": ("#eda100", "#c98500"),
     "market":       ("#e87ba4", "#d55181"),
+    "academic":     ("#0077a8", "#2f9fbd"),
 }
 # Labels name the METHOD, not who built it. A chart comparing four ways of
 # forecasting the same number should put them on equal footing; tagging two of
@@ -84,8 +110,13 @@ LABELS = {
     "polling":      "Polling",
     "professional": "Professional",
     "market":       "Markets",
+    "academic":     "Academic",
 }
-ORDER = ["fundamentals", "polling", "professional", "market"]
+# Least modelled to most modelled, matching CATEGORY_ORDER in publish.py. The
+# two lists are written out separately because charts.py and publish.py do not
+# import each other; if you reorder one, reorder the other, or the legend and
+# the table disagree about what order the reader is being asked to think in.
+ORDER = ["polling", "market", "fundamentals", "professional", "academic"]
 
 
 def _rd(p: Path) -> list[dict]:

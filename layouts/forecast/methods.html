@@ -21,6 +21,7 @@
   <nav class="sub">
     <a href="#overview" aria-current="true">Overview</a>
     <a href="#fundamentals">Fundamentals</a>
+    <a href="#academic">Academic</a>
     <a href="#polling">Polling</a>
     <a href="#professional">Professional</a>
     <a href="#markets">Markets</a>
@@ -177,6 +178,156 @@
          for our state partisan lean, and the reason the Senate table can be
          published at all.</p>
     </div>
+  </section>
+
+  <!-- ============================= ACADEMIC ============================== -->
+  {{/* Reimplementations of published specifications. Every figure on this
+       section comes out of $d.academic_models, which academic.py writes on the
+       day — including the coefficients, which are refit for the referendum
+       model on every run and would otherwise be a hardcoded number that goes
+       quietly wrong. */}}
+  <section data-section="academic" id="academic" hidden>
+    {{- $am := $d.academic_models }}
+    <div class="card">
+      <h2>Models from the literature</h2>
+      <p class="sub">Specifications published in the political-science
+         forecasting literature, rebuilt here and run on our data.</p>
+      <p class="muted">These are <em>our implementations</em>, not the authors’
+         own forecasts, and the distinction is not a formality. Where an author
+         has published a 2026 number we say so and print theirs beside ours;
+         where we have changed the specification to fit the data we hold, we say
+         that too. A model here wearing somebody’s name means we followed their
+         equation, not that they endorsed the result.</p>
+      <p class="thin-note">Why this family exists at all: an academic model
+         publishes an <em>equation</em>, where a commercial forecaster publishes
+         a <em>number</em>. Rebuilding an equation and running it on inputs we
+         captured ourselves is ordinary scholarship, so nothing here waits on a
+         licence — which is the opposite of the professional section below.</p>
+    </div>
+
+    {{- range $key, $m := ($am.models | default dict) }}
+    <div class="card">
+      <h2>{{ $m.name }}</h2>
+      <p class="muted">{{ $m.citation }}</p>
+      {{- with $m.margin_D }}
+      <div class="muted">Today:
+        <strong class="{{ if gt . 0.0 }}D{{ else }}R{{ end }}">{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}</strong>
+        {{- with $m.margin_D_80_low }} <span class="muted">— 80%
+          {{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}
+          to
+          {{ with $m.margin_D_80_high }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}{{ end }}</span>
+        {{- end }}
+      </div>
+      {{- end }}
+      <p class="thin-note">{{ $m.attribution }}
+        {{ if $m.refit_on_our_history }}Refit on our twenty-midterm history
+        rather than using the authors’ published coefficients.
+        {{ else }}Uses the authors’ published coefficients, unchanged.{{ end }}</p>
+      {{- with $m.diagnostics }}
+      {{- with .coefficients }}
+      <p class="thin-note">Coefficients:
+        {{- range $n, $v := . }} {{ $n }} {{ printf "%.3f" $v }};{{ end }}
+        {{- with $m.diagnostics.r2 }} R² {{ printf "%.2f" . }},{{ end }}
+        {{- with $m.diagnostics.loeo_rmse }} leave-one-out RMSE
+          {{ printf "%.2f" . }} points of vote share.{{ end }}</p>
+      {{- end }}
+      {{- with .bew_direct_D_seats }}
+      <p class="thin-note">The paper estimates a seats equation separately from
+         its vote equation, and the two do not agree once applied to 2026: theirs
+         returns <strong>{{ printf "%.0f" . }}</strong> Democratic seats directly,
+         while their vote number pushed through our district baselines returns
+         rather fewer. The seats equation was fitted on 1946–2002 and carries the
+         mid-century House’s seat bonus, which current districts do not give.
+         We use the vote equation, so this model is comparable with every other
+         line on the site, and leave the gap on show rather than resolving it
+         quietly.</p>
+      {{- end }}
+      {{- with .sensitivity_month }}
+      <p class="thin-note"><strong>The month is part of the specification.</strong>
+         Lockerbie reads June of the election year, and June 2026 came in below
+         the months around it — possibly survey noise. We feed it June anyway:
+         swapping in a smoothed average would be estimating a different model
+         and reporting it under his name. Here is what the choice is worth.</p>
+      <table style="max-width:460px">
+        <tr><th>Reading</th><th class="num">% expecting worse</th>
+            <th class="num">President’s party seat change</th></tr>
+        {{- range . }}
+        <tr{{ if .is_specification }} class="totalrow"{{ end }}>
+          <td>{{ .month }}{{ if .is_specification }} <span class="muted">· the specification</span>{{ end }}</td>
+          <td class="num">{{ printf "%.0f" .pct_expect_worse }}%</td>
+          <td class="num">{{ if gt .pres_party_seat_change 0.0 }}+{{ end }}{{ printf "%.0f" .pres_party_seat_change }}</td>
+        </tr>
+        {{- end }}
+      </table>
+      {{- end }}
+      {{- with .sensitivity_year_direction }}
+      {{/* THE ASSUMPTION, PRICED. This model needs a person to decide whether
+           2026 is a good or bad year for the president's party before it can
+           run, and that decision moves the answer by tens of seats. Showing
+           all three turns a footnote into something the reader can weigh. */}}
+      <p class="thin-note"><strong>What the open-seat term is worth.</strong>
+         This model multiplies open seats by the direction of the year. We first
+         read that as a judgment we would have to make ourselves — but the paper
+         settles it: “Midterms are, by definition, a bad year for the incumbent
+         party.” The −1 is the author’s rule, fixed for every midterm, not our
+         call about 2026. The other rows are counterfactuals, shown because this
+         one term carries about half the forecast:</p>
+      <table>
+        <tr><th>If 2026 is…</th><th class="num">President’s party seat change</th>
+            <th class="num">Implied D seats</th></tr>
+        {{- range . }}
+        <tr{{ if eq (printf "%v" .direction) "-1" }} class="totalrow"{{ end }}>
+          <td>{{ .label }}</td>
+          <td class="num">{{ if gt .pres_party_seat_change 0.0 }}+{{ end }}{{ printf "%.0f" .pres_party_seat_change }}</td>
+          <td class="num">{{ printf "%.0f" .implied_D_seats }}</td>
+        </tr>
+        {{- end }}
+      </table>
+      <p class="thin-note">Most forecasting models carry judgment calls — a
+         shrinkage curve somebody chose, a year somebody winsorised, a window
+         somebody drew — and they are usually buried in the machinery. This
+         model puts one in the open as a variable with a sign, which is why it
+         is worth pausing on even though the midterm case turns out to be
+         specified rather than chosen. In an on-year election the author calls
+         it “a little more complicated”, and there the judgment really would be
+         a judgment. The highlighted row is the one we publish.</p>
+      <p class="thin-note">Read the point estimate with its error bar and not
+         without it. Across 35 elections this model’s out-of-sample mean
+         absolute error is <strong>16.8 seats</strong>, and single misses have
+         been far larger — 2010 was forecast at −11 against an actual −64. The
+         interval on the figure above is built from that published error, which
+         is why it is so wide.</p>
+      {{- end }}
+      {{- with .benchmark }}
+      {{/* The cycle is read from the payload, not written into the sentence.
+           It said "for 2026" as a literal and rendered Lewis-Beck & Quinlan's
+           2024 forecast under that heading — a benchmark labelled with the
+           wrong year is worse than no benchmark. */}}
+      <p class="thin-note">The authors’ own published figure for
+         {{ with .for_cycle }}{{ . }}{{ else }}2026{{ end }}:
+         {{ .claim }} ({{ .authors }}{{ with .where }}, {{ . }}{{ end }}{{ with .published }}, {{ . }}{{ end }}).
+         {{ .note }}</p>
+      {{- end }}
+      {{- end }}
+      {{- range $m.notes }}<p class="thin-note">{{ . }}</p>{{- end }}
+    </div>
+    {{- end }}
+
+    {{- with ($am.not_implemented | default dict) }}
+    <div class="card">
+      <h2>Declared, not built</h2>
+      <p class="sub">Models we would like in this family and have not
+         implemented. Listed because a methods page that shows only what we
+         managed to build reads as a complete account of the literature.</p>
+      {{- range $key, $m := . }}
+      <p class="muted"><strong>{{ $m.name }}</strong><br>
+        <span class="muted">{{ $m.citation }}</span></p>
+      <ul class="thin-note">
+        {{- range $m.missing }}<li>{{ . }}</li>{{ end }}
+      </ul>
+      {{- end }}
+    </div>
+    {{- end }}
   </section>
 
   <!-- ============================== POLLING ============================== -->

@@ -55,6 +55,7 @@ DATA = REPO / "forecast" / "data"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import fundamentals  # noqa: E402  — reuse HISTORY and _lstsq rather than fork them
+import polling       # noqa: E402  — for generic_ballot(), reused not reimplemented
 
 ELECTION_DAY = "2026-11-03"
 
@@ -401,6 +402,448 @@ def run_enns(c: Ctx) -> Result | None:
 
 
 # ---------------------------------------------------------------------------
+# MODEL 4 — economic pessimism  (NOT IMPLEMENTED: one input missing)
+# ---------------------------------------------------------------------------
+# Lockerbie's House model, and the most interesting of the unbuilt ones because
+# its input is unlike anything else on this site. Every economic term we carry
+# is REALISED — FRED's disposable income, actually earned, already measured.
+# This one is EXPECTED: the share of people who say they will be worse off
+# financially a year from now. Those two can point in opposite directions, and
+# when they do, the disagreement is the finding.
+#
+# THE SPECIFICATION IS FULLY IN HAND, which is why the coefficients sit here as
+# data rather than in a comment. Published in PS in 2024, fitted 1954-2024 on
+# 35 observations:
+#
+#     seat change = 5.36 - 0.78 * (% expecting to be worse off)
+#                        + 0.41 * (open seats, signed by the year's direction)
+#
+# with R-squared .42 and standard errors of .07 on the pessimism term. It
+# forecast the incumbent party losing 12 seats in 2024.
+#
+# WHAT IS MISSING, precisely:
+#
+#   1. THE PESSIMISM SERIES. Michigan's Surveys of Consumers, Table 8 —
+#      "Expected Change in Financial Situation in a Year" — carries the
+#      better/same/worse split monthly back to 1960 and is downloadable as CSV.
+#      We do not capture it, and the site has a usage agreement we have not
+#      read. That is a capture job plus a licence question, not modelling.
+#      Lockerbie takes the JUNE reading of the election year specifically, so a
+#      monthly series is enough; we do not need it daily.
+#
+#   2. THE OPEN-SEAT TERM. This is the awkward one and it is not a data
+#      problem. The variable is the number of open seats multiplied by -1 in a
+#      bad year for the president's party, +1 in a good year, 0 in a neutral
+#      one. Which kind of year 2026 is, is a judgment about the outcome we are
+#      trying to forecast. Lockerbie makes that call himself; we would be
+#      guessing, and a term whose sign we choose can carry the forecast
+#      wherever we like. Any implementation must either publish the sign as an
+#      explicit assumption and show the answer under all three, or drop the
+#      term and say the model has been changed.
+#
+# So this stays a stub with its coefficients recorded, the same shape as the
+# Enns entry. When the Michigan series is captured, run() has everything it
+# needs except a decision about (2), and that decision belongs to a person.
+LOCKERBIE_CITE = ("Lockerbie, 'The Challenge of Forecasting the 2024 "
+                  "Presidential and House Elections: Economic Pessimism and "
+                  "Election Outcomes', PS: Political Science & Politics, 2024")
+
+# Table 1, "Forecasting Equations 1954-2024", House Seat Change column.
+#
+# THE PARENTHESES ARE SIGNIFICANCE LEVELS, NOT STANDARD ERRORS. The table's own
+# note says so. This matters because .001 beside a coefficient of .41 is an
+# absurd standard error and a perfectly ordinary p-value — reading it as the
+# former is what made this model look untrustworthy on first pass. It is not.
+LOCKERBIE_COEF = {
+    "constant": 5.36,
+    "pct_expect_worse": -0.78,      # p = .07
+    "open_seats_signed": 0.41,      # p = .001
+    "fitted_on": "1954-2024, n=35",
+    "r2": 0.42,
+    "r2_adj": 0.38,
+    "dv": "incumbent party House seat change",
+    "input_month": "June of the election year",
+    # Table 3, out-of-sample. This is the number that matters most for reading
+    # the forecast: the mean absolute error across 35 elections is 16.8 SEATS.
+    # Individual misses run far larger — 2010 was forecast at -11 against an
+    # actual -64. Any interval on this model has to be wide enough to say so.
+    "out_of_sample_mae_seats": 16.8,
+    "published_2024_forecast": -12,
+}
+
+LOCKERBIE_MISSING = [
+    "Michigan Surveys of Consumers Table 8, 'Expected Change in Financial "
+    "Situation in a Year' — the WORSE column, June 2026. ONE NUMBER, not a "
+    "series. Set LOCKERBIE_INPUTS['pct_expect_worse'].",
+    "the number of open House seats in 2026 — seats with no incumbent running. "
+    "One number. Set LOCKERBIE_INPUTS['open_seats'].",
+]
+
+# THE SIGN IS THE AUTHOR'S RULE, NOT OUR GUESS — corrected after reading the
+# paper rather than a summary of it.
+#
+# Lockerbie's second term multiplies the number of open seats by the DIRECTION
+# of the year: -1 in a bad year for the incumbent president's party, +1 in a
+# good one, 0 in neither. On first pass that looked like a judgment we would
+# have to make ourselves about the very thing being forecast, and this comment
+# said so at length.
+#
+# The paper settles it in one sentence: "Midterms are, by definition, a bad
+# year for the incumbent party." The -1 is not our reading of 2026. It is the
+# specification, and it is fixed for every midterm the model has ever been run
+# on. The judgment only bites in on-year elections, which Lockerbie himself
+# calls "a little more complicated" and handles by asking whether the
+# electorate expects one party to win big.
+#
+# So this is now a constant with a citation rather than an assumption with a
+# defence. The sensitivity table below stays, because showing what the term
+# contributes is still worth doing — the open-seat term is carrying about half
+# this forecast — but it is labelled as the counterfactual it is, not as a
+# choice we made and might have made differently.
+LOCKERBIE_MIDTERM_RULE = ("Lockerbie: 'Midterms are, by definition, a bad year "
+                          "for the incumbent party.' The -1 is his rule, not "
+                          "our assumption.")
+LOCKERBIE_YEAR_DIRECTION = -1
+LOCKERBIE_DIRECTION_LABEL = {
+    -1: "a bad year for the president's party — the midterm rule",
+    0:  "a neutral year",
+    1:  "a good year for the president's party",
+}
+
+# Both are single numbers, not series: Lockerbie reads the June figure of the
+# election year, and the open-seat count is fixed once filing closes. Fill
+# these in and the model runs; leave them None and it declares itself unbuilt.
+LOCKERBIE_INPUTS: dict = {
+    # Michigan Surveys of Consumers, Table 8, "Expected Change in Financial
+    # Situation in a Year", WORSE OFF column, June 2026. Read off the published
+    # table, n=1,380.
+    "pct_expect_worse": 37.0,
+    "open_seats": 60,
+}
+
+# THE JUNE READING IS LOWER THAN THE MONTHS AROUND IT, and we use it anyway.
+#
+# The 2026 run of the WORSE OFF column goes Mar 39, Apr 41, May 45, Jun 37. The
+# June figure is eight points below May and the lowest since January. It may
+# well be survey noise rather than a real collapse in pessimism.
+#
+# Lockerbie's specification says June of the election year. Not a spring
+# average, not a smoothed series — June. Substituting a three-month mean
+# because we distrust one month would be estimating a DIFFERENT model and
+# reporting it under his name, which is the thing this whole file exists not to
+# do. The month is part of the specification, so the month is what we feed it.
+#
+# What we do instead is price the worry. MONTHS_SENSITIVITY runs the model at
+# each recent reading so the reader can see what the choice of month is worth
+# — about six seats between May and June — and compare that with what the
+# year-direction assumption is worth, which is far more.
+LOCKERBIE_RECENT_MONTHS = [("Mar 2026", 39.0), ("Apr 2026", 41.0),
+                           ("May 2026", 45.0), ("Jun 2026", 37.0)]
+
+# Seats the president's party held going in — the base the seat CHANGE applies
+# to. Same figure fundamentals.py uses.
+LOCKERBIE_SEATS_BEFORE = 220
+
+
+def _published_tide_seat_pairs(cycle: int) -> list:
+    """(tide, expected D seats) from today's projections, for inversion.
+
+    WHY INTERPOLATE RATHER THAN SOLVE. Lockerbie forecasts SEATS; every other
+    line on this site is a national tide pushed through one shared seat curve.
+    To put him on the same axis, that curve has to run backwards. Bisecting on
+    house_forecast() would do it exactly, at the price of a 20,000-draw Monte
+    Carlo per iteration.
+
+    Exact is not needed. seats.py already evaluates that curve at eight or nine
+    tides every run and writes the pairs down, and across the range those tides
+    span it is monotone and close to linear. Interpolating between the two
+    nearest published points is accurate to a fraction of a seat, costs
+    nothing, and — the argument that actually matters — uses the SAME curve the
+    reader sees everywhere else on the page, rather than a second one that
+    could quietly drift from it.
+    """
+    for path in (DATA / str(cycle) / "model_private" / "seat_projections.json",
+                 DATA / str(cycle) / "derived" / "seat_projections.json"):
+        if not path.exists():
+            continue
+        try:
+            pr = json.loads(path.read_text()).get("projections") or {}
+        except json.JSONDecodeError:
+            continue
+        pairs = []
+        for m in pr.values():
+            t = m.get("tide_D")
+            h = (m.get("house") or {}).get("expected_D_seats")
+            if t is not None and h is not None:
+                pairs.append((float(t), float(h)))
+        if len(pairs) >= 2:
+            return sorted(set(pairs))
+    return []
+
+
+def implied_tide_for_seats(pairs: list, seats: float):
+    """The tide our curve says produces `seats`. Returns (tide, extrapolated)."""
+    if len(pairs) < 2:
+        return None
+    if seats <= pairs[0][1]:
+        (t1, s1), (t2, s2), out = pairs[0], pairs[1], True
+    elif seats >= pairs[-1][1]:
+        (t1, s1), (t2, s2), out = pairs[-2], pairs[-1], True
+    else:
+        out = False
+        for (t1, s1), (t2, s2) in zip(pairs, pairs[1:]):
+            if s1 <= seats <= s2:
+                break
+    if s2 == s1:
+        return None
+    return t1 + (seats - s1) * (t2 - t1) / (s2 - s1), out
+
+
+def run_lockerbie(c: Ctx) -> Result | None:
+    worse = LOCKERBIE_INPUTS.get("pct_expect_worse")
+    opens = LOCKERBIE_INPUTS.get("open_seats")
+    if worse is None or opens is None:
+        return None
+
+    k = LOCKERBIE_COEF
+
+    def change_for(direction: int) -> float:
+        return (k["constant"] + k["pct_expect_worse"] * worse
+                + k["open_seats_signed"] * opens * direction)
+
+    dirn = LOCKERBIE_YEAR_DIRECTION
+    seat_change = change_for(dirn)
+    pres_seats = LOCKERBIE_SEATS_BEFORE + seat_change
+    d_seats = 435.0 - pres_seats          # the president's party is Republican
+
+    pairs = _published_tide_seat_pairs(c.cycle)
+    got = implied_tide_for_seats(pairs, d_seats)
+    if got is None:
+        # No curve to invert against means no tide, and a seats-only result has
+        # nowhere to go in a pipeline built on tides. Decline rather than
+        # publish a number the rest of the site cannot place beside the others.
+        return None
+    tide, extrapolated = got
+
+    notes = ["forecasts SEAT CHANGE directly — the margin shown is our own seat "
+             "curve run backwards from that seat count, and is not a number "
+             "Lockerbie publishes"]
+    if extrapolated:
+        notes.append("that seat count falls outside the range of tides the "
+                     "other models produced today, so the inversion is "
+                     "extrapolated rather than interpolated")
+    notes.append(LOCKERBIE_MIDTERM_RULE)
+    notes.append(f"published out-of-sample mean absolute error is "
+                 f"{k['out_of_sample_mae_seats']} seats — the interval is his, "
+                 f"not ours, and it is very wide")
+
+    # AN INTERVAL BUILT FROM HIS OWN OUT-OF-SAMPLE ERROR, in seats, converted
+    # back to a tide through the same curve. Table 3's mean absolute error is
+    # 16.8 seats over 35 elections; for a normal error MAE ~= 0.798 sigma, so
+    # sigma is about 21 seats and an 80% band is roughly +/- 27. That is an
+    # enormous interval and it is the honest one: this model has been wrong by
+    # fifty seats in living memory.
+    mae = k["out_of_sample_mae_seats"]
+    sigma_seats = mae / 0.7979
+    band = 1.2816 * sigma_seats
+    lo_t = implied_tide_for_seats(pairs, d_seats - band)
+    hi_t = implied_tide_for_seats(pairs, d_seats + band)
+    interval = ((lo_t[0], hi_t[0]) if lo_t and hi_t else None)
+
+    return Result(
+        margin_D=tide,
+        interval_80=interval,
+        inputs={
+            "pct_expect_worse": worse,
+            "pct_expect_worse_source": "Michigan Surveys of Consumers, Table 8, "
+                                       "June of the election year",
+            "open_seats": opens,
+            "year_direction": dirn,
+            "year_direction_label": LOCKERBIE_DIRECTION_LABEL[dirn],
+            "seats_before": LOCKERBIE_SEATS_BEFORE,
+        },
+        diagnostics={
+            "coefficients": {kk: vv for kk, vv in k.items()
+                             if isinstance(vv, (int, float))},
+            "pres_party_seat_change": round(seat_change, 1),
+            "implied_D_seats": round(d_seats, 1),
+            "inversion_extrapolated": extrapolated,
+            "curve_points_used": len(pairs),
+            # WHAT THE MONTH IS WORTH. June is the specification; this shows
+            # the answer at each recent reading so "the June number looks
+            # noisy" becomes a number rather than a misgiving. It is NOT an
+            # alternative forecast and the page must not render it as one.
+            "sensitivity_month": [
+                {"month": mlab, "pct_expect_worse": mval,
+                 "pres_party_seat_change": round(
+                     k["constant"] + k["pct_expect_worse"] * mval
+                     + k["open_seats_signed"] * opens * dirn, 1),
+                 "is_specification": mval == worse}
+                for mlab, mval in LOCKERBIE_RECENT_MONTHS],
+            "midterm_rule": LOCKERBIE_MIDTERM_RULE,
+            "out_of_sample_mae_seats": mae,
+            "sensitivity_year_direction": [
+                {"direction": dd,
+                 "label": LOCKERBIE_DIRECTION_LABEL[dd],
+                 "pres_party_seat_change": round(change_for(dd), 1),
+                 "implied_D_seats": round(435.0 - (LOCKERBIE_SEATS_BEFORE
+                                                   + change_for(dd)), 1)}
+                for dd in (-1, 0, 1)],
+        },
+        notes=notes,
+    )
+
+
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# MODEL 5 — political history (Lewis-Beck & Quinlan)
+# ---------------------------------------------------------------------------
+# THE ONLY MODEL ON THIS SITE THAT FORECASTS THE SENATE IN ITS OWN RIGHT.
+#
+# Everything else here produces a national tide, which seats.py pushes through
+# one shared partisan-lean curve to get Senate numbers. That means every Senate
+# figure the site publishes leans on a single piece of machinery, and if the
+# machinery is wrong they are all wrong together. This model counts Senate
+# seats directly from institutional facts and never touches a poll or a price,
+# so it is a genuinely independent check rather than another opinion routed
+# through the same pipe.
+#
+# It also uses no economy and no popularity. Its inputs are all COUNTABLE
+# FACTS ABOUT THE STATE OF PLAY — who holds what, who is retiring, which states
+# are safe — known months ahead and not revised. There is nothing to nowcast,
+# which is why it can be run in July and stand.
+#
+# Table 1, PS 58(2), OLS on 39 elections 1946-2022. Coefficients unstandardised.
+LBQ_CITE = ("Lewis-Beck & Quinlan, 'A Political History Forecast of the 2024 "
+            "US Congressional Elections', PS: Political Science & Politics "
+            "58(2), 2025, Table 1")
+
+# Democrat seats = constant + sum(beta * x). Standard errors in comments.
+LBQ_SENATE = {
+    "constant": 25.153,             # (4.674)
+    "dem_federal_dominance": -5.057,   # (1.498)  1 if Dems hold all three
+    "dem_governors": 0.236,            # (0.135)  count, 6 months out
+    "strong_gop_senate_states": -0.416,  # (0.157)
+    "dem_holdover_senate": 0.851,      # (0.154)  D seats NOT up
+    "post_vra_1965": -4.623,           # (1.434)  1 for elections post-1966
+    "_fit": {"n": 39, "adj_r2": 0.72, "rmse": 3.684,
+             "out_of_sample_mae": 2.7, "calls_control": "72%"},
+}
+LBQ_HOUSE = {
+    "constant": 208.999,            # (17.618)
+    "dem_federal_dominance": -29.723,  # (6.137)
+    "dem_governors": 2.900,            # (0.583)
+    "strong_gop_senate_states": -2.254,  # (0.747)
+    "dem_senate_retirements": -4.978,  # (1.300)  D senators not contesting
+    "post_1994_revolution": -13.358,   # (7.846)  1 for contests post-1994
+    "_fit": {"n": 39, "adj_r2": 0.74, "rmse": 15.732,
+             "out_of_sample_mae": 12.0, "calls_control": "87%"},
+}
+
+# 2026 values. The two dummies and the dominance term are settled facts; the
+# three counts are not, and are left None until somebody counts them properly.
+# A plausible guess in any of these slots would be indistinguishable from a
+# measurement once it is in the JSON, which is exactly how a made-up number
+# ends up on a public page.
+#
+#   dem_federal_dominance   0. The dichotomy is 1 only when DEMOCRATS hold the
+#                           presidency, Senate and House together. Republicans
+#                           hold all three in 2026, so this is 0 — the variable
+#                           does not flip sign for the other party, it simply
+#                           is not triggered.
+#   post_vra_1965           1. Every election after 1966.
+#   post_1994_revolution    1. Every contest after 1994.
+#   dem_holdover_senate     Democratic seats NOT up in 2026. The site already
+#                           holds this as polling.HOLDOVER_D_DEFAULT and uses
+#                           it in every Senate simulation, so taking it from
+#                           there keeps the two from disagreeing.
+LBQ_INPUTS: dict = {
+    "dem_federal_dominance": 0,
+    "post_vra_1965": 1,
+    "post_1994_revolution": 1,
+    "dem_holdover_senate": polling.HOLDOVER_D_DEFAULT,
+    # Counted for 2026 and supplied by hand. None of the three is on a feed,
+    # and none of them moves once filing closes, so they are constants for this
+    # cycle rather than anything to capture daily.
+    "dem_governors": 24,              # 24 D, 26 R nationwide
+    "strong_gop_senate_states": 14,   # two GOP senators, voted R in 2024,
+                                      # and holding a 2026 Senate contest
+    "dem_senate_retirements": 4,      # D incumbents not contesting
+}
+
+LBQ_MISSING = [
+    "number of Democratic governors nationwide six months before Election Day "
+    "(≈ 3 May 2026). Set LBQ_INPUTS['dem_governors'].",
+    "number of states that have TWO Republican senators, voted Republican for "
+    "president in 2024, AND hold a Senate contest in 2026. Set "
+    "LBQ_INPUTS['strong_gop_senate_states'].",
+    "number of incumbent Senate Democrats not contesting the 2026 election, as "
+    "of five months before polling day. Set "
+    "LBQ_INPUTS['dem_senate_retirements'].",
+]
+
+
+def _lbq_predict(spec: dict, inputs: dict) -> float | None:
+    total = spec["constant"]
+    for var, beta in spec.items():
+        if var in ("constant", "_fit"):
+            continue
+        v = inputs.get(var)
+        if v is None:
+            return None
+        total += beta * v
+    return total
+
+
+def run_lbq(c: Ctx) -> Result | None:
+    house = _lbq_predict(LBQ_HOUSE, LBQ_INPUTS)
+    senate = _lbq_predict(LBQ_SENATE, LBQ_INPUTS)
+    if house is None:
+        return None
+
+    pairs = _published_tide_seat_pairs(c.cycle)
+    got = implied_tide_for_seats(pairs, house)
+    if got is None:
+        return None
+    tide, extrapolated = got
+
+    notes = ["forecasts SEAT COUNTS directly from institutional facts — no "
+             "polls, no economy, no popularity. The margin shown is our seat "
+             "curve run backwards from its House number, not theirs"]
+    if senate is not None:
+        notes.append(f"its Senate figure of {senate:.0f} D seats is computed "
+                     f"from a SEPARATE published equation, not from our "
+                     f"partisan-lean machinery — the only Senate number on this "
+                     f"site that is independent of it")
+    if extrapolated:
+        notes.append("the House number falls outside today's range of tides, "
+                     "so the inversion is extrapolated")
+
+    return Result(
+        margin_D=tide,
+        interval_80=None,
+        inputs={k: v for k, v in LBQ_INPUTS.items()},
+        diagnostics={
+            "house_D_seats": round(house, 1),
+            "senate_D_seats": round(senate, 1) if senate is not None else None,
+            "house_coefficients": {k: v for k, v in LBQ_HOUSE.items() if k != "_fit"},
+            "senate_coefficients": {k: v for k, v in LBQ_SENATE.items() if k != "_fit"},
+            "house_fit": LBQ_HOUSE["_fit"],
+            "senate_fit": LBQ_SENATE["_fit"],
+            "inversion_extrapolated": extrapolated,
+            "benchmark": {
+                "claim": "Democrats lose Senate control with a net loss of three "
+                         "seats; House a knife-edge race at 215 D seats",
+                "authors": "Lewis-Beck & Quinlan",
+                "for_cycle": "2024",
+                "note": "their 2024 forecast, quoted so our implementation can "
+                        "be sanity-checked against the published one",
+            },
+        },
+        notes=notes,
+    )
+
 
 MODELS = [
     {
@@ -424,6 +867,33 @@ MODELS = [
         "run": run_referendum,
     },
     {
+        "key": "academic_economic_pessimism",
+        "name": "Economic pessimism (Lockerbie)",
+        "citation": LOCKERBIE_CITE,
+        "attribution": "Our implementation of Lockerbie's published House "
+                       "equation. The open-seat term's SIGN is our assumption, "
+                       "not his — see the sensitivity table.",
+        # IMPLEMENTED, not a stub — it declines at runtime while its two
+        # numbers are missing, which is a different and more useful state than
+        # not existing. The moment LOCKERBIE_INPUTS is filled in, it appears.
+        "status": "implemented",
+        "missing": LOCKERBIE_MISSING,
+        "coefficients_published": LOCKERBIE_COEF,
+        "refit": False,
+        "run": run_lockerbie,
+    },
+    {
+        "key": "academic_political_history",
+        "name": "Political history (Lewis-Beck & Quinlan)",
+        "citation": LBQ_CITE,
+        "attribution": "Our implementation of their published Table 1 "
+                       "equations. Forecasts both chambers directly.",
+        "status": "implemented",
+        "missing": LBQ_MISSING,
+        "refit": False,
+        "run": run_lbq,
+    },
+    {
         "key": "academic_state_approval_economy",
         "name": "State approval + state economy (Enns et al.)",
         "citation": ENNS_CITE,
@@ -434,6 +904,258 @@ MODELS = [
         "run": run_enns,
     },
 ]
+
+
+# ---------------------------------------------------------------------------
+# Backfill
+# ---------------------------------------------------------------------------
+# WHY THIS IS POSSIBLE HERE AND NOT FOR MOST SOURCES. The project's standing
+# rule on backfill is "timestamped sources only": we reconstruct a past value
+# only where the past value is genuinely recoverable, never by inventing one.
+#
+# BEW qualifies in the strongest possible way. Its only moving input is the
+# generic ballot, and the generic ballot for every archived date is sitting in
+# parsed/<date>.csv exactly as it was captured on the day. The coefficients are
+# published constants. The date arithmetic is a subtraction. So running BEW
+# over the archive does not estimate what it "would have said" — it computes
+# what it did say, from the same bytes it would have read.
+#
+# THE REFERENDUM MODEL QUALIFIES MUCH MORE WEAKLY, and the difference matters.
+# Its income term comes from the FRED capture and is genuinely dated, but its
+# approval term is a hand-set constant with no live feed behind it. Backfilling
+# it therefore produces a line that is flat by construction, not because
+# approval held steady. A flat line on a chart is a claim about the world.
+# So it is backfilled only when asked for explicitly, and every backfilled
+# point is stamped `provenance: backfilled` with the reason.
+BACKFILL_PROVENANCE = "backfilled"
+LIVE_PROVENANCE = "captured"
+
+
+# ---------------------------------------------------------------------------
+# Reconstructing the generic ballot for a past date
+# ---------------------------------------------------------------------------
+# THE SNAPSHOT ARCHIVE CANNOT DO THIS, which is why this function exists. Our
+# parsed archive goes back to 2025-01-01, but the generic ballot does not: the
+# Silver Bulletin capture only began on 2026-08-19, and every parsed date
+# before that carries race_to_the_wh's seat numbers and nothing else. Running
+# BEW over the snapshot archive therefore fills in two days and stops.
+#
+# The poll list itself is a different story. Silver's CSV is not an average —
+# it is ~350 INDIVIDUAL polls, each with its own enddate, going back to August
+# 2025. Every one of those polls existed on its enddate. So the average as of
+# any past date is not an estimate of what the polls said; it is a computation
+# over exactly the polls that had been published by then.
+#
+# RAW `net`, NOT `adjusted_net`, AND THIS IS THE WHOLE GAME. The adjusted
+# columns are Silver's model output — house-effect and likely-voter corrected —
+# and the registry notes that they are REVISED RETROACTIVELY. Today's file
+# carries today's opinion of what a poll from last November really said. Using
+# them to reconstruct last November would leak nine months of hindsight into a
+# number presented as a contemporaneous forecast, and the backfilled line would
+# look better than the model deserves. The raw columns are the pollster's own
+# published figures and do not move.
+#
+# The live daily path keeps preferring `adjusted`, because for TODAY there is
+# no hindsight to leak. The two therefore differ slightly, and main() prints
+# the size of the gap at the join date rather than letting a step in the line
+# pass for a change in the polls.
+RECONSTRUCT_WINDOW_DAYS = 21
+
+
+def _silver_poll_file(cycle: int) -> Path | None:
+    """The newest captured Silver Bulletin poll list.
+
+    The NEWEST one is correct even for reconstructing old dates: each file is a
+    superset of the ones before it, since he adds polls rather than rotating
+    them out. Reading the newest gets the longest history.
+    """
+    base = DATA / str(cycle) / "raw" / "silver_bulletin"
+    if not base.exists():
+        return None
+    days = sorted(d for d in base.iterdir() if d.is_dir())
+    for day in reversed(days):
+        f = day / "generic_ballot_polls.csv"
+        if f.exists():
+            return f
+    return None
+
+
+def _parse_us_date(v: str) -> dt.date | None:
+    v = (v or "").strip()
+    for fmt in ("%m/%d/%Y", "%Y-%m-%d", "%m/%d/%y"):
+        try:
+            return dt.datetime.strptime(v, fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
+def load_poll_history(cycle: int) -> list[tuple[dt.date, float]]:
+    """[(enddate, D-minus-R margin)] from the raw poll list, oldest first."""
+    f = _silver_poll_file(cycle)
+    if f is None:
+        return []
+    out: list[tuple[dt.date, float]] = []
+    with f.open(encoding="utf-8", errors="replace") as fh:
+        for r in csv.DictReader(fh):
+            # "All polls" is his own subgroup label for the headline set; the
+            # file also carries LV-only and RV-only cuts of the SAME polls, and
+            # averaging across subgroups would count several of them twice.
+            if (r.get("subgroup") or "").strip().lower() not in ("all polls", ""):
+                continue
+            d0 = _parse_us_date(r.get("enddate", ""))
+            if d0 is None:
+                continue
+            try:
+                net = float(r["net"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            out.append((d0, net))
+    out.sort()
+    return out
+
+
+def reconstruct_generic_ballot(polls, on: dt.date,
+                               window: int = RECONSTRUCT_WINDOW_DAYS):
+    """Unweighted mean of poll margins in the `window` days ending on `on`.
+
+    UNWEIGHTED, deliberately. The file carries Silver's own per-poll `weight`
+    and `influence`, and both are model output that moves when he re-fits. An
+    unweighted mean of published margins is a number we can state the recipe
+    for in one sentence and that nobody has to trust us about. It is not his
+    average and this file never calls it that.
+
+    Returns (margin, n_polls) or None when the window is empty — no widening,
+    no carrying forward. A gap in the polling is a real fact about the cycle
+    and filling it invents data.
+    """
+    lo = on - dt.timedelta(days=window)
+    vals = [m for d0, m in polls if lo < d0 <= on]
+    if not vals:
+        return None
+    return statistics.fmean(vals), len(vals)
+
+
+def parsed_dates(cycle: int) -> list[str]:
+    return [Path(f).stem for f in
+            sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")))]
+
+
+def read_generic_ballot_on(cycle: int, date: str) -> tuple[float, str] | None:
+    """The generic ballot as it stood on `date`, from that day's parsed file.
+
+    polling.generic_ballot() does the picking — adjusted over raw, and the
+    reasoning for that preference lives there. Reimplementing the choice here
+    would give us two definitions of "the generic ballot" that could drift, and
+    the backfilled line would slowly stop matching the live one.
+    """
+    p = DATA / str(cycle) / "parsed" / f"{date}.csv"
+    if not p.exists():
+        return None
+    with p.open(encoding="utf-8") as fh:
+        rows = list(csv.DictReader(fh))
+    try:
+        gb = polling.generic_ballot(rows)
+    except SystemExit:
+        # generic_ballot() exits rather than returning None, because in the
+        # live path a missing generic ballot IS fatal. Here it is ordinary: the
+        # archive holds plenty of dates whose capture never got that far, and a
+        # backfill that dies on the first one is useless.
+        return None
+    if gb.get("value") is None:
+        return None
+    return float(gb["value"]), f"{gb['used']} from parsed/{date}.csv"
+
+
+def backfill(cycle: int, approval: float, include_referendum: bool,
+             step_days: int = 1) -> dict:
+    """Recompute BEW for every date the poll record can honestly support.
+
+    Dates come from the POLL RECORD, not from the snapshot archive, for the
+    reason set out above reconstruct_generic_ballot(): our snapshots only start
+    carrying a generic ballot on 2026-08-19, while Silver's poll list runs back
+    to August 2025. Walking the poll record gives roughly a year of line;
+    walking the snapshot archive gives two days.
+    """
+    polls = load_poll_history(cycle)
+    if not polls:
+        print("  no Silver Bulletin poll list in raw/ — nothing to reconstruct "
+              "from. Run capture first.")
+        return {}
+
+    first_poll, last_poll = polls[0][0], polls[-1][0]
+    print(f"  poll record: {len(polls)} polls, {first_poll} to {last_poll}")
+
+    # Start a full window in, so the first point is an average over a full
+    # window rather than over whichever one poll happens to be earliest.
+    d0 = first_poll + dt.timedelta(days=RECONSTRUCT_WINDOW_DAYS)
+    today = dt.date.fromisoformat(newest_parsed_date(cycle)
+                                  or dt.date.today().isoformat())
+    end = min(last_poll, today)
+
+    out: dict[str, dict] = {}
+    empty_windows = 0
+    cur = d0
+    while cur <= end:
+        got = reconstruct_generic_ballot(polls, cur)
+        if got is None:
+            empty_windows += 1
+            cur += dt.timedelta(days=step_days)
+            continue
+        margin, n_polls = got
+        c = Ctx(cycle=cycle, date=cur.isoformat(),
+                days_to_election=(dt.date.fromisoformat(ELECTION_DAY) - cur).days,
+                approval=approval,
+                approval_source="hand-set (Gallup basis) — CONSTANT across the "
+                                "backfill, so anything driven by it is flat by "
+                                "construction and not by evidence",
+                generic_ballot_D=margin,
+                generic_ballot_source=(f"reconstructed: unweighted mean of "
+                                       f"{n_polls} raw poll margin(s) in the "
+                                       f"{RECONSTRUCT_WINDOW_DAYS} days to "
+                                       f"{cur.isoformat()}"))
+        day: dict[str, dict] = {}
+        res = run_bew(c)
+        if res is not None:
+            lo, hi = res.interval_80 or (None, None)
+            day["academic_bew"] = {
+                "name": "Generic ballot (Bafumi, Erikson & Wlezien)",
+                "category": "academic", "publication": "individual",
+                "margin_D": round(res.margin_D, 2),
+                "margin_D_80_low": round(lo, 2) if lo is not None else None,
+                "margin_D_80_high": round(hi, 2) if hi is not None else None,
+                "inputs": {**res.inputs, "n_polls_in_window": n_polls},
+                "diagnostics": res.diagnostics,
+                "provenance": BACKFILL_PROVENANCE,
+            }
+        # The referendum model is NOT backfilled here at all, whatever the
+        # flag says, and the flag's help text says why: its approval term is a
+        # hand-set constant and its income term is not re-read per date, so
+        # every point would be identical. A flat line is a claim that approval
+        # and the economy did not move, which we have no evidence for. It is
+        # better to have no academic referendum history than a fabricated one.
+        if day:
+            out[cur.isoformat()] = {"snapshot_date": cur.isoformat(),
+                                    "models": day}
+        cur += dt.timedelta(days=step_days)
+
+    if include_referendum:
+        print("  --backfill-referendum: IGNORED. Its inputs do not vary by "
+              "date, so the line would be flat by construction. See the note "
+              "in backfill().")
+
+    print(f"  reconstructed {len(out)} date(s)")
+    if empty_windows:
+        print(f"  {empty_windows} date(s) had no poll in the trailing "
+              f"{RECONSTRUCT_WINDOW_DAYS} days and were left out rather than "
+              f"carried forward")
+    if out:
+        ks = sorted(out)
+        f0 = out[ks[0]]["models"]["academic_bew"]
+        l0 = out[ks[-1]]["models"]["academic_bew"]
+        print(f"  BEW {ks[0]} D{f0['margin_D']:+.2f}"
+              f"  ->  {ks[-1]} D{l0['margin_D']:+.2f}")
+    return out
 
 
 def newest_parsed_date(cycle: int) -> str | None:
@@ -448,6 +1170,25 @@ def main(argv=None) -> int:
     ap.add_argument("--approval", type=float, default=38.0,
                     help="president's approval, Gallup basis — same caveat as "
                          "fundamentals.py, do not feed a poll average")
+    ap.add_argument("--step-days", type=int, default=7,
+                    help="spacing of backfilled points, in days. Default 7. "
+                         "The reconstruction is a 21-day trailing average, so "
+                         "consecutive daily points share 20 of 21 days of "
+                         "polls and mostly repeat each other; weekly points "
+                         "carry nearly all the signal at a seventh of the "
+                         "cost, which matters because seats.py runs one Monte "
+                         "Carlo per point. Pass 1 for a daily line.")
+    ap.add_argument("--backfill", action="store_true",
+                    help="also recompute every archived date into "
+                         "model_private/academic_models_history.json. Safe to "
+                         "re-run: it rewrites the whole file from the parsed "
+                         "archive, which is the authority.")
+    ap.add_argument("--backfill-referendum", action="store_true",
+                    help="include the referendum model in the backfill. OFF by "
+                         "default: its approval input is a hand-set constant "
+                         "and its income input is not re-read per date, so the "
+                         "line it draws is flat by construction. Read the "
+                         "comment above backfill() before turning this on.")
     a = ap.parse_args(argv)
 
     date = a.date or newest_parsed_date(a.cycle) or dt.date.today().isoformat()
@@ -478,6 +1219,10 @@ def main(argv=None) -> int:
                 "attribution": spec["attribution"],
                 "missing": spec.get("missing")
                            or ["required inputs unavailable in this snapshot"],
+                # Where we hold the published coefficients already, ship them.
+                # A stub that names its equation is a specific piece of unfinished
+                # work; one that only names the paper is a wish.
+                "coefficients_published": spec.get("coefficients_published"),
             }
             why = spec.get("missing") or ["inputs unavailable"]
             print(f"\n  {spec['key'].upper()}  [not run]")
@@ -510,6 +1255,70 @@ def main(argv=None) -> int:
     (d / "academic_models.json").write_text(json.dumps(out, indent=2))
     print(f"\n  wrote {len(out['models'])} model(s), "
           f"{len(out['not_implemented'])} not implemented")
+
+    # THE HISTORY IS PRIVATE, like every other model_private/ file, and for the
+    # same structural reason rather than a licence one: it is model state that
+    # the runner would otherwise lose, and the workflow already restores and
+    # re-pushes this directory. Nothing in it is gated — both models are ours —
+    # but splitting the directory by sensitivity would mean two restore steps
+    # and one of them would eventually be forgotten.
+    #
+    # REWRITTEN WHOLE, not merged. Unlike seat_projections_history.json, which
+    # accumulates because a past seat projection cannot be recomputed, every
+    # entry here is a pure function of parsed/<date>.csv and published
+    # coefficients. Rebuilding from the archive is therefore always correct and
+    # a merge would only preserve stale values from an older coefficient table.
+    if a.backfill:
+        hist = backfill(a.cycle, a.approval, a.backfill_referendum,
+                        step_days=max(1, a.step_days))
+        if hist:
+            # Today's live values overwrite their backfilled twin, so the one
+            # date that has a genuine capture is not replaced by a
+            # reconstruction of itself.
+            # MEASURE THE JOIN, do not just make it. The backfilled points
+            # use raw poll margins in a 21-day window; today's live point uses
+            # Silver's own house-effect-adjusted average. Those are different
+            # recipes, so the line has a seam at this date, and a seam in a
+            # time series reads as news unless it is labelled. Print its size
+            # so it is a known quantity rather than a surprise on the chart.
+            # The weekly grid rarely lands exactly on today, so compute the
+            # reconstruction AT the live date purely for this comparison. It is
+            # not stored; its only job is to measure the seam.
+            recon = hist.get(date, {}).get("models", {}).get("academic_bew")
+            if recon is None:
+                _polls = load_poll_history(a.cycle)
+                _got = reconstruct_generic_ballot(
+                    _polls, dt.date.fromisoformat(date)) if _polls else None
+                if _got:
+                    _c = Ctx(cycle=a.cycle, date=date,
+                             days_to_election=c.days_to_election,
+                             approval=a.approval,
+                             generic_ballot_D=_got[0],
+                             generic_ballot_source="reconstructed (comparison only)")
+                    _r = run_bew(_c)
+                    if _r:
+                        recon = {"margin_D": round(_r.margin_D, 2)}
+            livebew = out["models"].get("academic_bew")
+            if recon and livebew:
+                gap = livebew["margin_D"] - recon["margin_D"]
+                print(f"  JOIN at {date}: reconstructed D{recon['margin_D']:+.2f}"
+                      f" vs live D{livebew['margin_D']:+.2f}"
+                      f"  ({gap:+.2f} points)")
+                if abs(gap) > 1.0:
+                    print("    NOTE: over a point. The seam will be visible on "
+                          "the chart. It is a change of recipe, not of polls.")
+            live = {k: {**v, "provenance": LIVE_PROVENANCE}
+                    for k, v in out["models"].items()}
+            if live:
+                hist[date] = {"snapshot_date": date, "models": live}
+            priv = DATA / str(a.cycle) / "model_private"
+            priv.mkdir(parents=True, exist_ok=True)
+            (priv / "academic_models_history.json").write_text(
+                json.dumps(hist, indent=2))
+            print(f"  wrote model_private/academic_models_history.json"
+                  f"   PRIVATE — {len(hist)} date(s)")
+            print(f"  next: python3 forecast/model/seats.py --cycle {a.cycle} "
+                  f"--backfill-academic   (projects each of those dates)")
     return 0
 
 
