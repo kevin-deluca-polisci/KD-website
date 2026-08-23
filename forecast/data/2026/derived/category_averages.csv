@@ -8013,6 +8013,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-01-09,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7811,0.7811,0.7811,,open,single,kalshi,2026-01-09,0,0.7811,1,
 2026-01-09,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.36,49.36,49.36,,open,single,kalshi,2026-01-09,0,49.36,1,
 2026-01-09,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.2976,0.2976,0.2976,,open,single,kalshi,2026-01-09,0,0.2976,1,
+2026-01-09,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.7667,4.0,5.6,0.8021,gated,ok,,2026-01-09,0,4.7667,3,
 2026-01-10,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,227.58,227.58,227.58,,open,single,kalshi,2026-01-10,0,227.58,1,
 2026-01-10,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7559,0.7559,0.7559,,open,single,kalshi,2026-01-10,0,0.7559,1,
 2026-01-10,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.33,49.33,49.33,,open,single,kalshi,2026-01-10,0,49.33,1,
@@ -8196,6 +8197,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-01-17,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8531,0.8531,0.8531,,open,single,kalshi,2026-01-17,0,0.8531,1,
 2026-01-17,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.3,49.3,49.3,,open,single,kalshi,2026-01-17,0,49.3,1,
 2026-01-17,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3,0.3,0.3,,open,single,kalshi,2026-01-17,0,0.3,1,
+2026-01-17,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.1,3.9,4.4,0.2646,gated,ok,,2026-01-17,0,4.1,3,
 2026-01-18,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,231.29,231.29,231.29,,open,single,kalshi,2026-01-18,0,231.29,1,
 2026-01-18,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8732,0.8732,0.8732,,open,single,kalshi,2026-01-18,0,0.8732,1,
 2026-01-18,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.31,49.31,49.31,,open,single,kalshi,2026-01-18,0,49.31,1,
@@ -8289,6 +8291,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-01-21,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.36,49.36,49.36,,open,single,kalshi,2026-01-21,0,49.36,1,
 2026-01-21,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3043,0.3043,0.3043,,open,single,kalshi,2026-01-21,0,0.3043,1,
 2026-01-21,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,4.68,4.68,4.68,,open,single,polling_reconstructed,2026-01-21,0,4.68,1,
+2026-01-21,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.4,4.4,4.4,0.0,gated,ok,,2026-01-21,0,4.4,3,
 2026-01-21,polling,NATL_HOUSE_2026,national,,,seats_D,seats,2,0,2,0,0,222.09,222.09,222.09,0.0,open,thin,,2026-01-21,0,222.09,2,
 2026-01-21,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,2,0,2,0,0,0.5841,0.5841,0.5841,0.0,open,thin,,2026-01-21,0,0.5841,2,
 2026-01-21,polling,NATL_SENATE_2026,national,,,seats_D,seats,2,0,2,0,0,48.57,48.57,48.57,0.0,open,thin,,2026-01-21,0,48.57,2,
@@ -8379,11 +8382,12 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-01-25,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.875,0.875,0.875,,open,single,kalshi,2026-01-25,0,0.875,1,
 2026-01-25,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.38,49.38,49.38,,open,single,kalshi,2026-01-25,0,49.38,1,
 2026-01-25,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3024,0.3024,0.3024,,open,single,kalshi,2026-01-25,0,0.3024,1,
+2026-01-25,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.0,4.5,5.3,0.4359,gated,ok,,2026-01-25,0,4.85,2,"composition changed (+1, -1); chained on 2 in common"
 2026-01-26,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,231.25,231.25,231.25,,open,single,kalshi,2026-01-26,0,231.25,1,
 2026-01-26,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8744,0.8744,0.8744,,open,single,kalshi,2026-01-26,0,0.8744,1,
 2026-01-26,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.39,49.39,49.39,,open,single,kalshi,2026-01-26,0,49.39,1,
 2026-01-26,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3058,0.3058,0.3058,,open,single,kalshi,2026-01-26,0,0.3058,1,
-2026-01-26,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.025,4.5,5.3,0.3594,gated,ok,,2026-01-26,0,4.9333,3,composition changed (+1); chained on 3 in common
+2026-01-26,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.025,4.5,5.3,0.3594,gated,ok,,2026-01-26,0,4.85,3,composition changed (+1); chained on 3 in common
 2026-01-27,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,231.44,231.44,231.44,,open,single,kalshi,2026-01-27,0,231.44,1,
 2026-01-27,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8756,0.8756,0.8756,,open,single,kalshi,2026-01-27,0,0.8756,1,
 2026-01-27,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.5,49.5,49.5,,open,single,kalshi,2026-01-27,0,49.5,1,
@@ -8546,6 +8550,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-01-29,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8744,0.8744,0.8744,,open,single,kalshi,2026-01-29,0,0.8744,1,
 2026-01-29,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.52,49.52,49.52,,open,single,kalshi,2026-01-29,0,49.52,1,
 2026-01-29,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3254,0.3254,0.3254,,open,single,kalshi,2026-01-29,0,0.3254,1,
+2026-01-29,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.05,4.7,5.4,0.2887,gated,ok,,2026-01-29,0,4.875,4,
 2026-01-30,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,231.19,231.19,231.19,,open,single,kalshi,2026-01-30,0,231.19,1,
 2026-01-30,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8702,0.8702,0.8702,,open,single,kalshi,2026-01-30,0,0.8702,1,
 2026-01-30,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.51,49.51,49.51,,open,single,kalshi,2026-01-30,0,49.51,1,
@@ -8562,7 +8567,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-02-02,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8341,0.8341,0.8341,,open,single,kalshi,2026-02-02,0,0.8341,1,
 2026-02-02,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.54,49.54,49.54,,open,single,kalshi,2026-02-02,0,49.54,1,
 2026-02-02,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3333,0.3333,0.3333,,open,single,kalshi,2026-02-02,0,0.3333,1,
-2026-02-02,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.0667,4.7,5.5,0.4041,gated,ok,,2026-02-02,0,5.0,3,composition changed (-1); chained on 3 in common
+2026-02-02,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.0667,4.7,5.5,0.4041,gated,ok,,2026-02-02,0,4.9083,3,composition changed (-1); chained on 3 in common
 2026-02-03,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,230.03,230.03,230.03,,open,single,kalshi,2026-02-03,0,230.03,1,
 2026-02-03,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8279,0.8279,0.8279,,open,single,kalshi,2026-02-03,0,0.8279,1,
 2026-02-03,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.63,49.63,49.63,,open,single,kalshi,2026-02-03,0,49.63,1,
@@ -8731,6 +8736,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-02-06,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8347,0.8347,0.8347,,open,single,kalshi,2026-02-06,0,0.8347,1,
 2026-02-06,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.58,49.58,49.58,,open,single,kalshi,2026-02-06,0,49.58,1,
 2026-02-06,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3505,0.3505,0.3505,,open,single,kalshi,2026-02-06,0,0.3505,1,
+2026-02-06,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.025,4.1,5.6,0.6449,gated,ok,,2026-02-06,0,4.8083,3,composition changed (+1); chained on 3 in common
 2026-02-07,market,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,0,0,0,7.7245,7.7245,7.7245,,open,single,kalshi,2026-02-07,0,7.7245,1,
 2026-02-07,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,231.07,231.07,231.07,,open,single,kalshi,2026-02-07,0,231.07,1,
 2026-02-07,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8405,0.8405,0.8405,,open,single,kalshi,2026-02-07,0,0.8405,1,
@@ -8746,12 +8752,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-02-09,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8221,0.8221,0.8221,,open,single,kalshi,2026-02-09,0,0.8221,1,
 2026-02-09,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.51,49.51,49.51,,open,single,kalshi,2026-02-09,0,49.51,1,
 2026-02-09,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3535,0.3535,0.3535,,open,single,kalshi,2026-02-09,0,0.3535,1,
-2026-02-09,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.025,4.1,5.6,0.6449,gated,ok,,2026-02-09,0,4.9,3,composition changed (+1); chained on 3 in common
+2026-02-09,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.025,4.1,5.6,0.6449,gated,ok,,2026-02-09,0,4.8083,4,
 2026-02-10,market,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,0,0,0,7.7245,7.7245,7.7245,,open,single,kalshi,2026-02-10,0,7.7245,1,
 2026-02-10,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.86,229.86,229.86,,open,single,kalshi,2026-02-10,0,229.86,1,
 2026-02-10,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8333,0.8333,0.8333,,open,single,kalshi,2026-02-10,0,0.8333,1,
 2026-02-10,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.48,49.48,49.48,,open,single,kalshi,2026-02-10,0,49.48,1,
 2026-02-10,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3519,0.3519,0.3519,,open,single,kalshi,2026-02-10,0,0.3519,1,
+2026-02-10,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.0,4.2,5.6,0.7211,gated,ok,,2026-02-10,0,4.8417,3,composition changed (-1); chained on 3 in common
 2026-02-11,academic,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,3.78,3.78,3.78,,open,single,academic_bew,2026-02-11,0,3.78,1,
 2026-02-11,academic,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,1,0,0,218.33,218.33,218.33,,open,single,academic_bew,2026-02-11,0,218.33,1,
 2026-02-11,academic,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,1,0,0,0.4995,0.4995,0.4995,,open,single,academic_bew,2026-02-11,0,0.4995,1,
@@ -8916,12 +8923,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-02-14,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8728,0.8728,0.8728,,open,single,kalshi,2026-02-14,0,0.8728,1,
 2026-02-14,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.51,49.51,49.51,,open,single,kalshi,2026-02-14,0,49.51,1,
 2026-02-14,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3565,0.3565,0.3565,,open,single,kalshi,2026-02-14,0,0.3565,1,
+2026-02-14,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,4.975,4.0,5.6,0.685,gated,ok,,2026-02-14,0,4.775,3,composition changed (+1); chained on 3 in common
 2026-02-16,market,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,0,0,0,7.8757,7.8757,7.8757,,open,single,kalshi,2026-02-16,0,7.8757,1,
 2026-02-16,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,232.34,232.34,232.34,,open,single,kalshi,2026-02-16,0,232.34,1,
 2026-02-16,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8701,0.8701,0.8701,,open,single,kalshi,2026-02-16,0,0.8701,1,
 2026-02-16,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.58,49.58,49.58,,open,single,kalshi,2026-02-16,0,49.58,1,
 2026-02-16,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3692,0.3692,0.3692,,open,single,kalshi,2026-02-16,0,0.3692,1,
-2026-02-16,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,4.975,4.0,5.6,0.685,gated,ok,,2026-02-16,0,4.85,4,
+2026-02-16,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,4.975,4.0,5.6,0.685,gated,ok,,2026-02-16,0,4.775,4,
 2026-02-17,market,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,0,0,0,4.0526,4.0526,4.0526,,open,single,kalshi,2026-02-17,0,4.0526,1,
 2026-02-17,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,233.53,233.53,233.53,,open,single,kalshi,2026-02-17,0,233.53,1,
 2026-02-17,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9304,0.9304,0.9304,,open,single,kalshi,2026-02-17,0,0.9304,1,
@@ -9007,6 +9015,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-02-18,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.6,49.6,49.6,,open,single,kalshi,2026-02-18,0,49.6,1,
 2026-02-18,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3641,0.3641,0.3641,,open,single,kalshi,2026-02-18,0,0.3641,1,
 2026-02-18,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,4.483,4.483,4.483,,open,single,polling_reconstructed,2026-02-18,0,4.483,1,
+2026-02-18,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,4.9,3.5,5.6,0.9557,gated,ok,,2026-02-18,0,4.7,4,
 2026-02-18,polling,NATL_HOUSE_2026,national,,,seats_D,seats,2,0,2,0,0,221.24,221.24,221.24,0.0,open,thin,,2026-02-18,0,221.24,2,
 2026-02-18,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,2,0,2,0,0,0.5658,0.5658,0.5658,0.0,open,thin,,2026-02-18,0,0.5658,2,
 2026-02-18,polling,NATL_SENATE_2026,national,,,seats_D,seats,2,0,2,0,0,48.48,48.48,48.48,0.0,open,thin,,2026-02-18,0,48.48,2,
@@ -9101,12 +9110,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-02-22,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.86,0.86,0.86,,open,single,kalshi,2026-02-22,0,0.86,1,
 2026-02-22,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.69,49.69,49.69,,open,single,kalshi,2026-02-22,0,49.69,1,
 2026-02-22,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3871,0.3871,0.3871,,open,single,kalshi,2026-02-22,0,0.3871,1,
+2026-02-22,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.8,4.2,5.4,0.6,gated,ok,,2026-02-22,0,4.8333,3,composition changed (-1); chained on 3 in common
 2026-02-23,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.4443,5.239,7.6495,1.7045,open,thin,,2026-02-23,0,5.8239,2,
 2026-02-23,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,231.5,231.5,231.5,,open,single,kalshi,2026-02-23,0,231.5,1,
 2026-02-23,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8618,0.8618,0.8618,,open,single,kalshi,2026-02-23,0,0.8618,1,
 2026-02-23,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.77,49.77,49.77,,open,single,kalshi,2026-02-23,0,49.77,1,
 2026-02-23,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3913,0.3913,0.3913,,open,single,kalshi,2026-02-23,0,0.3913,1,
-2026-02-23,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.025,4.2,5.7,0.6652,gated,ok,,2026-02-23,0,4.9,4,
+2026-02-23,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.025,4.2,5.7,0.6652,gated,ok,,2026-02-23,0,4.8333,3,composition changed (+1); chained on 3 in common
 2026-02-24,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,5.4931,3.3367,7.6495,3.0496,open,thin,,2026-02-24,0,4.8728,2,
 2026-02-24,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,230.97,230.97,230.97,,open,single,kalshi,2026-02-24,0,230.97,1,
 2026-02-24,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8286,0.8286,0.8286,,open,single,kalshi,2026-02-24,0,0.8286,1,
@@ -9272,6 +9282,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-02-26,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8592,0.8592,0.8592,,open,single,kalshi,2026-02-26,0,0.8592,1,
 2026-02-26,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.65,49.65,49.65,,open,single,kalshi,2026-02-26,0,49.65,1,
 2026-02-26,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3785,0.3785,0.3785,,open,single,kalshi,2026-02-26,0,0.3785,1,
+2026-02-26,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.475,4.8,5.9,0.4992,gated,ok,,2026-02-26,0,5.2833,4,
 2026-02-27,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,5.2631,2.8767,7.6495,3.3749,open,thin,,2026-02-27,0,4.6428,2,
 2026-02-27,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.65,229.65,229.65,,open,single,kalshi,2026-02-27,0,229.65,1,
 2026-02-27,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8069,0.8069,0.8069,,open,single,kalshi,2026-02-27,0,0.8069,1,
@@ -9292,7 +9303,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-03-02,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8683,0.8683,0.8683,,open,single,kalshi,2026-03-02,0,0.8683,1,
 2026-03-02,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.79,49.79,49.79,,open,single,kalshi,2026-03-02,0,49.79,1,
 2026-03-02,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3934,0.3934,0.3934,,open,single,kalshi,2026-03-02,0,0.3934,1,
-2026-03-02,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.25,4.6,5.8,0.5196,gated,ok,,2026-03-02,0,5.125,4,
+2026-03-02,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.25,4.6,5.8,0.5196,gated,ok,,2026-03-02,0,5.0583,4,
 2026-03-03,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,3.3727,2.92,3.8253,0.6401,open,thin,,2026-03-03,0,2.7523,2,
 2026-03-03,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,231.42,231.42,231.42,,open,single,kalshi,2026-03-03,0,231.42,1,
 2026-03-03,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8786,0.8786,0.8786,,open,single,kalshi,2026-03-03,0,0.8786,1,
@@ -9459,6 +9470,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-03-05,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.71,49.71,49.71,,open,single,kalshi,2026-03-05,0,49.71,1,
 2026-03-05,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3972,0.3972,0.3972,,open,single,kalshi,2026-03-05,0,0.3972,1,
 2026-03-06,market,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,0,0,0,5.404,5.404,5.404,,open,single,polymarket,2026-03-06,0,4.5479,1,composition changed (-1); chained on 1 in common
+2026-03-06,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.0,4.4,5.5,0.5354,gated,ok,,2026-03-06,0,4.8083,4,
 2026-03-07,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.5373,5.286,7.7885,1.7695,open,thin,,2026-03-07,0,4.4299,1,composition changed (+1); chained on 1 in common
 2026-03-07,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,234.35,234.35,234.35,,open,single,kalshi,2026-03-07,0,234.35,1,
 2026-03-07,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9536,0.9536,0.9536,,open,single,kalshi,2026-03-07,0,0.9536,1,
@@ -9474,12 +9486,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-03-09,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9453,0.9453,0.9453,,open,single,kalshi,2026-03-09,0,0.9453,1,
 2026-03-09,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.92,49.92,49.92,,open,single,kalshi,2026-03-09,0,49.92,1,
 2026-03-09,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4369,0.4369,0.4369,,open,single,kalshi,2026-03-09,0,0.4369,1,
-2026-03-09,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.8333,4.4,5.4,0.5132,gated,ok,,2026-03-09,0,4.8917,3,composition changed (-1); chained on 3 in common
+2026-03-09,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.8333,4.4,5.4,0.5132,gated,ok,,2026-03-09,0,4.8083,3,composition changed (-1); chained on 3 in common
 2026-03-10,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,5.912,4.4165,7.4074,2.1149,open,thin,,2026-03-10,0,3.8046,2,
 2026-03-10,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,233.06,233.06,233.06,,open,single,kalshi,2026-03-10,0,233.06,1,
 2026-03-10,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8778,0.8778,0.8778,,open,single,kalshi,2026-03-10,0,0.8778,1,
 2026-03-10,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.09,50.09,50.09,,open,single,kalshi,2026-03-10,0,50.09,1,
 2026-03-10,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.467,0.467,0.467,,open,single,kalshi,2026-03-10,0,0.467,1,
+2026-03-10,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.8,4.3,5.3,0.5,gated,ok,,2026-03-10,0,4.775,3,
 2026-03-11,academic,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,3.67,3.67,3.67,,open,single,academic_bew,2026-03-11,0,3.67,1,
 2026-03-11,academic,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,1,0,0,217.87,217.87,217.87,,open,single,academic_bew,2026-03-11,0,217.87,1,
 2026-03-11,academic,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,1,0,0,0.4884,0.4884,0.4884,,open,single,academic_bew,2026-03-11,0,0.4884,1,
@@ -9646,6 +9659,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-03-14,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9231,0.9231,0.9231,,open,single,kalshi,2026-03-14,0,0.9231,1,
 2026-03-14,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.28,50.28,50.28,,open,single,kalshi,2026-03-14,0,50.28,1,
 2026-03-14,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5045,0.5045,0.5045,,open,single,kalshi,2026-03-14,0,0.5045,1,
+2026-03-14,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.0,4.7,5.4,0.3606,gated,ok,,2026-03-14,0,4.975,3,
 2026-03-15,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.227,6.3428,8.1111,1.2504,open,thin,,2026-03-15,0,6.5585,2,
 2026-03-15,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,234.77,234.77,234.77,,open,single,kalshi,2026-03-15,0,234.77,1,
 2026-03-15,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8884,0.8884,0.8884,,open,single,kalshi,2026-03-15,0,0.8884,1,
@@ -9656,7 +9670,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-03-16,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8863,0.8863,0.8863,,open,single,kalshi,2026-03-16,0,0.8863,1,
 2026-03-16,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.3,50.3,50.3,,open,single,kalshi,2026-03-16,0,50.3,1,
 2026-03-16,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5136,0.5136,0.5136,,open,single,kalshi,2026-03-16,0,0.5136,1,
-2026-03-16,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.1,4.7,5.4,0.3559,gated,ok,,2026-03-16,0,5.0583,3,composition changed (+1); chained on 3 in common
+2026-03-16,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.1,4.7,5.4,0.3559,gated,ok,,2026-03-16,0,4.975,3,composition changed (+1); chained on 3 in common
 2026-03-17,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,8.7823,4.6799,12.8846,5.8016,open,thin,,2026-03-17,0,8.1138,2,
 2026-03-17,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,233.93,233.93,233.93,,open,single,kalshi,2026-03-17,0,233.93,1,
 2026-03-17,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.891,0.891,0.891,,open,single,kalshi,2026-03-17,0,0.891,1,
@@ -9743,6 +9757,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-03-18,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.46,50.46,50.46,,open,single,kalshi,2026-03-18,0,50.46,1,
 2026-03-18,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.533,0.533,0.533,,open,single,kalshi,2026-03-18,0,0.533,1,
 2026-03-18,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,4.429,4.429,4.429,,open,single,polling_reconstructed,2026-03-18,0,4.429,1,
+2026-03-18,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,4.85,4.3,5.1,0.3786,gated,ok,,2026-03-18,0,4.725,4,
 2026-03-18,polling,NATL_HOUSE_2026,national,,,seats_D,seats,2,0,2,0,0,221.03,221.03,221.03,0.0,open,thin,,2026-03-18,0,221.03,2,
 2026-03-18,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,2,0,2,0,0,0.5617,0.5617,0.5617,0.0,open,thin,,2026-03-18,0,0.5617,2,
 2026-03-18,polling,NATL_SENATE_2026,national,,,seats_D,seats,2,0,2,0,0,48.46,48.46,48.46,0.0,open,thin,,2026-03-18,0,48.46,2,
@@ -9837,12 +9852,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-03-22,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9156,0.9156,0.9156,,open,single,kalshi,2026-03-22,0,0.9156,1,
 2026-03-22,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.32,50.32,50.32,,open,single,kalshi,2026-03-22,0,50.32,1,
 2026-03-22,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.516,0.516,0.516,,open,single,kalshi,2026-03-22,0,0.516,1,
+2026-03-22,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.0,4.7,5.2,0.2449,gated,ok,,2026-03-22,0,4.875,4,
 2026-03-23,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.0168,4.9264,9.1071,2.9562,open,thin,,2026-03-23,0,6.3483,2,
 2026-03-23,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,235.5,235.5,235.5,,open,single,kalshi,2026-03-23,0,235.5,1,
 2026-03-23,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9004,0.9004,0.9004,,open,single,kalshi,2026-03-23,0,0.9004,1,
 2026-03-23,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.3,50.3,50.3,,open,single,kalshi,2026-03-23,0,50.3,1,
 2026-03-23,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5139,0.5139,0.5139,,open,single,kalshi,2026-03-23,0,0.5139,1,
-2026-03-23,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.0,4.7,5.2,0.2449,gated,ok,,2026-03-23,0,4.9583,4,
+2026-03-23,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.0,4.7,5.2,0.2449,gated,ok,,2026-03-23,0,4.875,4,
 2026-03-24,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.927,4.71,9.1441,3.1354,open,thin,,2026-03-24,0,6.2586,2,
 2026-03-24,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,234.92,234.92,234.92,,open,single,kalshi,2026-03-24,0,234.92,1,
 2026-03-24,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8964,0.8964,0.8964,,open,single,kalshi,2026-03-24,0,0.8964,1,
@@ -10008,6 +10024,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-03-26,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9259,0.9259,0.9259,,open,single,kalshi,2026-03-26,0,0.9259,1,
 2026-03-26,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.28,50.28,50.28,,open,single,kalshi,2026-03-26,0,50.28,1,
 2026-03-26,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5093,0.5093,0.5093,,open,single,kalshi,2026-03-26,0,0.5093,1,
+2026-03-26,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.1,4.4,5.4,0.4761,gated,ok,,2026-03-26,0,4.975,4,
 2026-03-27,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.3345,5.0065,9.6625,3.2923,open,thin,,2026-03-27,0,6.666,2,
 2026-03-27,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,236.86,236.86,236.86,,open,single,kalshi,2026-03-27,0,236.86,1,
 2026-03-27,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9112,0.9112,0.9112,,open,single,kalshi,2026-03-27,0,0.9112,1,
@@ -10028,6 +10045,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-03-30,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9321,0.9321,0.9321,,open,single,kalshi,2026-03-30,0,0.9321,1,
 2026-03-30,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.29,50.29,50.29,,open,single,kalshi,2026-03-30,0,50.29,1,
 2026-03-30,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5094,0.5094,0.5094,,open,single,kalshi,2026-03-30,0,0.5094,1,
+2026-03-30,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.3333,4.8,5.8,0.5033,gated,ok,,2026-03-30,0,5.2417,3,composition changed (-1); chained on 3 in common
 2026-03-31,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.2652,5.9882,8.5423,1.806,open,thin,,2026-03-31,0,6.5968,2,
 2026-03-31,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,239.94,239.94,239.94,,open,single,kalshi,2026-03-31,0,239.94,1,
 2026-03-31,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9471,0.9471,0.9471,,open,single,kalshi,2026-03-31,0,0.9471,1,
@@ -10198,6 +10216,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-04-03,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9302,0.9302,0.9302,,open,single,kalshi,2026-04-03,0,0.9302,1,
 2026-04-03,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.12,50.12,50.12,,open,single,kalshi,2026-04-03,0,50.12,1,
 2026-04-03,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4836,0.4836,0.4836,,open,single,kalshi,2026-04-03,0,0.4836,1,
+2026-04-03,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.3667,4.6,6.0,0.7095,gated,ok,,2026-04-03,0,5.275,3,
 2026-04-04,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.5026,6.9429,8.0622,0.7915,open,thin,,2026-04-04,0,6.8341,2,
 2026-04-04,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,240.16,240.16,240.16,,open,single,kalshi,2026-04-04,0,240.16,1,
 2026-04-04,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9387,0.9387,0.9387,,open,single,kalshi,2026-04-04,0,0.9387,1,
@@ -10218,6 +10237,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-04-07,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.934,0.934,0.934,,open,single,kalshi,2026-04-07,0,0.934,1,
 2026-04-07,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.27,50.27,50.27,,open,single,kalshi,2026-04-07,0,50.27,1,
 2026-04-07,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5116,0.5116,0.5116,,open,single,kalshi,2026-04-07,0,0.5116,1,
+2026-04-07,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.025,3.7,5.7,0.8995,gated,ok,,2026-04-07,0,4.8417,3,composition changed (+1); chained on 3 in common
 2026-04-08,academic,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,3.66,3.66,3.66,,open,single,academic_bew,2026-04-08,0,3.66,1,
 2026-04-08,academic,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,1,0,0,217.83,217.83,217.83,,open,single,academic_bew,2026-04-08,0,217.83,1,
 2026-04-08,academic,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,1,0,0,0.4872,0.4872,0.4872,,open,single,academic_bew,2026-04-08,0,0.4872,1,
@@ -10390,6 +10410,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-04-11,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9587,0.9587,0.9587,,open,single,kalshi,2026-04-11,0,0.9587,1,composition changed (-1); chained on 1 in common
 2026-04-11,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.47,50.47,50.47,,open,single,kalshi,2026-04-11,0,50.47,1,
 2026-04-11,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5373,0.5373,0.5373,,open,single,kalshi,2026-04-11,0,0.5373,1,
+2026-04-11,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.125,3.9,5.8,0.8421,gated,ok,,2026-04-11,0,4.9417,4,
 2026-04-12,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,5.5869,3.1447,8.0292,3.4539,open,thin,,2026-04-12,0,5.6241,2,
 2026-04-12,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,239.16,239.16,239.16,,open,single,kalshi,2026-04-12,0,239.16,1,
 2026-04-12,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9426,0.9426,0.9426,,open,single,kalshi,2026-04-12,0,0.9426,1,
@@ -10486,6 +10507,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-04-15,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.41,50.41,50.41,,open,single,kalshi,2026-04-15,0,50.41,1,
 2026-04-15,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5309,0.5309,0.5309,,open,single,kalshi,2026-04-15,0,0.5309,1,
 2026-04-15,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,4.724,4.724,4.724,,open,single,polling_reconstructed,2026-04-15,0,4.724,1,
+2026-04-15,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.8667,3.5,5.7,1.193,gated,ok,,2026-04-15,0,4.7417,3,composition changed (-1); chained on 3 in common
 2026-04-15,polling,NATL_HOUSE_2026,national,,,seats_D,seats,2,0,2,0,0,222.26,222.26,222.26,0.0,open,thin,,2026-04-15,0,222.26,2,
 2026-04-15,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,2,0,2,0,0,0.588,0.588,0.588,0.0,open,thin,,2026-04-15,0,0.588,2,
 2026-04-15,polling,NATL_SENATE_2026,national,,,seats_D,seats,2,0,2,0,0,48.59,48.59,48.59,0.0,open,thin,,2026-04-15,0,48.59,2,
@@ -10580,6 +10602,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-04-19,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9641,0.9641,0.9641,,open,single,kalshi,2026-04-19,0,0.9641,1,
 2026-04-19,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.27,50.27,50.27,,open,single,kalshi,2026-04-19,0,50.27,1,
 2026-04-19,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5163,0.5163,0.5163,,open,single,kalshi,2026-04-19,0,0.5163,1,
+2026-04-19,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.0,3.5,5.6,1.01,gated,ok,,2026-04-19,0,4.775,3,composition changed (+1); chained on 3 in common
 2026-04-20,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,8.0709,7.82,8.3217,0.3548,open,thin,,2026-04-20,0,7.9424,2,
 2026-04-20,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,239.56,239.56,239.56,,open,single,kalshi,2026-04-20,0,239.56,1,
 2026-04-20,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9291,0.9291,0.9291,,open,single,kalshi,2026-04-20,0,0.9291,1,
@@ -10750,6 +10773,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-04-23,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9355,0.9355,0.9355,,open,single,kalshi,2026-04-23,0,0.9355,1,
 2026-04-23,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.32,50.32,50.32,,open,single,kalshi,2026-04-23,0,50.32,1,
 2026-04-23,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5256,0.5256,0.5256,,open,single,kalshi,2026-04-23,0,0.5256,1,
+2026-04-23,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.1333,4.0,5.7,0.9815,gated,ok,,2026-04-23,0,5.0083,3,composition changed (-1); chained on 3 in common
 2026-04-24,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.9191,6.0284,7.8097,1.2596,open,thin,,2026-04-24,0,6.7906,2,
 2026-04-24,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,241.15,241.15,241.15,,open,single,kalshi,2026-04-24,0,241.15,1,
 2026-04-24,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9336,0.9336,0.9336,,open,single,kalshi,2026-04-24,0,0.9336,1,
@@ -10770,6 +10794,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-04-27,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9149,0.9149,0.9149,,open,single,kalshi,2026-04-27,0,0.9149,1,
 2026-04-27,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.21,50.21,50.21,,open,single,kalshi,2026-04-27,0,50.21,1,
 2026-04-27,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.5078,0.5078,0.5078,,open,single,kalshi,2026-04-27,0,0.5078,1,
+2026-04-27,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.325,4.4,5.7,0.6238,gated,ok,,2026-04-27,0,5.1417,3,composition changed (+1); chained on 3 in common
 2026-04-28,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.9076,5.7255,8.0896,1.6717,open,thin,,2026-04-28,0,6.7791,2,
 2026-04-28,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,240.77,240.77,240.77,,open,single,kalshi,2026-04-28,0,240.77,1,
 2026-04-28,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9282,0.9282,0.9282,,open,single,kalshi,2026-04-28,0,0.9282,1,
@@ -10941,6 +10966,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-05-01,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8296,0.8296,0.8296,,open,single,kalshi,2026-05-01,0,0.8296,1,
 2026-05-01,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.18,50.18,50.18,,open,single,kalshi,2026-05-01,0,50.18,1,
 2026-05-01,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4998,0.4998,0.4998,,open,single,kalshi,2026-05-01,0,0.4998,1,
+2026-05-01,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.875,5.7,6.1,0.1708,gated,ok,,2026-05-01,0,5.6917,4,
 2026-05-02,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.7145,6.0369,7.3921,0.9583,open,thin,,2026-05-02,0,6.5861,2,
 2026-05-02,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,234.14,234.14,234.14,,open,single,kalshi,2026-05-02,0,234.14,1,
 2026-05-02,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.822,0.822,0.822,,open,single,kalshi,2026-05-02,0,0.822,1,
@@ -10961,6 +10987,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-05-05,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8107,0.8107,0.8107,,open,single,kalshi,2026-05-05,0,0.8107,1,
 2026-05-05,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,50.07,50.07,50.07,,open,single,kalshi,2026-05-05,0,50.07,1,
 2026-05-05,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4895,0.4895,0.4895,,open,single,kalshi,2026-05-05,0,0.4895,1,
+2026-05-05,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.4333,4.9,5.8,0.4726,gated,ok,,2026-05-05,0,5.225,3,composition changed (-1); chained on 3 in common
 2026-05-06,academic,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,4.11,4.11,4.11,,open,single,academic_bew,2026-05-06,0,4.11,1,
 2026-05-06,academic,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,1,0,0,219.69,219.69,219.69,,open,single,academic_bew,2026-05-06,0,219.69,1,
 2026-05-06,academic,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,1,0,0,0.5321,0.5321,0.5321,,open,single,academic_bew,2026-05-06,0,0.5321,1,
@@ -11131,6 +11158,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-05-09,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7519,0.7519,0.7519,,open,single,kalshi,2026-05-09,0,0.7519,1,
 2026-05-09,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.98,49.98,49.98,,open,single,kalshi,2026-05-09,0,49.98,1,
 2026-05-09,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4809,0.4809,0.4809,,open,single,kalshi,2026-05-09,0,0.4809,1,
+2026-05-09,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.725,5.3,6.1,0.35,gated,ok,,2026-05-09,0,5.4583,3,composition changed (+1); chained on 3 in common
 2026-05-10,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,5.7656,4.9508,6.5803,1.1522,open,thin,,2026-05-10,0,5.6371,2,
 2026-05-10,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,228.64,228.64,228.64,,open,single,kalshi,2026-05-10,0,228.64,1,
 2026-05-10,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7437,0.7437,0.7437,,open,single,kalshi,2026-05-10,0,0.7437,1,
@@ -11227,6 +11255,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-05-13,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.93,49.93,49.93,,open,single,kalshi,2026-05-13,0,49.93,1,
 2026-05-13,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4757,0.4757,0.4757,,open,single,kalshi,2026-05-13,0,0.4757,1,
 2026-05-13,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,5.412,5.412,5.412,,open,single,polling_reconstructed,2026-05-13,0,5.412,1,
+2026-05-13,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.7,6.3,7.2,0.4583,gated,ok,,2026-05-13,0,6.4917,3,composition changed (-1); chained on 3 in common
 2026-05-13,polling,NATL_HOUSE_2026,national,,,seats_D,seats,2,0,2,0,0,225.24,225.24,225.24,0.0,open,thin,,2026-05-13,0,225.24,2,
 2026-05-13,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,2,0,2,0,0,0.6539,0.6539,0.6539,0.0,open,thin,,2026-05-13,0,0.6539,2,
 2026-05-13,polling,NATL_SENATE_2026,national,,,seats_D,seats,2,0,2,0,0,48.92,48.92,48.92,0.0,open,thin,,2026-05-13,0,48.92,2,
@@ -11321,6 +11350,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-05-17,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7412,0.7412,0.7412,,open,single,kalshi,2026-05-17,0,0.7412,1,
 2026-05-17,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.84,49.84,49.84,,open,single,kalshi,2026-05-17,0,49.84,1,
 2026-05-17,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4468,0.4468,0.4468,,open,single,kalshi,2026-05-17,0,0.4468,1,
+2026-05-17,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.375,6.3,6.6,0.15,gated,ok,,2026-05-17,0,6.1917,3,composition changed (+1); chained on 3 in common
 2026-05-18,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.0334,5.5297,6.5371,0.7123,open,thin,,2026-05-18,0,5.905,2,
 2026-05-18,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,227.35,227.35,227.35,,open,single,kalshi,2026-05-18,0,227.35,1,
 2026-05-18,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7238,0.7238,0.7238,,open,single,kalshi,2026-05-18,0,0.7238,1,
@@ -11491,6 +11521,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-05-21,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.758,0.758,0.758,,open,single,kalshi,2026-05-21,0,0.758,1,
 2026-05-21,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.9,49.9,49.9,,open,single,kalshi,2026-05-21,0,49.9,1,
 2026-05-21,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4573,0.4573,0.4573,,open,single,kalshi,2026-05-21,0,0.4573,1,
+2026-05-21,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.8,6.6,7.1,0.216,gated,ok,,2026-05-21,0,6.6167,4,
 2026-05-22,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.5678,6.0239,7.1116,0.7691,open,thin,,2026-05-22,0,6.4393,2,
 2026-05-22,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,228.9,228.9,228.9,,open,single,kalshi,2026-05-22,0,228.9,1,
 2026-05-22,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7653,0.7653,0.7653,,open,single,kalshi,2026-05-22,0,0.7653,1,
@@ -11511,6 +11542,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-05-25,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7382,0.7382,0.7382,,open,single,kalshi,2026-05-25,0,0.7382,1,
 2026-05-25,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.82,49.82,49.82,,open,single,kalshi,2026-05-25,0,49.82,1,
 2026-05-25,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4552,0.4552,0.4552,,open,single,kalshi,2026-05-25,0,0.4552,1,
+2026-05-25,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,7.1,6.7,7.7,0.5292,gated,ok,,2026-05-25,0,6.8833,3,composition changed (-1); chained on 3 in common
 2026-05-26,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.4183,6.2204,6.6162,0.2799,open,thin,,2026-05-26,0,6.2899,2,
 2026-05-26,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,228.53,228.53,228.53,,open,single,kalshi,2026-05-26,0,228.53,1,
 2026-05-26,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7427,0.7427,0.7427,,open,single,kalshi,2026-05-26,0,0.7427,1,
@@ -11681,6 +11713,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-05-29,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7487,0.7487,0.7487,,open,single,kalshi,2026-05-29,0,0.7487,1,
 2026-05-29,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.76,49.76,49.76,,open,single,kalshi,2026-05-29,0,49.76,1,
 2026-05-29,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4451,0.4451,0.4451,,open,single,kalshi,2026-05-29,0,0.4451,1,
+2026-05-29,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,7.625,7.1,8.1,0.4573,gated,ok,,2026-05-29,0,7.4833,3,composition changed (+1); chained on 3 in common
 2026-05-30,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.9787,6.136,7.8214,1.1918,open,thin,,2026-05-30,0,6.8503,2,
 2026-05-30,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,227.46,227.46,227.46,,open,single,kalshi,2026-05-30,0,227.46,1,
 2026-05-30,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7081,0.7081,0.7081,,open,single,kalshi,2026-05-30,0,0.7081,1,
@@ -11696,12 +11729,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-01,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7166,0.7166,0.7166,,open,single,kalshi,2026-06-01,0,0.7166,1,
 2026-06-01,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.73,49.73,49.73,,open,single,kalshi,2026-06-01,0,49.73,1,
 2026-06-01,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4383,0.4383,0.4383,,open,single,kalshi,2026-06-01,0,0.4383,1,
-2026-06-01,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,7.5333,7.1,7.9,0.4041,gated,ok,,2026-06-01,0,7.5583,3,composition changed (-1); chained on 3 in common
+2026-06-01,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,7.5333,7.1,7.9,0.4041,gated,ok,,2026-06-01,0,7.3167,3,composition changed (-1); chained on 3 in common
 2026-06-02,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.7354,6.1682,7.3026,0.8021,open,thin,,2026-06-02,0,6.607,2,
 2026-06-02,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,228.09,228.09,228.09,,open,single,kalshi,2026-06-02,0,228.09,1,
 2026-06-02,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7321,0.7321,0.7321,,open,single,kalshi,2026-06-02,0,0.7321,1,
 2026-06-02,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.81,49.81,49.81,,open,single,kalshi,2026-06-02,0,49.81,1,
 2026-06-02,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4473,0.4473,0.4473,,open,single,kalshi,2026-06-02,0,0.4473,1,
+2026-06-02,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,7.5333,7.1,7.9,0.4041,gated,ok,,2026-06-02,0,7.3167,3,
 2026-06-03,academic,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,4.1,4.1,4.1,,open,single,academic_bew,2026-06-03,0,4.1,1,
 2026-06-03,academic,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,1,0,0,219.65,219.65,219.65,,open,single,academic_bew,2026-06-03,0,219.65,1,
 2026-06-03,academic,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,1,0,0,0.5312,0.5312,0.5312,,open,single,academic_bew,2026-06-03,0,0.5312,1,
@@ -11872,6 +11906,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-06,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7154,0.7154,0.7154,,open,single,kalshi,2026-06-06,0,0.7154,1,
 2026-06-06,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.69,49.69,49.69,,open,single,kalshi,2026-06-06,0,49.69,1,
 2026-06-06,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4114,0.4114,0.4114,,open,single,kalshi,2026-06-06,0,0.4114,1,
+2026-06-06,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.625,6.4,6.8,0.1708,gated,ok,,2026-06-06,0,6.35,3,composition changed (+1); chained on 3 in common
 2026-06-07,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.9375,6.1759,7.699,1.077,open,thin,,2026-06-07,0,6.809,2,
 2026-06-07,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.23,229.23,229.23,,open,single,kalshi,2026-06-07,0,229.23,1,
 2026-06-07,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7453,0.7453,0.7453,,open,single,kalshi,2026-06-07,0,0.7453,1,
@@ -11882,7 +11917,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-08,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7455,0.7455,0.7455,,open,single,kalshi,2026-06-08,0,0.7455,1,
 2026-06-08,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.75,49.75,49.75,,open,single,kalshi,2026-06-08,0,49.75,1,
 2026-06-08,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4239,0.4239,0.4239,,open,single,kalshi,2026-06-08,0,0.4239,1,
-2026-06-08,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.6,6.4,6.8,0.1633,gated,ok,,2026-06-08,0,6.5583,3,composition changed (+1); chained on 3 in common
+2026-06-08,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.6,6.4,6.8,0.1633,gated,ok,,2026-06-08,0,6.325,4,
 2026-06-09,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.7837,6.1232,7.4442,0.9341,open,thin,,2026-06-09,0,6.6553,2,
 2026-06-09,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.59,229.59,229.59,,open,single,kalshi,2026-06-09,0,229.59,1,
 2026-06-09,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7577,0.7577,0.7577,,open,single,kalshi,2026-06-09,0,0.7577,1,
@@ -11969,6 +12004,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-10,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.93,49.93,49.93,,open,single,kalshi,2026-06-10,0,49.93,1,
 2026-06-10,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.445,0.445,0.445,,open,single,kalshi,2026-06-10,0,0.445,1,
 2026-06-10,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,4.815,4.815,4.815,,open,single,polling_reconstructed,2026-06-10,0,4.815,1,
+2026-06-10,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.9667,5.3,6.5,0.611,gated,ok,,2026-06-10,0,5.7583,3,composition changed (-1); chained on 3 in common
 2026-06-10,polling,NATL_HOUSE_2026,national,,,seats_D,seats,2,0,2,0,0,222.69,222.69,222.69,0.0,open,thin,,2026-06-10,0,222.69,2,
 2026-06-10,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,2,0,2,0,0,0.5981,0.5981,0.5981,0.0,open,thin,,2026-06-10,0,0.5981,2,
 2026-06-10,polling,NATL_SENATE_2026,national,,,seats_D,seats,2,0,2,0,0,48.64,48.64,48.64,0.0,open,thin,,2026-06-10,0,48.64,2,
@@ -12063,12 +12099,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-14,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7784,0.7784,0.7784,,open,single,kalshi,2026-06-14,0,0.7784,1,
 2026-06-14,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.75,49.75,49.75,,open,single,kalshi,2026-06-14,0,49.75,1,
 2026-06-14,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4337,0.4337,0.4337,,open,single,kalshi,2026-06-14,0,0.4337,1,
+2026-06-14,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.925,5.4,6.4,0.4272,gated,ok,,2026-06-14,0,5.6583,3,composition changed (+1); chained on 3 in common
 2026-06-15,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.208,6.7588,7.6571,0.6352,open,thin,,2026-06-15,0,7.0795,2,
 2026-06-15,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.55,229.55,229.55,,open,single,kalshi,2026-06-15,0,229.55,1,
 2026-06-15,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.772,0.772,0.772,,open,single,kalshi,2026-06-15,0,0.772,1,
 2026-06-15,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.75,49.75,49.75,,open,single,kalshi,2026-06-15,0,49.75,1,
 2026-06-15,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4326,0.4326,0.4326,,open,single,kalshi,2026-06-15,0,0.4326,1,
-2026-06-15,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.8667,5.4,6.4,0.5033,gated,ok,,2026-06-15,0,5.8917,3,composition changed (-1); chained on 3 in common
+2026-06-15,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.8667,5.4,6.4,0.5033,gated,ok,,2026-06-15,0,5.6583,3,composition changed (-1); chained on 3 in common
 2026-06-16,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.1471,6.6119,7.6823,0.7569,open,thin,,2026-06-16,0,7.0187,2,
 2026-06-16,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.6,229.6,229.6,,open,single,kalshi,2026-06-16,0,229.6,1,
 2026-06-16,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7753,0.7753,0.7753,,open,single,kalshi,2026-06-16,0,0.7753,1,
@@ -12234,6 +12271,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-18,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7712,0.7712,0.7712,,open,single,kalshi,2026-06-18,0,0.7712,1,
 2026-06-18,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.6,49.6,49.6,,open,single,kalshi,2026-06-18,0,49.6,1,
 2026-06-18,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4181,0.4181,0.4181,,open,single,kalshi,2026-06-18,0,0.4181,1,
+2026-06-18,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.925,5.4,6.4,0.4272,gated,ok,,2026-06-18,0,5.6583,3,composition changed (+1); chained on 3 in common
 2026-06-19,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.0702,6.6656,7.4748,0.5722,open,thin,,2026-06-19,0,6.9418,2,
 2026-06-19,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.34,229.34,229.34,,open,single,kalshi,2026-06-19,0,229.34,1,
 2026-06-19,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7732,0.7732,0.7732,,open,single,kalshi,2026-06-19,0,0.7732,1,
@@ -12254,7 +12292,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-22,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7646,0.7646,0.7646,,open,single,kalshi,2026-06-22,0,0.7646,1,
 2026-06-22,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.59,49.59,49.59,,open,single,kalshi,2026-06-22,0,49.59,1,
 2026-06-22,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4155,0.4155,0.4155,,open,single,kalshi,2026-06-22,0,0.4155,1,
-2026-06-22,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.4333,4.8,6.2,0.7095,gated,ok,,2026-06-22,0,5.4583,3,
+2026-06-22,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.4333,4.8,6.2,0.7095,gated,ok,,2026-06-22,0,5.225,3,composition changed (-1); chained on 3 in common
 2026-06-23,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.7289,6.6522,6.8056,0.1085,open,thin,,2026-06-23,0,6.6005,2,
 2026-06-23,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.18,229.18,229.18,,open,single,kalshi,2026-06-23,0,229.18,1,
 2026-06-23,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7627,0.7627,0.7627,,open,single,kalshi,2026-06-23,0,0.7627,1,
@@ -12425,6 +12463,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-26,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7742,0.7742,0.7742,,open,single,kalshi,2026-06-26,0,0.7742,1,
 2026-06-26,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.38,49.38,49.38,,open,single,kalshi,2026-06-26,0,49.38,1,
 2026-06-26,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3838,0.3838,0.3838,,open,single,kalshi,2026-06-26,0,0.3838,1,
+2026-06-26,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.55,5.1,6.1,0.4796,gated,ok,,2026-06-26,0,5.2583,3,composition changed (+1); chained on 3 in common
 2026-06-27,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.9238,6.4803,7.3674,0.6273,open,thin,,2026-06-27,0,6.7954,2,
 2026-06-27,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.39,229.39,229.39,,open,single,kalshi,2026-06-27,0,229.39,1,
 2026-06-27,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7725,0.7725,0.7725,,open,single,kalshi,2026-06-27,0,0.7725,1,
@@ -12435,7 +12474,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-28,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.777,0.777,0.777,,open,single,kalshi,2026-06-28,0,0.777,1,
 2026-06-28,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.39,49.39,49.39,,open,single,kalshi,2026-06-28,0,49.39,1,
 2026-06-28,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3849,0.3849,0.3849,,open,single,kalshi,2026-06-28,0,0.3849,1,
-2026-06-28,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.55,5.1,6.1,0.4796,gated,ok,,2026-06-28,0,5.4917,3,composition changed (+1); chained on 3 in common
+2026-06-28,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.55,5.1,6.1,0.4796,gated,ok,,2026-06-28,0,5.2583,4,
 2026-06-29,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.4015,6.3147,6.4882,0.1227,open,thin,,2026-06-29,0,6.273,2,
 2026-06-29,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.56,229.56,229.56,,open,single,kalshi,2026-06-29,0,229.56,1,
 2026-06-29,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.778,0.778,0.778,,open,single,kalshi,2026-06-29,0,0.778,1,
@@ -12446,6 +12485,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-06-30,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7846,0.7846,0.7846,,open,single,kalshi,2026-06-30,0,0.7846,1,
 2026-06-30,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.46,49.46,49.46,,open,single,kalshi,2026-06-30,0,49.46,1,
 2026-06-30,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3923,0.3923,0.3923,,open,single,kalshi,2026-06-30,0,0.3923,1,
+2026-06-30,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.5333,4.8,6.2,0.7024,gated,ok,,2026-06-30,0,5.325,3,composition changed (-1); chained on 3 in common
 2026-07-01,academic,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,3.89,3.89,3.89,,open,single,academic_bew,2026-07-01,0,3.89,1,
 2026-07-01,academic,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,1,0,0,218.78,218.78,218.78,,open,single,academic_bew,2026-07-01,0,218.78,1,
 2026-07-01,academic,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,1,0,0,0.5105,0.5105,0.5105,,open,single,academic_bew,2026-07-01,0,0.5105,1,
@@ -12611,6 +12651,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-07-03,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8001,0.8001,0.8001,,open,single,kalshi,2026-07-03,0,0.8001,1,
 2026-07-03,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.5,49.5,49.5,,open,single,kalshi,2026-07-03,0,49.5,1,
 2026-07-03,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3904,0.3904,0.3904,,open,single,kalshi,2026-07-03,0,0.3904,1,
+2026-07-03,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.8,5.3,6.2,0.4243,gated,ok,,2026-07-03,0,5.4917,3,composition changed (+1); chained on 3 in common
 2026-07-04,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.9178,6.6153,7.2204,0.4279,open,thin,,2026-07-04,0,6.7894,2,
 2026-07-04,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.91,229.91,229.91,,open,single,kalshi,2026-07-04,0,229.91,1,
 2026-07-04,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8079,0.8079,0.8079,,open,single,kalshi,2026-07-04,0,0.8079,1,
@@ -12626,7 +12667,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-07-06,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8076,0.8076,0.8076,,open,single,kalshi,2026-07-06,0,0.8076,1,
 2026-07-06,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.3,49.3,49.3,,open,single,kalshi,2026-07-06,0,49.3,1,
 2026-07-06,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3381,0.3381,0.3381,,open,single,kalshi,2026-07-06,0,0.3381,1,
-2026-07-06,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.8,5.3,6.2,0.4243,gated,ok,,2026-07-06,0,5.7417,4,
+2026-07-06,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.8,5.3,6.2,0.4243,gated,ok,,2026-07-06,0,5.4917,4,
 2026-07-07,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,6.6841,6.492,6.8762,0.2717,open,thin,,2026-07-07,0,6.5557,2,
 2026-07-07,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.69,229.69,229.69,,open,single,kalshi,2026-07-07,0,229.69,1,
 2026-07-07,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8118,0.8118,0.8118,,open,single,kalshi,2026-07-07,0,0.8118,1,
@@ -12713,6 +12754,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-07-08,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.56,49.56,49.56,,open,single,kalshi,2026-07-08,0,49.56,1,
 2026-07-08,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3992,0.3992,0.3992,,open,single,kalshi,2026-07-08,0,0.3992,1,
 2026-07-08,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,5.113,5.113,5.113,,open,single,polling_reconstructed,2026-07-08,0,5.113,1,
+2026-07-08,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.8,5.3,6.2,0.4243,gated,ok,,2026-07-08,0,5.4917,4,
 2026-07-08,polling,NATL_HOUSE_2026,national,,,seats_D,seats,2,0,2,0,0,223.94,223.94,223.94,0.0,open,thin,,2026-07-08,0,223.94,2,
 2026-07-08,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,2,0,2,0,0,0.627,0.627,0.627,0.0,open,thin,,2026-07-08,0,0.627,2,
 2026-07-08,polling,NATL_SENATE_2026,national,,,seats_D,seats,2,0,2,0,0,48.77,48.77,48.77,0.0,open,thin,,2026-07-08,0,48.77,2,
@@ -12807,12 +12849,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-07-12,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8643,0.8643,0.8643,,open,single,kalshi,2026-07-12,0,0.8643,1,
 2026-07-12,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.6,49.6,49.6,,open,single,kalshi,2026-07-12,0,49.6,1,
 2026-07-12,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.3997,0.3997,0.3997,,open,single,kalshi,2026-07-12,0,0.3997,1,
+2026-07-12,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.8,4.9,6.3,0.781,gated,ok,,2026-07-12,0,5.5917,3,composition changed (-1); chained on 3 in common
 2026-07-13,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.0838,6.5148,7.6529,0.8048,open,thin,,2026-07-13,0,6.9554,2,
 2026-07-13,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,228.32,228.32,228.32,,open,single,kalshi,2026-07-13,0,228.32,1,
 2026-07-13,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8593,0.8593,0.8593,,open,single,kalshi,2026-07-13,0,0.8593,1,
 2026-07-13,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.61,49.61,49.61,,open,single,kalshi,2026-07-13,0,49.61,1,
 2026-07-13,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4003,0.4003,0.4003,,open,single,kalshi,2026-07-13,0,0.4003,1,
-2026-07-13,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.875,4.9,6.3,0.6551,gated,ok,,2026-07-13,0,5.8167,4,
+2026-07-13,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.875,4.9,6.3,0.6551,gated,ok,,2026-07-13,0,5.5917,3,composition changed (+1); chained on 3 in common
 2026-07-14,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,5.7481,4.9633,6.5328,1.1098,open,thin,,2026-07-14,0,5.6196,2,
 2026-07-14,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.48,229.48,229.48,,open,single,kalshi,2026-07-14,0,229.48,1,
 2026-07-14,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8093,0.8093,0.8093,,open,single,kalshi,2026-07-14,0,0.8093,1,
@@ -12978,6 +13021,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-07-16,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7717,0.7717,0.7717,,open,single,kalshi,2026-07-16,0,0.7717,1,
 2026-07-16,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.77,49.77,49.77,,open,single,kalshi,2026-07-16,0,49.77,1,
 2026-07-16,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.425,0.425,0.425,,open,single,kalshi,2026-07-16,0,0.425,1,
+2026-07-16,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.875,4.9,6.3,0.6551,gated,ok,,2026-07-16,0,5.5917,4,
 2026-07-17,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.1647,6.9887,7.3408,0.249,open,thin,,2026-07-17,0,7.0363,2,
 2026-07-17,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,228.97,228.97,228.97,,open,single,kalshi,2026-07-17,0,228.97,1,
 2026-07-17,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7819,0.7819,0.7819,,open,single,kalshi,2026-07-17,0,0.7819,1,
@@ -12998,7 +13042,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-07-20,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7789,0.7789,0.7789,,open,single,kalshi,2026-07-20,0,0.7789,1,
 2026-07-20,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.68,49.68,49.68,,open,single,kalshi,2026-07-20,0,49.68,1,
 2026-07-20,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4165,0.4165,0.4165,,open,single,kalshi,2026-07-20,0,0.4165,1,
-2026-07-20,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.5667,3.0,6.0,1.5044,gated,ok,,2026-07-20,0,4.5833,3,composition changed (-1); chained on 3 in common
+2026-07-20,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,4.5667,3.0,6.0,1.5044,gated,ok,,2026-07-20,0,4.3583,3,composition changed (-1); chained on 3 in common
 2026-07-21,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.2137,7.0302,7.3972,0.2595,open,thin,,2026-07-21,0,7.0853,2,
 2026-07-21,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.31,229.31,229.31,,open,single,kalshi,2026-07-21,0,229.31,1,
 2026-07-21,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8071,0.8071,0.8071,,open,single,kalshi,2026-07-21,0,0.8071,1,
@@ -13169,6 +13213,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-07-24,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.801,0.801,0.801,,open,single,kalshi,2026-07-24,0,0.801,1,
 2026-07-24,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.61,49.61,49.61,,open,single,kalshi,2026-07-24,0,49.61,1,
 2026-07-24,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4115,0.4115,0.4115,,open,single,kalshi,2026-07-24,0,0.4115,1,
+2026-07-24,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.55,4.5,6.3,0.8583,gated,ok,,2026-07-24,0,5.125,3,composition changed (+1); chained on 3 in common
 2026-07-25,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.096,6.9635,7.2284,0.1873,open,thin,,2026-07-25,0,6.9675,2,
 2026-07-25,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.14,229.14,229.14,,open,single,kalshi,2026-07-25,0,229.14,1,
 2026-07-25,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7957,0.7957,0.7957,,open,single,kalshi,2026-07-25,0,0.7957,1,
@@ -13184,12 +13229,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-07-27,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7883,0.7883,0.7883,,open,single,kalshi,2026-07-27,0,0.7883,1,
 2026-07-27,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.68,49.68,49.68,,open,single,kalshi,2026-07-27,0,49.68,1,
 2026-07-27,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.424,0.424,0.424,,open,single,kalshi,2026-07-27,0,0.424,1,
-2026-07-27,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.2667,4.1,6.3,1.106,gated,ok,,2026-07-27,0,5.2833,3,
+2026-07-27,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.2667,4.1,6.3,1.106,gated,ok,,2026-07-27,0,5.0583,3,composition changed (-1); chained on 3 in common
 2026-07-28,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.2544,7.2102,7.2986,0.0625,open,thin,,2026-07-28,0,7.126,2,
 2026-07-28,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.5,229.5,229.5,,open,single,kalshi,2026-07-28,0,229.5,1,
 2026-07-28,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8071,0.8071,0.8071,,open,single,kalshi,2026-07-28,0,0.8071,1,
 2026-07-28,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.69,49.69,49.69,,open,single,kalshi,2026-07-28,0,49.69,1,
 2026-07-28,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4234,0.4234,0.4234,,open,single,kalshi,2026-07-28,0,0.4234,1,
+2026-07-28,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,5.5,4.1,6.3,1.0165,gated,ok,,2026-07-28,0,5.0583,3,composition changed (+1); chained on 3 in common
 2026-07-29,academic,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,3.42,3.42,3.42,,open,single,academic_bew,2026-07-29,0,3.42,1,
 2026-07-29,academic,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,1,0,0,216.83,216.83,216.83,,open,single,academic_bew,2026-07-29,0,216.83,1,
 2026-07-29,academic,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,1,0,0,0.4637,0.4637,0.4637,,open,single,academic_bew,2026-07-29,0,0.4637,1,
@@ -13361,6 +13407,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-01,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8051,0.8051,0.8051,,open,single,kalshi,2026-08-01,0,0.8051,1,
 2026-08-01,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.78,49.78,49.78,,open,single,kalshi,2026-08-01,0,49.78,1,
 2026-08-01,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4374,0.4374,0.4374,,open,single,kalshi,2026-08-01,0,0.4374,1,
+2026-08-01,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,5.9333,5.3,6.5,0.6028,gated,ok,,2026-08-01,0,5.725,3,composition changed (-1); chained on 3 in common
 2026-08-02,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.3872,7.2812,7.4932,0.1499,open,thin,,2026-08-02,0,7.2588,2,
 2026-08-02,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.05,229.05,229.05,,open,single,kalshi,2026-08-02,0,229.05,1,
 2026-08-02,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7846,0.7846,0.7846,,open,single,kalshi,2026-08-02,0,0.7846,1,
@@ -13371,7 +13418,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-03,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7836,0.7836,0.7836,,open,single,kalshi,2026-08-03,0,0.7836,1,
 2026-08-03,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.83,49.83,49.83,,open,single,kalshi,2026-08-03,0,49.83,1,
 2026-08-03,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4448,0.4448,0.4448,,open,single,kalshi,2026-08-03,0,0.4448,1,
-2026-08-03,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.7,6.5,6.9,0.1826,gated,ok,,2026-08-03,0,6.6833,3,composition changed (+1); chained on 3 in common
+2026-08-03,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.7,6.5,6.9,0.1826,gated,ok,,2026-08-03,0,6.4583,3,composition changed (+1); chained on 3 in common
 2026-08-04,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.5266,7.3763,7.6768,0.2125,open,thin,,2026-08-04,0,7.3981,2,
 2026-08-04,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.74,229.74,229.74,,open,single,kalshi,2026-08-04,0,229.74,1,
 2026-08-04,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8121,0.8121,0.8121,,open,single,kalshi,2026-08-04,0,0.8121,1,
@@ -13458,6 +13505,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-05,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.86,49.86,49.86,,open,single,kalshi,2026-08-05,0,49.86,1,
 2026-08-05,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4541,0.4541,0.4541,,open,single,kalshi,2026-08-05,0,0.4541,1,
 2026-08-05,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,6.316,6.316,6.316,,open,single,polling_reconstructed,2026-08-05,0,6.316,1,
+2026-08-05,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.6333,6.2,7.2,0.5132,gated,ok,,2026-08-05,0,6.425,3,composition changed (-1); chained on 3 in common
 2026-08-05,polling,NATL_HOUSE_2026,national,,,seats_D,seats,2,0,2,0,0,229.26,229.26,229.26,0.0,open,thin,,2026-08-05,0,229.26,2,
 2026-08-05,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,2,0,2,0,0,0.73,0.73,0.73,0.0,open,thin,,2026-08-05,0,0.73,2,
 2026-08-05,polling,NATL_SENATE_2026,national,,,seats_D,seats,2,0,2,0,0,49.35,49.35,49.35,0.0,open,thin,,2026-08-05,0,49.35,2,
@@ -13552,12 +13600,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-09,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8126,0.8126,0.8126,,open,single,kalshi,2026-08-09,0,0.8126,1,
 2026-08-09,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.94,49.94,49.94,,open,single,kalshi,2026-08-09,0,49.94,1,
 2026-08-09,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4672,0.4672,0.4672,,open,single,kalshi,2026-08-09,0,0.4672,1,
+2026-08-09,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.825,6.6,7.0,0.1708,gated,ok,,2026-08-09,0,6.5917,3,composition changed (+1); chained on 3 in common
 2026-08-10,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.6751,7.456,7.8941,0.3098,open,thin,,2026-08-10,0,7.5466,2,
 2026-08-10,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,230.04,230.04,230.04,,open,single,kalshi,2026-08-10,0,230.04,1,
 2026-08-10,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8148,0.8148,0.8148,,open,single,kalshi,2026-08-10,0,0.8148,1,
 2026-08-10,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.89,49.89,49.89,,open,single,kalshi,2026-08-10,0,49.89,1,
 2026-08-10,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4598,0.4598,0.4598,,open,single,kalshi,2026-08-10,0,0.4598,1,
-2026-08-10,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.8,6.6,7.0,0.2,gated,ok,,2026-08-10,0,6.8167,3,composition changed (-1); chained on 3 in common
+2026-08-10,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.8,6.6,7.0,0.2,gated,ok,,2026-08-10,0,6.5917,3,composition changed (-1); chained on 3 in common
 2026-08-11,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.6696,7.3676,7.9716,0.4271,open,thin,,2026-08-11,0,7.5412,2,
 2026-08-11,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,230.26,230.26,230.26,,open,single,kalshi,2026-08-11,0,230.26,1,
 2026-08-11,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8252,0.8252,0.8252,,open,single,kalshi,2026-08-11,0,0.8252,1,
@@ -13723,6 +13772,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-13,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8442,0.8442,0.8442,,open,single,kalshi,2026-08-13,0,0.8442,1,
 2026-08-13,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.86,49.86,49.86,,open,single,kalshi,2026-08-13,0,49.86,1,
 2026-08-13,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4571,0.4571,0.4571,,open,single,kalshi,2026-08-13,0,0.4571,1,
+2026-08-13,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.825,6.6,7.0,0.1708,gated,ok,,2026-08-13,0,6.5917,3,composition changed (+1); chained on 3 in common
 2026-08-14,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,8.0445,7.3848,8.7042,0.933,open,thin,,2026-08-14,0,7.9161,2,
 2026-08-14,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,231.06,231.06,231.06,,open,single,kalshi,2026-08-14,0,231.06,1,
 2026-08-14,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8356,0.8356,0.8356,,open,single,kalshi,2026-08-14,0,0.8356,1,
@@ -13743,7 +13793,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-17,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8276,0.8276,0.8276,,open,single,kalshi,2026-08-17,0,0.8276,1,
 2026-08-17,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.51,49.51,49.51,,open,single,kalshi,2026-08-17,0,49.51,1,
 2026-08-17,market,NATL_SENATE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.4243,0.4243,0.4243,,open,single,kalshi,2026-08-17,0,0.4243,1,
-2026-08-17,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.65,6.3,6.8,0.238,gated,ok,,2026-08-17,0,6.65,3,composition changed (+1); chained on 3 in common
+2026-08-17,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.65,6.3,6.8,0.238,gated,ok,,2026-08-17,0,6.4167,4,
 2026-08-18,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.5727,7.2731,7.8722,0.4236,open,thin,,2026-08-18,0,7.4442,2,
 2026-08-18,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,230.84,230.84,230.84,,open,single,kalshi,2026-08-18,0,230.84,1,
 2026-08-18,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.8255,0.8255,0.8255,,open,single,kalshi,2026-08-18,0,0.8255,1,
@@ -13806,7 +13856,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-19,market,NATL_SENATE_2026,national,,,win_prob_D,prob,2,0,0,0,0,0.4796,0.4541,0.505,0.036,open,thin,,2026-08-19,0,0.4541,1,composition changed (+1); chained on 1 in common
 2026-08-19,market,NATL_SENATE_2026,national,,,win_prob_R,prob,1,0,0,0,0,0.495,0.495,0.495,,open,single,polymarket,2026-08-19,0,0.495,1,start
 2026-08-19,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,1,0,0,5.518,5.518,5.518,,open,single,polling_reconstructed,2026-08-19,0,5.518,1,
-2026-08-19,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.4841,6.1365,6.8,0.3168,gated,ok,,2026-08-19,0,6.4841,4,
+2026-08-19,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.4841,6.1365,6.8,0.3168,gated,ok,,2026-08-19,0,6.2508,4,
 2026-08-19,polling,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,1,0,0,225.71,225.71,225.71,,open,single,polling_reconstructed,2026-08-19,0,225.71,1,composition changed (-1); chained on 1 in common
 2026-08-19,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,1,0,0,0.6632,0.6632,0.6632,,open,single,polling_reconstructed,2026-08-19,0,0.6632,1,composition changed (-1); chained on 1 in common
 2026-08-19,polling,NATL_SENATE_2026,national,,,seats_D,seats,1,0,1,0,0,48.97,48.97,48.97,,open,single,polling_reconstructed,2026-08-19,0,48.97,1,composition changed (-1); chained on 1 in common
@@ -14011,7 +14061,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-20,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.81,49.81,49.81,,open,single,kalshi,2026-08-20,0,49.81,1,
 2026-08-20,market,NATL_SENATE_2026,national,,,win_prob_D,prob,2,0,0,0,0,0.4847,0.4644,0.505,0.0287,open,thin,,2026-08-20,0,0.4592,2,
 2026-08-20,market,NATL_SENATE_2026,national,,,win_prob_R,prob,1,0,0,0,0,0.495,0.495,0.495,,open,single,polymarket,2026-08-20,0,0.495,1,
-2026-08-20,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.3968,6.0905,6.8,0.3645,gated,ok,,2026-08-20,0,6.4688,3,composition changed (-1); chained on 3 in common
+2026-08-20,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.3968,6.0905,6.8,0.3645,gated,ok,,2026-08-20,0,6.2355,3,composition changed (-1); chained on 3 in common
 2026-08-20,polling,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,226.38,226.38,226.38,,open,single,class_polling,2026-08-20,0,226.38,0,BREAK: no member in common with the previous date
 2026-08-20,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.6763,0.6763,0.6763,,open,single,class_polling,2026-08-20,0,0.6763,0,BREAK: no member in common with the previous date
 2026-08-20,polling,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.04,49.04,49.04,,open,single,class_polling,2026-08-20,0,49.04,0,BREAK: no member in common with the previous date
@@ -14444,7 +14494,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-21,market,SEN_WV_2026,senate,WV,,win_prob_R,prob,2,0,0,0,0,0.9563,0.95,0.9625,0.0088,open,thin,,2026-08-21,0,0.9563,2,start
 2026-08-21,market,SEN_WY_2026,senate,WY,,win_prob_D,prob,2,0,0,0,0,0.0287,0.0275,0.03,0.0018,open,thin,,2026-08-21,0,0.0287,2,start
 2026-08-21,market,SEN_WY_2026,senate,WY,,win_prob_R,prob,2,0,0,0,0,0.9723,0.9645,0.98,0.011,open,thin,,2026-08-21,0,0.9723,2,start
-2026-08-21,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.1197,5.9,6.4,0.2555,gated,ok,,2026-08-21,0,6.1916,3,
+2026-08-21,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.1197,5.9,6.4,0.2555,gated,ok,,2026-08-21,0,5.9583,3,
 2026-08-21,polling,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,230.09,230.09,230.09,,open,single,class_polling,2026-08-21,0,230.09,1,
 2026-08-21,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.7452,0.7452,0.7452,,open,single,class_polling,2026-08-21,0,0.7452,1,
 2026-08-21,polling,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.44,49.44,49.44,,open,single,class_polling,2026-08-21,0,49.44,1,
@@ -14953,7 +15003,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-22,market,SEN_WY_2026,senate,WY,,win_prob_D,prob,2,0,0,0,0,0.0287,0.0275,0.03,0.0018,open,thin,,2026-08-22,0,0.0287,2,
 2026-08-22,market,SEN_WY_2026,senate,WY,,win_prob_R,prob,2,0,0,0,0,0.972,0.964,0.98,0.0113,open,thin,,2026-08-22,0,0.972,2,
 2026-08-22,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,0,0,0,3.86,3.86,3.86,,open,single,academic_bew,2026-08-22,0,3.86,0,BREAK: no member in common with the previous date
-2026-08-22,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.1197,5.9,6.4,0.2555,gated,ok,,2026-08-22,0,6.1916,3,
+2026-08-22,polling,NATL_HOUSE_2026,national,,,margin_D,pct,3,3,0,0,0,6.1197,5.9,6.4,0.2555,gated,ok,,2026-08-22,0,5.9583,3,
 2026-08-22,polling,NATL_HOUSE_2026,national,,,seats_D,seats,5,3,0,0,0,227.076,218.66,230.09,4.823,gated,ok,,2026-08-22,0,230.09,1,composition changed (+4); chained on 1 in common
 2026-08-22,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,5,3,0,0,0,0.6848,0.5077,0.7452,0.1008,gated,ok,,2026-08-22,0,0.7452,1,composition changed (+4); chained on 1 in common
 2026-08-22,polling,NATL_SENATE_2026,national,,,seats_D,seats,5,3,0,0,0,49.114,48.2,49.44,0.5233,gated,ok,,2026-08-22,0,49.44,1,composition changed (+4); chained on 1 in common
@@ -15185,7 +15235,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-23,market,GOV_AZ_2026,governor,AZ,,win_prob_D,prob,2,0,0,0,0,0.8275,0.78,0.875,0.0672,open,thin,,2026-08-23,0,0.845,2,
 2026-08-23,market,GOV_AZ_2026,governor,AZ,,win_prob_R,prob,2,0,0,0,0,0.1725,0.125,0.22,0.0672,open,thin,,2026-08-23,0,0.1275,2,
 2026-08-23,market,GOV_CO_2026,governor,CO,,win_prob_D,prob,2,0,0,0,0,0.965,0.96,0.97,0.0071,open,thin,,2026-08-23,0,0.96,2,
-2026-08-23,market,GOV_CO_2026,governor,CO,,win_prob_R,prob,2,0,0,0,0,0.049,0.038,0.06,0.0156,open,thin,,2026-08-23,0,0.042,2,
+2026-08-23,market,GOV_CO_2026,governor,CO,,win_prob_R,prob,2,0,0,0,0,0.0488,0.0375,0.06,0.0159,open,thin,,2026-08-23,0,0.0418,2,
 2026-08-23,market,GOV_CT_2026,governor,CT,,win_prob_D,prob,2,0,0,0,0,0.9525,0.94,0.965,0.0177,open,thin,,2026-08-23,0,0.9642,2,
 2026-08-23,market,GOV_CT_2026,governor,CT,,win_prob_R,prob,2,0,0,0,0,0.0287,0.0275,0.03,0.0018,open,thin,,2026-08-23,0,0.0275,2,
 2026-08-23,market,GOV_FL_2026,governor,FL,,win_prob_D,prob,2,0,0,0,0,0.1675,0.14,0.195,0.0389,open,thin,,2026-08-23,0,0.1925,2,
@@ -15196,8 +15246,8 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-23,market,GOV_HI_2026,governor,HI,,win_prob_R,prob,1,0,0,0,0,0.0215,0.0215,0.0215,,open,single,polymarket,2026-08-23,0,0.0215,1,
 2026-08-23,market,GOV_IA_2026,governor,IA,,win_prob_D,prob,2,0,0,0,0,0.7375,0.735,0.74,0.0035,open,thin,,2026-08-23,0,0.7425,2,
 2026-08-23,market,GOV_IA_2026,governor,IA,,win_prob_R,prob,2,0,0,0,0,0.27,0.26,0.28,0.0141,open,thin,,2026-08-23,0,0.245,2,
-2026-08-23,market,GOV_ID_2026,governor,ID,,win_prob_D,prob,1,0,0,0,0,0.025,0.025,0.025,,open,single,polymarket,2026-08-23,0,0.025,1,
-2026-08-23,market,GOV_ID_2026,governor,ID,,win_prob_R,prob,1,0,0,0,0,0.955,0.955,0.955,,open,single,polymarket,2026-08-23,0,0.955,1,
+2026-08-23,market,GOV_ID_2026,governor,ID,,win_prob_D,prob,1,0,0,0,0,0.0255,0.0255,0.0255,,open,single,polymarket,2026-08-23,0,0.0255,1,
+2026-08-23,market,GOV_ID_2026,governor,ID,,win_prob_R,prob,1,0,0,0,0,0.9545,0.9545,0.9545,,open,single,polymarket,2026-08-23,0,0.9545,1,
 2026-08-23,market,GOV_IL_2026,governor,IL,,win_prob_D,prob,1,0,0,0,0,0.957,0.957,0.957,,open,single,polymarket,2026-08-23,0,0.957,1,
 2026-08-23,market,GOV_IL_2026,governor,IL,,win_prob_R,prob,1,0,0,0,0,0.0375,0.0375,0.0375,,open,single,polymarket,2026-08-23,0,0.0375,1,
 2026-08-23,market,GOV_KS_2026,governor,KS,,win_prob_D,prob,2,0,0,0,0,0.255,0.17,0.34,0.1202,open,thin,,2026-08-23,0,0.34,2,
@@ -15205,16 +15255,16 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-23,market,GOV_MA_2026,governor,MA,,win_prob_D,prob,2,0,0,0,0,0.9545,0.95,0.959,0.0064,open,thin,,2026-08-23,0,0.959,2,
 2026-08-23,market,GOV_MA_2026,governor,MA,,win_prob_R,prob,2,0,0,0,0,0.0423,0.0345,0.05,0.011,open,thin,,2026-08-23,0,0.0345,2,
 2026-08-23,market,GOV_MD_2026,governor,MD,,win_prob_D,prob,2,0,0,0,0,0.8633,0.76,0.9665,0.146,open,thin,,2026-08-23,0,0.966,2,
-2026-08-23,market,GOV_MD_2026,governor,MD,,win_prob_R,prob,2,0,0,0,0,0.0255,0.021,0.03,0.0064,open,thin,,2026-08-23,0,0.0232,2,
+2026-08-23,market,GOV_MD_2026,governor,MD,,win_prob_R,prob,2,0,0,0,0,0.028,0.026,0.03,0.0028,open,thin,,2026-08-23,0,0.0257,2,
 2026-08-23,market,GOV_ME_2026,governor,ME,,win_prob_D,prob,1,0,0,0,0,0.955,0.955,0.955,,open,single,polymarket,2026-08-23,0,0.955,1,
-2026-08-23,market,GOV_ME_2026,governor,ME,,win_prob_R,prob,1,0,0,0,0,0.043,0.043,0.043,,open,single,polymarket,2026-08-23,0,0.043,1,
+2026-08-23,market,GOV_ME_2026,governor,ME,,win_prob_R,prob,1,0,0,0,0,0.0435,0.0435,0.0435,,open,single,polymarket,2026-08-23,0,0.0435,1,
 2026-08-23,market,GOV_MI_2026,governor,MI,,win_prob_D,prob,2,0,0,0,0,0.855,0.82,0.89,0.0495,open,thin,,2026-08-23,0,0.885,2,
-2026-08-23,market,GOV_MI_2026,governor,MI,,win_prob_R,prob,2,0,0,0,0,0.15,0.11,0.19,0.0566,open,thin,,2026-08-23,0,0.125,2,
+2026-08-23,market,GOV_MI_2026,governor,MI,,win_prob_R,prob,2,0,0,0,0,0.145,0.11,0.18,0.0495,open,thin,,2026-08-23,0,0.12,2,
 2026-08-23,market,GOV_MN_2026,governor,MN,,win_prob_D,prob,2,0,0,0,0,0.9325,0.92,0.945,0.0177,open,thin,,2026-08-23,0,0.94,2,
 2026-08-23,market,GOV_MN_2026,governor,MN,,win_prob_R,prob,2,0,0,0,0,0.0688,0.0475,0.09,0.0301,open,thin,,2026-08-23,0,0.0475,2,
 2026-08-23,market,GOV_NE_2026,governor,NE,,win_prob_D,prob,2,0,0,0,0,0.1025,0.075,0.13,0.0389,open,thin,,2026-08-23,0,0.08,2,
 2026-08-23,market,GOV_NE_2026,governor,NE,,win_prob_R,prob,2,0,0,0,0,0.9475,0.925,0.97,0.0318,open,thin,,2026-08-23,0,0.925,2,
-2026-08-23,market,GOV_NH_2026,governor,NH,,win_prob_D,prob,1,0,0,0,0,0.17,0.17,0.17,,open,single,polymarket,2026-08-23,0,0.17,1,
+2026-08-23,market,GOV_NH_2026,governor,NH,,win_prob_D,prob,1,0,0,0,0,0.1705,0.1705,0.1705,,open,single,polymarket,2026-08-23,0,0.1705,1,
 2026-08-23,market,GOV_NH_2026,governor,NH,,win_prob_R,prob,1,0,0,0,0,0.81,0.81,0.81,,open,single,polymarket,2026-08-23,0,0.81,1,
 2026-08-23,market,GOV_NM_2026,governor,NM,,win_prob_D,prob,2,0,0,0,0,0.9175,0.91,0.925,0.0106,open,thin,,2026-08-23,0,0.92,2,
 2026-08-23,market,GOV_NM_2026,governor,NM,,win_prob_R,prob,2,0,0,0,0,0.0775,0.045,0.11,0.046,open,thin,,2026-08-23,0,0.07,2,
@@ -15236,13 +15286,13 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-23,market,GOV_VT_2026,governor,VT,,win_prob_R,prob,1,0,0,0,0,0.88,0.88,0.88,,open,single,predictit,2026-08-23,0,0.8825,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,GOV_WI_2026,governor,WI,,win_prob_D,prob,1,0,0,0,0,0.77,0.77,0.77,,open,single,predictit,2026-08-23,0,0.7825,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,GOV_WI_2026,governor,WI,,win_prob_R,prob,1,0,0,0,0,0.25,0.25,0.25,,open,single,predictit,2026-08-23,0,0.2225,1,composition changed (-1); chained on 1 in common
-2026-08-23,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.7052,7.6327,7.7778,0.1026,open,thin,,2026-08-23,0,7.5768,2,
+2026-08-23,market,NATL_HOUSE_2026,national,,,margin_D,margin,2,0,0,0,0,7.7116,7.634,7.7892,0.1097,open,thin,,2026-08-23,0,7.5832,2,
 2026-08-23,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,229.81,229.81,229.81,,open,single,kalshi,2026-08-23,0,229.81,1,
 2026-08-23,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,3,0,0,0,0,0.8314,0.7893,0.885,0.0489,open,ok,,2026-08-23,0,0.8136,3,
 2026-08-23,market,NATL_HOUSE_2026,national,,,win_prob_R,prob,2,0,0,0,0,0.1575,0.125,0.19,0.046,open,thin,,2026-08-23,0,0.1031,2,
 2026-08-23,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,49.94,49.94,49.94,,open,single,kalshi,2026-08-23,0,49.94,1,
-2026-08-23,market,NATL_SENATE_2026,national,,,win_prob_D,prob,3,0,0,0,0,0.4871,0.4762,0.505,0.0156,open,ok,,2026-08-23,0,0.4675,3,
-2026-08-23,market,NATL_SENATE_2026,national,,,win_prob_R,prob,2,0,0,0,0,0.5175,0.495,0.54,0.0318,open,thin,,2026-08-23,0,0.3789,2,
+2026-08-23,market,NATL_SENATE_2026,national,,,win_prob_D,prob,3,0,0,0,0,0.4838,0.4764,0.495,0.0099,open,ok,,2026-08-23,0,0.4642,3,
+2026-08-23,market,NATL_SENATE_2026,national,,,win_prob_R,prob,2,0,0,0,0,0.5125,0.495,0.53,0.0247,open,thin,,2026-08-23,0,0.3739,2,
 2026-08-23,market,SEN_AK_2026,senate,AK,,win_prob_D,prob,1,0,0,0,0,0.59,0.59,0.59,,open,single,predictit,2026-08-23,0,0.59,1,
 2026-08-23,market,SEN_AK_2026,senate,AK,,win_prob_R,prob,1,0,0,0,0,0.44,0.44,0.44,,open,single,predictit,2026-08-23,0,0.44,1,
 2026-08-23,market,SEN_AL_2026,senate,AL,,win_prob_D,prob,1,0,0,0,0,0.02,0.02,0.02,,open,single,predictit,2026-08-23,0,0.0325,1,composition changed (-1); chained on 1 in common
@@ -15258,7 +15308,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-23,market,SEN_GA_2026,senate,GA,,win_prob_D,prob,1,0,0,0,0,0.9,0.9,0.9,,open,single,predictit,2026-08-23,0,0.915,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_GA_2026,senate,GA,,win_prob_R,prob,1,0,0,0,0,0.12,0.12,0.12,,open,single,predictit,2026-08-23,0,0.0973,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_IA_2026,senate,IA,,win_prob_D,prob,1,0,0,0,0,0.42,0.42,0.42,,open,single,predictit,2026-08-23,0,0.4125,1,composition changed (-1); chained on 1 in common
-2026-08-23,market,SEN_IA_2026,senate,IA,,win_prob_R,prob,1,0,0,0,0,0.6,0.6,0.6,,open,single,predictit,2026-08-23,0,0.6025,1,composition changed (-1); chained on 1 in common
+2026-08-23,market,SEN_IA_2026,senate,IA,,win_prob_R,prob,1,0,0,0,0,0.59,0.59,0.59,,open,single,predictit,2026-08-23,0,0.5925,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_ID_2026,senate,ID,,win_prob_D,prob,1,0,0,0,0,0.04,0.04,0.04,,open,single,predictit,2026-08-23,0,0.0405,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_ID_2026,senate,ID,,win_prob_R,prob,1,0,0,0,0,0.9,0.9,0.9,,open,single,predictit,2026-08-23,0,0.9278,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_IL_2026,senate,IL,,win_prob_D,prob,1,0,0,0,0,0.97,0.97,0.97,,open,single,predictit,2026-08-23,0,0.9647,1,composition changed (-1); chained on 1 in common
@@ -15300,7 +15350,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-23,market,SEN_RI_2026,senate,RI,,win_prob_D,prob,1,0,0,0,0,0.96,0.96,0.96,,open,single,predictit,2026-08-23,0,0.96,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_RI_2026,senate,RI,,win_prob_R,prob,1,0,0,0,0,0.03,0.03,0.03,,open,single,predictit,2026-08-23,0,0.0348,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_SC_2026,senate,SC,,win_prob_D,prob,1,0,0,0,0,0.11,0.11,0.11,,open,single,predictit,2026-08-23,0,0.115,1,composition changed (-1); chained on 1 in common
-2026-08-23,market,SEN_SC_2026,senate,SC,,win_prob_R,prob,1,0,0,0,0,0.88,0.88,0.88,,open,single,predictit,2026-08-23,0,0.885,1,composition changed (-1); chained on 1 in common
+2026-08-23,market,SEN_SC_2026,senate,SC,,win_prob_R,prob,1,0,0,0,0,0.91,0.91,0.91,,open,single,predictit,2026-08-23,0,0.915,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_SD_2026,senate,SD,,win_prob_D,prob,1,0,0,0,0,0.02,0.02,0.02,,open,single,predictit,2026-08-23,0,0.0258,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_SD_2026,senate,SD,,win_prob_R,prob,1,0,0,0,0,0.97,0.97,0.97,,open,single,predictit,2026-08-23,0,0.962,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_TN_2026,senate,TN,,win_prob_D,prob,1,0,0,0,0,0.05,0.05,0.05,,open,single,predictit,2026-08-23,0,0.0403,1,composition changed (-1); chained on 1 in common
@@ -15314,7 +15364,7 @@ snapshot_date,category,race_id,chamber,state,district,quantity,unit,n_sources,n_
 2026-08-23,market,SEN_WY_2026,senate,WY,,win_prob_D,prob,1,0,0,0,0,0.03,0.03,0.03,,open,single,predictit,2026-08-23,0,0.0287,1,composition changed (-1); chained on 1 in common
 2026-08-23,market,SEN_WY_2026,senate,WY,,win_prob_R,prob,1,0,0,0,0,0.98,0.98,0.98,,open,single,predictit,2026-08-23,0,0.972,1,composition changed (-1); chained on 1 in common
 2026-08-23,polling,NATL_HOUSE_2026,national,,,margin_D,margin,1,0,0,0,0,3.86,3.86,3.86,,open,single,academic_bew,2026-08-23,0,3.86,1,
-2026-08-23,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.1898,5.9,6.4,0.2513,gated,ok,,2026-08-23,0,6.1916,3,composition changed (+1); chained on 3 in common
+2026-08-23,polling,NATL_HOUSE_2026,national,,,margin_D,pct,4,4,0,0,0,6.1898,5.9,6.4,0.2513,gated,ok,,2026-08-23,0,5.9583,3,composition changed (+1); chained on 3 in common
 2026-08-23,polling,NATL_HOUSE_2026,national,,,seats_D,seats,5,3,0,0,0,227.076,218.66,230.09,4.823,gated,ok,,2026-08-23,0,230.09,5,
 2026-08-23,polling,NATL_HOUSE_2026,national,,,win_prob_D,prob,5,3,0,0,0,0.6848,0.5077,0.7452,0.1008,gated,ok,,2026-08-23,0,0.7452,5,
 2026-08-23,polling,NATL_SENATE_2026,national,,,seats_D,seats,5,3,0,0,0,49.114,48.2,49.44,0.5233,gated,ok,,2026-08-23,0,49.44,5,
