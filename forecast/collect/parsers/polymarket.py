@@ -277,7 +277,7 @@ def _pv_rows(ev: dict, title: str, art, ctx) -> list:
         return []
     return [ctx.row(art, race_id=NATIONAL_HOUSE, chamber="national", state="",
                     district="", quantity="margin_D", value=round(exp, 4),
-                    unit="margin")]
+                    unit="pct")]
 
 
 def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:

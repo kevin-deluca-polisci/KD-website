@@ -114,7 +114,24 @@ def read_parsed(cycle: int) -> list[dict]:
     for p in sorted(d.glob("*.csv")):
         with p.open(encoding="utf-8") as fh:
             rows.extend(csv.DictReader(fh))
-    return rows
+    return [_canonical_unit(r) for r in rows]
+
+
+def _canonical_unit(r: dict) -> dict:
+    """One unit per quantity, applied on the way in as well as on the way out.
+
+    parsers/__init__.py now refuses to build a margin row with any unit but
+    `pct`, which fixes the archive going forward. This fixes it going
+    backward: parsed/ is rebuilt from raw on every run, but a tree where the
+    parse step has not run since the change would otherwise still hold rows
+    saying "margin", and the grouping key includes the unit, so the category
+    average would silently fork again exactly as it did before.
+
+    Cheap, and it means the merge is correct whatever order the steps ran in.
+    """
+    if r.get("quantity", "").startswith("margin_D") and r.get("unit") != "pct":
+        r = {**r, "unit": "pct"}
+    return r
 
 
 # Sources whose national margin already reaches its category by another route,
@@ -401,7 +418,7 @@ def class_model_rows(cycle: int) -> list[dict]:
           for cat in cats:
               if not elsewhere:
                   emit(source_id, cat, NATL_HOUSE, "national", "", "", "margin_D",
-                       model.get("tide_D"), "margin")
+                       model.get("tide_D"), "pct")
               emit(source_id, cat, NATL_HOUSE, "national", "", "", "seats_D",
                    house.get("expected_D_seats"), "seats")
               emit(source_id, cat, NATL_HOUSE, "national", "", "", "win_prob_D",
@@ -418,7 +435,7 @@ def class_model_rows(cycle: int) -> list[dict]:
               for st, r in (model.get("races") or {}).items():
                   rid = f"SEN_{st}_2026"
                   emit(source_id, cat, rid, "senate", st, "", "margin_D",
-                       r.get("expected_margin_D"), "margin")
+                       r.get("expected_margin_D"), "pct")
                   emit(source_id, cat, rid, "senate", st, "", "win_prob_D",
                        r.get("win_prob_D"), "prob")
     return rows

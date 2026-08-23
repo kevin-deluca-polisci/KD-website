@@ -335,7 +335,7 @@ def _margin_rows(markets: list, art, ctx) -> list:
             continue
         out.append(ctx.row(art, race_id=rid, chamber="national", state="",
                            district="", quantity="margin_D",
-                           value=round(exp, 4), unit="margin"))
+                           value=round(exp, 4), unit="pct"))
     return out
 
 

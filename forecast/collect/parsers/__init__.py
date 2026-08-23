@@ -248,6 +248,24 @@ class Row:
             raise ValueError(f"unknown quantity {self.quantity!r}")
         if self.provenance not in PROVENANCE:
             raise ValueError(f"unknown provenance {self.provenance!r}")
+        # ONE UNIT PER QUANTITY, ENFORCED RATHER THAN HOPED FOR.
+        #
+        # margin_D was being written with unit "margin" by the market parsers
+        # and our own model rows, and with unit "pct" by every parser that
+        # reads a poll aggregator. Nothing complained, because aggregate.py
+        # groups by (date, category, race, quantity, UNIT) and the two spellings
+        # never met — until the BEW model joined the polling family, at which
+        # point polling published TWO national margins every day: a four-source
+        # average at D+6.19 under "pct" and a one-source row at D+3.86 under
+        # "margin". Both were correct arithmetic on a wrongly split group.
+        #
+        # A quantity is a thing; a unit is how it is measured. If two rows
+        # disagree about the unit of the same quantity, one of them is wrong,
+        # and it should stop the run rather than quietly fork the group.
+        if self.quantity.startswith("margin_D") and self.unit != "pct":
+            raise ValueError(
+                f"{self.quantity} must be unit 'pct', got {self.unit!r} — a "
+                f"second spelling silently splits the category average")
         if self.quantity == "rating_ordinal":
             if not isinstance(self.value, str) or not self.value:
                 raise ValueError("rating_ordinal must be a non-empty string")

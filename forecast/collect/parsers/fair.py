@@ -111,7 +111,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                 chamber="national", state="", district="",
                 quantity="margin_D",
                 # share -> margin. See THE UNITS TRAP above.
-                value=round(2.0 * (share - 50.0), 3), unit="margin"))
+                value=round(2.0 * (share - 50.0), 3), unit="pct"))
 
     if not rows:
         raise ValueError(

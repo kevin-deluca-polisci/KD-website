@@ -1,0 +1,284 @@
+{
+  "probed_at": "2026-08-23T15:32:02.337419+00:00",
+  "series": "A229RX0",
+  "vintage_old": "2025-06-02",
+  "vintage_new": "2026-08-03",
+  "fetcher": "capture.Fetcher",
+  "user_agent": "PLSC 2219 Forecast Archive (Yale University) (+https://kevinmdeluca.com/forecast/2026/; kevin.deluca@yale.edu)",
+  "robots": {
+    "status": 200,
+    "error": null,
+    "text": "#Restrict chatGPT and google Bard to one crawl per month.\nUser-agent: GPTBot\nCrawl-delay: 2592000\nDisallow: /graph/graph-landing.php\nDisallow: /graph/image.php\nDisallow: /graph/alfredgraph.png\nDisallow: /search\n\nUser-agent: ChatGPT-User\nCrawl-delay: 2592000\nDisallow: /graph/graph-landing.php\nDisallow: /graph/image.php\nDisallow: /graph/alfredgraph.png\nDisallow: /search\n\nUser-agent: Google-Extended\nCrawl-delay: 2592000\nDisallow: /graph/graph-landing.php\nDisallow: /graph/image.php\nDisallow: /graph/alfredgraph.png\nDisallow: /search\n\n# Allows all robots to visit all files.\nUser-agent: *\nCrawl-delay: 2\nDisallow: /graph/graph-landing.php\nDisallow: /graph/image.php\nDisallow: /graph/alfredgraph.png\nDisallow: /search"
+  },
+  "candidates": [
+    {
+      "candidate": "alfredgraph vintage_date",
+      "series": "A229RX0",
+      "vintages": {
+        "old": {
+          "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=A229RX0&vintage_date=2025-06-02",
+          "status": 200,
+          "error": null,
+          "bytes": 13566,
+          "sha256": "ba2b43749f7dc723982bfd5b1a5e2e204f9b72f64a0624326d094580588cbec6",
+          "is_csv": true,
+          "csv": {
+            "rows": 796,
+            "columns": [
+              "observation_date",
+              "A229RX0_20250602"
+            ],
+            "first_date": "1959-01-01",
+            "last_date": "2025-04-01",
+            "last_value": "52589",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0_20250602\n1959-01-01,13186\n1959-02-01,13209\n1959-03-01,13267\n1959-04-01,13336\n1959-05-01,13392\n1959-06-01,13419\n1959-07-01,13379\n1959-08-01,13280\n1959-09-01,13264\n1959-10-01,13"
+        },
+        "new": {
+          "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=A229RX0&vintage_date=2026-08-03",
+          "status": 200,
+          "error": null,
+          "bytes": 13804,
+          "sha256": "ab6bce3b3db2d27658292783ae6222c2ccdb73089a611333c4dd8a86fc9f8432",
+          "is_csv": true,
+          "csv": {
+            "rows": 810,
+            "columns": [
+              "observation_date",
+              "A229RX0_20260803"
+            ],
+            "first_date": "1959-01-01",
+            "last_date": "2026-06-01",
+            "last_value": "52669",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0_20260803\n1959-01-01,13186\n1959-02-01,13209\n1959-03-01,13267\n1959-04-01,13336\n1959-05-01,13392\n1959-06-01,13419\n1959-07-01,13379\n1959-08-01,13280\n1959-09-01,13264\n1959-10-01,13"
+        }
+      },
+      "verdict": "works",
+      "notes": [
+        "vintages differ (parameter is doing something)",
+        "2025-06-02 vintage stops at 2025-04-01, correctly in the past",
+        "column header names the vintage: 'observation_date A229RX0_20250602'",
+        "last value 52589 (old vintage) vs 52669 (new vintage)"
+      ]
+    },
+    {
+      "candidate": "alfredgraph vintage_date + window",
+      "series": "A229RX0",
+      "vintages": {
+        "old": {
+          "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=A229RX0&vintage_date=2025-06-02&cosd=2024-01-01&coed=2026-08-01",
+          "status": 200,
+          "error": null,
+          "bytes": 306,
+          "sha256": "b373d7aa879a7d1e69060c293e0d502a6b8a2928f0baf2df0c7fcc4b201c4461",
+          "is_csv": true,
+          "csv": {
+            "rows": 16,
+            "columns": [
+              "observation_date",
+              "A229RX0_20250602"
+            ],
+            "first_date": "2024-01-01",
+            "last_date": "2025-04-01",
+            "last_value": "52589",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0_20250602\n2024-01-01,51425\n2024-02-01,51435\n2024-03-01,51526\n2024-04-01,51421\n2024-05-01,51514\n2024-06-01,51484\n2024-07-01,51418\n2024-08-01,51359\n2024-09-01,51404\n2024-10-01,51"
+        },
+        "new": {
+          "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=A229RX0&vintage_date=2026-08-03&cosd=2024-01-01&coed=2026-08-01",
+          "status": 200,
+          "error": null,
+          "bytes": 544,
+          "sha256": "44413b90b875b0ee0a81d9f00e847cd82c49f1a6f2e643f7f92f41237474ec9f",
+          "is_csv": true,
+          "csv": {
+            "rows": 30,
+            "columns": [
+              "observation_date",
+              "A229RX0_20260803"
+            ],
+            "first_date": "2024-01-01",
+            "last_date": "2026-06-01",
+            "last_value": "52669",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0_20260803\n2024-01-01,51878\n2024-02-01,51902\n2024-03-01,51924\n2024-04-01,51946\n2024-05-01,52124\n2024-06-01,52192\n2024-07-01,52135\n2024-08-01,52136\n2024-09-01,52159\n2024-10-01,52"
+        }
+      },
+      "verdict": "works",
+      "notes": [
+        "vintages differ (parameter is doing something)",
+        "2025-06-02 vintage stops at 2025-04-01, correctly in the past",
+        "column header names the vintage: 'observation_date A229RX0_20250602'",
+        "last value 52589 (old vintage) vs 52669 (new vintage)"
+      ]
+    },
+    {
+      "candidate": "alfredgraph vintage series id",
+      "series": "A229RX0",
+      "vintages": {
+        "old": {
+          "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=A229RX0_20250602",
+          "status": 200,
+          "error": null,
+          "bytes": 13804,
+          "sha256": "e6a638275fa3c2c36aaab26aaf4cf2477b588fbd0340b2fe35c819768134904e",
+          "is_csv": true,
+          "csv": {
+            "rows": 810,
+            "columns": [
+              "observation_date",
+              "A229RX0_20260823"
+            ],
+            "first_date": "1959-01-01",
+            "last_date": "2026-06-01",
+            "last_value": "52669",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0_20260823\n1959-01-01,13186\n1959-02-01,13209\n1959-03-01,13267\n1959-04-01,13336\n1959-05-01,13392\n1959-06-01,13419\n1959-07-01,13379\n1959-08-01,13280\n1959-09-01,13264\n1959-10-01,13"
+        },
+        "new": {
+          "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=A229RX0_20260803",
+          "status": 200,
+          "error": null,
+          "bytes": 13804,
+          "sha256": "e6a638275fa3c2c36aaab26aaf4cf2477b588fbd0340b2fe35c819768134904e",
+          "is_csv": true,
+          "csv": {
+            "rows": 810,
+            "columns": [
+              "observation_date",
+              "A229RX0_20260823"
+            ],
+            "first_date": "1959-01-01",
+            "last_date": "2026-06-01",
+            "last_value": "52669",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0_20260823\n1959-01-01,13186\n1959-02-01,13209\n1959-03-01,13267\n1959-04-01,13336\n1959-05-01,13392\n1959-06-01,13419\n1959-07-01,13379\n1959-08-01,13280\n1959-09-01,13264\n1959-10-01,13"
+        }
+      },
+      "verdict": "ignored",
+      "notes": [
+        "two vintages fourteen months apart returned BYTE-IDENTICAL responses \u2014 the parameter was accepted and discarded"
+      ]
+    },
+    {
+      "candidate": "fredgraph + vintage_date (ignore-test)",
+      "series": "A229RX0",
+      "vintages": {
+        "old": {
+          "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A229RX0&vintage_date=2025-06-02",
+          "status": 200,
+          "error": null,
+          "bytes": 13795,
+          "sha256": "3faecf0165682f93737167c3937c10eb24bbb2d90f7f193ff97e207208369e54",
+          "is_csv": true,
+          "csv": {
+            "rows": 810,
+            "columns": [
+              "observation_date",
+              "A229RX0"
+            ],
+            "first_date": "1959-01-01",
+            "last_date": "2026-06-01",
+            "last_value": "52669",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0\n1959-01-01,13186\n1959-02-01,13209\n1959-03-01,13267\n1959-04-01,13336\n1959-05-01,13392\n1959-06-01,13419\n1959-07-01,13379\n1959-08-01,13280\n1959-09-01,13264\n1959-10-01,13254\n1959-"
+        },
+        "new": {
+          "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A229RX0&vintage_date=2026-08-03",
+          "status": 200,
+          "error": null,
+          "bytes": 13795,
+          "sha256": "3faecf0165682f93737167c3937c10eb24bbb2d90f7f193ff97e207208369e54",
+          "is_csv": true,
+          "csv": {
+            "rows": 810,
+            "columns": [
+              "observation_date",
+              "A229RX0"
+            ],
+            "first_date": "1959-01-01",
+            "last_date": "2026-06-01",
+            "last_value": "52669",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0\n1959-01-01,13186\n1959-02-01,13209\n1959-03-01,13267\n1959-04-01,13336\n1959-05-01,13392\n1959-06-01,13419\n1959-07-01,13379\n1959-08-01,13280\n1959-09-01,13264\n1959-10-01,13254\n1959-"
+        }
+      },
+      "verdict": "ignored",
+      "notes": [
+        "two vintages fourteen months apart returned BYTE-IDENTICAL responses \u2014 the parameter was accepted and discarded"
+      ]
+    },
+    {
+      "candidate": "CONTROL nonsense parameter",
+      "series": "A229RX0",
+      "vintages": {
+        "old": {
+          "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A229RX0&kd_not_a_real_param=2025-06-02",
+          "status": 200,
+          "error": null,
+          "bytes": 13795,
+          "sha256": "3faecf0165682f93737167c3937c10eb24bbb2d90f7f193ff97e207208369e54",
+          "is_csv": true,
+          "csv": {
+            "rows": 810,
+            "columns": [
+              "observation_date",
+              "A229RX0"
+            ],
+            "first_date": "1959-01-01",
+            "last_date": "2026-06-01",
+            "last_value": "52669",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0\n1959-01-01,13186\n1959-02-01,13209\n1959-03-01,13267\n1959-04-01,13336\n1959-05-01,13392\n1959-06-01,13419\n1959-07-01,13379\n1959-08-01,13280\n1959-09-01,13264\n1959-10-01,13254\n1959-"
+        },
+        "new": {
+          "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A229RX0&kd_not_a_real_param=2026-08-03",
+          "status": 200,
+          "error": null,
+          "bytes": 13795,
+          "sha256": "3faecf0165682f93737167c3937c10eb24bbb2d90f7f193ff97e207208369e54",
+          "is_csv": true,
+          "csv": {
+            "rows": 810,
+            "columns": [
+              "observation_date",
+              "A229RX0"
+            ],
+            "first_date": "1959-01-01",
+            "last_date": "2026-06-01",
+            "last_value": "52669",
+            "parse_error": null
+          },
+          "head": "observation_date,A229RX0\n1959-01-01,13186\n1959-02-01,13209\n1959-03-01,13267\n1959-04-01,13336\n1959-05-01,13392\n1959-06-01,13419\n1959-07-01,13379\n1959-08-01,13280\n1959-09-01,13264\n1959-10-01,13254\n1959-"
+        }
+      },
+      "verdict": "ignored",
+      "notes": [
+        "two vintages fourteen months apart returned BYTE-IDENTICAL responses \u2014 the parameter was accepted and discarded"
+      ]
+    }
+  ],
+  "bulk": {
+    "candidate": "all vintages in one file",
+    "url": "https://alfred.stlouisfed.org/series/downloaddata?seid=A229RX0&cosd=2024-01-01&coed=2026-08-01",
+    "status": 200,
+    "error": null,
+    "content_type": "text/html; charset=UTF-8",
+    "bytes": 47242,
+    "head": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta charset=\"utf-8\">\n    <title>\n        Download Data for Real Disposable Personal Income: Per ",
+    "is_zip": false,
+    "is_csv": false,
+    "csv": {}
+  },
+  "control_ok": true
+}
