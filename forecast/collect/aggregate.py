@@ -93,6 +93,16 @@ NOT_A_FORECAST = {
     # consumes them and the archive should record what it was fed.
     "income_growth_last_full_year", "income_growth_ytd",
     "income_growth_yoy_latest_month", "income_ytd_months",
+    # MARKET MICROSTRUCTURE. A bid, an ask, a volume and a depth are facts
+    # about an exchange, not opinions about an election, and averaging the ask
+    # price across three exchanges would produce a number that is neither a
+    # forecast nor a price anyone could trade at. They are captured for the
+    # portfolio evaluation — what a forecast would have COST to act on — and
+    # they are published per source, never averaged.
+    "price_bid_D", "price_ask_D", "price_bid_R", "price_ask_R",
+    "market_volume_D", "market_volume_R",
+    "market_open_interest_D", "market_open_interest_R",
+    "market_liquidity_D", "market_liquidity_R",
 }
 
 

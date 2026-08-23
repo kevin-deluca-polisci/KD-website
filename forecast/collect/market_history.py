@@ -128,7 +128,13 @@ POLY_FIDELITY_MINUTES = 1440
 #      readers. See the module docstring.
 #   2  the captured market dict copied whole, with the live price fields
 #      removed and the historical close put back in their place.
-SHAPE_VERSION = 2
+#   3  the BOOK as well as the price: both legs of the bid/ask, the day's
+#      volume and its open interest, all of which the candles carried and v2
+#      threw away. Needed for the portfolio evaluation, which has to buy at
+#      the ask and sell at the bid rather than transact at a midpoint nobody
+#      was offering. Bumping the version is what makes the sweep withdraw the
+#      v2 artifacts and rewrite them complete.
+SHAPE_VERSION = 3
 
 # Fields that describe the market AT CAPTURE TIME and would be a lie on a past
 # date. Everything else — ticker, event_ticker, titles, sub-titles, strikes,
@@ -166,7 +172,7 @@ _POLY_LIVE_ONLY = {
 }
 
 
-def _kalshi_market(m: dict, px_cents: float) -> dict:
+def _kalshi_market(m: dict, px_cents: float, book: dict | None = None) -> dict:
     """The captured Kalshi market, re-priced to a past day's close.
 
     The price goes back as `last_price_dollars` — the modern, dollar-
@@ -179,6 +185,11 @@ def _kalshi_market(m: dict, px_cents: float) -> dict:
     """
     out = {k: v for k, v in m.items() if not _is_live_only(k)}
     out["last_price_dollars"] = f"{px_cents / 100.0:.4f}"
+    # The two legs and the day's activity, where the bar carried them. Written
+    # in the same fixed-point string form the live endpoint uses, so the parser
+    # reads a reconstructed day exactly as it reads a captured one.
+    for k, v in (book or {}).items():
+        out[k] = v
     # A contract with a traded bar on that date was open on that date. Say so
     # explicitly rather than inheriting today's status, which for a settled
     # market would make the ladder readers skip a day they can see the price of.
@@ -324,6 +335,42 @@ def _as_cents(v) -> float | None:
     if v != v:                            # NaN
         return None
     return v * 100.0 if 0.0 <= v <= 1.0 else v
+
+
+def _candle_book(c: dict) -> dict:
+    """Both legs, the volume and the open interest from one daily bar.
+
+    THE MID WAS NEVER ENOUGH, and this is the repair. A synthesised artifact
+    used to carry one number — the bid/ask midpoint — which is the right answer
+    to "what did the market think that day" and the wrong one to "what would
+    that forecast have cost to act on". You buy at the ask and sell at the bid,
+    and on a three-cent spread the difference decides the sign of every
+    marginal bet in a portfolio.
+
+    Kalshi's candles carry both legs and the day's volume already, so none of
+    this needs a new fetch: it was being discarded on the way in. Recovering it
+    means the whole historical book comes back with the price, and the
+    portfolio evaluation can run over the archive rather than over the eleven
+    weeks since live capture began.
+    """
+    out: dict = {}
+    bid, ask = (_leg_close(c, leg) for leg in _BID_ASK)
+    if bid is not None:
+        out["yes_bid_dollars"] = f"{bid / 100.0:.4f}"
+    if ask is not None:
+        out["yes_ask_dollars"] = f"{ask / 100.0:.4f}"
+    for src, dest in (("volume_fp", "volume"), ("volume", "volume"),
+                      ("open_interest_fp", "open_interest"),
+                      ("open_interest", "open_interest")):
+        if dest in out or src not in c:
+            continue
+        try:
+            v = float(c[src])
+        except (TypeError, ValueError):
+            continue
+        if v >= 0:
+            out[dest] = v
+    return out
 
 
 def _candle_price(c: dict) -> float | None:
@@ -621,7 +668,8 @@ def kalshi_history(cycle: int, fetcher, since: str, dry: bool) -> tuple[int, int
                     continue      # rule 2: no price, no row
                 stats["priced"] += 1
                 d0 = dt.datetime.fromtimestamp(ts, dt.timezone.utc).date().isoformat()
-                rebuilt[series][d0].append(_kalshi_market(m, px))
+                rebuilt[series][d0].append(
+                    _kalshi_market(m, px, _candle_book(c)))
                 span = spans[series]
                 span[0] = min(span[0], d0) if span[0] else d0
                 span[1] = max(span[1], d0) if span[1] else d0

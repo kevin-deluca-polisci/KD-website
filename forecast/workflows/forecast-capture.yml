@@ -64,6 +64,27 @@ on:
         type: boolean
         required: false
         default: false
+      backfill_wikipedia:
+        description: >-
+          Recover Wikipedia's revision history into dated captures. One
+          revision per day, written as the artifact the live capture would have
+          written, so the existing parser reads a recovered day with no special
+          case. Never overwrites a real capture. Start with the weekly grid
+          across the whole span, then re-run with wiki_since set and
+          wiki_step_days=1 for daily resolution over the recent window.
+        type: boolean
+        required: false
+        default: false
+
+      wiki_since:
+        description: "Earliest revision date for backfill_wikipedia (blank = registry default, 2025-01-20)"
+        required: false
+        default: ""
+
+      wiki_step_days:
+        description: "Day grid for backfill_wikipedia: 7 = weekly (fast), 1 = daily (slow)"
+        required: false
+        default: "7"
         
 concurrency: {group: forecast-capture, cancel-in-progress: false}
 # issues: write is needed by the gate's issue-opening step. Without it that
@@ -136,6 +157,21 @@ jobs:
             python3 forecast/collect/market_history.py --cycle "$CYCLE"
           else
             echo "backfill_markets not set — skipping market history"
+          fi
+      - name: Backfill Wikipedia revision history
+        # Before the raw push, like the market backfill and for the same
+        # reason: this writes into raw/, and a step after the push would have
+        # its work thrown away with the runner.
+        if: inputs.dry_run != true
+        run: |
+          if [ "${{ inputs.backfill_wikipedia }}" = "true" ]; then
+            WIKI_ARGS="--step-days ${{ inputs.wiki_step_days || '7' }}"
+            if [ -n "${{ inputs.wiki_since }}" ]; then
+              WIKI_ARGS="$WIKI_ARGS --since ${{ inputs.wiki_since }}"
+            fi
+            python3 forecast/collect/wiki_history.py --cycle "$CYCLE" $WIKI_ARGS
+          else
+            echo "backfill_wikipedia not set — skipping wikipedia history"
           fi
       - name: Push raw to the private archive
         if: inputs.dry_run != true

@@ -128,6 +128,51 @@ def _sides(m: dict, q: str, outs: list[str], prices: list[float]) -> dict:
     return {side: prices[0]} if prices else {}
 
 
+# --------------------------------------------------------------------------
+# Microstructure: what the forecast would have cost to act on.
+#
+# `outcomePrices` is a midpoint and is the right number for "what does the
+# market think". It is the wrong number for "what would this have cost you",
+# because you buy at the ask and sell at the bid. Gamma publishes both sides
+# and the depth beside them, so this records them rather than throwing the
+# spread away and reconstructing it later from nothing.
+#
+# Emitted only for a Yes/No market whose YES is one party's win: on a
+# multi-outcome market the book belongs to an outcome rather than to a party,
+# and mapping one to the other would invent a quote nobody offered.
+# --------------------------------------------------------------------------
+_MICRO = (("bestBid", "price_bid", "prob"),
+          ("bestAsk", "price_ask", "prob"),
+          ("volumeNum", "market_volume", "count"),
+          ("volume", "market_volume", "count"),
+          ("liquidityNum", "market_liquidity", "count"),
+          ("liquidity", "market_liquidity", "count"))
+# Every one of them is a fact about ONE book, so every one takes the side.
+
+
+def _micro_rows(m: dict, side: str, rid: str, chamber: str, state: str,
+                district: str, art, ctx) -> list:
+    out, seen = [], set()
+    for field, quantity, unit in _MICRO:
+        if quantity in seen:
+            continue                      # first spelling wins; Gamma has two
+        v = m.get(field)
+        if not isinstance(v, (int, float)) or isinstance(v, bool):
+            continue
+        v = float(v)
+        if unit == "prob":
+            if not (0.0 <= v <= 1.0):
+                continue
+        elif v < 0:
+            continue
+        name = f"{quantity}_{side}"
+        seen.add(quantity)
+        out.append(ctx.row(art, race_id=rid, chamber=chamber, state=state,
+                           district=district, quantity=name,
+                           value=round(v, 6), unit=unit))
+    return out
+
+
 def _target(blob: str, q: str):
     """(race_id, chamber, state, district) or None.
 
@@ -278,6 +323,14 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                 for side, price in found.items():
                     if 0.0 <= price <= 1.0:
                         bucket[side] = round(bucket.get(side, 0.0) + price, 6)
+                # The book, for the one shape where a quote belongs to a party.
+                # `found` has a single entry exactly when this is a Yes/No
+                # market on one party's win; a multi-outcome market yields two
+                # or more and its bid/ask cannot be assigned to a side.
+                if len(found) == 1:
+                    rid, chamber, state, district = got
+                    rows.extend(_micro_rows(m, next(iter(found)), rid, chamber,
+                                            state, district, art, ctx))
             for (rid, chamber, state, district), sides in agg.items():
                 for side, price in sides.items():
                     # A sum over candidates can drift past 1 on a market whose

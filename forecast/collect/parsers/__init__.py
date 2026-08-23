@@ -90,6 +90,33 @@ QUANTITIES = {
     "income_growth_ytd",
     "income_growth_yoy_latest_month",
     "income_ytd_months",
+    # --- MARKET MICROSTRUCTURE -------------------------------------------
+    # Not forecasts. A price a forecast can be TRADED at, which is a different
+    # object and must never enter a category average: aggregate.py lists these
+    # in NOT_A_FORECAST for the same reason it lists the FRED series.
+    #
+    # WHY THEY EXIST. The archive stores the bid/ask MIDPOINT as each market's
+    # probability, which is the right answer to "what does the market think"
+    # and the wrong one to "what would this have cost you". You buy at the ask
+    # and sell at the bid, and on a three-cent spread that difference decides
+    # the sign of every marginal bet in a portfolio. Depth matters for the same
+    # reason: an edge you cannot take size on is not an edge.
+    #
+    # The side suffix follows win_prob_D/win_prob_R: `price_ask_D` is what one
+    # dollar of the Democratic outcome costs to buy.
+    "price_bid_D", "price_ask_D",
+    "price_bid_R", "price_ask_R",
+    # DEPTH CARRIES THE SIDE TOO, and that is not pedantry. On Polymarket a
+    # race is often two separate books — one on the Democrat winning, one on
+    # the Republican — with their own volume and their own resting depth. The
+    # first version of this emitted `market_volume` from each of them, so a
+    # race ended up with two rows of the same name and no way to tell which
+    # book either belonged to. The question the portfolio work actually asks is
+    # "can I take size on the side I want to buy", which is a question about
+    # one book.
+    "market_volume_D", "market_volume_R",
+    "market_open_interest_D", "market_open_interest_R",
+    "market_liquidity_D", "market_liquidity_R",
 }
 
 # Chamber-level pseudo-races. Same ID convention as real races so the class
@@ -227,7 +254,11 @@ class Row:
         else:
             v = float(self.value)
             bounds = {"prob": (0, 1), "pct": (-100, 100), "seats": (0, 535),
-                      "ordinal": (0, 10)}.get(self.unit)
+                      "ordinal": (0, 10),
+                      # Volume and depth are counts of money or contracts, in
+                      # whatever units the exchange reports. Bounded only
+                      # against a sign error and a parse of the wrong field.
+                      "count": (0, 1e15)}.get(self.unit)
             if bounds and not (bounds[0] <= v <= bounds[1]):
                 raise ValueError(
                     f"{self.quantity}={v} outside {bounds} for unit {self.unit!r}")

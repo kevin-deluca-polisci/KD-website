@@ -58,6 +58,66 @@ def _price(m: dict) -> float | None:
     return None
 
 
+# --------------------------------------------------------------------------
+# Microstructure. See the note in parsers/__init__.py: `_price` returns the
+# bid/ask MID, which answers "what does the market think" and not "what would
+# this have cost". Both sides and the depth are recorded here so the portfolio
+# evaluation can buy at the ask and sell at the bid instead of pretending the
+# spread does not exist.
+#
+# Kalshi renamed its price fields once already (the `_dollars` suffix), so
+# every name is tried suffixed first and legacy second, exactly as _price does.
+# --------------------------------------------------------------------------
+_BID_FIELDS = ("yes_bid_dollars", "yes_bid")
+_ASK_FIELDS = ("yes_ask_dollars", "yes_ask")
+_VOL_FIELDS = ("volume", "volume_24h", "volume_fp")
+_OI_FIELDS = ("open_interest", "open_interest_fp")
+
+
+def _as_prob(v):
+    """A Kalshi price as a probability. Strings and cents both."""
+    if v is None or isinstance(v, bool) or isinstance(v, (dict, list)):
+        return None
+    try:
+        p = float(v)
+    except (TypeError, ValueError):
+        return None
+    if p > 1.0:
+        p /= 100.0
+    return p if 0.0 <= p <= 1.0 else None
+
+
+def _first(m: dict, fields):
+    for f in fields:
+        if f in m:
+            return m[f]
+    return None
+
+
+def _micro_rows(m: dict, side: str, rid: str, chamber: str, state: str,
+                district: str, art, ctx) -> list:
+    out = []
+    for fields, quantity in ((_BID_FIELDS, f"price_bid_{side}"),
+                             (_ASK_FIELDS, f"price_ask_{side}")):
+        p = _as_prob(_first(m, fields))
+        if p is not None:
+            out.append(ctx.row(art, race_id=rid, chamber=chamber, state=state,
+                               district=district, quantity=quantity,
+                               value=round(p, 6), unit="prob"))
+    for fields, quantity in ((_VOL_FIELDS, f"market_volume_{side}"),
+                             (_OI_FIELDS, f"market_open_interest_{side}")):
+        v = _first(m, fields)
+        try:
+            v = float(v)
+        except (TypeError, ValueError):
+            continue
+        if v >= 0:
+            out.append(ctx.row(art, race_id=rid, chamber=chamber, state=state,
+                               district=district, quantity=quantity,
+                               value=round(v, 4), unit="count"))
+    return out
+
+
 def _classify(ticker: str, title: str) -> tuple[str, str, str, str] | None:
     """-> (race_id, chamber, state, district) or None if not a race we track."""
     blob = f"{ticker} {title}"
@@ -502,6 +562,11 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                                 quantity=f"win_prob_{side}", value=round(p, 4),
                                 unit="prob"))
             rows_by_series[series] += 1
+            # The book behind that probability. Not counted in
+            # rows_by_series: the starvation check asks whether a series
+            # produced a FORECAST, and a bid is not one.
+            rows.extend(_micro_rows(m, side, rid, chamber, state, district,
+                                    art, ctx))
     if ladder_unreadable:
         # Raised rather than printed: a ladder is the only thing on this
         # exchange that gives us a seat distribution or a national margin, and

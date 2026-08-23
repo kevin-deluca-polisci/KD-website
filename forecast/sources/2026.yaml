@@ -592,13 +592,36 @@ sources:
         # This is how the polling category gets populated now that RCP blocks
         # direct collection — second-hand, but CC BY-SA and openly available.
         - "2026 United States House of Representatives elections"
-      # Backfill walks revision history to the start of the cycle. This is the
+      # Backfill walks revision history to the start of the term. This is the
       # ONLY source in the whole registry that recovers the past — everything
       # else only exists going forward from the day capture starts.
+      #
+      # TWO DIFFERENT THINGS USE THIS BLOCK, and the distinction matters.
+      #
+      #   capture.py --backfill  fetches the revision LIST: ids, timestamps,
+      #                          users, sizes. It records THAT the page changed
+      #                          and never what it said, so nothing downstream
+      #                          can read it. Useful as provenance, not as data.
+      #   wiki_history.py        fetches the WIKITEXT of one revision per day
+      #                          and writes it into that day's raw directory,
+      #                          shaped exactly like a live capture, so the
+      #                          existing parser reads a recovered day with no
+      #                          special case. This is the one that produces
+      #                          rows.
+      #
+      # `since` is inauguration day, matching model/academic.py SERIES_START:
+      # the site's frame starts there, so there is nothing to recover before it.
+      # It was 2026-01-01, which threw away the whole first year of ratings for
+      # no reason other than that nobody had revisited the number.
+      #
+      # Recovered revisions parse as `archival` provenance — Wikipedia's own
+      # dated record of what the page held — which is the class scoring counts
+      # as real-time. That is what makes this backfill admissible evidence
+      # rather than description; see RULES.md §10.
       backfill:
         enabled: true
-        since: 2026-01-01
-        max_revisions_per_page: 2000
+        since: 2025-01-20
+        max_revisions_per_page: 5000
     notes: >
       CC BY-SA 4.0 — reusable with attribution and share-alike. Full MediaWiki
       API, complete revision history. There is NO standalone Senate ratings

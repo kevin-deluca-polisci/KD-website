@@ -52,6 +52,36 @@ def _price(c: dict) -> float | None:
     return None
 
 
+# PredictIt names its two sides of the book explicitly, and they are the two
+# numbers a bettor actually faces: `bestBuyYesCost` is what one YES contract
+# costs to buy, `bestSellYesCost` what one sells for. That pair IS the ask and
+# the bid. `lastTradePrice` sits somewhere between them and may be hours old,
+# which is fine for "what does the market think" and useless for "what would
+# this have cost". See parsers/__init__.py on why both are kept.
+#
+# Note for the portfolio work: PredictIt caps a position at $850 per contract
+# and takes 5% of profits plus 5% on withdrawal. The cap is the depth figure
+# for this exchange — there is no order book to record — and the fees belong in
+# the evaluation rather than here.
+_BOOK = (("bestBuyYesCost", "price_ask"), ("bestSellYesCost", "price_bid"))
+
+
+def _book_rows(c: dict, side: str, rid: str, chamber: str, state: str,
+               art, ctx) -> list:
+    out = []
+    for field, quantity in _BOOK:
+        v = c.get(field)
+        try:
+            f = float(v)
+        except (TypeError, ValueError):
+            continue
+        if 0.0 <= f <= 1.0:
+            out.append(ctx.row(art, race_id=rid, chamber=chamber, state=state,
+                               district="", quantity=f"{quantity}_{side}",
+                               value=round(f, 6), unit="prob"))
+    return out
+
+
 def _target(name: str) -> tuple[str, str, str] | None:
     """Market name -> (race_id, chamber, state) or None."""
     if not _CYCLE.search(name):
@@ -108,6 +138,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             # dropped the other in the Polymarket parser, and which side
             # survived depended on listing order; same trap, same fix.
             found: dict[str, float] = {}
+            books: dict[str, dict] = {}
             for c in m.get("contracts") or []:
                 if not isinstance(c, dict):
                     continue
@@ -117,8 +148,12 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                     continue
                 if _DEM.search(label):
                     found.setdefault("D", p)
+                    books.setdefault("D", c)
                 elif _REP.search(label):
                     found.setdefault("R", p)
+                    books.setdefault("R", c)
+            for side, c in books.items():
+                rows.extend(_book_rows(c, side, rid, chamber, state, art, ctx))
             for side, p in found.items():
                 rows.append(ctx.row(art, race_id=rid, chamber=chamber,
                                     state=state, district="",
