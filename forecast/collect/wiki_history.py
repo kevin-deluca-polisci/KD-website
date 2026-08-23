@@ -64,6 +64,7 @@ import collections
 import datetime as dt
 import json
 import sys
+import time
 import traceback
 import urllib.parse
 from pathlib import Path
@@ -184,7 +185,8 @@ def _write(cycle: int, date: str, title: str, body: bytes, revid: int,
 
 
 def backfill_page(cycle: int, fetcher, api: str, title: str, since: str,
-                  step_days: int, cap: int, dry: bool) -> dict:
+                  step_days: int, cap: int, dry: bool,
+                  deadline: float | None = None) -> dict:
     stats = collections.Counter()
     revs = _revisions(fetcher, api, title, since, cap)
     stats["revisions_listed"] = len(revs)
@@ -194,10 +196,29 @@ def backfill_page(cycle: int, fetcher, api: str, title: str, since: str,
     targets = _pick(revs, step_days)
     stats["days_targeted"] = len(targets)
     first, last = min(targets), max(targets)
-    print(f"    {title}: {len(revs)} revision(s), {len(targets)} day(s) "
+
+    # THE CEILING IS EDITED DAYS, NOT CALENDAR DAYS, and saying so is the
+    # difference between "we are at 44%" and "we are finished". A page nobody
+    # edited on a Tuesday has no Tuesday revision to recover, and yesterday's
+    # artifact is still what the page said. Reporting the gap against the
+    # achievable set is what lets a run tell you whether to run it again.
+    have = sum(1 for d in targets
+               if (_day_dir(cycle, d) / f"{_artifact_name(title)}.json").exists())
+    stats["already_present"] = have
+    stats["missing_before"] = len(targets) - have
+    print(f"    {title}: {len(revs)} revision(s), {len(targets)} edited day(s) "
           f"{first} .. {last}")
+    print(f"      {have} already in the archive, {len(targets) - have} to fetch")
 
     for date in sorted(targets):
+        if deadline is not None and time.monotonic() > deadline:
+            # Stop CLEANLY rather than being killed by the job timeout. Every
+            # artifact already written stays written, rule 1 makes the next run
+            # skip them, and the summary says how many are left. A backfill that
+            # can be resumed by pressing the same button is worth more than one
+            # that has to be planned in date windows by hand.
+            stats["stopped_on_budget"] = 1
+            break
         revid = targets[date]
         if (_day_dir(cycle, date) / f"{_artifact_name(title)}.json").exists():
             stats["skipped_exists"] += 1
@@ -248,6 +269,11 @@ def main(argv=None) -> int:
                     help="substring of one page title, for a single page")
     ap.add_argument("--dry-run", action="store_true",
                     help="list what would be fetched and write nothing")
+    ap.add_argument("--time-budget", type=int, default=1200,
+                    help="seconds before stopping cleanly (default 1200). The "
+                         "run resumes exactly where it left off, so the way to "
+                         "finish a large backfill is to press the same button "
+                         "again rather than to slice it into date windows.")
     a = ap.parse_args(argv)
 
     reg = capture.load_registry(a.cycle)
@@ -271,12 +297,13 @@ def main(argv=None) -> int:
           f"step {a.step_days}d{' · DRY RUN' if a.dry_run else ''}")
     print("=" * 70)
 
+    deadline = (time.monotonic() + a.time_budget) if a.time_budget > 0 else None
     total = collections.Counter()
     failed: list[str] = []
     for title in pages:
         try:
             got = backfill_page(a.cycle, fetcher, api, title, since,
-                                max(1, a.step_days), cap, a.dry_run)
+                                max(1, a.step_days), cap, a.dry_run, deadline)
             total.update(got)
         except Exception:                                   # noqa: BLE001
             # One page's failure must not discard another's work — the same
@@ -290,6 +317,24 @@ def main(argv=None) -> int:
     print("  " + ", ".join(f"{k}={v}" for k, v in sorted(total.items())))
     if failed:
         print(f"  WARNING: {len(failed)} page(s) failed: {failed}")
+    left = total.get("missing_before", 0) - total.get("written", 0)
+    if a.dry_run:
+        # The shared Fetcher returns nothing in dry-run, so the revision lists
+        # come back empty and every count above is zero. Say so, rather than
+        # letting a run that fetched nothing report that there is nothing left.
+        print("\n  DRY RUN: no requests were made, so the counts above are not "
+              "a plan.\n  Run it for real to see the gap; the time budget "
+              "stops it before the job does.")
+    elif total.get("stopped_on_budget"):
+        print(f"\n  STOPPED ON THE TIME BUDGET with {left} edited day(s) still "
+              f"missing.\n  Nothing is lost — run this again with the same "
+              f"settings to continue from here.")
+    elif left > 0:
+        print(f"\n  {left} edited day(s) still missing (fetch failures or "
+              f"revisions with no wikitext). Re-running is safe.")
+    else:
+        print("\n  COMPLETE: every edited day in this window is in the archive. "
+              "Re-running would write nothing.")
     if total.get("written") and not a.dry_run:
         print(f"\n  next: python3 forecast/collect/parse.py --cycle {a.cycle} --all")
         print("        every recovered day parses with the existing reader, and")
