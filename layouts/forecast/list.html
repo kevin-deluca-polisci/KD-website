@@ -119,7 +119,7 @@
         <line class="gridline" x1="{{ $L }}" y1="{{ add $T $H }}" x2="{{ add $L $W }}" y2="{{ add $T $H }}"/>
         {{- range $pan.date_ticks }}
         <text class="tick" x="{{ add $L (mul (div .x 100.0) $W) }}" y="{{ add (add $T $H) 18 }}"
-              text-anchor="{{ .anchor }}">{{ .date }}</text>
+              text-anchor="{{ .anchor }}">{{ with .label }}{{ . }}{{ else }}{{ .date }}{{ end }}</text>
         {{- end }}
       </svg>
 

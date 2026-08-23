@@ -35,6 +35,7 @@ directly labelled and a table view ships alongside.
 from __future__ import annotations
 
 import csv
+import datetime as dt
 import json
 import math
 from pathlib import Path
@@ -406,6 +407,71 @@ def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list
 # Geometry. Output is in a 0-100 x 0-100 box; the template scales it.
 # --------------------------------------------------------------------------
 
+
+def _date_ticks(dates: list[str], X) -> list[dict]:
+    """Calendar ticks on a time axis: the two ends, plus month boundaries.
+
+    Interior ticks used to be placed at thirds of the INDEX, which on an
+    unevenly sampled series put the middle label nowhere near the middle of the
+    time span — on the 578-day view it read 2026-02-21 at x=33, thirteen months
+    in. On a time axis the tick can be any calendar date, so it may as well be
+    a round one.
+
+    The step widens until the labels stop crowding: month, two months, quarter,
+    half-year, year. Interior ticks landing within 7% of an end are dropped,
+    since the end labels are anchored outward and would collide.
+
+    The year is printed only when it changes, which is the difference between
+    "2025-01-22 2025-04-01 2025-07-01" and "22 Jan 2025 · Apr · Jul".
+    """
+    d0, dn = dt.date.fromisoformat(dates[0]), dt.date.fromisoformat(dates[-1])
+    ends = [
+        {"date": dates[0], "x": round(X(dates[0]), 2), "anchor": "start",
+         "label": d0.strftime("%b %Y")},
+        {"date": dates[-1], "x": round(X(dates[-1]), 2), "anchor": "end",
+         "label": dn.strftime("%b %Y")},
+    ]
+    if (dn - d0).days < 45:
+        # Short window: the ends carry it, and month boundaries would be one
+        # tick or none.
+        return ends if len(dates) > 1 else [{**ends[0], "x": 50.0,
+                                             "anchor": "middle"}]
+
+    for step in (1, 2, 3, 6, 12):
+        marks, y, m = [], d0.year, d0.month
+        # First month boundary strictly after the start.
+        m += 1
+        if m > 12:
+            m, y = 1, y + 1
+        while True:
+            if (m - 1) % step:
+                m += 1
+                if m > 12:
+                    m, y = 1, y + 1
+                continue
+            cur = dt.date(y, m, 1)
+            if cur >= dn:
+                break
+            marks.append(cur)
+            m += step
+            while m > 12:
+                m, y = m - 12, y + 1
+        if len(marks) <= 5:
+            break
+
+    out, last_year = list(ends[:1]), d0.year
+    for cur in marks:
+        x = X(cur.isoformat())
+        if x < 7 or x > 93:
+            continue                      # would collide with an end label
+        label = cur.strftime("%b %Y") if cur.year != last_year else cur.strftime("%b")
+        last_year = cur.year
+        out.append({"date": cur.isoformat(), "x": round(x, 2),
+                    "anchor": "middle", "label": label})
+    out.append(ends[1])
+    return out
+
+
 def _nice_ticks(lo: float, hi: float, n: int = 4) -> list[float]:
     """Round tick values strictly INSIDE [lo, hi].
 
@@ -563,10 +629,32 @@ def build_panel(rows: list[dict], panel: str,
     # the axis out to meet it.
     ticks = [t for t in _nice_ticks(lo, hi) if lo <= t <= hi]
 
+    # THE X AXIS IS TIME, NOT THE RANK OF A DATE AMONG THE DATES WE HAPPEN TO
+    # HOLD. It used to be the rank, and on a series sampled unevenly that is a
+    # distortion rather than a rounding: in the "all" view on 2026-08-23 the
+    # left half of the axis carried 441 days and the right half 137, because
+    # 2025 is reconstructed weekly and 2026 is captured daily. Thirteen months
+    # were squeezed into a third of the width and the last three months took
+    # another third, so a two-point move looked three times faster in 2025 than
+    # the same move in 2026.
+    #
+    # It also meant the SHAPE OF HISTORY MOVED whenever the archive gained
+    # dates. Every day the Wikipedia backfill recovers redistributes every
+    # earlier point sideways, which is not a property a tracker should have.
+    #
+    # Linear in days fixes both, and it costs nothing: uneven sampling is then
+    # drawn honestly as long flat segments early and dense detail late, which
+    # is what the data actually is.
+    _d0 = dt.date.fromisoformat(dates[0])
+    _span = (dt.date.fromisoformat(dates[-1]) - _d0).days
+
     def X(d):
-        # A single date sits in the middle rather than at x=0, where it would
-        # look like a truncated chart instead of a young one.
-        return 50.0 if len(dates) == 1 else dates.index(d) / (len(dates) - 1) * 100
+        # A single date, or a whole series inside one day, sits in the middle
+        # rather than at x=0, where it would look like a truncated chart
+        # instead of a young one.
+        if _span <= 0:
+            return 50.0
+        return (dt.date.fromisoformat(d) - _d0).days / _span * 100
     def Y(v):
         return 100 - (v - lo) / (hi - lo) * 100
 
@@ -643,14 +731,7 @@ def build_panel(rows: list[dict], panel: str,
     # line carries the series and only the final point keeps a dot.
     dense = len(dates) > 20
 
-    # Date ticks: ends always, plus a few interior ones once the axis is long
-    # enough to need them.
-    idxs = [0, len(dates) - 1] if len(dates) < 8 else \
-           sorted({0, len(dates) // 3, 2 * len(dates) // 3, len(dates) - 1})
-    date_ticks = [{"date": dates[i],
-                   "x": round(50.0 if len(dates) == 1 else i / (len(dates) - 1) * 100, 2),
-                   "anchor": "start" if i == 0 else ("end" if i == len(dates) - 1 else "middle")}
-                  for i in idxs]
+    date_ticks = _date_ticks(dates, X)
 
     # Horizontal strip layout: the same current values laid out along a shared
     # value axis instead of against time. This is the "where do the methods
