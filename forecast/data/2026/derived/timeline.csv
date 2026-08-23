@@ -402,6 +402,10 @@ snapshot_date,series,panel,unit,value,low,high,band_kind,n_sources,label
 2026-08-22,market,house_prob,prob,0.8105,0.7889,0.8761,spread,3,Markets
 2026-08-22,fundamentals,house_prob,prob,0.9491,0.3123,0.9855,spread,5,Fundamentals
 2026-08-22,academic,house_prob,prob,0.5077,0.3931,0.9855,spread,4,Academic
+2026-08-23,polling,house_prob,prob,0.7452,0.5077,0.7452,spread,5,Polling
+2026-08-23,market,house_prob,prob,0.8136,0.7893,0.885,spread,3,Markets
+2026-08-23,fundamentals,house_prob,prob,0.9491,0.3123,0.9855,spread,5,Fundamentals
+2026-08-23,academic,house_prob,prob,0.5077,0.3931,0.9855,spread,4,Academic
 2025-01-22,polling,house_seats,seats,184.68,184.68,184.68,spread,2,Polling
 2025-01-22,academic,house_seats,seats,201.44,,,,1,Academic
 2025-01-29,polling,house_seats,seats,185.43,185.43,185.43,spread,2,Polling
@@ -805,6 +809,10 @@ snapshot_date,series,panel,unit,value,low,high,band_kind,n_sources,label
 2026-08-22,market,house_seats,seats,229.79,,,,1,Markets
 2026-08-22,fundamentals,house_seats,seats,250.13,210.23,263.12,spread,5,Fundamentals
 2026-08-22,academic,house_seats,seats,218.66,213.79,263.12,spread,4,Academic
+2026-08-23,polling,house_seats,seats,230.09,218.66,230.09,spread,5,Polling
+2026-08-23,market,house_seats,seats,229.81,,,,1,Markets
+2026-08-23,fundamentals,house_seats,seats,250.13,210.23,263.12,spread,5,Fundamentals
+2026-08-23,academic,house_seats,seats,218.66,213.79,263.12,spread,4,Academic
 2025-01-22,polling,margin,pct,-4.6,,,,1,Polling
 2025-01-22,academic,margin,pct,-0.44,,,,1,Academic
 2025-01-29,polling,margin,pct,-4.424,,,,1,Polling
@@ -1172,10 +1180,14 @@ snapshot_date,series,panel,unit,value,low,high,band_kind,n_sources,label
 2026-08-21,polling,margin,pct,6.1916,5.9,6.4,spread,3,Polling
 2026-08-21,market,margin,pct,7.592,7.6082,7.8327,spread,2,Markets
 2026-08-21,fundamentals,margin,pct,1.78,1.78,10.48,spread,2,Fundamentals
-2026-08-22,polling,margin,pct,6.1916,5.9,6.4,spread,4,Polling
+2026-08-22,polling,margin,pct,6.1916,5.9,6.4,spread,3,Polling
 2026-08-22,market,margin,pct,7.5444,7.6382,7.7075,spread,2,Markets
 2026-08-22,fundamentals,margin,pct,1.78,1.78,12.72,spread,5,Fundamentals
 2026-08-22,academic,margin,pct,3.86,2.67,12.72,spread,4,Academic
+2026-08-23,polling,margin,pct,6.1916,5.9,6.4,spread,4,Polling
+2026-08-23,market,margin,pct,7.5602,7.6405,7.7368,spread,2,Markets
+2026-08-23,fundamentals,margin,pct,1.78,1.78,12.72,spread,5,Fundamentals
+2026-08-23,academic,margin,pct,3.86,2.67,12.72,spread,4,Academic
 2025-01-22,polling,senate_prob,prob,0.005,0.0018,0.0018,spread,2,Polling
 2025-01-22,academic,senate_prob,prob,0.0198,,,,1,Academic
 2025-01-29,polling,senate_prob,prob,0.0054,0.0022,0.0022,spread,2,Polling
@@ -1589,6 +1601,10 @@ snapshot_date,series,panel,unit,value,low,high,band_kind,n_sources,label
 2026-08-22,market,senate_prob,prob,0.4657,0.4709,0.505,spread,3,Markets
 2026-08-22,fundamentals,senate_prob,prob,0.6209,0.0569,0.784,spread,5,Fundamentals
 2026-08-22,academic,senate_prob,prob,0.1309,0.0844,0.784,spread,4,Academic
+2026-08-23,polling,senate_prob,prob,0.2903,0.1309,0.2903,spread,5,Polling
+2026-08-23,market,senate_prob,prob,0.466,0.4717,0.505,spread,3,Markets
+2026-08-23,fundamentals,senate_prob,prob,0.6209,0.0569,0.784,spread,5,Fundamentals
+2026-08-23,academic,senate_prob,prob,0.1309,0.0844,0.784,spread,4,Academic
 2025-01-22,polling,senate_seats,seats,43.89,43.89,43.89,spread,2,Polling
 2025-01-22,academic,senate_seats,seats,46.14,,,,1,Academic
 2025-01-29,polling,senate_seats,seats,43.99,43.99,43.99,spread,2,Polling
@@ -2002,3 +2018,7 @@ snapshot_date,series,panel,unit,value,low,high,band_kind,n_sources,label
 2026-08-22,market,senate_seats,seats,49.88,,,,1,Markets
 2026-08-22,fundamentals,senate_seats,seats,51.47,47.22,52.73,spread,5,Fundamentals
 2026-08-22,academic,senate_seats,seats,48.2,47.64,52.73,spread,4,Academic
+2026-08-23,polling,senate_seats,seats,49.44,48.2,49.44,spread,5,Polling
+2026-08-23,market,senate_seats,seats,49.88,,,,1,Markets
+2026-08-23,fundamentals,senate_seats,seats,51.47,47.22,52.73,spread,5,Fundamentals
+2026-08-23,academic,senate_seats,seats,48.2,47.64,52.73,spread,4,Academic

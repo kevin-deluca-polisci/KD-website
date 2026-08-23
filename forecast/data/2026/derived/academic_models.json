@@ -1,7 +1,7 @@
 {
   "cycle": 2026,
-  "snapshot_date": "2026-08-22",
-  "days_to_election": 73,
+  "snapshot_date": "2026-08-23",
+  "days_to_election": 72,
   "category": "academic",
   "publication": "individual",
   "models": {
@@ -23,7 +23,7 @@
         "generic_ballot_D": 6.5,
         "generic_ballot_share_deviation": 3.25,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
-        "days_to_election": 73,
+        "days_to_election": 72,
         "president_party": "R",
         "pres_party_coded": -1
       },
@@ -67,7 +67,7 @@
         "approval": 38.0,
         "approval_source": "hand-set (Gallup basis); no live approval feed yet",
         "income_growth": -0.096,
-        "income_source": "FRED income_growth_ytd as of 2026-08-22, 6 month(s) of the year in hand"
+        "income_source": "FRED income_growth_ytd as of 2026-08-23, 6 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
