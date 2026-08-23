@@ -329,6 +329,7 @@ def class_model_rows(cycle: int) -> list[dict]:
     # another unit and left MIN_N counting zero gated contributors on a cell
     # that was made entirely of them.
     tier = {"p": "individual"}
+    prov = {"p": "computed"}
 
     def emit(source_id, cat, race_id, chamber, state, district, quantity,
              value, unit):
@@ -343,6 +344,16 @@ def class_model_rows(cycle: int) -> list[dict]:
             "publication": tier["p"],
             "as_of": as_of["d"],
             "captured_at": "", "raw_sha256": "", "raw_path": "",
+            # OURS, AND SOMETIMES OURS-IN-HINDSIGHT.
+            #
+            # A projection computed on the day it is dated is a real-time
+            # forecast that happens to be ours: `computed`. A projection
+            # seats.py filled in for an earlier date during a backfill is our
+            # arithmetic on a poll record as it stands NOW, and the method was
+            # chosen with the cycle visible — `retrospective`, and it must not
+            # be scored as though somebody published it at the time. seats.py
+            # already stamps which is which; this only translates the word.
+            "provenance": prov["p"],
         })
 
     for date, proj in sorted(days.items()):
@@ -367,6 +378,9 @@ def class_model_rows(cycle: int) -> list[dict]:
           cats = model.get("categories") or [cat]
           as_of["d"] = model.get("as_of") or date
           tier["p"] = model.get("publication") or "individual"
+          prov["p"] = ("retrospective"
+                       if (model.get("provenance") or "") == "backfilled"
+                       else "computed")
           senate, house = model.get("senate") or {}, model.get("house") or {}
           # Whether this model's margin is already a row in its own right. The
           # projection says so itself now; MARGIN_FROM_ELSEWHERE remains as the
@@ -423,6 +437,7 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
         per_source: dict[str, list[float]] = defaultdict(list)
         tiers: dict[str, str] = {}
         as_ofs: dict[str, str] = {}
+        provs: dict[str, str] = {}
         for m in members:
             try:
                 per_source[m["source_id"]].append(float(m["value"]))
@@ -430,6 +445,7 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
                 continue
             tiers[m["source_id"]] = m["publication"]
             as_ofs[m["source_id"]] = m.get("as_of") or date
+            provs[m["source_id"]] = m.get("provenance") or "captured"
 
         if any(t == "private" for t in tiers.values()):
             per_source = {s: v for s, v in per_source.items()
@@ -450,6 +466,17 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
         # never about how many numbers went in; it is about how many UNKNOWN
         # numbers a reader is left with after subtracting the ones we published.
         n_gated = sum(1 for s in per_source if tiers.get(s) != "individual")
+        # HOW MUCH OF THIS AVERAGE IS A RECONSTRUCTION.
+        #
+        # On dates before daily capture began, most category averages are made
+        # entirely of values we computed afterwards from a poll record as it
+        # stands today. That is legitimate history and illegitimate evidence,
+        # and the difference has to travel with the number rather than living
+        # in somebody's memory of how the backfill worked. The scorer filters
+        # on it; the site can use it to say which part of a line was
+        # reconstructed.
+        n_retrospective = sum(1 for s in per_source
+                              if provs.get(s) == "retrospective")
 
         # How the site is allowed to render this cell.
         if n >= MIN_DISPLAY_N:
@@ -468,6 +495,7 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             "snapshot_date": date, "category": cat, "race_id": rid,
             "chamber": ch, "state": st, "district": dist,
             "quantity": q, "unit": unit, "n_sources": n, "n_gated": n_gated,
+            "n_retrospective": n_retrospective,
             # 0 unless this row is the open-only subset of a gated cell.
             "partial": 0, "n_withheld": 0,
             "mean": round(statistics.fmean(vals), 4),
@@ -546,7 +574,12 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
         {**{k: r[k] for k in ("snapshot_date", "source_id", "category", "race_id",
                               "chamber", "state", "district", "quantity", "value",
                               "unit")},
-         "as_of": r.get("as_of") or r["snapshot_date"]}
+         "as_of": r.get("as_of") or r["snapshot_date"],
+         # Published, because a reader downloading this file is entitled to the
+         # same distinction the scorer uses. Three quarters of these rows are
+         # dated before capture began and they are not all the same kind of
+         # thing; see PROVENANCE in collect/parsers/__init__.py.
+         "provenance": r.get("provenance") or "captured"}
         for r in rows
         if r["publication"] == "individual" and r["quantity"] not in NO_AVERAGE
         and r["quantity"] not in NEVER_PUBLISH

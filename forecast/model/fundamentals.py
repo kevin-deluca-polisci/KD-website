@@ -105,6 +105,20 @@ def predict(b, approval, income, seats_before):
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cycle", type=int, default=2026)
+    # WHEN THE LIVE APPROVAL FEED LANDS, THIS DEFAULT AND ITS CONSUMERS MOVE
+    # TOGETHER. Approval is the single largest lever in this family: 0.27
+    # margin points per approval point here, and the referendum model in
+    # model/academic.py reads the same number through its own --approval.
+    # Three things to do, not one:
+    #   1. replace this default with the feed, and record its source in
+    #      `approval_source` so the methods page stops saying "hand-set";
+    #   2. re-run the academic backfill, which currently holds approval
+    #      CONSTANT across the whole reconstructed history and says so — any
+    #      line driven by approval is flat by construction until it is re-run
+    #      against a real approval series;
+    #   3. check the referendum model separately. Its fitted approval
+    #      coefficient is 0.026, so a live feed will move this model and barely
+    #      touch that one, and that difference is the finding rather than a bug.
     ap.add_argument("--approval", type=float, default=38.0,
                     help="president's approval (Gallup basis — do NOT feed a poll "
                          "average, the historical column is Gallup-only and the "

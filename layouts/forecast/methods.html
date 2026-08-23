@@ -26,6 +26,7 @@
     <a href="#professional">Professional</a>
     <a href="#markets">Markets</a>
     <a href="#ratings">Ratings</a>
+    <a href="#scoring">How this gets scored</a>
     <a href="#disclosure">What is not published</a>
   </nav>
 
@@ -645,6 +646,53 @@
          modelling assumption doing real work while looking like data entry.
          What ratings are good for is disagreement, which is drawn as a spread
          on the <a href="/forecast/comparisons/">comparisons page</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============================== SCORING ============================== -->
+  <section data-section="scoring" id="scoring" hidden>
+    <div class="card">
+      <h2>How this gets scored</h2>
+      <p class="sub">The rules were fixed on 22 August 2026, seventy-three days
+         before the election and before any 2026 result existed. They are in the
+         repository as
+         <a href="https://github.com/kevin-deluca-polisci/KD-website/blob/main/forecast/score/RULES.md">forecast/score/RULES.md</a>,
+         where git records when they appeared and every change since.</p>
+      <p>Writing them afterwards would have been worth much less. Which horizon
+         counts, what &ldquo;control&rdquo; means, whether unopposed races belong
+         in the denominator &mdash; each of those changes who comes out ahead, and
+         a rule chosen after the answer is known cannot be told apart from a rule
+         chosen because the answer is known.</p>
+      <table>
+        <tr><th>Question</th><th>Answer fixed in advance</th></tr>
+        <tr><td>Who is scored</td>
+            <td class="muted">Every source and every category average, by the same code. Our own class models get no exemption. Student forecasts run through the same machinery.</td></tr>
+        <tr><td>When</td>
+            <td class="muted">Nine fixed horizons &mdash; 180, 120, 90, 60, 30, 14, 7 and 1 day out, plus the last value before polls open. A forecast staler than 21 days at a horizon is recorded absent rather than carried forward or penalised.</td></tr>
+        <tr><td>On what</td>
+            <td class="muted">Brier score on chamber control, absolute and signed error on the national margin and on seats, race-level Brier with a calibration table, and a log score on the seat ladders where an exchange quotes a distribution.</td></tr>
+        <tr><td>Senate control</td>
+            <td class="muted">51 seats for the Democrats, not 50. The Vice President breaks ties through this Congress and is a Republican, so 50&ndash;50 is Republican control.</td></tr>
+        <tr><td>The national margin</td>
+            <td class="muted">Two-party, over all 435 districts, votes as cast, unopposed races included. The version excluding unopposed races is published beside it as a robustness check, never substituted for it.</td></tr>
+        <tr><td>Truth</td>
+            <td class="muted">Certified returns as they stand on 6 January 2027, after any runoff state law requires. Stored in the archive with its hash, so the numbers that resolved the scores can be checked rather than taken on trust.</td></tr>
+        <tr><td>Against what</td>
+            <td class="muted">Four naive baselines, scored by the same code: a coin flip, the postwar base rate, the 2024 result carried forward, and the final polling average. A forecast that cannot beat &ldquo;no change&rdquo; has not shown anything.</td></tr>
+      </table>
+      <p class="thin-note">Nothing is scored yet, because nothing has happened
+         yet. What runs today is the coverage report: which forecasters will have
+         a value at each horizon, so a gap can be closed while there is still
+         time. It has already found one &mdash; most named forecasters were not
+         being captured before 19 August 2026, so the three earliest horizons
+         will only ever carry the category averages and the sources whose history
+         could be reconstructed.</p>
+      <p class="thin-note">This archive is maintained by the same person who
+         wrote two of the models being scored. The protections are that the rules
+         were fixed in advance, that the code path is identical for every source,
+         and that the raw archive is released afterwards so anyone can recompute
+         every number from the stored bytes. That is not independence and is not
+         offered as such.</p>
     </div>
   </section>
 

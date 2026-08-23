@@ -37,6 +37,34 @@ from typing import Any
 # The long format. Every source, every quantity, one shape.
 # ---------------------------------------------------------------------------
 
+# --------------------------------------------------------------------------
+# PROVENANCE: is this row a real-time forecast for the date it carries?
+#
+# The archive holds three-quarters of its rows at dates before daily capture
+# began, and they are not all the same kind of thing. Telling them apart is the
+# difference between a timeline study and a circular one, so it is a field
+# rather than a footnote.
+#
+#   captured        we fetched it from the publisher THAT DAY.
+#   computed        one of our own models produced it that day, from inputs we
+#                   held that day. Real-time; simply ours rather than theirs.
+#   archival        recovered later from the publisher's OWN DATED RECORD — an
+#                   exchange's candlesticks, a Wikipedia revision, Ray Fair's
+#                   dated table. The publisher committed to the number on that
+#                   date; we merely read the commitment afterwards. Counts as
+#                   real-time, because it was.
+#   retrospective   WE computed it later for an earlier date, from data as it
+#                   stands now. Our reconstructed poll averages and the model
+#                   backfills. Not a real-time forecast and must never be
+#                   scored as one: the inputs have been revised since, and the
+#                   method was chosen in August 2026 with the cycle visible.
+#                   Descriptive history, and useful, but not evidence about
+#                   what was knowable at the time.
+#
+# The first three are real-time. Scoring filters on that; the site does not.
+PROVENANCE = {"captured", "computed", "archival", "retrospective"}
+REALTIME_PROVENANCE = {"captured", "computed", "archival"}
+
 QUANTITIES = {
     "win_prob_R",     # 0–1 probability the Republican wins
     "win_prob_D",
@@ -186,10 +214,13 @@ class Row:
     captured_at: str
     raw_sha256: str
     raw_path: str
+    provenance: str = "captured"   # see PROVENANCE above
 
     def validate(self) -> None:
         if self.quantity not in QUANTITIES:
             raise ValueError(f"unknown quantity {self.quantity!r}")
+        if self.provenance not in PROVENANCE:
+            raise ValueError(f"unknown provenance {self.provenance!r}")
         if self.quantity == "rating_ordinal":
             if not isinstance(self.value, str) or not self.value:
                 raise ValueError("rating_ordinal must be a non-empty string")
@@ -317,6 +348,36 @@ class Context:
                     f"publication tier; attribution must carry the attributed "
                     f"source's licence, not the reading source's")
 
+        # PROVENANCE, DERIVED RATHER THAN DECLARED.
+        #
+        # The rule is one comparison: if the bytes were obtained AFTER the date
+        # the row describes, we are reading a record the publisher made at the
+        # time rather than watching them make it — so the row is `archival`.
+        # That single test covers every route we have into the past without a
+        # per-source setting to keep in sync:
+        #
+        #   - a Wikipedia revision fetched today for a date in March
+        #   - an exchange candlestick synthesised into a past day's directory
+        #   - Ray Fair's dated table, back-dated by his parser to the day he
+        #     posted each row
+        #   - Race to the WH's own trend sheet, likewise
+        #
+        # A parser that knows better may still pass provenance= explicitly; the
+        # only case today is a source that publishes somebody else's ESTIMATE
+        # of a past value rather than their own past statement, which nothing
+        # in the registry currently does.
+        #
+        # `retrospective` is deliberately unreachable from here. A parser reads
+        # what a publisher said; it never recomputes anything for an earlier
+        # date. Only our own models can do that, and they are stamped in
+        # aggregate.class_model_rows.
+        fetched = (art.meta.get("fetched_at") or art.meta.get("synthesised_at")
+                   or "")[:10]
+        prov = kw.pop("provenance", None)
+        if prov is None:
+            later = (fetched > asof) if fetched else (self.snapshot_date > asof)
+            prov = "archival" if later else "captured"
+
         r = Row(
             snapshot_date=asof,
             source_id=attributed or self.source_id,
@@ -325,6 +386,7 @@ class Context:
             captured_at=art.meta.get("fetched_at", ""),
             raw_sha256=art.sha256,
             raw_path=str(art.path),
+            provenance=prov,
             **kw,
         )
         r.validate()
