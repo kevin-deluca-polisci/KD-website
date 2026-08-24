@@ -94,6 +94,9 @@
         <tr><td>Two-party assumption</td>
             <td>Every race modelled as D versus R</td>
             <td class="muted">Nebraska has no Democrat and a serious independent; the model cannot represent that.</td></tr>
+        <tr><td>Which district map</td>
+            <td>The lines in force on the date being shown, not today&rsquo;s</td>
+            <td class="muted">Ten states redrew mid-cycle. Where a map has no signature date &mdash; a court imposed it, or it took effect only when an injunction lifted &mdash; the date is a judgment call, and California&rsquo;s is worth about three and a half seats.</td></tr>
       </table>
     </div>
   </section>
@@ -680,6 +683,41 @@
         <tr><td>Against what</td>
             <td class="muted">Four naive baselines, scored by the same code: a coin flip, the postwar base rate, the 2024 result carried forward, and the final polling average. A forecast that cannot beat &ldquo;no change&rdquo; has not shown anything.</td></tr>
       </table>
+      <h3>Redistricting, and which map a past number was computed on</h3>
+      <p>Ten states redrew their congressional maps during this cycle and 123 of
+         the 435 districts moved, the last of them on 2 June 2026. That breaks
+         something that looks like bookkeeping and is not. A national margin does
+         not care where the lines are, but a seat count does, and every seat
+         count on this site before today was originally produced by pushing a
+         past national tide through <em>today&rsquo;s</em> districts &mdash;
+         districts that, for most of 2025, did not exist.</p>
+      <p>They are now computed on the map that was in force on their own date.
+         The baseline is assembled per state rather than chosen wholesale: on
+         1 December 2025 that means Texas, Missouri, North Carolina and Ohio on
+         new lines with California, Florida, Tennessee, Louisiana, Alabama and
+         Utah still on old ones. The correction is worth about six Democratic
+         seats at the start of the archive and falls to nothing by June 2026, so
+         the current numbers are unchanged and the history is what moved. Each
+         projection records which baseline produced it.</p>
+      <p>The effective dates are
+         <a href="https://github.com/kevin-deluca-polisci/KD-website/blob/main/forecast/conditions/redistricting_effective.csv">published with the basis for each</a>,
+         because five of the ten cannot use the obvious rule. North Carolina&rsquo;s
+         map became law without a signature, Utah&rsquo;s was imposed by a court,
+         Alabama&rsquo;s was passed conditionally and took force only when the
+         Supreme Court lifted an injunction, and Ohio&rsquo;s date comes from our
+         own archive of the Wikipedia status table. California signed on 21
+         August 2025 but the map could not govern a ballot until voters ratified
+         it on 4 November, and the ratification date is used. That single choice
+         is worth 3.6 expected seats across the intervening seventy-five days,
+         which is why it is written down rather than left in a comment.</p>
+      <p>Two consequences for scoring, both fixed before any result exists. A
+         race-level forecast is scored only if it was made under the map that
+         decided the race, since a forecast of TX-09 in March 2025 is about
+         different ground from the TX-09 on the November ballot. And a
+         backfilled seat count computed on the right map is still a number we
+         produced later, from a specification chosen later, so it stays out of
+         the real-time table. The fix makes those rows accurate. It does not
+         make them evidence about what was knowable at the time.</p>
       <p class="thin-note">Nothing is scored yet, because nothing has happened
          yet. What runs today is the coverage report: which forecasters will have
          a value at each horizon, so a gap can be closed while there is still
