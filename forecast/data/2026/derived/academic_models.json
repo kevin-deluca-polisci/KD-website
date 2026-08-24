@@ -1,7 +1,7 @@
 {
   "cycle": 2026,
-  "snapshot_date": "2026-08-23",
-  "days_to_election": 72,
+  "snapshot_date": "2026-08-24",
+  "days_to_election": 71,
   "category": "academic",
   "publication": "individual",
   "models": {
@@ -16,14 +16,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 3.86,
+      "margin_D": 3.87,
       "margin_D_80_low": -0.72,
-      "margin_D_80_high": 8.45,
+      "margin_D_80_high": 8.46,
       "inputs": {
-        "generic_ballot_D": 6.5,
-        "generic_ballot_share_deviation": 3.25,
+        "generic_ballot_D": 6.505,
+        "generic_ballot_share_deviation": 3.252,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
-        "days_to_election": 72,
+        "days_to_election": 71,
         "president_party": "R",
         "pres_party_coded": -1
       },
@@ -42,7 +42,7 @@
           "constant": -0.45,
           "root_mse": 3.71
         },
-        "bew_direct_D_seat_share": 54.69,
+        "bew_direct_D_seat_share": 54.7,
         "bew_direct_D_seats": 237.9
       },
       "notes": [
@@ -67,7 +67,7 @@
         "approval": 38.0,
         "approval_source": "hand-set (Gallup basis); no live approval feed yet",
         "income_growth": -0.096,
-        "income_source": "FRED income_growth_ytd as of 2026-08-23, 6 month(s) of the year in hand"
+        "income_source": "FRED income_growth_ytd as of 2026-08-24, 6 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
@@ -126,7 +126,7 @@
         "pres_party_seat_change": -48.1,
         "implied_D_seats": 263.1,
         "inversion_extrapolated": false,
-        "curve_points_used": 10,
+        "curve_points_used": 11,
         "sensitivity_month": [
           {
             "month": "Mar 2026",
@@ -238,7 +238,7 @@
           "out_of_sample_mae": 2.7,
           "calls_control": "72%"
         },
-        "inversion_extrapolated": false,
+        "inversion_extrapolated": true,
         "benchmark": {
           "claim": "Democrats lose Senate control with a net loss of three seats; House a knife-edge race at 215 D seats",
           "authors": "Lewis-Beck & Quinlan",
@@ -248,7 +248,8 @@
       },
       "notes": [
         "forecasts SEAT COUNTS directly from institutional facts \u2014 no polls, no economy, no popularity. The margin shown is our seat curve run backwards from its House number, not theirs",
-        "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it"
+        "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it",
+        "the House number falls outside today's range of tides, so the inversion is extrapolated"
       ]
     }
   },
