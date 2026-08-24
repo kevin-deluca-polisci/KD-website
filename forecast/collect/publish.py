@@ -612,8 +612,14 @@ def _spread_plot(races: list[dict]) -> dict | None:
     Whether the methods cluster or scatter is then visible without reading a
     single number.
 
-    Sorted widest band first, so the races the methods argue about are at the
-    top. That ordering is the point of the card.
+    Sorted by the consensus probability, safest Democratic seat at the top.
+    It used to be sorted widest-band-first, which put the loudest argument at
+    the top and made a fair case for itself — but it also meant two adjacent
+    rows had nothing to do with each other, and the order churned daily. Seat
+    order gives the card a spine: the bands slide right as you read down, and
+    a wide band is legible AS a wide band because its neighbours are narrow.
+    The spread is still printed in its own column and the widest is still named
+    in the note underneath, so nothing that ordering used to say is lost.
     """
     rows = []
     for r in races:
@@ -636,7 +642,16 @@ def _spread_plot(races: list[dict]) -> dict | None:
         })
     if not rows:
         return None
-    rows.sort(key=lambda r: (-r["spread"], r["state"]))
+    # The MEDIAN across methods, not the midpoint of the band. A midpoint is
+    # dragged by whichever single method is furthest out, which is exactly the
+    # method this card exists to show as an outlier — sorting by it would let
+    # one disagreeing source decide where the row goes.
+    for _r in rows:
+        _xs = sorted(p["x"] for p in _r["points"])
+        _n = len(_xs)
+        _r["x_mid"] = round((_xs[_n // 2] if _n % 2
+                             else (_xs[_n // 2 - 1] + _xs[_n // 2]) / 2), 2)
+    rows.sort(key=lambda r: (-r["x_mid"], r["state"]))
     used = [c for c in CATEGORY_ORDER
             if any(p["key"] == c for r in rows for p in r["points"])]
     return {
@@ -645,7 +660,7 @@ def _spread_plot(races: list[dict]) -> dict | None:
         "labels": {c: CATEGORY_LABEL[c] for c in used},
         "ticks": [{"x": v, "label": f"{v}%"} for v in (0, 25, 50, 75, 100)],
         "n_rows": len(rows),
-        "widest": rows[0]["spread"],
+        "widest": max(r["spread"] for r in rows),
         "median_spread": round(
             sorted(r["spread"] for r in rows)[len(rows) // 2], 1),
     }

@@ -170,6 +170,40 @@ _SEAT_SERIES = {
     "KXDHOUSESEATS": (NATIONAL_HOUSE, "house", 218),
     "KXDSENATESEATS": (NATIONAL_SENATE, "senate", 51),
 }
+
+# THE SAME LADDER FROM THE OTHER SIDE.
+#
+# Kalshi listed a Republican House-seats ladder from mid-September 2025 and did
+# not list the Democratic one until 31 December. For three and a half months
+# the market was quoting a full, priced, eleven-bucket distribution over House
+# seats and this parser read none of it, because it only knew the D ticker.
+# Those months contain the Missouri, North Carolina, Ohio and California map
+# changes, which is exactly the stretch a redistricting analysis needs.
+#
+# A ladder over R seats is a ladder over D seats reflected: with 435 seats,
+# "Republicans above 249" is "Democrats below 186". So the buckets invert and
+# everything downstream is unchanged.
+#
+# HOUSE ONLY, DELIBERATELY. The reflection assumes every seat is D or R, which
+# is true of the House and false of the Senate — King and Sanders sit as
+# independents, so complementing a Republican Senate ladder to 100 would
+# silently hand their seats to the Democrats. If an R Senate ladder ever
+# appears it stays unread until someone decides what to do about that.
+_SEAT_SERIES_COMPLEMENT = {
+    "KXRHOUSESEATS": (NATIONAL_HOUSE, "house", 218, 435),
+}
+
+
+def _reflect(bucket, total: int):
+    """An R-seats bucket as the D-seats bucket it implies."""
+    lo, hi = bucket
+    if lo is None and hi is None:
+        return None
+    if lo is None:                     # R below X  ->  D above total-X
+        return (total - hi, None)
+    if hi is None:                     # R above X  ->  D below total-X
+        return (None, total - lo)
+    return (total - hi, total - lo)
 _ABOVE = re.compile(r"^\s*above\s+(\d+)", re.I)
 _BELOW = re.compile(r"^\s*(?:below|less than|fewer than)\s+(\d+)", re.I)
 _RANGE = re.compile(r"^\s*(\d+)\s*[-\u2013]\s*(\d+)\s*$")
@@ -339,31 +373,65 @@ def _margin_rows(markets: list, art, ctx) -> list:
     return out
 
 
+def _pick_ladder(markets: list, series: str) -> list:
+    """[(bucket, price)] for one series, filtered the way the ladder needs."""
+    picked = []
+    for m in markets:
+        ticker = str(m.get("ticker", ""))
+        if not ticker.startswith(series):
+            continue
+        if not _CYCLE_EVENT.search(str(m.get("event_ticker", "")) or ticker):
+            continue              # a different Congress on the same ladder
+        if str(m.get("status", "active")).lower() not in ("active", "open"):
+            continue
+        label = str(m.get("yes_sub_title") or m.get("subtitle") or "")
+        b = _bucket(label)
+        p = _price(m)
+        if b is None or p is None:
+            continue
+        picked.append((b, p))
+    return picked
+
+
 def _seat_rows(markets: list, art, ctx) -> list:
-    """One seats_D and one win_prob_D per chamber, from the priced ladder."""
+    """One seats_D and one win_prob_D per chamber, from the priced ladder.
+
+    The Democratic ladder wins where both exist. The reflected Republican one
+    is a fallback, not a second opinion: emitting both would put one market
+    into the seats average twice.
+    """
     out = []
+    done: set[str] = set()
+
     for series, (rid, chamber, threshold) in _SEAT_SERIES.items():
-        picked = []
-        for m in markets:
-            ticker = str(m.get("ticker", ""))
-            if not ticker.startswith(series):
-                continue
-            if not _CYCLE_EVENT.search(str(m.get("event_ticker", "")) or ticker):
-                continue          # a different Congress on the same ladder
-            if str(m.get("status", "active")).lower() not in ("active", "open"):
-                continue
-            label = str(m.get("yes_sub_title") or m.get("subtitle") or "")
-            b = _bucket(label)
-            p = _price(m)
-            if b is None or p is None:
-                continue
-            picked.append((b, p))
+        picked = _pick_ladder(markets, series)
         if len(picked) < 3:
             # Two buckets is not a distribution. Better no number than a mean
             # of whichever half of the ladder happened to be quoted.
             continue
         total = 435 if chamber == "house" else 100
         exp, maj = _seat_stats(picked, threshold, total)
+        if exp is None:
+            continue
+        out.append(ctx.row(art, race_id=rid, chamber="national", state="",
+                           district="", quantity="seats_D",
+                           value=round(exp, 2), unit="seats"))
+        out.append(ctx.row(art, race_id=rid, chamber="national", state="",
+                           district="", quantity="win_prob_D",
+                           value=round(maj, 4), unit="prob"))
+        done.add(chamber)
+
+    for series, (rid, chamber, threshold, total) in _SEAT_SERIES_COMPLEMENT.items():
+        if chamber in done:
+            continue              # the D ladder already spoke for this chamber
+        picked = _pick_ladder(markets, series)
+        if len(picked) < 3:
+            continue
+        flipped = [(_reflect(b, total), p) for b, p in picked]
+        flipped = [(b, p) for b, p in flipped if b is not None]
+        if len(flipped) < 3:
+            continue
+        exp, maj = _seat_stats(flipped, threshold, total)
         if exp is None:
             continue
         out.append(ctx.row(art, race_id=rid, chamber="national", state="",
@@ -380,13 +448,21 @@ def _seat_rows(markets: list, art, ctx) -> list:
 # parser failure — an error that fires every day for a permanent, understood
 # condition is one nobody reads, and it would bury a real one.
 _UNPARSED_SERIES = {
-    "KXRHOUSESEATS":
-        "the Republican-side mirror of the seat-count ladder. Captured because "
-        "bytes are cheap and a series we already hold history for is one we can "
-        "backfill; not parsed because the D ladder already gives us the whole "
-        "distribution and reading both would double-count it.",
+    # KXRHOUSESEATS WAS HERE AND IS NOT ANY MORE. It was declared unparsed
+    # because the D ladder "already gives us the whole distribution" — true
+    # from 2025-12-31, when Kalshi first listed KXDHOUSESEATS, and false for
+    # the three and a half months before that, when the Republican ladder was
+    # the ONLY priced seat distribution on the exchange. Those months hold the
+    # Missouri, North Carolina, Ohio and California map changes.
+    #
+    # It is now read as a reflection (see _SEAT_SERIES_COMPLEMENT), and the
+    # double-count the old comment feared is prevented per DATE rather than
+    # per ticker: where a D ladder exists for a chamber, the R ladder for that
+    # chamber is skipped below.
     "KXRSENATESEATS":
-        "as KXRHOUSESEATS, for the Senate.",
+        "the Republican-side Senate seat ladder. Not reflected into a D count "
+        "the way the House one is, because the Senate has independents and "
+        "100 minus the Republicans is not the Democrats.",
     "KXGENERICBALLOTVOTEHUB":
         "weekly threshold ladder on what VoteHub's generic-ballot AVERAGE will "
         "read on a given date. A market about a poll aggregator's number, not "
@@ -457,10 +533,19 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     unmatched: list[str] = []
     empty_series: list[str] = []
     unparsed_seen: list[str] = []   # captured on purpose, read by nothing
+    superseded: set[str] = set()    # a ladder the other side already covered
     ladder_unreadable: list[str] = []   # a distribution we could not read
     rows_by_series: dict[str, int] = {}   # series -> rows it produced
     priced = 0                     # markets that had a usable price
     seen_markets = 0               # markets present, priced or not
+
+    # Which chambers have a Democratic ladder in TODAY'S capture. Computed up
+    # front because the artifact loop sees one series at a time and cannot
+    # otherwise know whether a better ladder is coming.
+    _present = {a.name.replace("markets-", "") for a in market_arts}
+    _d_ladder_chambers = {ch for sname, (_r, ch, _t) in _SEAT_SERIES.items()
+                          if sname in _present}
+
     for art in market_arts:
         series = art.name.replace("markets-", "")
         rows_by_series.setdefault(series, 0)
@@ -502,6 +587,17 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             unparsed_seen.append(series)
             continue
 
+        # ONE LADDER PER CHAMBER PER DATE. Both ladders are readable and they
+        # are the same distribution seen from opposite sides, so emitting both
+        # would put one market into the seats average twice. The D ladder is
+        # the primary because it needs no reflection; the R ladder is read only
+        # on dates where Kalshi had not listed the D one yet.
+        if series in _SEAT_SERIES_COMPLEMENT:
+            if _SEAT_SERIES_COMPLEMENT[series][1] in _d_ladder_chambers:
+                unparsed_seen.append(series)
+                superseded.add(series)
+                continue
+
         seen_markets += len(markets)
         # Ladders first: both kinds are read as a distribution ACROSS markets,
         # not one market at a time, so neither can go through the per-market
@@ -512,7 +608,8 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             rows_by_series[series] += len(got)
             priced += len(markets)
             continue
-        if series in _SEAT_SERIES or series in _MARGIN_SERIES:
+        if (series in _SEAT_SERIES or series in _MARGIN_SERIES
+                or series in _SEAT_SERIES_COMPLEMENT):
             # A LADDER THAT WOULD NOT READ AS A LADDER IS NOT A PILE OF
             # CHAMBER-CONTROL PRICES. It falls through to the per-market loop
             # below otherwise, and that loop is exactly wrong for this shape:
@@ -619,8 +716,13 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     # that we did not declare unparsed, must have produced at least one row.
     # See _expected_to_parse for why this is asked per series rather than of the
     # capture as a whole.
+    # `superseded` is the one benign way a series can carry markets and
+    # produce nothing: the R ladder on a date that also has the D ladder. That
+    # is this parser choosing, not this parser failing, and raising on it would
+    # break every date from 2025-12-31 onward.
     starved = sorted(s for s, n in rows_by_series.items()
                      if n == 0 and s not in empty_series
+                     and s not in superseded
                      and _expected_to_parse(s, ctx))
     if starved:
         sample = [t for t in unmatched if _series_of(t) in set(starved)][:5]

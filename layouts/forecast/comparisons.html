@@ -110,7 +110,8 @@
     <h2>Senate, race by race</h2>
     <p class="sub">One line per seat. The band runs from the lowest Democratic
        win probability any method gives it to the highest; each mark is one
-       method. Widest disagreement first.
+       method. Ordered by the methods’ median probability, safest Democratic
+       seat first; the spread column at the right is how far apart they are.
        {{- $miss := $s.categories_missing_per_race }}
        {{- if $miss }} No per-race number yet from
        {{ range $i, $c := $miss }}{{ if $i }}, {{ end }}{{ index $s.labels $c }}{{ end }}.{{ end }}</p>
@@ -195,8 +196,9 @@
     {{- $noun := cond (eq $c "governor") "races" "seats" }}
     <div data-panel data-chamber="{{ $c }}">
       <p class="sub">Each row is one {{ if eq $c "governor" }}race{{ else }}seat{{ end }};
-         each dot is a rating, sized by how many raters gave it. Sorted widest
-         disagreement first. {{ $r.n_shown }} of {{ $r.n_contested }} {{ $noun }}
+         each dot is a rating, sized by how many raters gave it. The
+         {{ $r.n_shown }} shown are the {{ $noun }} the raters argue about
+         most, ordered safest Democratic first, out of {{ $r.n_contested }}
          where the {{ $r.n_raters }} raters do not all
          agree{{ if gt $r.n_unanimous 0 }}; {{ $r.n_unanimous }}
          more are unanimous{{ end }}.

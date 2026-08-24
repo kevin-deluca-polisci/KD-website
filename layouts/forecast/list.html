@@ -35,8 +35,14 @@
       </div>
       <span class="seglabel">Showing</span>
       <div class="seg" data-dim="metric">
-        <button type="button" data-value="seats" aria-selected="true">Democratic seats</button>
-        <button type="button" data-value="prob" aria-selected="false">Chance of a majority</button>
+        {{/* CHANCE OF A MAJORITY OPENS SELECTED. A seat count is the more
+             informative number and the harder one — it is what the models
+             actually project and what the ladder below is built on — but it is
+             not the question anyone arrives with. "Will the Democrats take the
+             House" is, and a page that answers it in one glance earns the right
+             to make someone click for the seat count. */}}
+        <button type="button" data-value="seats" aria-selected="false">Democratic seats</button>
+        <button type="button" data-value="prob" aria-selected="true">Chance of a majority</button>
       </div>
       {{/* Third dimension. The toggle script reads every .seg[data-dim] and
            matches it against data-<dim> on the panels, so this needed no

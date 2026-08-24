@@ -138,17 +138,25 @@ ORDER = ["polling", "market", "fundamentals", "professional", "academic"]
 
 # Time windows the tracker offers, and the one it opens on.
 #
-# 60 DAYS IS THE DEFAULT rather than 30 or everything. Thirty is too few points
-# to read a trend from while the backfilled series are weekly — four dots is a
-# shape, not a line. Everything is the wrong default for the opposite reason:
-# it spans January 2025 to today, so the axis has to contain every value any
-# method has held in twenty months and the recent weeks flatten into nothing.
-# Sixty shows roughly eight backfilled points plus every captured day, which is
-# enough to see movement without burying it.
-RANGES = [("30", 30), ("60", 60), ("all", None)]
-RANGE_LABELS = {"30": "30 days", "60": "60 days", "all": "All"}
-RANGE_DEFAULT = "60"
-RANGE_DEFAULT_DAYS = 60
+# THE DEFAULT IS AN ABSOLUTE DATE, NOT A ROLLING WINDOW, and that is the point
+# of it. A rolling sixty days draws the same amount of chart in March as in
+# October; "since 2026" grows as the cycle does, so the axis itself shows how
+# much of the election year is left. It is also the window every other number
+# on this site is about — the forecast is for November 2026, not for the last
+# two months.
+#
+# The rolling windows stay, because "what has moved lately" is a different
+# question and 30/60 answer it better. "All" stays because the backfill reaches
+# to January 2025 and a reader should be able to see the whole thing. Neither
+# is what the page should open on.
+#
+# An entry's second element is EITHER an int (days back from the newest date)
+# or an ISO date string (an absolute floor). build_panel takes both.
+RANGES = [("30", 30), ("60", 60), ("2026", "2026-01-01"), ("all", None)]
+RANGE_LABELS = {"30": "30 days", "60": "60 days",
+                "2026": "Since 2026", "all": "All"}
+RANGE_DEFAULT = "2026"
+RANGE_DEFAULT_DAYS = "2026-01-01"
 
 
 def _rd(p: Path) -> list[dict]:
@@ -528,8 +536,13 @@ def _nice_ticks(lo: float, hi: float, n: int = 4) -> list[float]:
 
 
 def build_panel(rows: list[dict], panel: str,
-                window_days: int | None = None) -> dict | None:
-    """One panel's geometry. `window_days` trims to the most recent N days.
+                window: int | str | None = None) -> dict | None:
+    """One panel's geometry. `window` trims the series before any geometry.
+
+    It is EITHER an int — that many days back from the newest date in the
+    panel, a rolling window — OR an ISO date string, an absolute floor. The two
+    kinds are not interchangeable and the tracker offers both: rolling for
+    "what moved lately", absolute for "this election year".
 
     THE WINDOW IS WHY THE AXIS CAN BE TIGHT. Fitting the scale to the data was
     only half the problem: once the backfill gave some series six hundred days,
@@ -546,12 +559,15 @@ def build_panel(rows: list[dict], panel: str,
     rs = [r for r in rows if r["panel"] == panel]
     if not rs:
         return None
-    if window_days is not None:
+    if window is not None:
         all_dates = sorted({r["snapshot_date"] for r in rs})
         if all_dates:
-            import datetime as _dt
-            cutoff = (_dt.date.fromisoformat(all_dates[-1])
-                      - _dt.timedelta(days=window_days)).isoformat()
+            if isinstance(window, str):
+                cutoff = window
+            else:
+                import datetime as _dt
+                cutoff = (_dt.date.fromisoformat(all_dates[-1])
+                          - _dt.timedelta(days=window)).isoformat()
             trimmed = [r for r in rs if r["snapshot_date"] >= cutoff]
             # A window that would empty the panel is ignored rather than
             # rendered blank: better to show the whole short series than an
@@ -1170,8 +1186,18 @@ def build_ratings_spread(derived: Path, snapshot: str, chamber: str,
         return None
     # Unanimous seats carry no spread to show. They are counted, not drawn.
     contested = [s for s in seats if s["spread"] > 0]
+    # WHICH seats appear is still decided by disagreement — the card shows 24
+    # of however many are contested, and the 24 worth showing are the 24 the
+    # raters argue about hardest. Sorting the SELECTION and sorting the DISPLAY
+    # are separate questions, and they were conflated here.
     contested.sort(key=lambda s: (-s["spread"], s["race_id"]))
     shown = contested[:top_n]
+    # Drawn safe-D at the top to safe-R at the bottom. The dots then march
+    # left-to-right down the card instead of scattering, so a reader sees WHERE
+    # in the chamber the disagreements sit and not only how loud each one is —
+    # and the row order stops reshuffling every time one rater moves one seat.
+    # `mean` runs 0 (Safe D) to 10 (Safe R), so ascending is D first.
+    shown = sorted(shown, key=lambda s: (s["mean"], s["race_id"]))
     if not shown:
         return None
     return {
