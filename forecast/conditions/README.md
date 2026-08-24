@@ -85,12 +85,46 @@ This also keeps two questions separate that are easy to conflate:
 
 The tables themselves are dates and citations, so they are publishable.
 
-The thing they point at is not. Re-running a seat model on an old map needs a
-**district-level partisan baseline for that map version** — Cook PVI per
-district, or 2024 presidential two-party by new district. That is the
-proprietary piece, it lives in the private data repo under the standing rule,
-and `redistricting_plans.csv` refers to it by filename (`baseline_file`)
-without containing any of it.
+The baseline these point at is **the Cook PVI capture we already hold**:
+`cook_pvi/2026-08-19/manual.json`, 435 rows, each carrying `pvi` and
+`pvi_prior`. Because no state redrew twice this cycle, that single
+before/after pair is a complete baseline for every state whose map changed,
+and there is nothing further to collect.
+
+Those values may sit in the public data and be used as model inputs — they
+are Cook's own published figures — but the site does not display them as a
+table. `baseline_file` names the capture rather than duplicating it.
+
+## Conventions settled on 2026-08-24
+
+**At-large seats are district `00`.** Checked before choosing: no at-large
+House `race_id` existed anywhere in the parsed archive, so there was no
+convention to match and nothing to migrate. `00` also reads as "no district
+number" rather than as the first of several, which is what an at-large seat
+is.
+
+**Non-voting delegates get no `race_id`.** DC and the territories are not
+among the 435, no other source in the archive has a race for them, and
+minting an id would create a race nothing can ever join. The extractor still
+emits the row, marked `non-voting delegate`, so the fact is not lost.
+
+**An incumbent who moves districts is still an incumbent.** Al Green moved
+from TX-09 to TX-18 under the 2025 Texas map. There is no
+`switched_district` event type, because the member follows his seat: TX-18
+has an incumbent running, and TX-09 becomes an open seat. This is worth
+revisiting only if a candidate-quality term ever enters a model, since a
+member in a redrawn seat faces a large share of voters who have never voted
+for him and "incumbent" is doing less work than usual.
+
+**A map is "in effect" when it governs the ballot that actually gets
+printed.** This is the only test a seat forecast can use, because a seat
+forecast is a claim about ballots. Virginia is the case that forces the
+question: the referendum passed on 2026-04-21, so for seventeen days it was
+in a real sense "the map" — but no map was ever drawn under it, the state
+supreme court threw out the referendum result on 2026-05-08, and no ballot
+was ever going to carry it. `in_effect_for_2026` is therefore `no`
+throughout. What changed in those seventeen days was expectation, and
+expectation is what the markets price rather than what this table records.
 
 ## Columns
 
@@ -116,7 +150,7 @@ without containing any of it.
 | `event_date` | when it happened |
 | `known_by` | when it was public |
 | `date_basis` | see above |
-| `event_type` | `introduced` · `passed_chamber` · `passed_legislature` · `signed` · `commission_adopted` · `court_filed` · `court_ruling` · `stayed` · `blocked` · `revived` · `superseded` · `final_for_2026` |
+| `event_type` | `introduced` · `passed_chamber` · `passed_legislature` · `signed` · `commission_adopted` · `referendum_approved` · `referendum_rejected` · `court_filed` · `court_ruling` · `stayed` · `blocked` · `revived` · `superseded` · `final_for_2026` |
 | `status_after` | `proposed` · `enacted` · `enjoined` · `dead` · `in_effect` |
 | `in_effect_for_2026` | `yes` / `no` / `unknown` — the map's status *as of this event*, which is the field the backfill actually reads |
 | `court_case` | case name, if any |

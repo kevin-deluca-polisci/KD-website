@@ -64,6 +64,11 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+# The module's own directory too, so `maps` imports whether polling is run
+# directly, imported by seats.py, or imported as forecast.model.polling.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import maps  # noqa: E402  — dated district baselines
 from forecast.collect.parsers import is_state          # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
@@ -492,7 +497,8 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
 PVI_PREFERENCE = ("cook_pvi", "grant_williams", "wikipedia")
 
 
-def house_forecast(tide: float, rows: list[dict], sigma_total: float) -> dict:
+def house_forecast(tide: float, rows: list[dict], sigma_total: float,
+                   asof: str | None = None) -> dict:
     """
     District-level run.
 
@@ -521,6 +527,23 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float) -> dict:
     if not pvi:
         return {"ok": False, "why": "no district PVI in the archive"}
 
+    # THE MAP IS A FUNCTION OF THE DATE.
+    #
+    # Ten states redrew during this cycle and 123 of 435 districts moved, so
+    # projecting a March 2025 tide onto today's lines produces a seat count
+    # for districts that did not exist. `asof` selects per state: current
+    # index where that state's map was already in effect, previous index
+    # where it was not. Passing nothing keeps the old behaviour exactly.
+    vintage = "current map (no date supplied)"
+    if asof:
+        cur, prior = maps.split_rows(rows, source or "")
+        if prior:
+            pvi, detail = maps.baseline_asof(cur or pvi, prior, asof)
+            vintage = detail["vintage"]
+        else:
+            vintage = (f"current map as of {asof} — NO pvi_prior rows in this "
+                       f"snapshot, so no dated baseline was possible")
+
     sigma_state = math.sqrt(max(sigma_total ** 2 - SIGMA_NATIONAL ** 2,
                                 SIGMA_STATE_FLOOR ** 2))
     districts = {rid: round(tide + _pvi_to_margin(v), 2) for rid, v in pvi.items()}
@@ -539,6 +562,7 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float) -> dict:
     return {
         "ok": True,
         "pvi_source": source,
+        "map_vintage": vintage,
         "n_districts": len(districts),
         "expected_D_seats": round(statistics.fmean(wins), 2),
         "D_seats_80pct": [wins[int(0.10 * N_SIMS)], wins[int(0.90 * N_SIMS)]],

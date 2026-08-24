@@ -489,7 +489,7 @@ def race_from(line: str, default_chamber: str, cycle: int) -> tuple[str, str]:
             dist = m.group(2)
             try:
                 if dist.upper() == "AL":
-                    return P.race_id("house", st, 1, cycle), "ushr at-large (=01)"
+                    return P.race_id("house", st, 0, cycle), "ushr at-large (=00)"
                 return P.race_id("house", st, dist, cycle), "ushr template"
             except ValueError:
                 pass
@@ -509,10 +509,13 @@ def race_from(line: str, default_chamber: str, cycle: int) -> tuple[str, str]:
         if st in NON_VOTING:
             return "", "non-voting delegate"
         if st:
-            # At-large seats are district 1 here, matching how the site's other
-            # readers number them. Flagged in `why` so it can be checked.
+            # AT-LARGE IS 00. Checked before choosing: no at-large House
+            # race_id exists anywhere in the parsed archive, so there was no
+            # incumbent convention to match and nothing to migrate. 00 also
+            # reads as "no district number" rather than as the first of
+            # several, which is what an at-large seat is.
             try:
-                return P.race_id("house", st, 1, cycle), "at-large link (=01)"
+                return P.race_id("house", st, 0, cycle), "at-large link (=00)"
             except ValueError:
                 pass
     # "NY-17" IS ONLY A SEAT ON A HOUSE PAGE. On the Senate and governor

@@ -66,8 +66,13 @@ DATA = REPO / "forecast" / "data"
 # on this list stays in model_private/, and the filter is a whitelist rather
 # than a blacklist so that a field added to house_forecast() later has to be
 # considered before it can be published rather than after.
+# `map_vintage` is on this list on purpose. It names which district lines a
+# seat count was computed on, and a seat count whose baseline is invisible is
+# one nobody can reproduce or argue with. It reveals nothing about the index
+# itself — only which of two published maps was in force on a date.
 HOUSE_PUBLIC_FIELDS = ("n_districts", "expected_D_seats", "D_seats_80pct",
-                       "prob_D_218_plus", "pvi_source", "districts")
+                       "prob_D_218_plus", "pvi_source", "map_vintage",
+                       "districts")
 # Sources that publish a national House margin and leave the seat count to
 # whoever wants one. Mapped to the category their forecast belongs to.
 # Outside sources that publish a NATIONAL MARGIN and no seat count. Each one's
@@ -174,10 +179,15 @@ def public_house(h: dict | None) -> dict | None:
 
 
 def project(tide: float, pvi: dict, states: list, rows: list,
-            sigma: float, holdover_D: int) -> dict:
-    """One tide in, one full set of seat answers out."""
+            sigma: float, holdover_D: int, asof: str | None = None) -> dict:
+    """One tide in, one full set of seat answers out.
+
+    `asof` is the date being projected, and it selects the DISTRICT MAP: see
+    model/maps.py. The Senate run ignores it because no Senate seat was
+    redistricted; only the House baseline moves.
+    """
     sen = polling.senate_forecast(tide, pvi, states, sigma, holdover_D)
-    house = public_house(polling.house_forecast(tide, rows, sigma))
+    house = public_house(polling.house_forecast(tide, rows, sigma, asof=asof))
     out = {
         "tide_D": round(tide, 3),
         "senate": {
@@ -196,6 +206,7 @@ def project(tide: float, pvi: dict, states: list, rows: list,
     }
     if house:
         out["house"] = {
+            "map_vintage": house.get("map_vintage"),
             "n_districts": house["n_districts"],
             "expected_D_seats": house["expected_D_seats"],
             "D_seats_80pct": house["D_seats_80pct"],
@@ -345,7 +356,7 @@ def main(argv=None) -> int:
 
     projections = {}
     for name, (category, tide, tier, margin_elsewhere) in sorted(tides.items()):
-        p = project(tide, pvi, states, rows, sigma, a.holdover_d)
+        p = project(tide, pvi, states, rows, sigma, a.holdover_d, asof=date)
         # The category travels WITH the projection. aggregate.py files each
         # one under it, so adding a model is a registry entry plus a line in
         # EXTERNAL_TIDE_SOURCES and nothing downstream has to learn its name.
@@ -529,8 +540,12 @@ def main(argv=None) -> int:
                 for key, m in (ah[d0].get("models") or {}).items():
                     if m.get("margin_D") is None:
                         continue
+                    # THE DATE GOES IN. This loop re-projected every past
+                    # date onto today's lines, which is the whole bug: a
+                    # March 2025 tide was being turned into seats using
+                    # districts that did not exist until August.
                     p0 = project(float(m["margin_D"]), pvi, states, rows,
-                                 sigma, a.holdover_d)
+                                 sigma, a.holdover_d, asof=d0)
                     p0["category"] = m.get("category") or "academic"
                     p0["categories"] = (m.get("categories")
                                         or [p0["category"]])

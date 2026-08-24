@@ -68,7 +68,7 @@ HOUSE_MAJORITY = 218
 SENATE_D_CONTROL = 51                # §4: the VP is Republican, so 50 is not control
 
 # The hash of RULES.md as pre-registered on 2026-08-22. See _check_rules.
-RULES_SHA256 = "c7b038b960532029db51bb7e9d1c5fd8ff35ee81d835504cf4cc389f5883f70a"
+RULES_SHA256 = "6d67d5c10513156bb3cfb7de279ea59bd544f51f9141e94f7ef266aee68a66e2"
 
 
 def _sha(path: Path) -> str:

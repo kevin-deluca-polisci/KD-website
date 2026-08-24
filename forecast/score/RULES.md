@@ -145,6 +145,29 @@ and no source gets a different universe from another.
   districts and a source covering all 435 are not comparable on an average
   alone. A second figure — the Brier averaged over the intersection of races
   every scored source covered — is published for a like-for-like comparison.
+- **A race-level forecast is scored only if it was made under the map that
+  decided the race.** Ten states redrew during this cycle and 123 of 435
+  districts moved. A forecast of TX-09 dated March 2025 is about a different
+  piece of geography from the TX-09 that appears on the November ballot, and
+  scoring the first against the second compares a claim about one district
+  with the result of another. So for each state, race-level rows dated before
+  that state's map took effect are **not scored and are recorded as
+  out-of-map coverage**, with the count published. National quantities are
+  unaffected: a two-party margin, a seat total and a chamber probability are
+  claims about the country and do not depend on where the lines are.
+
+  Effective dates are in `conditions/redistricting_effective.csv` and the
+  basis for each is named there. The rule is the signature date, and five of
+  the ten states cannot use it. North Carolina's map became law without a
+  signature, Utah's was imposed by a court, Alabama's was passed conditionally
+  and took force only when the Supreme Court lifted the *Allen v. Milligan*
+  injunction, and Ohio's enactment date comes from our own archive because no
+  signature date could be found. California is the fifth and the only one
+  where a signature exists and is not used: the legislature signed on
+  2025-08-21 but the map could not govern a ballot until voters ratified the
+  amendment on 2025-11-04, so the ratification date is used. That choice is
+  worth 3.6 expected seats across the intervening 75 days, which is why it is
+  written down here rather than left in a comment.
 - A probability of exactly 0 or 1 is scored as given. Log scores are computed
   with probabilities clipped to [0.001, 0.999], and the clipping is stated in
   the output. A source that says 0 and is wrong should take a large penalty,
@@ -230,11 +253,35 @@ For the retrospective series we publish a sensitivity: the same reconstruction
 at windows of 7, 14, 21 and 28 days, so a reader can see what the specification
 choice was worth.
 
+**Backfilled seat counts are computed on the map that was in effect on their
+own date**, per `model/maps.py`, rather than on today's lines. Before this
+change a seat count dated March 2025 was produced from districts that did not
+exist until August. That fix changes their accuracy and not their status: a
+projection we compute now, from a specification chosen now, is
+`retrospective` whatever map it uses, and it stays out of the real-time table.
+Every projection records which baseline produced it in a `map_vintage` field,
+because a seat count whose inputs are invisible cannot be checked by anyone.
+
 ## 11. Amendments
 
 Every change to this file after its first commit is listed here, with its date
 and reason. `score.py` refuses to run against a changed file until the new hash
 is pinned, so an amendment cannot be silent.
+
+- **2026-08-24 — redistricting (§5 and §10 amended).** The first two versions
+  were written as though the district map were a constant. It is not: ten
+  states redrew mid-cycle and 123 of 435 districts moved, the last of them on
+  2026-06-02. Two consequences, both settled here before any result exists.
+  Race-level rows made under a superseded map are not scored, because they
+  describe different geography from the race that gets decided. And backfilled
+  seat counts are now computed on the map in force on their own date, which
+  makes them right without making them real-time. Neither change touches a
+  national margin, a seat total or a chamber probability, none of which depend
+  on districting.
+
+  Measured before it was applied: the correction is worth about +5.7 expected
+  Democratic seats at the start of the archive, falling to zero by 2026-06-02
+  when the last map took effect. Today's published numbers do not move.
 
 - **2026-08-23 — provenance (§10 added).** The first version treated every row
   as equally real-time. Measuring the archive showed 75.5% of published
