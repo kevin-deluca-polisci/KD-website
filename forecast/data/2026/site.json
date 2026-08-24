@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-24T02:41:25.457348+00:00",
+  "generated_at": "2026-08-24T02:51:47.608567+00:00",
   "latest_snapshot": "2026-08-23",
   "snapshot_count": 306,
   "headline": [
@@ -2820,7 +2820,7 @@
     }
   },
   "seat_projections": {
-    "snapshot_date": "2026-08-20",
+    "snapshot_date": "2026-08-23",
     "sigma": 6.55,
     "holdover_D": 34,
     "majority_at": {
@@ -3024,7 +3024,7 @@
           }
         },
         "house": {
-          "map_vintage": "current map as of 2026-08-20",
+          "map_vintage": "current map as of 2026-08-23",
           "n_districts": 435,
           "expected_D_seats": 218.66,
           "D_seats_80pct": [
@@ -3042,7 +3042,7 @@
         ],
         "publication": "individual",
         "margin_published_elsewhere": false,
-        "as_of": "2026-08-20"
+        "as_of": "2026-08-23"
       },
       "academic_economic_pessimism": {
         "tide_D": 12.72,
@@ -3239,7 +3239,7 @@
           }
         },
         "house": {
-          "map_vintage": "current map as of 2026-08-20",
+          "map_vintage": "current map as of 2026-08-23",
           "n_districts": 435,
           "expected_D_seats": 263.12,
           "D_seats_80pct": [
@@ -3257,7 +3257,7 @@
         ],
         "publication": "individual",
         "margin_published_elsewhere": false,
-        "as_of": "2026-08-20"
+        "as_of": "2026-08-23"
       },
       "academic_political_history": {
         "tide_D": 2.67,
@@ -3454,7 +3454,7 @@
           }
         },
         "house": {
-          "map_vintage": "current map as of 2026-08-20",
+          "map_vintage": "current map as of 2026-08-23",
           "n_districts": 435,
           "expected_D_seats": 213.79,
           "D_seats_80pct": [
@@ -3472,7 +3472,7 @@
         ],
         "publication": "individual",
         "margin_published_elsewhere": false,
-        "as_of": "2026-08-20"
+        "as_of": "2026-08-23"
       },
       "academic_referendum": {
         "tide_D": 8.28,
@@ -3669,7 +3669,7 @@
           }
         },
         "house": {
-          "map_vintage": "current map as of 2026-08-20",
+          "map_vintage": "current map as of 2026-08-23",
           "n_districts": 435,
           "expected_D_seats": 238.54,
           "D_seats_80pct": [
@@ -3687,7 +3687,7 @@
         ],
         "publication": "individual",
         "margin_published_elsewhere": false,
-        "as_of": "2026-08-20"
+        "as_of": "2026-08-23"
       },
       "class_fundamentals": {
         "tide_D": 10.48,
@@ -3884,7 +3884,7 @@
           }
         },
         "house": {
-          "map_vintage": "current map as of 2026-08-20",
+          "map_vintage": "current map as of 2026-08-23",
           "n_districts": 435,
           "expected_D_seats": 250.13,
           "D_seats_80pct": [
@@ -3901,7 +3901,7 @@
         ],
         "publication": "individual",
         "margin_published_elsewhere": false,
-        "as_of": "2026-08-20"
+        "as_of": "2026-08-23"
       },
       "class_polling": {
         "tide_D": 6.5,
@@ -4098,7 +4098,7 @@
           }
         },
         "house": {
-          "map_vintage": "current map as of 2026-08-20",
+          "map_vintage": "current map as of 2026-08-23",
           "n_districts": 435,
           "expected_D_seats": 230.09,
           "D_seats_80pct": [
@@ -4115,7 +4115,221 @@
         ],
         "publication": "individual",
         "margin_published_elsewhere": true,
-        "as_of": "2026-08-20"
+        "as_of": "2026-08-23"
+      },
+      "fair": {
+        "tide_D": 1.78,
+        "senate": {
+          "n_races": 35,
+          "expected_D_seats_up": 13.22,
+          "D_seats_up_80pct": [
+            10,
+            16
+          ],
+          "expected_D_total": 47.22,
+          "D_total_80pct": [
+            44,
+            50
+          ],
+          "prob_D_50_plus": 0.1346,
+          "prob_D_51_plus": 0.0569
+        },
+        "races": {
+          "AK": {
+            "expected_margin_D": -11.12,
+            "pvi": -6.45,
+            "win_prob_D": 0.0448
+          },
+          "AL": {
+            "expected_margin_D": -27.84,
+            "pvi": -14.81,
+            "win_prob_D": 0.0
+          },
+          "AR": {
+            "expected_margin_D": -28.84,
+            "pvi": -15.31,
+            "win_prob_D": 0.0
+          },
+          "CO": {
+            "expected_margin_D": 13.72,
+            "pvi": 5.97,
+            "win_prob_D": 0.9819
+          },
+          "DE": {
+            "expected_margin_D": 17.8,
+            "pvi": 8.01,
+            "win_prob_D": 0.9967
+          },
+          "FL": {
+            "expected_margin_D": -9.0,
+            "pvi": -5.39,
+            "win_prob_D": 0.0847
+          },
+          "GA": {
+            "expected_margin_D": 0.18,
+            "pvi": -0.8,
+            "win_prob_D": 0.511
+          },
+          "IA": {
+            "expected_margin_D": -10.4,
+            "pvi": -6.09,
+            "win_prob_D": 0.0562
+          },
+          "ID": {
+            "expected_margin_D": -34.3,
+            "pvi": -18.04,
+            "win_prob_D": 0.0
+          },
+          "IL": {
+            "expected_margin_D": 14.46,
+            "pvi": 6.34,
+            "win_prob_D": 0.9864
+          },
+          "KS": {
+            "expected_margin_D": -14.28,
+            "pvi": -8.03,
+            "win_prob_D": 0.0146
+          },
+          "KY": {
+            "expected_margin_D": -28.1,
+            "pvi": -14.94,
+            "win_prob_D": 0.0
+          },
+          "LA": {
+            "expected_margin_D": -19.72,
+            "pvi": -10.75,
+            "win_prob_D": 0.0013
+          },
+          "MA": {
+            "expected_margin_D": 29.76,
+            "pvi": 13.99,
+            "win_prob_D": 1.0
+          },
+          "ME": {
+            "expected_margin_D": 9.42,
+            "pvi": 3.82,
+            "win_prob_D": 0.9248
+          },
+          "MI": {
+            "expected_margin_D": 1.4,
+            "pvi": -0.19,
+            "win_prob_D": 0.5846
+          },
+          "MN": {
+            "expected_margin_D": 6.84,
+            "pvi": 2.53,
+            "win_prob_D": 0.8518
+          },
+          "MS": {
+            "expected_margin_D": -19.78,
+            "pvi": -10.78,
+            "win_prob_D": 0.0013
+          },
+          "MT": {
+            "expected_margin_D": -17.86,
+            "pvi": -9.82,
+            "win_prob_D": 0.0032
+          },
+          "NC": {
+            "expected_margin_D": -1.02,
+            "pvi": -1.4,
+            "win_prob_D": 0.4381
+          },
+          "NE": {
+            "expected_margin_D": -18.76,
+            "pvi": -10.27,
+            "win_prob_D": 0.0021
+          },
+          "NH": {
+            "expected_margin_D": 5.76,
+            "pvi": 1.99,
+            "win_prob_D": 0.8104
+          },
+          "NJ": {
+            "expected_margin_D": 10.32,
+            "pvi": 4.27,
+            "win_prob_D": 0.9424
+          },
+          "NM": {
+            "expected_margin_D": 9.14,
+            "pvi": 3.68,
+            "win_prob_D": 0.9186
+          },
+          "OH": {
+            "expected_margin_D": -8.76,
+            "pvi": -5.27,
+            "win_prob_D": 0.0905
+          },
+          "OK": {
+            "expected_margin_D": -32.9,
+            "pvi": -17.34,
+            "win_prob_D": 0.0
+          },
+          "OR": {
+            "expected_margin_D": 17.08,
+            "pvi": 7.65,
+            "win_prob_D": 0.9954
+          },
+          "RI": {
+            "expected_margin_D": 17.7,
+            "pvi": 7.96,
+            "win_prob_D": 0.9966
+          },
+          "SC": {
+            "expected_margin_D": -14.78,
+            "pvi": -8.28,
+            "win_prob_D": 0.012
+          },
+          "SD": {
+            "expected_margin_D": -27.36,
+            "pvi": -14.57,
+            "win_prob_D": 0.0
+          },
+          "TN": {
+            "expected_margin_D": -26.74,
+            "pvi": -14.26,
+            "win_prob_D": 0.0
+          },
+          "TX": {
+            "expected_margin_D": -10.06,
+            "pvi": -5.92,
+            "win_prob_D": 0.0623
+          },
+          "VA": {
+            "expected_margin_D": 8.76,
+            "pvi": 3.49,
+            "win_prob_D": 0.9095
+          },
+          "WV": {
+            "expected_margin_D": -40.14,
+            "pvi": -20.96,
+            "win_prob_D": 0.0
+          },
+          "WY": {
+            "expected_margin_D": -44.68,
+            "pvi": -23.23,
+            "win_prob_D": 0.0
+          }
+        },
+        "house": {
+          "map_vintage": "current map as of 2026-08-23",
+          "n_districts": 435,
+          "expected_D_seats": 210.23,
+          "D_seats_80pct": [
+            190,
+            230
+          ],
+          "prob_D_majority": 0.3123,
+          "majority_at": 218,
+          "pvi_source": "cook_pvi"
+        },
+        "category": "fundamentals",
+        "categories": [
+          "fundamentals"
+        ],
+        "publication": "individual",
+        "margin_published_elsewhere": true,
+        "as_of": "2026-07-31"
       }
     },
     "publication": "individual",
