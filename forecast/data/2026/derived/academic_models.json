@@ -126,7 +126,7 @@
         "pres_party_seat_change": -48.1,
         "implied_D_seats": 263.1,
         "inversion_extrapolated": false,
-        "curve_points_used": 11,
+        "curve_points_used": 10,
         "sensitivity_month": [
           {
             "month": "Mar 2026",
@@ -238,7 +238,7 @@
           "out_of_sample_mae": 2.7,
           "calls_control": "72%"
         },
-        "inversion_extrapolated": true,
+        "inversion_extrapolated": false,
         "benchmark": {
           "claim": "Democrats lose Senate control with a net loss of three seats; House a knife-edge race at 215 D seats",
           "authors": "Lewis-Beck & Quinlan",
@@ -248,8 +248,7 @@
       },
       "notes": [
         "forecasts SEAT COUNTS directly from institutional facts \u2014 no polls, no economy, no popularity. The margin shown is our seat curve run backwards from its House number, not theirs",
-        "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it",
-        "the House number falls outside today's range of tides, so the inversion is extrapolated"
+        "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it"
       ]
     }
   },
