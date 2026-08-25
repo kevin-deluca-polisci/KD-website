@@ -104,35 +104,96 @@ _NODES, _WEIGHTS = _gauss_legendre(96)
 
 
 def house_analytic(tide: float, pvi: dict[str, float], sigma_total: float,
-                   majority: int = MAJORITY) -> dict:
-    """Expected seats and P(majority) in closed form. See the module docstring."""
+                   majority: int = MAJORITY,
+                   sigma_state: float | None = None,
+                   sigma_district: float | None = None) -> dict:
+    """Expected seats and P(majority) in closed form, over three error levels.
+
+        margin_i = tide + 2 x pvi_i + nat + state_s + eps_i
+
+    E[seats] is the easy half and needs none of this: expectation is linear, so
+    it is SUM Phi(margin_i / sigma_total) whatever the correlation structure.
+
+    P(majority) is where the structure earns its keep. A state-shared error
+    moves a whole delegation together, so it fattens the tails of a seat total
+    in a way that independent district noise never does -- and the tails are
+    the entire content of P(majority). Treating New Hampshire's two seats as
+    two independent draws when one shared error governs both understates the
+    chance of losing or winning them together.
+
+    The integral is done in the order the dependence runs. Outermost, the
+    national error, shared by all 435. Given it, states are independent, so
+    each state's seat count is integrated over its OWN shared error by a second
+    quadrature, giving that state a mean and a variance. Those add across
+    states, and the total is normal-approximated -- which is the same
+    Poisson-binomial approximation the two-level version used, applied one
+    level up.
+
+    Passing sigma_state=None reproduces the old two-level behaviour exactly, so
+    a caller that has not been updated gets what it used to get rather than a
+    silent change of answer.
+    """
     sigma_nat = polling.SIGMA_NATIONAL
-    sigma_state = math.sqrt(max(sigma_total ** 2 - sigma_nat ** 2,
+    if sigma_state is None:
+        sigma_state = 0.0
+        sigma_d = math.sqrt(max(sigma_total ** 2 - sigma_nat ** 2,
                                 polling.SIGMA_STATE_FLOOR ** 2))
-    margins = [tide + 2.0 * v for v in pvi.values()]
+    else:
+        sigma_d = (sigma_district if sigma_district is not None
+                   else math.sqrt(max(sigma_total ** 2 - sigma_nat ** 2
+                                      - sigma_state ** 2, 1e-6)))
+    sig_tot = math.sqrt(sigma_nat ** 2 + sigma_state ** 2 + sigma_d ** 2)
 
-    e_seats = sum(_phi(m / sigma_total) for m in margins)
+    by_state: dict[str, list[float]] = {}
+    for rid, v in pvi.items():
+        st = rid.split("_")[1] if "_" in rid else ""
+        by_state.setdefault(st, []).append(tide + 2.0 * v)
+    margins = [m for v in by_state.values() for m in v]
 
-    lo, hi = -5.0 * sigma_nat, 5.0 * sigma_nat
-    half, mid = (hi - lo) / 2.0, (hi + lo) / 2.0
+    e_seats = sum(_phi(m / sig_tot) for m in margins)
+
+    def gauss_nodes(sd: float, n: int):
+        nodes, weights = _gauss_legendre(n)
+        lo, hi = -5.0 * sd, 5.0 * sd
+        half, mid = (hi - lo) / 2.0, (hi + lo) / 2.0
+        out = []
+        for x, w in zip(nodes, weights):
+            z = mid + half * x
+            dens = math.exp(-0.5 * (z / sd) ** 2) / (sd * math.sqrt(2 * math.pi))
+            out.append((z, w * half * dens))
+        return out
+
+    nat_nodes = gauss_nodes(sigma_nat, 64)
+    st_nodes = gauss_nodes(sigma_state, 24) if sigma_state > 1e-9 else [(0.0, 1.0)]
+
     total = 0.0
-    for x, w in zip(_NODES, _WEIGHTS):
-        nat = mid + half * x
-        dens = math.exp(-0.5 * (nat / sigma_nat) ** 2) / (
-            sigma_nat * math.sqrt(2.0 * math.pi))
-        mu = vv = 0.0
-        for m in margins:
-            p = _phi((m + nat) / sigma_state)
-            mu += p
-            vv += p * (1.0 - p)
-        if vv <= 0.0:
-            cond = 1.0 if mu >= majority else 0.0
+    for nat, wn in nat_nodes:
+        mu_all = var_all = 0.0
+        for _st, ms in by_state.items():
+            m1 = m2 = v1 = 0.0
+            for e, we in st_nodes:
+                mu = vv = 0.0
+                for m in ms:
+                    p = _phi((m + nat + e) / sigma_d)
+                    mu += p
+                    vv += p * (1.0 - p)
+                m1 += we * mu
+                m2 += we * mu * mu
+                v1 += we * vv
+            # Var over the state error = E[Var | e] + Var[E | e].
+            mu_all += m1
+            var_all += v1 + max(m2 - m1 * m1, 0.0)
+        if var_all <= 0.0:
+            cond = 1.0 if mu_all >= majority else 0.0
         else:
-            cond = 1.0 - _phi((majority - 0.5 - mu) / math.sqrt(vv))
-        total += w * half * dens * cond
+            cond = 1.0 - _phi((majority - 0.5 - mu_all) / math.sqrt(var_all))
+        total += wn * cond
     return {"expected_D_seats": round(e_seats, 2),
             "prob_D_majority": round(total, 4),
-            "n_districts": len(margins)}
+            "n_districts": len(margins),
+            "sigma_total": round(sig_tot, 2),
+            "sigma_state": round(sigma_state, 2),
+            "sigma_district": round(sigma_d, 2)}
 
 
 # ---------------------------------------------------------------------------
@@ -213,6 +274,36 @@ def main(argv=None) -> int:
     #
     # The correct reconstruction is the sigma of the newest day that has one,
     # because that is the run that produced the backfill.
+    # THE SIGMA STRUCTURE IS READ PER PROJECTION, NOT ONCE FOR THE FILE.
+    #
+    # A stored projection was produced by whatever the model was on the day it
+    # ran. Dates written before 2026-08-25 used a two-level sigma; dates
+    # written after use three. Applying today's structure to all of them makes
+    # the engine check compare a three-level analytic result against a
+    # two-level simulation and report a disagreement that is an artefact of the
+    # comparison rather than a fault in either engine -- which is exactly what
+    # it did on the first run after the change, at a mean of -0.46 seats.
+    #
+    # So each projection is re-computed with ITS OWN recorded components, and
+    # one that recorded none is re-computed two-level, which is what produced
+    # it. The check then measures what it claims to: whether the two
+    # implementations of the SAME model agree.
+    def _structure(pr: dict) -> tuple[float | None, float | None]:
+        h = (pr or {}).get("house") or {}
+        return h.get("sigma_state"), h.get("sigma_district")
+
+    n_three = sum(1 for d in hist
+                  for pr in ((hist[d] or {}).get("projections") or {}).values()
+                  if _structure(pr)[0] is not None)
+    n_two = sum(1 for d in hist
+                for pr in ((hist[d] or {}).get("projections") or {}).values()
+                if _structure(pr)[0] is None)
+    print(f"  sigma structure: {n_three} projection(s) recorded three levels, "
+          f"{n_two} predate that and are checked two-level")
+    if n_two:
+        print(f"  -> run seats.py --backfill-history to put every date on the "
+              f"current model.")
+
     dated_sigma = {d: (hist[d] or {}).get("sigma") for d in hist}
     fallback = next((dated_sigma[d] for d in sorted(hist, reverse=True)
                      if dated_sigma[d]), 9.0)
@@ -231,9 +322,18 @@ def main(argv=None) -> int:
             if tide is None or h.get("expected_D_seats") is None:
                 continue
             # 1. the same map the stored number used — this is the CHECK
-            same = house_analytic(float(tide), cur, float(sigma))
+            # SAME SIGMA, SAME STRUCTURE. polling.house_forecast draws three
+            # error levels; calling this engine with a total alone silently
+            # runs the two-level path, and the self-check below then reports a
+            # disagreement that is entirely this function's own doing. The
+            # components come from the stored projection where a run recorded
+            # them, and from a fresh calibration otherwise.
+            _ss, _sd = _structure(proj)
+            same = house_analytic(float(tide), cur, float(sigma),
+                                  sigma_state=_ss, sigma_district=_sd)
             # 2. the map that was actually in force on that date
-            dated = house_analytic(float(tide), base, float(sigma))
+            dated = house_analytic(float(tide), base, float(sigma),
+                                   sigma_state=_ss, sigma_district=_sd)
             checks.append(same["expected_D_seats"] - h["expected_D_seats"])
             out.append({
                 "date": date, "model": key, "tide_D": tide,

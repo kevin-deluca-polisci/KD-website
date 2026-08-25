@@ -107,9 +107,57 @@ SHRINK_TAU_DAYS = 265.7
 # JUDGMENT CALL 3 — the national error. Even after shrinkage the tide itself
 # can be wrong, and that error hits every state at once. It is the difference
 # between "each race is a coin flip" and "they all move together", and it
-# dominates the seat distribution's tails. 4.0 points of margin at this
-# horizon is a deliberately generous reading of recent final-poll misses.
-SIGMA_NATIONAL = 4.0
+# dominates the seat distribution's tails: on the 2026 lines it carries about
+# 85% of the variance of the seat total, which makes it the most consequential
+# number in this file by a wide margin.
+#
+# IT IS 538'S, NOT OURS, AND THAT IS DELIBERATE.
+#
+# It used to be 4.0, described in this comment as "a deliberately generous
+# reading of recent final-poll misses". That was a guess. It was never
+# estimated against anything, it could not be, and a guess sitting on 85% of
+# the variance is not a judgment call so much as an unexamined one.
+#
+# 538's 2024 House model publishes a full error decomposition: about 3 points
+# at the national level, 2 each at the regional, state and demographic-cluster
+# levels, 6 at the district level, plus "about 2 points on the margin" of
+# extra error for unforeseen problems in generic-ballot polling. Their stated
+# per-seat total of "about 8" confirms those combine in quadrature —
+# sqrt(9+4+4+4+36+4) = 7.81 — so the generic-ballot buffer belongs at the
+# national level and the national term is
+#
+#     3.0 (+) 2.0 = sqrt(13) = 3.606
+#
+# WHY BORROWING THIS ONE IS LEGITIMATE AND BORROWING THE REST IS NOT. A sigma
+# is either a statement about the DATA or a statement about the MODEL, and
+# only the first kind travels. 3.0 describes how far a poll-based estimate of
+# the national environment lands from the actual national House vote. That is
+# a property of the generic ballot as an instrument, and we read the same
+# instrument they do, so their number describes our tide as well as theirs.
+#
+# Their 6.0 at the district level does NOT travel, and calibrate_sigma_house
+# keeps measuring ours instead. It is the residual of a district forecast
+# built from district polls, fundraising, candidate quality and expert
+# ratings; ours is tide + slope x 2 x baseline + incumbency. Taking their
+# residual for our prediction is the same error the comment in
+# house_forecast() describes — claiming an accuracy the projection has not
+# earned — and it would move the point estimate too, not just the spread,
+# because the seat curve is convex where our mass currently sits.
+#
+# A SIDE EFFECT WORTH NAMING: this number carries no horizon. 538 state one
+# figure for an election-day forecast, so adopting it retires the question of
+# how sigma should shrink between now and November. That question was worth
+# asking — the answer, from our own returns, is that most of the national
+# error is terminal polling bias, which does not shrink with time at all, and
+# the parts that do shrink are small enough that a decaying sigma would be
+# modelling a mechanism that is not there.
+#
+# WHAT WOULD CHANGE THIS. Two things. If 538 publish a revised decomposition
+# for 2026, follow it and say so. If we ever hold enough historical
+# generic-ballot series to fit the terminal error ourselves — see
+# model/sigma_sweep.py for the market cross-checks and the argument — then
+# estimate it and stop borrowing.
+SIGMA_NATIONAL = 3.606      # 538 2024 House: 3.0 national (+) 2.0 generic-ballot
 SIGMA_STATE_FLOOR = 3.0     # idiosyncratic error never falls below this
 
 N_SIMS = 20000
@@ -489,16 +537,292 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
     return out
 
 
+# ---------------------------------------------------------------------------
+# HOUSE SIGMA. Calibrated on House districts, against the baseline the House
+# model actually uses, and split three ways rather than two.
+#
+# `calibrate_sigma` above estimates the spread of SENATE margins around a
+# presidential PVI, and until now the House model borrowed that number. Two
+# different offices and two different predictors. Senate races are statewide
+# campaigns with more money, more name recognition and far more split-ticket
+# voting than a House district sees, so there was never a reason to expect the
+# residuals to transfer, and measurement showed they do not.
+#
+# THE THIRD LEVEL IS THE PART THAT WAS MISSING ENTIRELY. The old structure was
+# a national error shared by all 435 plus an independent district error. But a
+# baseline can be wrong for a whole STATE at once -- New Hampshire's composite
+# has both its seats about seven points too Republican, because a governor's
+# personal vote sits inside the index -- and a shared error does not average
+# away across a delegation. It moves the whole delegation together, which is
+# what fattens the tails of a seat total, and the tails are where P(majority)
+# lives. Treating it as independent district noise understates exactly the
+# quantity the site leads with.
+#
+#     margin_i = mu_i + nat + state_s + eps_i
+#     nat     ~ N(0, SIGMA_NATIONAL)      shared by all 435
+#     state_s ~ N(0, sigma_state)         shared within one state
+#     eps_i   ~ N(0, sigma_district)      independent
+#
+# SIGMA_NATIONAL is NOT estimated here, and cannot be. It is uncertainty about
+# the national tide -- a property of the polling forecast, not of the district
+# residuals -- and the cycle intercept in the calibration absorbs it by
+# construction. Trying to read it off these residuals would double-count it.
+# It comes from 538's published decomposition instead; see the constant.
+#
+# THE OTHER TWO ARE OURS AND STAY OURS. 538 also publish district and
+# state-level terms, and they are smaller than what this function measures.
+# They describe a richer district model than ours and adopting them would
+# claim an accuracy the projection has not earned. The gap between their
+# numbers and these is not an error to be corrected; it is the price of a thin
+# predictor, and the way to close it is to add predictors, not to assert a
+# smaller residual.
+HOUSE_SIGMA_FALLBACK = {"sigma_state": 3.4, "sigma_district": 6.1}
+
+
+def house_incumbency(cycle: int = 2026) -> dict[str, int]:
+    """{race_id: +1 D incumbent, -1 R incumbent, 0 open}, for the 2026 lines.
+
+    WHERE THIS COMES FROM AND WHY THAT IS ALLOWED. The roster is read from the
+    hand-entered Cook table, which also carries an `incumbent` name and an
+    `open_seat` flag beside the index. Cook's INDEX is proprietary and never
+    leaves this machine. Which party currently holds a district is not: it is
+    on the Clerk of the House's roster and in every almanac, and it was checked
+    against public returns before being used here -- Cook's incumbent party
+    agrees with the 2024 MEDSL winner in 248 of 248 comparable districts, every
+    one of them.
+
+    A fact that is independently verifiable from a public source is a fact we
+    may use, whatever table our copy happened to sit in. The index is not, and
+    is not touched.
+    """
+    base = DATA / str(cycle) / "raw" / "cook_pvi"
+    caps = sorted(base.glob("*/manual.json")) if base.exists() else []
+    if not caps:
+        return {}
+    out: dict[str, int] = {}
+    for r in json.loads(caps[-1].read_text(encoding="utf-8")).get("rows", []):
+        st, d = str(r.get("state", "")).upper(), r.get("district")
+        if not st or d is None:
+            continue
+        rid = f"HOU_{st}_{int(d):02d}_{cycle}"
+        # An open seat has no incumbent to advantage, whoever used to hold it.
+        if str(r.get("open_seat")).strip().lower() in ("true", "1", "yes"):
+            out[rid] = 0
+            continue
+        p = str(r.get("party") or "").strip().upper()[:1]
+        out[rid] = 1 if p == "D" else -1 if p == "R" else 0
+    return out
+
+
+def calibrate_sigma_house(cycle: int = 2026, baseline: str = "dra") -> dict:
+    """Three-level House sigma, from house_calibration.py. Never raises.
+
+    `baseline` MUST name the index the forecast is built from. A sigma fitted
+    against a different index is not this model's sigma, and a slope fitted
+    against a different index shrinks the wrong thing by the wrong amount.
+    Measured on 2024, Cook's index and the DRA composite give sigmas of 4.55
+    and 6.96 for the same districts -- not a rounding difference.
+
+    Both specifications come back. Whichever one the projection can actually
+    apply is the one it must use: adding an incumbency term while keeping the
+    no-incumbency slope double-counts, and taking the with-incumbency sigma
+    without applying the term claims an accuracy the model does not have.
+    """
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import house_calibration as hc
+        rows = hc.load_house(hc.DERIVED / "returns.csv")
+        base = (hc.load_baseline_cook(cycle) if baseline == "cook"
+                else hc.load_baseline_dra())
+        inc = hc.incumbency(rows)
+        obs = []
+        for r in rows:
+            if r["cycle"] not in (2022, 2024) or r["runoff"]:
+                continue
+            if (r["party"] != "DEMOCRAT" or r["uncontested"]
+                    or r["votes_unreliable"]):
+                continue
+            bl = hc.baseline_for(base, r["state"], r["district"], r["cycle"])
+            if bl is None or r["margin_D"] is None:
+                continue
+            obs.append({"cycle": r["cycle"], "state": r["state"],
+                        "baseline": bl, "actual": r["margin_D"],
+                        "inc": inc.get((r["cycle"], r["state"],
+                                        r["district"]), 0)})
+        if len(obs) < 100:
+            return {"ok": False, "why": f"only {len(obs)} House observations",
+                    **HOUSE_SIGMA_FALLBACK}
+        out = {"ok": True, "baseline": baseline, "n": None, "cycles": None}
+        for use, name in ((True, "with_incumbency"), (False, "baseline_only")):
+            f = hc.fit(obs, use_inc=use)
+            c = f["components"]
+            if not c.get("ok"):
+                return {"ok": False, "why": c.get("why", "no components"),
+                        **HOUSE_SIGMA_FALLBACK}
+            out["n"], out["cycles"] = f["n"], f["cycles"]
+            out[name] = {
+                "slope": f["slope_baseline"],
+                "incumbency_pts": f["incumbency_pts"],
+                "sigma_state": c["sigma_state"],
+                "sigma_district": c["sigma_district"],
+                "sigma_total": round(math.sqrt(
+                    SIGMA_NATIONAL ** 2 + c["sigma_state"] ** 2
+                    + c["sigma_district"] ** 2), 2)}
+        return out
+    except Exception as e:                       # never break the daily run
+        return {"ok": False, "why": f"{type(e).__name__}: {e}",
+                **HOUSE_SIGMA_FALLBACK}
+
+
 # Which district index to use when the archive holds more than one. Cook's own
 # 2026 lines first, then Grant Williams' republication of them, then whatever
 # Wikipedia's ratings table carries. Previously this was "whichever row the
 # parser happened to emit first", which made the House forecast depend on file
 # ordering — the same model could change answer because a source was renamed.
-PVI_PREFERENCE = ("cook_pvi", "grant_williams", "wikipedia")
+# WHICH DISTRICT BASELINE THE HOUSE PROJECTION USES, in order.
+#
+# `dra` leads. Cook's index is the better-centred one and by the pooled
+# 2022+2024 calibration it is also the more accurate -- sigma_state 3.15 vs
+# 4.19, sigma_district 8.05 vs 8.82 -- but the whole difference is worth about
+# two points on P(D majority) and 0.7 seats of width, and Cook's index can
+# never be published. The redistricting page needs a district partisanship
+# number a reader can check. That trade was made deliberately: a small,
+# measured accuracy cost in exchange for a page that can exist at all.
+#
+# Cook stays second, so removing DRA from the archive falls back rather than
+# failing, and the private class model can still be run against it.
+PVI_PREFERENCE = ("dra", "cook_pvi", "grant_williams", "wikipedia")
+
+# DRA computes no district export for a single-district state, because there
+# the district IS the state and the app has nothing to divide. These six are
+# filled from our own composite of MEDSL returns; see model/state_composite.py.
+DRA_AT_LARGE = ("AK", "DE", "ND", "SD", "VT", "WY")
+
+# The quantity pair DRA rows are filed under. See parsers/dra.py for why it is
+# not `pvi`.
+DRA_QUANTITIES = ("composite_share", "composite_share_prior")
+
+# Which calibration each baseline source needs. The slope, the incumbency
+# coefficient and the three sigmas are all properties of the index they were
+# fitted against, so this map is not a convenience -- reading it wrong means
+# projecting one index with another's slope, which is the same class of error
+# as borrowing a richer model's residual. grant_williams and wikipedia both
+# republish Cook's index, so they calibrate as Cook.
+BASELINE_CALIBRATION = {"dra": "dra", "cook_pvi": "cook",
+                        "grant_williams": "cook", "wikipedia": "cook"}
+
+
+def _at_large_shares(cycle: int = 2026) -> dict[str, float]:
+    """{state: two-party D share} for the six single-district states."""
+    f = DATA / str(cycle) / "derived" / "state_composite.csv"
+    if not f.exists():
+        return {}
+    import csv as _csv
+    out = {}
+    with f.open() as fh:
+        for r in _csv.DictReader(fh):
+            if r["state"] in DRA_AT_LARGE:
+                try:
+                    out[r["state"]] = float(r["statewide_two_party_D"])
+                except (TypeError, ValueError):
+                    continue
+    return out
+
+
+def dra_baseline(rows: list[dict], cycle: int = 2026
+                 ) -> tuple[dict[str, float], dict[str, float], dict]:
+    """DRA's composite as a PVI-equivalent: (current, prior, detail).
+
+    THE CENTRING IS THE WHOLE FUNCTION, so it is worth being explicit about
+    what it does and what it cannot do.
+
+    Cook's PVI is defined as a deviation from the national presidential vote,
+    so `tide + 2 x PVI` is coherent with `tide` meaning "the national margin"
+    without anyone having to do anything. DRA's composite is an absolute
+    two-party share inside the district. Feed the generic ballot into that raw
+    and every district comes out about two and a half points too Republican,
+    because the composite's own national level is sitting inside the number.
+
+    So each district is expressed as its distance from the MEAN DISTRICT:
+
+        pvi_equivalent_i = share_i - mean(share over all 435 current districts)
+
+    That is the same shape as Cook's definition with "the mean district"
+    standing in for "the nation". It is not identical to the nation: districts
+    are equal in population and unequal in turnout, and turnout is lower in the
+    safest Democratic seats, so a population-weighted mean sits a little to the
+    Democratic side of the actual national vote.
+
+    WHAT THAT COSTS, MEASURED RATHER THAN ASSUMED. Refitting the calibration
+    against the centred baseline and comparing each cycle's fitted intercept to
+    the actual national House margin from returns.csv:
+
+        centred DRA   2022  -1.04    2024  +0.72     mean -0.16
+        Cook, as used 2022  -0.90    2024  +0.82     mean -0.04
+
+    So centring makes DRA behave like Cook to within a sixth of a point on
+    average, with the same +/- 0.9 of per-cycle wobble. That wobble is the
+    error in translating a national margin onto a district index at all, it is
+    a property of both baselines rather than of this choice, and against
+    SIGMA_NATIONAL of 3.6 it raises the total by 3%. Named here so nobody
+    rediscovers it as a bug.
+
+    ONE CONSTANT, BOTH MAPS. The prior-map districts are centred on the SAME
+    number as the current ones, computed from the current 435. Redistricting
+    moves voters between districts; it does not change how the country votes.
+    Recentring each vintage on its own mean would silently make a redraw look
+    like a national swing, which is precisely the artefact the redistricting
+    page exists to measure rather than manufacture.
+    """
+    cur, pri = maps.split_rows(rows, "dra", DRA_QUANTITIES)
+
+    # The six single-district states, in the same units (a two-party share).
+    #
+    # DISTRICT "01", NOT "00". An at-large seat has no natural number and the
+    # archive had to pick one; cook_pvi and the incumbency roster both write
+    # 01, so that is the convention and this has to match it. Writing 00 here
+    # cost nothing visible -- the baseline still had 435 districts and the run
+    # still succeeded -- while quietly dropping the incumbency term for all six
+    # states, because house_incumbency() is keyed on race_id and none of the
+    # six keys matched. Four incumbents disappeared and the seat count moved
+    # with no error anywhere. Hence the assertion below.
+    filled = []
+    for st, share in _at_large_shares(cycle).items():
+        rid = f"HOU_{st}_01_{cycle}"
+        if rid not in cur:
+            cur[rid] = share
+            filled.append(st)
+
+    if not cur:
+        return {}, {}, {"ok": False, "why": "no DRA composite rows"}
+
+    # THE KEYS HAVE TO LINE UP WITH EVERY OTHER DISTRICT TABLE. A baseline
+    # whose race_ids do not match the incumbency roster loses incumbency for
+    # those districts and says nothing about it -- see the note on district
+    # numbering above. This is cheap and it catches the whole class.
+    roster = house_incumbency(cycle)
+    if roster:
+        orphans = sorted(rid for rid in cur if rid not in roster)
+        if orphans:
+            raise ValueError(
+                f"DRA baseline has {len(orphans)} race_id(s) the incumbency "
+                f"roster does not know: {orphans[:6]}. These would be "
+                f"projected with no incumbency term and no warning. Check the "
+                f"at-large district number and the cycle suffix.")
+
+    centre = statistics.fmean(cur.values())
+    detail = {"ok": True, "n_current": len(cur), "n_prior": len(pri),
+              "centre_share": round(centre, 4),
+              "at_large_filled": sorted(filled),
+              "at_large_source": "derived/state_composite.csv (MEDSL)"}
+    return ({rid: v - centre for rid, v in cur.items()},
+            {rid: v - centre for rid, v in pri.items()},
+            detail)
+
 
 
 def house_forecast(tide: float, rows: list[dict], sigma_total: float,
-                   asof: str | None = None) -> dict:
+                   asof: str | None = None, house_sigma: dict | None = None) -> dict:
     """
     District-level run.
 
@@ -516,16 +840,28 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float,
     comment claiming a protection the code does not provide is worse than no
     comment at all.
     """
+    # TWO SHAPES OF BASELINE, ONE SCALE OUT.
+    #
+    # Cook files a deviation under `pvi`; DRA files an absolute share under
+    # `composite_share` and has to be centred before it means the same thing.
+    # Everything downstream of here works in Cook's units -- a share deviation,
+    # doubled into a margin by _pvi_to_margin -- so the difference is resolved
+    # once, here, and never again.
     by_source: dict[str, dict[str, float]] = {}
     for r in rows:
         if r["quantity"] == "pvi" and r["chamber"] == "house" and r["race_id"]:
             by_source.setdefault(r["source_id"], {}).setdefault(
                 r["race_id"], float(r["value"]))
+    dra_cur, dra_pri, dra_detail = dra_baseline(rows)
+    if dra_cur:
+        by_source["dra"] = dra_cur
+
     source = next((s for s in PVI_PREFERENCE if by_source.get(s)),
                   next(iter(by_source), None))
     pvi = by_source.get(source or "", {})
     if not pvi:
-        return {"ok": False, "why": "no district PVI in the archive"}
+        return {"ok": False, "why": "no district baseline in the archive"}
+    baseline_detail = dra_detail if source == "dra" else {"ok": True}
 
     # THE MAP IS A FUNCTION OF THE DATE.
     #
@@ -536,7 +872,10 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float,
     # where it was not. Passing nothing keeps the old behaviour exactly.
     vintage = "current map (no date supplied)"
     if asof:
-        cur, prior = maps.split_rows(rows, source or "")
+        if source == "dra":
+            cur, prior = dra_cur, dra_pri
+        else:
+            cur, prior = maps.split_rows(rows, source or "")
         if prior:
             pvi, detail = maps.baseline_asof(cur or pvi, prior, asof)
             vintage = detail["vintage"]
@@ -544,26 +883,90 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float,
             vintage = (f"current map as of {asof} — NO pvi_prior rows in this "
                        f"snapshot, so no dated baseline was possible")
 
-    sigma_state = math.sqrt(max(sigma_total ** 2 - SIGMA_NATIONAL ** 2,
+    # THREE LEVELS, not two. See calibrate_sigma_house: a state-shared error
+    # is what a two-level structure cannot express, and it is the one that
+    # decides the tails, because it moves a whole delegation at once instead of
+    # averaging away across 435 independent draws.
+    # THE SIGMA MUST BE THE ONE FITTED AGAINST THE INDEX ACTUALLY SELECTED.
+    # `source` was chosen a few lines above by PVI_PREFERENCE, and it can
+    # change without anyone editing this file -- a missing DRA snapshot falls
+    # back to Cook silently and correctly. What must not happen silently is
+    # projecting the fallback index with the preferred index's slope.
+    hs = (house_sigma if house_sigma is not None
+          else calibrate_sigma_house(
+              baseline=BASELINE_CALIBRATION.get(source or "", "cook")))
+    if hs.get("ok"):
+        pass                       # components chosen below, beside the slope
+    else:
+        # The old two-level split, kept as the fallback so a missing returns
+        # file degrades the model rather than stopping it. Named as such in the
+        # output, because a silent fallback is how a model quietly stops being
+        # the model that was documented.
+        sigma_st = 0.0
+        sigma_d = math.sqrt(max(sigma_total ** 2 - SIGMA_NATIONAL ** 2,
                                 SIGMA_STATE_FLOOR ** 2))
-    districts = {rid: round(tide + _pvi_to_margin(v), 2) for rid, v in pvi.items()}
+        sigma_used = sigma_total
+        sigma_src = f"FALLBACK, senate-calibrated ({hs.get('why', '?')})"
+
+    # THE POINT ESTIMATE AND THE SPREAD NOW COME FROM ONE MODEL.
+    #
+    # Until now the margin was tide + 2 x PVI with no incumbency term, while
+    # sigma was taken from a fit that HAD one. That borrows the tighter
+    # residual of a richer model to describe a poorer prediction, and it is
+    # wrong in the direction that flatters: it claims an accuracy the
+    # projection has not earned.
+    #
+    # So the slope, the incumbency coefficient and the three sigmas are drawn
+    # from the SAME fit, and if the roster is unavailable the model falls back
+    # to the no-incumbency slope AND the no-incumbency sigma together, never
+    # one without the other.
+    inc = house_incumbency() if hs.get("ok") else {}
+    spec_name = "with_incumbency" if inc else "baseline_only"
+    spec = hs.get(spec_name) if hs.get("ok") else None
+    if spec:
+        sigma_st, sigma_d = spec["sigma_state"], spec["sigma_district"]
+        sigma_used = spec["sigma_total"]
+        slope, inc_pts = spec["slope"], (spec.get("incumbency_pts") or 0.0)
+        sigma_src = (f"house-calibrated on {hs['n']} district-cycles "
+                     f"{hs.get('cycles')}, baseline {hs.get('baseline')}, "
+                     f"{spec_name}")
+    else:
+        slope, inc_pts = 1.0, 0.0
+    districts = {rid: round(tide + slope * _pvi_to_margin(v)
+                            + inc_pts * inc.get(rid, 0), 2)
+                 for rid, v in pvi.items()}
+    n_inc = sum(1 for rid in districts if inc.get(rid, 0) != 0)
+    st_of = {rid: (rid.split("_")[1] if "_" in rid else "") for rid in districts}
+    states = sorted(set(st_of.values()))
 
     rng = random.Random(SEED)
     order = sorted(districts)
     wins = []
     for _ in range(N_SIMS):
         nat = rng.gauss(0.0, SIGMA_NATIONAL)
+        eff = ({s: rng.gauss(0.0, sigma_st) for s in states} if sigma_st > 0
+               else {s: 0.0 for s in states})
         w = 0
         for rid in order:
-            if districts[rid] + nat + rng.gauss(0.0, sigma_state) > 0:
+            if (districts[rid] + nat + eff[st_of[rid]]
+                    + rng.gauss(0.0, sigma_d) > 0):
                 w += 1
         wins.append(w)
     wins.sort()
     return {
         "ok": True,
         "pvi_source": source,
+        "baseline_detail": baseline_detail,
         "map_vintage": vintage,
         "n_districts": len(districts),
+        "sigma_source": sigma_src,
+        "sigma_national": SIGMA_NATIONAL,
+        "sigma_state": round(sigma_st, 2),
+        "sigma_district": round(sigma_d, 2),
+        "sigma_total": round(sigma_used, 2),
+        "baseline_slope": round(slope, 4),
+        "incumbency_pts": round(inc_pts, 2),
+        "n_incumbents": n_inc,
         "expected_D_seats": round(statistics.fmean(wins), 2),
         "D_seats_80pct": [wins[int(0.10 * N_SIMS)], wins[int(0.90 * N_SIMS)]],
         "prob_D_218_plus": round(sum(1 for w in wins if w >= 218) / N_SIMS, 4),
@@ -574,7 +977,7 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float,
              "state": rid.split("_")[1] if "_" in rid else "",
              "district": rid.split("_")[2] if rid.count("_") > 2 else "",
              "expected_margin_D": m,
-             "win_prob_D": round(_norm_cdf(m / sigma_total), 4)}
+             "win_prob_D": round(_norm_cdf(m / sigma_used), 4)}
             for rid, m in sorted(districts.items(), key=lambda kv: -kv[1])],
     }
 

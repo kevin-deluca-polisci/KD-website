@@ -70,8 +70,17 @@ DATA = REPO / "forecast" / "data"
 # seat count was computed on, and a seat count whose baseline is invisible is
 # one nobody can reproduce or argue with. It reveals nothing about the index
 # itself — only which of two published maps was in force on a date.
+# The sigma fields were added on 2026-08-25 and the whitelist did its job:
+# it forced the question rather than letting them through. They are parameters
+# of OUR model, contain nothing from any third-party index, and a seat
+# probability whose spread is invisible cannot be reproduced or argued with by
+# anyone outside. `sigma_source` names its own provenance, including when it
+# falls back, which is the field that stops a quiet change of method looking
+# like a change of opinion.
 HOUSE_PUBLIC_FIELDS = ("n_districts", "expected_D_seats", "D_seats_80pct",
                        "prob_D_218_plus", "pvi_source", "map_vintage",
+                       "sigma_source", "sigma_national", "sigma_state",
+                       "sigma_district", "sigma_total",
                        "districts")
 # Sources that publish a national House margin and leave the seat count to
 # whoever wants one. Mapped to the category their forecast belongs to.
@@ -213,6 +222,22 @@ def project(tide: float, pvi: dict, states: list, rows: list,
             "prob_D_majority": house["prob_D_218_plus"],
             "majority_at": HOUSE_MAJORITY,
             "pvi_source": house.get("pvi_source"),
+            # THE SPREAD, ALONGSIDE THE POINT ESTIMATE. A seat count and a
+            # probability are both functions of sigma, and one published
+            # without it cannot be reproduced or argued with from outside.
+            # `sigma_source` names its own provenance, including when it falls
+            # back to the old Senate-calibrated value -- which is what stops a
+            # quiet change of method from reading as a change of opinion.
+            #
+            # Note this dict is a SECOND narrowing after HOUSE_PUBLIC_FIELDS.
+            # Adding a field to the whitelist alone is not enough; it has to be
+            # named here too, which is why the sigma fields were missing from
+            # the first run after they were whitelisted.
+            "sigma_source": house.get("sigma_source"),
+            "sigma_national": house.get("sigma_national"),
+            "sigma_state": house.get("sigma_state"),
+            "sigma_district": house.get("sigma_district"),
+            "sigma_total": house.get("sigma_total"),
         }
         out["districts"] = house.get("districts") or []
     return out

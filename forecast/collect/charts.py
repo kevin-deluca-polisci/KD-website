@@ -511,6 +511,7 @@ def _nice_ticks(lo: float, hi: float, n: int = 4) -> list[float]:
     # about n intervals, and the fallbacks below get progressively finer.
     candidates = [m * mag for m in (10, 5, 2.5, 2, 1)]
     candidates += [m * mag / 10.0 for m in (5, 2.5, 2, 1)]
+    chosen = next((c for c in candidates if c >= raw), candidates[-1])
 
     def gen(step: float) -> list[float]:
         if step <= 0:
@@ -523,7 +524,6 @@ def _nice_ticks(lo: float, hi: float, n: int = 4) -> list[float]:
             v += step
         return out
 
-    chosen = next((c for c in candidates if c >= raw), candidates[-1])
     ticks = gen(chosen)
     if len(ticks) < 3:
         for c in candidates[candidates.index(chosen) + 1:]:
@@ -636,6 +636,49 @@ def build_panel(rows: list[dict], panel: str,
     lo, hi = lo - pad, hi + pad
     if unit == "prob":
         lo, hi = max(0.0, lo), min(1.0, hi)
+        # SNAP TO THE CERTAINTY BOUND WHEN THE SERIES GETS NEAR IT.
+        #
+        # A probability axis has two ends that mean something, and a reader
+        # judging "how close to certain is this" needs the certain end
+        # labelled. Fitting the domain to the data alone loses it: the House
+        # panel peaked at 0.966, the padded top came to 0.976, the 100% tick
+        # fell outside and was dropped, and the chart showed a line running
+        # into the top of the frame with 80% as its last reference. That reads
+        # as "somewhere above 80" when the answer is "almost certain".
+        #
+        # So when the domain already reaches within one tick step of 0 or 1,
+        # the bound is pulled in and the label comes with it. The guard is the
+        # step rather than a fixed distance, because the step is what decides
+        # whether a label would appear anyway. A series living between 40% and
+        # 60% is untouched -- it is nowhere near either end, and stretching its
+        # axis to the full range would flatten the movement the panel exists
+        # to show.
+        #
+        # THE THRESHOLD IS IN PROBABILITY, NOT IN TICK STEPS. The first
+        # version tested "within one tick step of the bound", which sounds
+        # principled and is not: the step on a wide probability panel is 0.25,
+        # so the guard reached down from 0.75 and would snap a panel whose
+        # whole range sat in the low eighties. Five points is a threshold in
+        # the units of the thing being measured, and a probability five points
+        # from certain is near enough to certain that a reader needs the
+        # ceiling to judge against.
+        #
+        # data_lo and data_hi INCLUDE THE LAST POINT'S INTERVAL, and that is
+        # the right quantity rather than an oversight. The band is drawn, so
+        # the axis has to hold it; on 2026-08-24 the House probability band
+        # ran 0.31 to 0.9855 while the four point estimates sat between 0.51
+        # and 0.81. Testing the points alone would have left the drawn band
+        # running into an unlabelled top edge, which is the fault this is
+        # here to fix.
+        #
+        # Each bound is tested on its own, so a panel that hugs zero does not
+        # also get a ceiling it never approaches. The Senate panel's band runs
+        # 0.057 to 0.784 and is left exactly as it was.
+        NEAR_CERTAIN = 0.05
+        if data_hi >= 1.0 - NEAR_CERTAIN:
+            hi = 1.0
+        if data_lo <= NEAR_CERTAIN:
+            lo = 0.0
     # A flat series would otherwise give a zero-height domain and a division by
     # zero in Y(). One point of room either side is enough to draw a line.
     if hi - lo < 1e-6:

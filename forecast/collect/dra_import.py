@@ -48,6 +48,9 @@ column, the "Un" row is not a district, and the blank-id row is the state.
 from __future__ import annotations
 
 import argparse
+import datetime as _dt
+import getpass
+import hashlib
 import csv
 import re
 import sys
@@ -173,14 +176,91 @@ def expected_seats() -> dict[str, int]:
     return {k: len(v) for k, v in seats.items()}
 
 
+def snapshot(folder: Path, cycle: int, dry_run: bool = False) -> int:
+    """Copy the DRA exports into the raw store, verbatim, with hashes.
+
+    WHY THE BYTES AND NOT THE PARSE. This project's whole architecture is that
+    capture stores what a source said and never interprets it, and parse reads
+    storage and never fetches. dra_import.py was written before there was a
+    `dra` source in the registry, so it read the download folder directly and
+    handed rows to a model. That works exactly until someone re-exports a state
+    and the earlier numbers are gone with no record that they were ever
+    different -- which for a redistricting archive is the one thing that must
+    not happen, because the whole point is that a district's index carries the
+    date on which it was knowable.
+
+    So the CSVs go into raw/dra/<date>/ unchanged, one .meta.json each, and the
+    parser reads them from there like every other source. The download folder
+    becomes an inbox rather than the archive.
+
+    NAMING. DRA names an export after the map's VINTAGE, so Arkansas's current
+    lines arrive in a file called "AR-2022-...". The stored name is
+    <state>-<current|prior>.csv, taken from the containing directory, because
+    the directory is the only unambiguous statement of which map a file
+    describes. See main() for the same reasoning applied to `infer`.
+    """
+    files = sorted(f for f in folder.rglob("*")
+                   if f.suffix.lower() in (".csv", ".tsv", ".txt"))
+    if not files:
+        raise SystemExit(f"no CSVs in {folder}")
+    date = _dt.date.today().isoformat()
+    out = REPO / "forecast" / "data" / str(cycle) / "raw" / "dra" / date
+    who = getpass.getuser()
+    written = skipped = 0
+    for f in files:
+        meta_in = infer(f.name)
+        fold = re.sub(r"[^a-z]", "", f.parent.name.lower())
+        ver = None
+        if "current" in fold or "new" in fold:
+            ver = "current"
+        elif "prior" in fold or "old" in fold or "previous" in fold:
+            ver = "prior"
+        st = meta_in["state"]
+        if not st or not ver:
+            print(f"    SKIP {f.name}  (state={st} version={ver}) — a file the "
+                  f"importer cannot place is not stored, because a raw file "
+                  f"with no state is worse than no file")
+            skipped += 1
+            continue
+        body = f.read_bytes()
+        name = f"{st}-{ver}"
+        meta = {"source_url": "https://davesredistricting.org/",
+                "fetched_at": _dt.datetime.now().astimezone().isoformat(),
+                "bytes": len(body),
+                "sha256": hashlib.sha256(body).hexdigest(),
+                "manual_entry": True, "entered_by": who,
+                "original_filename": f.name,
+                "original_folder": f.parent.name,
+                "state": st, "map_version": ver,
+                "election": meta_in.get("election"),
+                "map_version_from": "containing directory, not the filename"}
+        if not dry_run:
+            out.mkdir(parents=True, exist_ok=True)
+            (out / f"{name}.csv").write_bytes(body)
+            (out / f"{name}.meta.json").write_text(
+                __import__("json").dumps(meta, indent=2, sort_keys=True))
+        written += 1
+    print(f"\n  {'would write' if dry_run else 'wrote'} {written} file(s) to "
+          f"forecast/data/{cycle}/raw/dra/{date}/"
+          + (f"   ({skipped} skipped)" if skipped else ""))
+    return 0 if written else 1
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     ap.add_argument("--dir", required=True)
     ap.add_argument("--out")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--snapshot", action="store_true",
+                    help="copy the exports into raw/dra/<today>/ verbatim "
+                         "with hashes, so parse.py can read them like any "
+                         "other source. Does not model anything.")
+    ap.add_argument("--cycle", type=int, default=2026)
     a = ap.parse_args(argv)
 
     d = Path(a.dir).expanduser()
+    if a.snapshot:
+        return snapshot(d, a.cycle, a.dry_run)
     # WALK SUBDIRECTORIES, because the folder is the answer to a question the
     # filename gets wrong. DRA names an export after the map's VINTAGE --
     # "AR-2022-Congressional-district-statistics.csv" -- and Arkansas's 2022

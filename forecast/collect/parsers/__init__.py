@@ -77,6 +77,14 @@ QUANTITIES = {
     "turnout_pct",
     "pvi",            # Cook Partisan Voting Index, signed: negative = R-leaning
     "pvi_prior",      # same, on the PREVIOUS map — the pair shows redistricting
+    # Dave's Redistricting district composite: an ABSOLUTE two-party
+    # Democratic share inside the district, 0-100. Deliberately NOT filed under
+    # `pvi`, which is a deviation from the national vote. Mixing an absolute
+    # share and a deviation in one column would make every consumer guess which
+    # it had, and the two differ by about two and a half points. Centring is a
+    # modelling decision and happens in model/polling.py's dra_baseline().
+    "composite_share",
+    "composite_share_prior",   # same, on the PREVIOUS map
     "margin_D_adjusted",      # house-effect / likely-voter adjusted polling margin
     "margin_D_pres_2024",     # statewide 2024 presidential two-party margin
     "margin_D_prior_senate",  # statewide 2024 Senate two-party margin

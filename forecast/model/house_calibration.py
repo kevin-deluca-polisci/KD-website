@@ -102,8 +102,39 @@ REDREW_2026 = {"TX", "CA", "FL", "OH", "NC", "MO", "TN", "LA", "AL", "UT"}
 REDREW_2024 = {"GA", "NY"}
 
 
-def load_baseline() -> dict[tuple, dict[str, float]]:
-    """{(state, district): {version: margin}} for both map versions.
+def load_baseline_cook(cycle: int = 2026) -> dict[tuple, dict[str, float]]:
+    """Cook's index as a MARGIN, current and prior lines, from manual.json.
+
+    THE POINT OF HAVING BOTH LOADERS. A sigma is only meaningful against the
+    predictor it was fitted to. The House forecast currently builds margins
+    from Cook's PVI, so a sigma fitted against the DRA composite -- a different
+    index with a different spread -- is not the sigma of the model in use, and
+    a slope fitted against DRA would shrink Cook's index by the wrong amount.
+
+    Calibrating against whichever baseline the forecast actually uses is the
+    whole rule, so `--baseline` exists and polling.py passes the one it is
+    running on. When the House model moves to DRA, the flag moves with it and
+    nothing else has to change.
+    """
+    base = REPO / "forecast" / "data" / str(cycle) / "raw" / "cook_pvi"
+    caps = sorted(base.glob("*/manual.json")) if base.exists() else []
+    if not caps:
+        return {}
+    out: dict[tuple, dict[str, float]] = {}
+    for r in json.loads(caps[-1].read_text(encoding="utf-8")).get("rows", []):
+        st, d = str(r.get("state", "")).upper(), r.get("district")
+        if not st or d is None:
+            continue
+        k = (st, f"{int(d):02d}")
+        if r.get("pvi") is not None:
+            out.setdefault(k, {})["current"] = 2.0 * float(r["pvi"])
+        if r.get("pvi_prior") is not None:
+            out.setdefault(k, {})["prior"] = 2.0 * float(r["pvi_prior"])
+    return out
+
+
+def load_baseline_dra() -> dict[tuple, dict[str, float]]:
+    """{(state, district): {version: margin}} for both DRA map versions.
 
     THE MISTAKE THIS PREVENTS, which cost a whole round of wrong conclusions:
     calibrating 2022 and 2024 outcomes against the 2026 lines. In the ten
@@ -191,6 +222,56 @@ def incumbency(rows: list[dict]) -> dict[tuple, int]:
     return out
 
 
+def variance_components(resid: list[float], groups: list[str]) -> dict:
+    """Split residual variance into a state-correlated part and a district part.
+
+    THE NAIVE VERSION IS BIASED AND I USED IT FIRST. Taking the SD of the
+    per-state mean residuals looks like the state-level spread, but a state's
+    mean is itself noisy -- Delaware's "state effect" is one district's error,
+    Vermont's is one district's error, and that sampling noise inflates the
+    estimate. Wyoming would appear to have a large state effect purely because
+    n=1.
+
+    The one-way random-effects (ANOVA) estimator removes it:
+
+        MSB = between-group mean square, MSW = within-group mean square
+        sigma_state^2 = (MSB - MSW) / n_effective
+
+    where n_effective corrects for unequal group sizes. When MSB < MSW the
+    estimate is negative, which means the data show no state-level component
+    at all; it is clamped at zero and reported, not hidden.
+
+    WHY THIS MATTERS MORE THAN ITS SIZE SUGGESTS. A state-level error is shared
+    by every district in that state, so it does not average away across the
+    435. It moves the whole delegation together, which is exactly what widens
+    the tails of a seat total -- and the tails are where P(majority) lives. An
+    independent district error of the same size would barely register there.
+    """
+    by = defaultdict(list)
+    for r, g in zip(resid, groups):
+        by[g].append(r)
+    by = {g: v for g, v in by.items() if v}
+    k = len(by)
+    n = sum(len(v) for v in by.values())
+    if k < 2 or n <= k:
+        return {"ok": False, "why": "not enough groups"}
+    grand = sum(sum(v) for v in by.values()) / n
+    ssb = sum(len(v) * (statistics.mean(v) - grand) ** 2 for v in by.values())
+    ssw = sum(sum((x - statistics.mean(v)) ** 2 for x in v)
+              for v in by.values())
+    msb, msw = ssb / (k - 1), ssw / (n - k)
+    # Unequal group sizes: the ANOVA n_effective, not the plain average.
+    n_eff = (n - sum(len(v) ** 2 for v in by.values()) / n) / (k - 1)
+    var_state = (msb - msw) / n_eff if n_eff > 0 else 0.0
+    naive = statistics.pstdev([statistics.mean(v) for v in by.values()])
+    return {"ok": True, "groups": k, "n": n,
+            "sigma_state": round(math.sqrt(max(var_state, 0.0)), 2),
+            "sigma_district": round(math.sqrt(max(msw, 0.0)), 2),
+            "negative_estimate": var_state < 0,
+            "naive_sd_of_state_means": round(naive, 2),
+            "n_effective": round(n_eff, 2)}
+
+
 BUCKETS = [("competitive (|margin| < 10)", 0, 10),
            ("lean (10-25)", 10, 25),
            ("safe (25+)", 25, 999)]
@@ -223,6 +304,7 @@ def fit(obs: list[dict], use_inc: bool) -> dict:
     for r, o in zip(resid, obs):
         bys[(o["cycle"], o["state"])].append(r)
     between = statistics.pstdev([statistics.mean(v) for v in bys.values()])
+    vc = variance_components(resid, [f'{o["cycle"]}_{o["state"]}' for o in obs])
     return {
         "n": n, "cycles": cycles,
         "cycle_shift": {str(c): round(b, 2) for c, b in zip(cycles, beta)},
@@ -231,6 +313,7 @@ def fit(obs: list[dict], use_inc: bool) -> dict:
         "sigma_all": round(statistics.pstdev(resid) * dof, 2),
         "sigma_by_bucket": by_bucket,
         "sigma_between_state": round(between, 2),
+        "components": vc,
         "r2": round(1 - statistics.pvariance(resid) / statistics.pvariance(y), 4),
     }
 
@@ -257,8 +340,15 @@ def report(base: dict, inc: dict) -> None:
             continue
         print(f"  {'  ' + name:<26}{b['sd']:>16.2f}"
               f"{(i['sd'] if i else float('nan')):>16.2f}   (n={b['n']})")
-    print(f"  {'state-correlated part':<26}{base['sigma_between_state']:>16.2f}"
-          f"{inc['sigma_between_state']:>16.2f}")
+    for label, key in (("sigma_state (correlated)", "sigma_state"),
+                       ("sigma_district (indep.)", "sigma_district")):
+        b = base["components"].get(key)
+        i = inc["components"].get(key)
+        if b is not None:
+            print(f"  {label:<26}{b:>16.2f}{i:>16.2f}")
+    print(f"  {'  (naive SD of state means)':<26}"
+          f"{base['components'].get('naive_sd_of_state_means', 0):>16.2f}"
+          f"{inc['components'].get('naive_sd_of_state_means', 0):>16.2f}")
     print("\n  cycle shifts (the national environment relative to the "
           "composite):")
     for c, v in inc["cycle_shift"].items():
@@ -301,12 +391,16 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     ap.add_argument("--returns", default=str(DERIVED / "returns.csv"))
     ap.add_argument("--cycles", default="2022,2024")
+    ap.add_argument("--baseline", choices=["dra", "cook"], default="dra",
+                    help="which district index to calibrate against. It must "
+                         "be the one the forecast uses; see load_baseline_cook")
     ap.add_argument("--json")
     a = ap.parse_args(argv)
 
     want = {int(x) for x in a.cycles.split(",")}
     rows = load_house(Path(a.returns).expanduser())
-    base = load_baseline()
+    base = (load_baseline_cook(2026) if a.baseline == "cook"
+            else load_baseline_dra())
     inc_map = incumbency(rows)
 
     obs = []
@@ -328,6 +422,7 @@ def main(argv=None) -> int:
         raise SystemExit(f"only {len(obs)} usable observations")
 
     n_inc = sum(1 for o in obs if o["inc"] != 0)
+    print(f"  baseline: {a.baseline}")
     print(f"  {len(obs)} contested races; {n_inc} with an incumbent "
           f"({100*n_inc/len(obs):.0f}%), {len(obs)-n_inc} open")
     res_base = fit(obs, use_inc=False)

@@ -159,8 +159,19 @@ def vintage_label(detail: dict) -> str:
             f"{','.join(old)} on previous lines")
 
 
-def split_rows(rows: list[dict], source: str) -> tuple[dict, dict]:
-    """Pull {race_id: value} for `pvi` and `pvi_prior` from parsed rows."""
+def split_rows(rows: list[dict], source: str,
+               quantities: tuple[str, str] = ("pvi", "pvi_prior"),
+               ) -> tuple[dict, dict]:
+    """Pull {race_id: value} for a current/prior quantity pair from parsed rows.
+
+    `quantities` defaults to Cook's pair so every existing caller is unchanged.
+    Dave's Redistricting stores the same current/prior structure under
+    ("composite_share", "composite_share_prior") because its units are an
+    absolute share rather than a deviation from the nation, and filing two
+    incompatible scales under one quantity name would make every consumer guess
+    which one it had.
+    """
+    q_cur, q_pri = quantities
     cur: dict[str, float] = {}
     pri: dict[str, float] = {}
     for r in rows:
@@ -174,9 +185,9 @@ def split_rows(rows: list[dict], source: str) -> tuple[dict, dict]:
             v = float(r["value"])
         except (TypeError, ValueError, KeyError):
             continue
-        if q == "pvi":
+        if q == q_cur:
             cur.setdefault(rid, v)
-        elif q == "pvi_prior":
+        elif q == q_pri:
             pri.setdefault(rid, v)
     return cur, pri
 

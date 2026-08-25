@@ -487,6 +487,55 @@ sources:
       same method. Holding both lets us validate ours against theirs and publish
       OURS, which is the point — a redistributable index we can actually show.
 
+  - id: dra
+    name: Dave's Redistricting — district election composites (2026 and prior maps)
+    category: fundamentals
+    method: manual                 # exported by a human; capture.py never fetches it
+    enabled: true
+    cadence: sporadic              # re-exported when a state's map changes
+    publication: private           # *** see PUBLICATION below — this is meant to change ***
+    declared_inputs: []
+    license: permitted
+    robots_checked: 2026-08-25
+    # Same reason as cook_pvi and medsl: imported on one date and needed on
+    # every later one. Without this the composite vanishes from tomorrow's
+    # parse and the House model loses its baseline overnight.
+    static_artifacts: true
+    config:
+      source_url: https://davesredistricting.org/
+      inbox: forecast/data/DRA
+    notes: >
+      WHAT IT IS. For every district on a plan, DRA computes a composite of
+      recent statewide election results inside those boundaries. Held for both
+      the 2026 lines and, in the ten states that redrew, the lines they
+      replaced, so a district's index carries the map that was actually in
+      force on the date being projected.
+      HOW IT ARRIVES. Exported by hand from the app into the inbox folder
+      above, then snapshotted into raw/ verbatim with hashes by:
+        python3 forecast/collect/dra_import.py --dir forecast/data/DRA --snapshot
+      The inbox is an inbox, not the archive. Re-exporting a state overwrites
+      the download; the raw store keeps every dated version.
+      UNITS. An absolute two-party Democratic share inside the district, NOT a
+      deviation from the nation. It is emitted as `composite_share` rather than
+      `pvi` for exactly that reason — the two scales are not interchangeable
+      and one column must not hold both. Centring happens once, visibly, in
+      model/polling.py.
+      WHY WE HOLD IT: it is the district baseline that can be published. Cook
+      PVI is the better-centred index and is private forever; the redistricting
+      page needs a number a reader can check.
+      PUBLICATION: `private` today, and this is the field to change. DRA do not
+      forbid republication. Their data is assembled from state partners — VEST,
+      the Redistricting Data Hub and others, differing by state — and this
+      archive has not yet written that per-state attribution into the methods
+      page. Taking the permission without honouring its condition is not
+      something to do by omission. When the attribution table lands, set this
+      to `individual`, and check that `composite_share` is not caught by
+      NEVER_PUBLISH in aggregate.py.
+      KNOWN GAP: DRA has no district export for the six single-district states
+      (AK, DE, ND, SD, VT, WY), because there the district IS the state. Those
+      six are filled from our own MEDSL-derived state composite; see
+      model/state_composite.py and dra_baseline() in model/polling.py.
+
   - id: cook_pvi
     name: Cook Partisan Voting Index (2026 lines)
     category: fundamentals
@@ -644,7 +693,18 @@ sources:
 
   - id: wiki_endorsements
     name: Wikipedia candidate endorsements
-    category: candidate_quality
+    # fundamentals, NOT a category of its own. `category` names a FORECAST
+    # FAMILY -- aggregate.py groups by it to build the per-family averages the
+    # site shows -- and endorsements are an input to a model, not a forecast
+    # anyone is making. The convention is FRED's: an input takes the category
+    # of the model that will consume it, and is kept out of the averages by
+    # QUANTITY, via NOT_A_FORECAST in aggregate.py. Inventing
+    # `candidate_quality` here broke capture.py --self-test, which whitelists
+    # the six real families, and a self-test failure aborts the whole run --
+    # so one unrecognised word in one field cost a day of collection across
+    # every source. When this source starts emitting parsed rows, add its
+    # quantities to NOT_A_FORECAST before the first run, not after.
+    category: fundamentals
     method: wikipedia
     enabled: true
     cadence: daily
