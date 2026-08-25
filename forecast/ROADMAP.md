@@ -92,16 +92,59 @@ count **cross-pressured endorsements**, where a group's modal endorsement in
 other races that cycle went the other way. That is a defection count, it needs
 only the 2026 data, and it is already more informative than a share.
 
-### 3. Primaries identify quality cleanly, and they are already resolved
+### 3. Primaries are OUT, and the reason is the estimand
 
-In a primary, party is constant by construction, so endorsement share is not a
-proxy for partisanship. If the Ballotpedia data covers primary endorsements,
-that is the cleanest identification available, and **the 2026 primaries have
-already happened** -- which means the model can be fit and validated now,
-against known outcomes, with the data already in hand and no scraping at all.
+An earlier version of this section argued that primaries were the cleanest
+identification available, because party is constant in a primary so endorsement
+share cannot be a restatement of partisanship. That argument is correct about
+primaries and wrong about what we are trying to measure. Kevin's objection,
+recorded because it settles the design:
 
-This is the cheapest first move by a wide margin and should be checked before
-anything else is planned.
+> A primary tells you who the high quality candidate is IN THE PRIMARY, but not
+> in the general. The key thing the model picks up is who gets endorsed in the
+> general, after the candidates in the primary are decided. It's the same as my
+> newspaper endorsement measure -- it only measures quality DIFFERENTIALS
+> between candidates. So a primary has different candidates, and it might not
+> tell you about the quality differences in the general election.
+
+Candidate quality here is not a property of a person in isolation. It is a
+comparison between the two people actually on the general-election ballot, and
+a primary compares a different set. A candidate who dominated a six-way primary
+and one who was unopposed have incomparable primary records and may be
+identically matched in November.
+
+So: `stage == pri` rows are dropped in `collect/mit_returns.py`, and primary
+contests are not modelled. This also happens to remove a data problem -- MEDSL
+carries essentially no primary returns anyway (60 rows in fifty years of House
+elections) -- but the reason is the estimand, not the availability. Had the
+returns existed we would still not use them.
+
+### 3a. The specification, stated
+
+    general-election two-party vote share
+        ~ partisanship (the district or state baseline)
+        + endorsement share differential between the two nominees
+        + incumbency
+        + controls
+
+Endorsement share is within-race by construction, which is what handles the
+salience problem in section 1. Partisanship is what the coefficient has to be
+adjusted for, and is the entire reason the DRA baseline work matters here as
+well as for the seat model.
+
+**Cross-party endorsements are expected to carry most of the signal**, for the
+same reason they do in the newspaper model: an endorsement from a group or a
+politician whose usual side is the other one is evidence about the candidate
+rather than about the party. Wikipedia annotates these by hand -- 65 in the
+2026 sweep, 50 in 2024 -- which is a small enough n to be a validation set
+rather than a regressor, so the group-lean residual still has to do the work at
+scale.
+
+**Open question for the pre-registration**, not settled here: whether an
+endorsement a nominee collected DURING their primary counts toward their
+general-election share. Including them is more data and imports the contested
+primary's salience; excluding them is cleaner and discards a lot. Decide before
+seeing a coefficient, and report the other as a robustness check.
 
 ### 4. Training data: ask before scraping
 
@@ -117,20 +160,65 @@ thing breaks quietly. A ten-minute email plausibly saves a month of scraping,
 and one cycle of training data is a description rather than a model, so two or
 three prior cycles is the real requirement.
 
-**Second, scrape Wikipedia regardless**, because it is independently valuable to
-the endorsements project and because it supplies something Ballotpedia's dump
-probably does not: **dates**. Wikipedia's revision history says when an
-endorsement first appeared, and `collect/wiki_firstseen.py` already does exactly
-this job for retirement announcements -- heading paths, reference stripping,
-person keys, first-seen grading. The machinery transfers with modest changes.
+**Second, scrape Wikipedia**, and this is now built and measured rather than
+proposed. `collect/wiki_endorsements.py` extracts endorsements from race
+articles; `--self-test` covers it, `--audit` reports on a sweep.
 
-The caution on Wikipedia is coverage. Endorsement lists exist for Senate races
-and high-profile House races and essentially nowhere else, so selection into
-Wikipedia is selection on notability, which is selection on competitiveness --
-the salience problem from section 1, reappearing in the training set. A model
-fit on Wikipedia races and applied to all 435 is extrapolating. So: Wikipedia as
-a **validation** set and as the source of dates, Ballotpedia's own prior cycles
-as the training set, if they can be had.
+A full 2026 pass on 2026-08-25 returned **11,234 rows from 121 pages**, and the
+numbers below are what the pre-registration has to be written against. They
+replace the guess this section previously carried, which was that Wikipedia
+covered Senate races and marquee House races and nothing else. That was wrong.
+
+| | measured |
+|---|---|
+| contests with any endorsement | 322 of ~435 House, 32 of ~35 Senate, 36 of 36 governor |
+| distinct endorsers | 4,637 |
+| endorsers in >=2 contests | 1,237 (27%) |
+| endorsers in >=5 contests | 319 (7%) |
+| contests with >=2 endorsed candidates | 279 of 390 (72%) |
+| rows carrying a usable citation date | 69% |
+| wikilinked (so entity-keyed) | 98% |
+
+**Four findings that decide the specification.**
+
+1. **The group-lean residual is identified, but only for organisations.** The
+   endorsers who recur are national groups -- AIPAC in 173 contests, Planned
+   Parenthood in 132, the AFL-CIO in 112, the League of Conservation Voters in
+   90. Their lean is estimable. Individual politicians overwhelmingly appear
+   once, usually endorsing in their own state, so their lean is not estimable
+   the same way and must come from party instead. Two mechanisms, one model,
+   and the pre-registration has to say which applies to whom.
+
+2. **Salience is confirmed and quantified.** Median 12 endorsements per
+   contest, p90 of 65, maximum 417 (California governor). Counts are
+   unusable. Share-within-race is the only defensible form, and this is now a
+   measurement rather than an argument.
+
+3. **113 House districts have no endorsements at all**, and they are the safe
+   seats -- missing, and missing not at random. They cannot be dropped, since
+   that is a competitive-races-only model presented as a full one, and they
+   cannot be imputed zero, since no data is not no quality. The decision to
+   record in advance: candidate quality enters as an adjustment only where data
+   exists, with the untouched districts stated explicitly.
+
+4. **Arrival is roughly flat, not clustered.** Roughly 575-750 dated
+   endorsements a month through 2026. The worry that a share-to-date is
+   incomparable across dates is weaker than it looked -- though this is the
+   stock of dates on pages today, not the flow of when entries appeared, so
+   weekly capture is what will actually answer it. One real exception: the
+   California governor's race has been accumulating endorsements since early
+   2023, so its runway is three years where a Senate race that opened last
+   autumn has one. Any time normalisation has to handle that.
+
+**A bonus the design did not anticipate.** Wikipedia editors annotate
+cross-party endorsements by hand, in a consistent italic parenthetical -- a
+Democrat endorsing in a Republican primary is written as such on the page. 65
+of them in the 2026 sweep. Too few to fit on, but they are a free validation
+set for whatever cross-pressure measure gets built, and for individual
+endorsers they supply directly what the group-lean step has to estimate.
+
+The remaining caution is depth, not breadth. Coverage is broad; how MUCH is
+listed still tracks how interesting the race is, which is finding 2.
 
 ### 5. The dating problem decides what this can ever be
 
@@ -181,7 +269,46 @@ September state. Two things are worth doing now even though the rest waits.
 
 Everything else here can happen in December.
 
-### 8. Licence, unresolved
+### 8. It is Kevin's own forecast, so it needs its own pre-registration
+
+Decided 2026-08-24: this becomes a model in the archive, not a captured source.
+That means a source id, a registry entry, a place beside polling and
+fundamentals in the class models, and scoring by `score.py` on the same
+horizons with no exemption.
+
+**Name.** `endorsement_quality`, displayed as *endorsement-based candidate
+quality*. Not "candidate quality model" flat: the model measures endorsements
+and INFERS quality, and whether that inference works is the thing being tested.
+A name that asserts the conclusion is a name that will read badly if the
+answer is no. It also keeps it distinct from the newspaper-endorsements
+project it borrows its structure from.
+
+**A section in the pre-registration report, alongside the other evaluations.**
+More necessary here than for the AI panel, not less: this is Kevin's own model
+in Kevin's own research area, which is exactly where "you chose that
+specification after seeing the numbers" is most damaging and least answerable.
+Written before the first estimate, the choices below cost an afternoon; written
+after, they cannot be distinguished from choices made because of the answers.
+
+What has to be fixed in advance:
+
+- the specification -- raw share, cross-pressure count, or the group-lean
+  residual of section 2, and if more than one, which is *the* forecast
+- which endorser categories count, and whether `newspaper` is in or out given
+  that it overlaps Kevin's other data
+- how `declined` and `withdrawn` rows are treated: dropped, negative weight, or
+  a separate covariate
+- incumbency and open-seat controls
+- **the time-normalisation.** Endorsements do not arrive uniformly. They
+  cluster after primaries, after debates, and in the last three weeks, so a
+  candidate at 60% share in June and 60% in October are not the same object.
+  Normalise within date, or model the arrival process; decide which now.
+- the horizon at which the model starts, which is the day capture starts
+- **the null**: does the seat model with candidate quality beat the same model
+  without it, on the same horizons. Pre-register that this is the headline
+  result and that a null gets published as a null.
+
+### 9. Licence, unresolved
 
 Ballotpedia's data comes with terms that have not been read yet, and the default
 is the project default: `private` until a decision is recorded in

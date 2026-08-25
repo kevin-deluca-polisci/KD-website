@@ -295,6 +295,47 @@ class RawStore:
         (d / f"{slug}.meta.json").write_text(json.dumps(meta, indent=2, sort_keys=True))
         return len(body)
 
+    def write_dedup(self, source_id: str, name: str, body: bytes,
+                    meta: dict) -> tuple[int, bool]:
+        """Body only when it differs from the most recent prior capture.
+
+        WHY A SOURCE WOULD WANT THIS. The endorsement sweep reads 150 Wikipedia
+        articles a day at roughly 150KB each. Stored unconditionally that is
+        ~22MB a day into a private git repo, most of it byte-identical to
+        yesterday, for a set of pages that changes slowly.
+
+        The metadata is ALWAYS written, changed or not. That distinction is the
+        whole point: a day with no body is a day we checked and found nothing
+        new, which is a different and much more useful fact than a day with no
+        record. The meta carries `dedup.changed` and the date and hash of the
+        copy it matched, so a reader can walk backwards to the bytes without
+        guessing.
+
+        It also happens to give first-seen dating for free. If today's bytes
+        differ from the last stored copy, something on that page changed today,
+        and the row that appeared is datable to today without anyone parsing a
+        revision history.
+
+        Returns (bytes written, changed).
+        """
+        prev, prev_date = self.previous_hash(source_id, name)
+        cur = meta.get("sha256") or hashlib.sha256(body).hexdigest()
+        changed = prev != cur
+        if self.dry_run:
+            return 0, changed
+        slug = self._slugify(name)
+        d = self.root / source_id / self.snapshot_date
+        d.mkdir(parents=True, exist_ok=True)
+        m = dict(meta)
+        m["dedup"] = {"changed": changed, "matched_date": prev_date,
+                      "matched_sha256": prev}
+        if changed:
+            (d / f"{slug}.{self._extension(body, meta)}").write_bytes(body)
+        (d / f"{slug}.meta.json").write_text(
+            json.dumps(m, indent=2, sort_keys=True))
+        return (len(body) if changed else 0), changed
+
+
     def write_backfill(self, source_id: str, subdir: str, name: str,
                        body: bytes, meta: dict) -> int:
         """Backfill lands under its own dated path, not today's."""
@@ -537,7 +578,23 @@ def handle_wikipedia(src: dict, fetcher: Fetcher, store: RawStore,
     n = b = 0
     notes: list[str] = []
 
-    for title in cfg.get("pages", []):
+    pages = list(cfg.get("pages") or [])
+    # A PAGE PLAN instead of 150 lines of YAML. Election article titles are
+    # mechanical, so a source that wants every race in a cycle names the
+    # generator rather than enumerating it -- which also means a plan cannot
+    # drift out of step with the module that parses what it fetches.
+    plan = cfg.get("pages_plan") or {}
+    if plan:
+        import importlib
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        mod = importlib.import_module(plan["module"])
+        pages += list(getattr(mod, plan.get("function", "titles"))(
+            int(plan["cycle"])))
+
+    dedup = bool(cfg.get("dedup"))
+    changed_n = absent_n = 0
+    for title in pages:
         params = {
             "action": "parse", "page": title, "prop": "wikitext",
             "format": "json", "formatversion": "2",
@@ -545,16 +602,36 @@ def handle_wikipedia(src: dict, fetcher: Fetcher, store: RawStore,
         url = f"{api}?{urllib.parse.urlencode(params)}"
         try:
             body, meta = fetcher.get(url)
-            b += store.write(src["id"], f"current-{title}", body, meta)
-            n += 1
         except Exception as e:
             notes.append(f"current fetch failed for '{title}': {e}")
+            continue
+        # A TITLE THAT DOES NOT EXIST IS NOT A FAILURE. A generated plan asks
+        # for a Senate race in all fifty states and only about thirty-five hold
+        # one; treating the rest as errors would bury a real failure under
+        # fifteen expected ones every single day.
+        if body and b"missingtitle" in body[:400]:
+            absent_n += 1
+            continue
+        if dedup:
+            wrote, ch = store.write_dedup(src["id"], f"current-{title}",
+                                          body, meta)
+            b += wrote
+            changed_n += ch
+        else:
+            b += store.write(src["id"], f"current-{title}", body, meta)
+        n += 1
+    if dedup:
+        notes.append(f"{changed_n} of {n} page(s) changed; the rest recorded "
+                     f"as unchanged with no body stored")
+    if absent_n:
+        notes.append(f"{absent_n} planned title(s) do not exist (expected for "
+                     f"a generated plan)")
 
     bf = cfg.get("backfill") or {}
     if backfill and bf.get("enabled"):
         since = str(bf.get("since", "2026-01-01"))
         cap = bf.get("max_revisions_per_page", 2000)
-        for title in cfg.get("pages", []):
+        for title in pages:
             got = 0
             rvcontinue = None
             page_idx = 0

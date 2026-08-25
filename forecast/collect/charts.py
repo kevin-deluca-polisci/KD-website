@@ -367,10 +367,11 @@ def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list
     # Its last few points simply stay on the chart, at the right-hand edge,
     # looking like the newest thing we know rather than the last thing we knew.
     #
-    # Grant Williams is the case this exists for. He was withdrawn from the
-    # published tier on 2026-08-22, aggregate.py stopped emitting a professional
-    # average that same run, and without this the professional line would have
-    # gone on being drawn from four stale rows indefinitely.
+    # The professional family is the case this exists for. Its last publishable
+    # contributor moved to the private tier on 2026-08-22, aggregate.py stopped
+    # emitting a professional average that same run, and without this the
+    # professional line would have gone on being drawn from four stale rows
+    # indefinitely.
     #
     # THE RULE, and it is narrow on purpose: a row is dropped only when the
     # averages HAVE that date and do not have that series on it. A date the

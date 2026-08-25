@@ -1,0 +1,63 @@
+{
+ "baseline_only": {
+  "n": 768,
+  "cycles": [
+   2022,
+   2024
+  ],
+  "cycle_shift": {
+   "2022": -5.51,
+   "2024": -4.6
+  },
+  "slope_baseline": 1.0413,
+  "incumbency_pts": null,
+  "sigma_all": 10.27,
+  "sigma_by_bucket": {
+   "competitive (|margin| < 10)": {
+    "n": 160,
+    "sd": 9.45
+   },
+   "lean (10-25)": {
+    "n": 262,
+    "sd": 12.19
+   },
+   "safe (25+)": {
+    "n": 346,
+    "sd": 8.74
+   }
+  },
+  "sigma_between_state": 6.78,
+  "r2": 0.9035
+ },
+ "with_incumbency": {
+  "n": 768,
+  "cycles": [
+   2022,
+   2024
+  ],
+  "cycle_shift": {
+   "2022": -5.27,
+   "2024": -3.99
+  },
+  "slope_baseline": 0.9211,
+  "incumbency_pts": 5.49,
+  "sigma_all": 9.76,
+  "sigma_by_bucket": {
+   "competitive (|margin| < 10)": {
+    "n": 160,
+    "sd": 7.8
+   },
+   "lean (10-25)": {
+    "n": 262,
+    "sd": 11.54
+   },
+   "safe (25+)": {
+    "n": 346,
+    "sd": 8.91
+   }
+  },
+  "sigma_between_state": 6.0,
+  "r2": 0.9128
+ },
+ "n_obs": 768
+}

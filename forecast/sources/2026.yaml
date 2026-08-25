@@ -641,6 +641,48 @@ sources:
   # that should be visible and dated, not an absence. capture.py skips all of
   # these because license != permitted.
 
+
+  - id: wiki_endorsements
+    name: Wikipedia candidate endorsements
+    category: candidate_quality
+    method: wikipedia
+    enabled: true
+    cadence: daily
+    publication: individual        # CC BY-SA 4.0, attribution required
+    license: permitted
+    robots_checked: 2026-08-25
+    # WHY THIS IS DAILY AND DEDUPED.
+    #
+    # An endorsement is an event with a date, and the date is the point. A
+    # citation gives the date the story ran, which is close but is missing on
+    # ~30% of entries; capturing every day and storing only what CHANGED makes
+    # the archive itself the record. The day a page's bytes move is the day
+    # something was added to it, and that is a `captured` first-seen date --
+    # the strongest provenance class in the taxonomy -- for every row, not just
+    # the well-cited ones.
+    #
+    # 150 articles at ~150KB is ~22MB a day stored naively, nearly all of it
+    # identical to yesterday. `dedup: true` writes the metadata every day and
+    # the body only on change. A day with no body is a day we looked and found
+    # nothing new, which is a fact worth recording and is not the same as a day
+    # with no record.
+    config:
+      api: https://en.wikipedia.org/w/api.php
+      dedup: true
+      # 150 titles, generated rather than enumerated. See handle_wikipedia.
+      pages_plan:
+        module: wiki_endorsements
+        function: titles
+        cycle: 2026
+      # Roughly 29 of the planned titles do not exist in any given cycle --
+      # only about 35 states hold a Senate race and 36 a governor's race. The
+      # handler counts those as absent rather than as failures.
+      backfill:
+        enabled: false
+        # Deliberately off. capture.py --backfill fetches revision LISTS, which
+        # record that a page changed and never what it said. For this source
+        # the wikitext of past revisions is what would be worth having, and
+        # that is wiki_history.py's job, not this one's.
   - id: votehub
     name: VoteHub
     category: professional

@@ -46,7 +46,7 @@
         <tr><td><strong>Fundamentals</strong></td>
             <td class="muted">Predicts from conditions rather than opinion: the economy, presidential approval, seats defended. Knows nothing about candidates or polls.</td></tr>
         <tr><td><strong>Professional</strong></td>
-            <td class="muted">Published statistical forecasts combining most of the above plus candidate quality, fundraising and local knowledge. <strong>Currently draws no line on the chart</strong> — everything in this family is either licence-restricted or, in one case, withheld on the evidence below. <a href="#professional">What happened</a>.</td></tr>
+            <td class="muted">Published statistical forecasts combining most of the above plus candidate quality, fundraising and local knowledge. <strong>Currently draws no line on the chart</strong> — this site publishes no individual forecaster's numbers, and the category average needs more contributors than we have. <a href="#professional">More</a>.</td></tr>
         <tr><td><strong>Academic</strong></td>
             <td class="muted">Specifications published in the political-science forecasting literature, rebuilt here and run on our data. <a href="#academic">Four of them</a>, disagreeing more with each other than any other family does.</td></tr>
       </table>
@@ -433,58 +433,22 @@
          quality and money. The category we are least free to reproduce.</p>
       <div class="note">
         <strong>Why this family shows nothing today.</strong>
-        Every other forecaster here is collected under a licence that permits an
-        average but not a per-forecaster figure, and a category average needs at
-        least three such contributors before it can be shown. That left one
-        openly licensed model — Grant Williams' — carrying the family on its own,
-        and on 2026-08-22 we stopped publishing it. Not for a licence reason. His
-        seat numbers carry a units error, and this archive should not publish a
-        number it can show to be wrong.
-        <p style="margin:10px 0 0">His model builds each district's margin from
-           its Cook PVI. Regressing his own published district margins on the PVI
-           he ships beside them recovers that step exactly:</p>
-        <table style="margin-top:10px;max-width:520px">
-          <tr><th>Chamber</th><th class="num">Fitted relationship</th><th class="num">R²</th></tr>
-          <tr><td class="muted">House (435 districts)</td><td class="num">margin = 5.69 + 1.114 × PVI</td><td class="num">0.978</td></tr>
-          <tr><td class="muted">Senate (35 races)</td><td class="num">margin = 6.14 + 1.199 × PVI</td><td class="num">0.949</td></tr>
-        </table>
-        <p style="margin:10px 0 0">An R² of 0.978 across 435 districts means that
-           line <em>is</em> the district model; polling enters only eight of them.
-           Cook PVI is a share deviation: a district three points more Democratic
-           in share is six points more Democratic in margin, so the
-           unit-consistent multiplier is 2.0. Our own seat model uses exactly
-           2.0, and his state PVIs agree with ours in scale, so this is one
-           multiplier on one index rather than two different indices.</p>
-        <p style="margin:10px 0 0">A coefficient of 1.11 compresses every district
-           45% toward the national environment, which in a D+5.7 year turns a
-           large block of Republican-leaning seats into Democratic-favoured ones.
-           Re-running his districts with his own uncertainty and only that number
-           changed:</p>
-        <table style="margin-top:10px;max-width:520px">
-          <tr><th>PVI multiplier</th><th class="num">Expected D seats</th></tr>
-          <tr><td class="muted">1.114 — his</td><td class="num">256.5</td></tr>
-          <tr><td class="muted">1.7 — an empirical House estimate</td><td class="num">233.3</td></tr>
-          <tr><td class="muted">2.0 — unit-consistent</td><td class="num">226.9</td></tr>
-        </table>
-        <p style="margin:10px 0 0">His published figure is 250.79. The 226.9 is
-           where the markets, the polling family and our own curve all sit, so
-           the entire gap between him and everything else on this page was that
-           one coefficient. What is <em>not</em> affected is his national margin,
-           which comes from a separate model, and nothing here is a claim that
-           the rest of his work is unsound: his file is internally consistent to
-           the decimal, which is the only reason the error was diagnosable from
-           outside at all.</p>
-        <p style="margin:10px 0 0">Collection continues daily and every row is
-           kept. His outputs are gitignored and overwritten on each run, so this
-           archive is the only record that his forecast existed on any given day
-           — which is worth more when a model turns out to have a fault in it,
-           not less. The full series will be in the post-election release.</p>
+        This site publishes no individual forecaster's numbers in any category —
+        what it shows is the average across a family, which is a wisdom-of-crowds
+        figure rather than a pick. That average needs at least three contributors
+        collected under licences permitting it, and the professional family is
+        below that floor: most of these forecasters permit collection but not
+        per-forecaster republication during the cycle.
+        <p style="margin:10px 0 0">So the professional line is absent, not late.
+           Collection continues daily and every row is kept; the full series will
+           be in the post-election release, when the licence questions that
+           govern the cycle no longer apply.</p>
       </div>
 
       <table>
         <tr><th>Forecaster</th><th>What it is</th></tr>
         <tr><td><a href="https://grantbw4.github.io/2026-midterms-forecast/">Grant Williams</a></td>
-            <td class="muted">An open-source district- and state-level model built on partisan lean, polling, incumbency and candidate quality. MIT-licensed, so it is the one forecast in this category we could quote race by race. <strong>Collected daily, not published</strong> — see the note above. No published track record from a previous cycle.</td></tr>
+            <td class="muted">An open-source district- and state-level model built on partisan lean, polling, incumbency and candidate quality. MIT-licensed. Collected daily.</td></tr>
         <tr><td><a href="https://votes.decisiondeskhq.com/forecast/2026">Decision Desk HQ</a></td>
             <td class="muted">Polls-plus-fundamentals model paired with a live results operation. Their forecast page is <strong>not collected</strong> — their robots file disallows it — but their race ratings reach us, attributed, through Wikipedia.</td></tr>
         <tr><td><a href="https://www.economist.com/interactive/us-midterms-2026">The Economist</a></td>
@@ -517,18 +481,19 @@
       <p class="thin-note">Both CNalysis and Elections Daily would be genuinely
          new opinions rather than duplicates: neither is among the raters
          reaching us through Wikipedia's ratings tables.</p>
-            {{/* No per-forecaster figures here any more.
+            {{/* No per-forecaster figures on this card, by policy.
 
-           This card used to print Grant Williams' national numbers under the
-           heading "Current figures, where the licence permits" — which is an
-           accurate description of why HE was the one shown and a poor reason
-           for a reader to see him rather than anyone else. It made one
-           forecaster look like the category's representative when the only
-           thing distinguishing him is an MIT licence, a fact about paperwork.
+           This card used to print one forecaster's national numbers under the
+           heading "Current figures, where the licence permits". That was an
+           accurate description of why THAT forecaster was the one shown and a
+           poor reason for a reader to see them rather than anyone else: it made
+           one model look like the category's representative when the only thing
+           distinguishing it was a permissive licence, which is a fact about
+           paperwork rather than about forecasting.
 
            What this page publishes for the professional category is the
-           average, on the comparisons page. This card's job is to say who is
-           in it and link to them. */}}
+           average, on the comparisons page. This card's job is to say who is in
+           it and link to them. */}}
       <p class="thin-note">No individual forecaster's numbers are shown on this
          site. What we publish for this category is the average across everyone
          in it — wisdom of the crowd rather than a pick — and it is on the
