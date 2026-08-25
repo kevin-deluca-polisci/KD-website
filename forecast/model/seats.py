@@ -81,6 +81,16 @@ HOUSE_PUBLIC_FIELDS = ("n_districts", "expected_D_seats", "D_seats_80pct",
                        "prob_D_218_plus", "pvi_source", "map_vintage",
                        "sigma_source", "sigma_national", "sigma_state",
                        "sigma_district", "sigma_total",
+                       # HOW THE BASELINE WAS BUILT. For Cook this is empty --
+                       # a PVI is a deviation already. For the DRA composite it
+                       # carries the centring constant, and that number is
+                       # load-bearing: every district margin is its composite
+                       # share minus this, so a projection cannot be
+                       # reproduced without it. It also names the six at-large
+                       # districts whose value came from our own MEDSL
+                       # composite rather than from DRA at all, which is a
+                       # provenance fact a reader is entitled to.
+                       "baseline_detail",
                        "districts")
 # Sources that publish a national House margin and leave the seat count to
 # whoever wants one. Mapped to the category their forecast belongs to.
@@ -238,6 +248,7 @@ def project(tide: float, pvi: dict, states: list, rows: list,
             "sigma_state": house.get("sigma_state"),
             "sigma_district": house.get("sigma_district"),
             "sigma_total": house.get("sigma_total"),
+            "baseline_detail": house.get("baseline_detail") or {},
         }
         out["districts"] = house.get("districts") or []
     return out
