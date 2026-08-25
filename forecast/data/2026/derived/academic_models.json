@@ -1,7 +1,7 @@
 {
   "cycle": 2026,
-  "snapshot_date": "2026-08-24",
-  "days_to_election": 71,
+  "snapshot_date": "2026-08-25",
+  "days_to_election": 70,
   "category": "academic",
   "publication": "individual",
   "models": {
@@ -16,14 +16,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 3.87,
-      "margin_D_80_low": -0.72,
-      "margin_D_80_high": 8.46,
+      "margin_D": 3.91,
+      "margin_D_80_low": -0.68,
+      "margin_D_80_high": 8.49,
       "inputs": {
-        "generic_ballot_D": 6.505,
-        "generic_ballot_share_deviation": 3.252,
+        "generic_ballot_D": 6.583,
+        "generic_ballot_share_deviation": 3.292,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
-        "days_to_election": 71,
+        "days_to_election": 70,
         "president_party": "R",
         "pres_party_coded": -1
       },
@@ -42,8 +42,8 @@
           "constant": -0.45,
           "root_mse": 3.71
         },
-        "bew_direct_D_seat_share": 54.7,
-        "bew_direct_D_seats": 237.9
+        "bew_direct_D_seat_share": 54.73,
+        "bew_direct_D_seats": 238.1
       },
       "notes": [
         "tide is BEW's vote equation; their separate seats equation is reported as a diagnostic and is not used downstream"
@@ -67,7 +67,7 @@
         "approval": 38.0,
         "approval_source": "hand-set (Gallup basis); no live approval feed yet",
         "income_growth": -0.096,
-        "income_source": "FRED income_growth_ytd as of 2026-08-24, 6 month(s) of the year in hand"
+        "income_source": "FRED income_growth_ytd as of 2026-08-25, 6 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
@@ -102,9 +102,9 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 12.72,
-      "margin_D_80_low": 7.77,
-      "margin_D_80_high": 17.37,
+      "margin_D": 14.63,
+      "margin_D_80_low": 8.52,
+      "margin_D_80_high": 20.57,
       "inputs": {
         "pct_expect_worse": 37.0,
         "pct_expect_worse_source": "Michigan Surveys of Consumers, Table 8, June of the election year",
@@ -125,7 +125,7 @@
         },
         "pres_party_seat_change": -48.1,
         "implied_D_seats": 263.1,
-        "inversion_extrapolated": false,
+        "inversion_extrapolated": true,
         "curve_points_used": 10,
         "sensitivity_month": [
           {
@@ -178,6 +178,7 @@
       },
       "notes": [
         "forecasts SEAT CHANGE directly \u2014 the margin shown is our own seat curve run backwards from that seat count, and is not a number Lockerbie publishes",
+        "that seat count falls outside the range of tides the other models produced today, so the inversion is extrapolated rather than interpolated",
         "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
         "published out-of-sample mean absolute error is 16.8 seats \u2014 the interval is his, not ours, and it is very wide"
       ]
@@ -193,7 +194,7 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 2.67,
+      "margin_D": 2.29,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
