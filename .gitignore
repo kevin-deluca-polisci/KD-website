@@ -8,5 +8,15 @@ public/
 .vscode/
 .env
 
-# scratch: files the Cowork bridge cannot delete; safe to remove by hand
+# ONE-OFF PATCH SCRIPTS, WHICH MUST NEVER REACH A COMMIT.
+#
+# Edits to this repo are often applied by writing a throwaway `_name.py` that
+# rewrites a source file and is then discarded. Five of them were committed and
+# pushed on 2026-08-25 because the cleanup step was a `mv` into _to_delete/ and
+# the bridge cannot unlink, so every one of those moves failed silently while
+# the run reported success. Ignoring the pattern is the fix that does not
+# depend on remembering.
+_*.py
+
+# scratch: files the Cowork bridge cannot delete without a permission grant
 _to_delete/
