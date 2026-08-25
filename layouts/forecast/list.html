@@ -69,7 +69,9 @@
          by the vice-president, who is a Republican this cycle.{{ end }}</p>
 
       {{- $L := 56.0 }}{{ $T := 18.0 }}{{ $W := 618.0 }}{{ $H := 176.0 }}
-      <svg viewBox="0 0 720 234" role="img"
+      <div class="chartwrap">
+      <svg viewBox="0 0 720 234" role="img" data-tl
+           data-l="{{ $L }}" data-t="{{ $T }}" data-w="{{ $W }}" data-h="{{ $H }}"
            aria-label="{{ $pan.label }} over time, by method">
         {{- range $pan.y_ticks }}
         {{- $y := add $T (mul (div .y 100.0) $H) }}
@@ -97,7 +99,7 @@
               stroke="{{ $col }}" stroke-width="2" opacity="0.32" stroke-linecap="round"/>
         {{- end }}
         {{- if gt (len $s.points) 1 }}
-        <polyline fill="none" stroke="{{ $col }}" stroke-width="2"
+        <polyline data-k="{{ $s.key }}" fill="none" stroke="{{ $col }}" stroke-width="2"
                   stroke-linejoin="round" stroke-linecap="round"
                   {{ if $s.stale }}stroke-dasharray="5 4"{{ end }}
                   points="{{ range $i, $c := $s.points }}{{ if $i }} {{ end }}{{ add $L (mul (div $c.x 100.0) $W) }},{{ add $T (mul (div $c.y 100.0) $H) }}{{ end }}"/>
@@ -127,7 +129,22 @@
         <text class="tick" x="{{ add $L (mul (div .x 100.0) $W) }}" y="{{ add (add $T $H) 18 }}"
               text-anchor="{{ .anchor }}">{{ with .label }}{{ . }}{{ else }}{{ .date }}{{ end }}</text>
         {{- end }}
+
+        {{/* THE HOVER LAYER. Empty until a pointer arrives; the script fills
+             it. It sits last so it paints above the series, and the catcher
+             rect is the only thing that takes pointer events — the marks
+             themselves stay inert so a hover near a line is not stolen by
+             whichever circle happens to be under the cursor. */}}
+        <g data-cross hidden>
+          <line class="crosshair" y1="{{ $T }}" y2="{{ add $T $H }}"/>
+        </g>
+        <rect data-catch x="{{ $L }}" y="{{ $T }}" width="{{ $W }}" height="{{ $H }}"
+              fill="transparent" style="pointer-events:all"/>
       </svg>
+      <div class="tltip" data-tip hidden aria-hidden="true"></div>
+      </div>
+
+      <script type="application/json" data-hover>{{ $pan.hover | jsonify }}</script>
 
       <div class="legend">
         {{- range $pan.series }}
@@ -426,3 +443,147 @@
 
 </div>
 {{ partial "forecast/foot.html" (dict "page" . "d" $d) }}
+\n
+{{/* ------------------------------------------------------------------ */}}
+{{/* Hover crosshair. Progressive enhancement: with no JS the chart is the
+     same chart it was, direct labels and all, and the sparse panels keep
+     their native <title> tooltips. */}}
+<script>
+(function () {
+  var FMT = {
+    prob:  function (v) { return (v * 100).toFixed(0) + "%"; },
+    seats: function (v) { return v.toFixed(0); },
+    pct:   function (v) { return (v > 0 ? "D+" : "R+") + Math.abs(v).toFixed(1); }
+  };
+  function fmt(unit, v) { return (FMT[unit] || FMT.pct)(v); }
+
+  function prettyDate(iso) {
+    var p = iso.split("-");
+    var M = ["Jan","Feb","Mar","Apr","May","Jun",
+             "Jul","Aug","Sep","Oct","Nov","Dec"];
+    return M[+p[1] - 1] + " " + (+p[2]) + ", " + p[0];
+  }
+
+  document.querySelectorAll(".chartwrap").forEach(function (wrap) {
+    var svg = wrap.querySelector("svg[data-tl]");
+    var tag = wrap.parentNode.querySelector("script[data-hover]");
+    var tip = wrap.querySelector("[data-tip]");
+    var cross = svg && svg.querySelector("[data-cross]");
+    var catcher = svg && svg.querySelector("[data-catch]");
+    if (!svg || !tag || !tip || !cross || !catcher) return;
+
+    var data;
+    try { data = JSON.parse(tag.textContent); } catch (e) { return; }
+    if (!data || !data.series || !data.series.length) return;
+
+    // Coordinates come from the DRAWN line, read out of the polyline's own
+    // points list, so a marker cannot land anywhere the line is not. Pairing
+    // is by key: a series with a single point draws no polyline, and matching
+    // by position would put its values on somebody else's line.
+    var series = [];
+    data.series.forEach(function (sr) {
+      var poly = svg.querySelector('polyline[data-k="' + sr.k + '"]');
+      if (!poly) return;
+      var pts = poly.getAttribute("points").trim().split(/\s+/).map(function (q) {
+        var xy = q.split(",");
+        return { x: parseFloat(xy[0]), y: parseFloat(xy[1]) };
+      });
+      if (pts.length !== sr.i.length) return;   // refuse rather than mis-plot
+      var col = getComputedStyle(poly).stroke;
+      var byDate = {};
+      sr.i.forEach(function (di, k) { byDate[di] = { p: pts[k], v: sr.v[k] }; });
+      series.push({ k: sr.k, label: sr.l, byDate: byDate, col: col });
+    });
+    if (!series.length) return;
+
+    // date index -> x, from whichever series has a point on that date.
+    var xOf = {}, idxs = [];
+    series.forEach(function (sr) {
+      Object.keys(sr.byDate).forEach(function (di) {
+        if (!(di in xOf)) { xOf[di] = sr.byDate[di].p.x; idxs.push(+di); }
+      });
+    });
+    idxs.sort(function (a, b) { return a - b; });
+    if (!idxs.length) return;
+
+    var line = cross.querySelector(".crosshair");
+    var dots = [];
+    series.forEach(function () {
+      var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("r", "4.5");
+      c.setAttribute("stroke", "var(--surface)");
+      c.setAttribute("stroke-width", "2");
+      c.setAttribute("class", "hovdot");
+      cross.appendChild(c);
+      dots.push(c);
+    });
+
+    function toViewBoxX(evt) {
+      var pt = svg.createSVGPoint();
+      pt.x = evt.clientX;
+      pt.y = evt.clientY;
+      var m = svg.getScreenCTM();
+      if (!m) return null;
+      return pt.matrixTransform(m.inverse()).x;
+    }
+
+    function nearest(x) {
+      var best = idxs[0], bd = Infinity;
+      for (var i = 0; i < idxs.length; i++) {
+        var d = Math.abs(xOf[idxs[i]] - x);
+        if (d < bd) { bd = d; best = idxs[i]; }
+      }
+      return best;
+    }
+
+    function show(evt) {
+      var x = toViewBoxX(evt);
+      if (x === null) return;
+      var di = nearest(x);
+      var cx = xOf[di];
+      line.setAttribute("x1", cx);
+      line.setAttribute("x2", cx);
+      cross.removeAttribute("hidden");
+
+      var rows = [], anyY = null;
+      series.forEach(function (sr, n) {
+        var hit = sr.byDate[di];
+        if (!hit) { dots[n].setAttribute("r", "0"); return; }
+        dots[n].setAttribute("r", "4.5");
+        dots[n].setAttribute("cx", hit.p.x);
+        dots[n].setAttribute("cy", hit.p.y);
+        dots[n].setAttribute("fill", sr.col);
+        if (anyY === null || hit.p.y < anyY) anyY = hit.p.y;
+        rows.push('<span class="tlrow"><i style="background:' + sr.col +
+                  '"></i>' + sr.label + '<b>' + fmt(data.unit, hit.v) +
+                  "</b></span>");
+      });
+      if (!rows.length) return;
+
+      tip.innerHTML = '<span class="tldate">' + prettyDate(data.dates[di]) +
+                      "</span>" + rows.join("");
+      tip.removeAttribute("hidden");
+
+      // Place it in CSS pixels, flipping side near the right edge so the tip
+      // never leaves the card.
+      var box = svg.getBoundingClientRect();
+      var wbox = wrap.getBoundingClientRect();
+      var px = box.left + (cx / 720) * box.width - wbox.left;
+      var right = px > wbox.width * 0.62;
+      tip.style.left = right ? "auto" : (px + 14) + "px";
+      tip.style.right = right ? (wbox.width - px + 14) + "px" : "auto";
+      tip.style.top = "10px";
+    }
+
+    function hide() {
+      cross.setAttribute("hidden", "");
+      tip.setAttribute("hidden", "");
+    }
+
+    catcher.addEventListener("pointermove", show);
+    catcher.addEventListener("pointerdown", show);
+    catcher.addEventListener("pointerleave", hide);
+    wrap.addEventListener("pointerleave", hide);
+  });
+})();
+</script>

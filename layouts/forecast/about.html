@@ -143,6 +143,72 @@
   </div>
 
   <div class="card prose">
+    <h2>Why a line can step without anyone changing their mind</h2>
+    <p class="sub">A category average is the mean of whoever is in the category
+       that day, and the membership changes.</p>
+
+    <p>Each line on the tracker is the average of the forecasts in that family
+       on that date. When a family gains or loses a member, the average moves,
+       and nobody's forecast has changed. On 20 August 2026 the fundamentals
+       family went from one model to five in a single day; its line stepped from
+       D+1.8 to D+7.2, and every one of those five points was bookkeeping rather
+       than news.</p>
+
+    <p>The number plotted is the plain mean of that day's members, and the
+       member count is shown beside it. That is the honest answer to "what does
+       this family predict today", which is the question a tracker is read for.
+       It is not the honest answer to "how much has this family moved", and the
+       two are different questions whenever membership is unstable.</p>
+
+    <h3>What we also compute, and why it is not what you see</h3>
+
+    <p>The archive carries a second version of every category average, called
+       the <em>chained</em> level, computed the way a price index handles a
+       change of basket. Rather than comparing today's members with yesterday's
+       different members, it compares the ones present on <em>both</em> days and
+       carries the level forward by that change:</p>
+
+    <p class="thin-note"><code>level(t) = level(t&minus;1) + [ mean of common members (t)
+       &minus; mean of common members (t&minus;1) ]</code></p>
+
+    <p>A model that joins today contributes nothing to today's movement; it
+       enters from tomorrow, once it has two observations to move between. Every
+       wiggle on a chained line is therefore somebody changing their mind. That
+       is a real and useful property, and it is why the chain is computed at
+       all.</p>
+
+    <p>It was published as the headline until 25 August 2026, and taking it down
+       is worth explaining rather than doing quietly. A chained level is an index
+       anchored at the first date, so it drifts away from the mean of the current
+       members, and after a large enough composition change it stops describing
+       them at all. When the fundamentals family went from one model to five, the
+       chain had exactly one member in common between the two days, correctly
+       moved on that one member, and left the level where a one-model family had
+       put it. Five days later the page was showing a fundamentals margin of
+       D+2.1 beside a seat count of 239 — two numbers that cannot both be true,
+       because no D+2 national environment produces 239 Democratic seats.</p>
+
+    <p>Two faults there are worth separating. One is a threshold: bridging a
+       single common member into a five-member family carries a fifth of the
+       information and asserts all of the level, and the chain should break and
+       re-anchor rather than carry it. The other is structural and no threshold
+       fixes it: each quantity is chained on its own, and a seat count is not a
+       linear function of a national margin, so a chained margin and a chained
+       seat count drift apart by construction.</p>
+
+    <p>So the chain stays in the published data as <code>mean_chained</code> in
+       <code>category_averages.csv</code>, next to <code>mean</code>,
+       <code>n_sources</code> and the number of members the two dates had in
+       common. It is a good way to ask how much of a family's movement was real.
+       It is not the level, and this site no longer prints it as one.</p>
+
+    <p class="thin-note">The practical consequence for a reader: a step in one of
+       these lines is not always news. Check the member count beside it. Where
+       the count changes on the same day as the level, the step is the family
+       being redefined, not a forecast being revised.</p>
+  </div>
+
+  <div class="card prose">
     <h2>Use of AI</h2>
     <p class="sub">Stated plainly, because a site about where numbers come from
        should say where its own code came from.</p>

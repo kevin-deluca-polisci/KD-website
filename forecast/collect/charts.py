@@ -225,25 +225,45 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
         if r.get("snapshot_date", "") < SERIES_START:
             continue
         cat, q = r["category"], r["quantity"]
-        # THE TIMELINE PLOTS THE CHAINED LEVEL, NOT THE SIMPLE MEAN.
+        # THE TIMELINE PLOTS THE SIMPLE MEAN. It used to plot the chained
+        # level, and the reason for the change is worth keeping.
         #
-        # A category's membership changes — models get added, a gated source
-        # crosses the disclosure floor, a family gains a member because a model
-        # turned out to belong to two. Every one of those moves the simple mean
-        # without anyone's forecast having changed, and on a time series that is
-        # indistinguishable from news. Chaining, computed in aggregate.py,
-        # carries the level forward using only sources present on both dates,
-        # so a movement on this chart is a movement in somebody's opinion.
+        # Chaining answers a real question. Category membership changes —
+        # models get added, a gated source crosses the disclosure floor, a
+        # family gains a member because a model belongs to two — and every one
+        # of those moves the simple mean without anyone's forecast having
+        # changed. Chaining carries the level forward using only sources
+        # present on both dates, so a movement on a chained line is a movement
+        # in somebody's opinion. That is a genuinely better answer to "how much
+        # of this is real".
         #
-        # The comparison table still shows the simple mean, and should: "what
-        # does this family say today" is a different question from "how did it
-        # get here", and the mean is the honest answer to the first.
+        # IT IS THE WRONG ANSWER TO "WHAT DOES THIS FAMILY PREDICT", and that
+        # is the question a tracker is read for. The two coincide only while
+        # membership is stable. On 2026-08-20 the fundamentals family went from
+        # one member to five in a day; the chain, correctly by its own rules,
+        # moved on the single source the two days had in common and held the
+        # level where a one-member family had left it. Five days later the
+        # published fundamentals margin was D+2.09 while the mean of its five
+        # members was D+7.49 — a number that was no longer an average of
+        # anything, sitting next to a seat count of 239 that no D+2 environment
+        # produces.
         #
-        # Falls back to the mean where no chain exists — an archive written
-        # before chaining, or a cell whose chain broke.
-        v = _f(r.get("mean_chained"))
+        # Two further faults, neither fixable by tuning the chain. Each
+        # quantity is chained independently, and seats is a non-linear function
+        # of margin, so a chained margin and a chained seat count stop
+        # corresponding by construction. And the interval drawn beside the
+        # point is the min and max of the UNCHAINED members, so the marker
+        # could sit against the floor of its own band.
+        #
+        # So the level published everywhere is now the mean, the timeline and
+        # the comparison table finally agree, and a composition change shows up
+        # as the step it actually is rather than being smoothed away. The chain
+        # is still computed and still in category_averages.csv as
+        # `mean_chained`; about.html explains what it measures and why a step
+        # in one of these lines is sometimes bookkeeping rather than news.
+        v = _f(r["mean"])
         if v is None:
-            v = _f(r["mean"])
+            v = _f(r.get("mean_chained"))
         if v is None or cat not in LABELS:
             continue
         panel = PANEL_OF.get((r["race_id"], q))
@@ -576,6 +596,7 @@ def build_panel(rows: list[dict], panel: str,
             if trimmed:
                 rs = trimmed
     dates = sorted({r["snapshot_date"] for r in rs})
+    di = {d: i for i, d in enumerate(dates)}   # for the hover payload, below
     vals = [_f(r["value"]) for r in rs if _f(r["value"]) is not None]
     # Only the LAST point's interval widens the axis, because only the last
     # point's interval is drawn. Letting every historical band into the range
@@ -839,6 +860,31 @@ def build_panel(rows: list[dict], panel: str,
         "ref_below": bool(ref is not None and ref < data_lo),
         "zero_y": round(Y(0.0), 2) if unit == "pct" and lo < 0 < hi else None,
         "series": series,
+        # WHAT THE HOVER LAYER READS, and why it is a separate compact block
+        # rather than the series themselves.
+        #
+        # The template could jsonify `series` straight into the page and the
+        # tooltip would have everything it needs. That costs about 50KB per
+        # panel and there are sixteen panels — four metrics by four ranges,
+        # all pre-rendered and toggled with CSS — so the honest version of
+        # "just serialise it" is eight hundred kilobytes of duplicated
+        # coordinates on a page whose whole point is to load fast.
+        #
+        # So: dates once, and per series only the value and which date it
+        # belongs to. The x and y a marker needs are already in the DOM, in the
+        # polyline's `points` attribute, at the same ordinal position — the
+        # tooltip reads them from there. That also means the marker cannot
+        # drift away from the drawn line, because it is placed on the drawn
+        # line rather than on a second copy of the arithmetic.
+        "hover": {
+            "unit": unit,
+            "dates": dates,
+            "series": [
+                {"k": sr["key"], "l": sr["label"],
+                 "i": [di[pt["date"]] for pt in sr["points"]],
+                 "v": [pt["v"] for pt in sr["points"]]}
+                for sr in series],
+        },
     }
 
 

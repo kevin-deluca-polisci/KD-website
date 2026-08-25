@@ -201,6 +201,23 @@ document.documentElement.className+=" js";})();
   .viz .rowlab{font-size:13px;font-weight:600;fill:var(--ink)}
   .viz .rowsub{font-size:11px;fill:var(--ink-3)}
   .viz .rowval{font-size:13px;font-weight:700;fill:var(--ink)}
+  /* Hover crosshair. The wrap is the positioning context for the tooltip;
+     the tooltip is an HTML box rather than SVG text so it can wrap, use the
+     page's own type, and be read by a screen reader if it ever needs to be. */
+  .chartwrap{position:relative}
+  .crosshair{stroke:var(--ink-3);stroke-width:1;opacity:.45;
+             stroke-dasharray:3 3;pointer-events:none}
+  .hovdot{pointer-events:none}
+  .tltip{position:absolute;z-index:5;pointer-events:none;
+         background:var(--surface);color:var(--ink-1);
+         border:1px solid var(--rule,rgba(128,128,128,.35));
+         border-radius:8px;padding:8px 10px;font-size:.82em;line-height:1.5;
+         box-shadow:0 6px 20px rgba(0,0,0,.13);min-width:150px}
+  .tltip .tldate{display:block;font-weight:600;margin-bottom:4px;
+                 color:var(--ink-2)}
+  .tltip .tlrow{display:flex;align-items:center;gap:7px;white-space:nowrap}
+  .tltip .tlrow i{width:9px;height:9px;border-radius:2px;flex:0 0 auto}
+  .tltip .tlrow b{margin-left:auto;font-variant-numeric:tabular-nums}
   .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:.85em;color:var(--ink-2)}
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .swatch{width:11px;height:11px;border-radius:2px;display:inline-block}

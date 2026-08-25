@@ -10,17 +10,18 @@
   "r2": 0.657,
   "loeo_rmse": 2.291,
   "inputs": {
-    "approval": 38.0,
+    "approval": 33.45,
+    "approval_source": "hand-set; no live approval feed yet",
+    "approval_n": 11,
     "income_growth": -0.096,
     "seats_before": 220,
     "income_is_placeholder": false,
-    "income_source": "FRED income_growth_ytd as of 2026-08-25, 6 month(s) of the year in hand",
-    "approval_source": "hand-set; no live approval feed yet"
+    "income_source": "FRED income_growth_ytd as of 2026-08-25, 6 month(s) of the year in hand"
   },
-  "pres_party_two_party_vote": 44.76,
-  "margin_D": 10.48,
-  "margin_D_80_low": 4.61,
-  "margin_D_80_high": 16.35,
+  "pres_party_two_party_vote": 44.15,
+  "margin_D": 11.7,
+  "margin_D_80_low": 5.82,
+  "margin_D_80_high": 17.57,
   "sensitivity": [
     {
       "approval": 34,

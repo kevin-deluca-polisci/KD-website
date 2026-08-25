@@ -91,6 +91,8 @@ NOT_A_FORECAST = {
     # forecasters would be meaningless — there is one true value and FRED
     # publishes it. They live in the archive because the fundamentals model
     # consumes them and the archive should record what it was fed.
+    # Presidential approval. An input to two models, not anybody's forecast.
+    "approval_pct", "disapproval_pct", "approval_pct_aggregate",
     "income_growth_last_full_year", "income_growth_ytd",
     "income_growth_yoy_latest_month", "income_ytd_months",
     # MARKET MICROSTRUCTURE. A bid, an ask, a volume and a depth are facts

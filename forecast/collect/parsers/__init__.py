@@ -94,6 +94,33 @@ QUANTITIES = {
     # annual figure does not exist until the year after the election, so
     # something has to stand in for it and the choice is a judgment call
     # that deserves to be visible. See parsers/fred.py.
+    # PRESIDENTIAL APPROVAL, poll level. An INPUT, not a forecast: it is a
+    # right-hand-side variable in the fundamentals and referendum models, and
+    # aggregate.py keeps it out of every category average via NOT_A_FORECAST,
+    # for the same reason it excludes the FRED series. Averaging "presidential
+    # approval" across forecasters would be meaningless; there is one true
+    # value and pollsters estimate it.
+    #
+    # One row per poll rather than one aggregate, deliberately. That is what
+    # makes a past value RECOVERABLE rather than assumed: an average as of any
+    # past date is a computation over exactly the polls published by then. It
+    # is the same property that lets the generic ballot backfill BEW, and
+    # without it a backfilled approval line is a flat line wearing a claim.
+    "approval_pct",
+    "disapproval_pct",
+    # An AGGREGATOR's approval average, one row per aggregator per day. Kept
+    # apart from `approval_pct` on purpose: an aggregator's number already
+    # contains the individual polls, and averaging the two together would count
+    # the same interviews twice, once raw and once inside somebody's model.
+    # Same reasoning that keeps a market price apart from a market probability.
+    #
+    # It is also the only dated approval this archive can build for 2026.
+    # Wikipedia's monthly poll tables are dense for 2025 and nearly empty for
+    # the election year, but its aggregator table is refreshed daily, so
+    # capturing it every day turns a today-value into a series from today
+    # forward. That does not recover the past. It stops the same gap opening
+    # again.
+    "approval_pct_aggregate",
     "income_growth_last_full_year",
     "income_growth_ytd",
     "income_growth_yoy_latest_month",

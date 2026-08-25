@@ -105,6 +105,17 @@ class Ctx:
     income_source: str = ""
     generic_ballot_D: float | None = None      # D minus R margin, UNSHRUNK
     generic_ballot_source: str = ""
+    # STRUCTURAL INPUTS, AS OF `date`. These were module constants, which is
+    # the whole reason Lockerbie and LBQ could only draw horizontal lines: not
+    # because the models do not move but because their inputs were frozen at
+    # whatever somebody read off a page one afternoon. See model/conditions.py.
+    open_seats: int | None = None
+    open_seats_source: str = ""
+    dem_senate_retirements: int | None = None
+    dem_governors: int | None = None
+    structural_source: str = ""
+    pct_expect_worse: float | None = None
+    pct_expect_worse_source: str = ""
     notes: list[str] = field(default_factory=list)
 
 
@@ -135,11 +146,42 @@ def _read_polling(cycle: int) -> tuple[float, str] | None:
     return float(gb["value"]), f"{gb.get('used', 'generic ballot')} via polling_model.json"
 
 
-def build_ctx(cycle: int, date: str, approval: float) -> Ctx:
+def build_ctx(cycle: int, date: str, approval: float | None = None) -> Ctx:
+    """`approval=None` means read it from the archive, which is now the default.
+
+    An EXPLICIT number still wins, because --approval exists so a class can ask
+    what the model says at 45% without editing anything. What changed is which
+    way round the default runs: it used to be that a constant was normal and a
+    feed was aspirational, and the constant was invisible because nothing
+    downstream could tell it from a real reading. Both cases now carry their
+    own source string all the way into the model output.
+    """
     days = (dt.date.fromisoformat(ELECTION_DAY) - dt.date.fromisoformat(date)).days
+    if approval is None:
+        approval, appr_src, _n = fundamentals.approval_from_archive(cycle, date)
+    else:
+        appr_src = f"forced to {approval} on the command line, not read from the archive"
     c = Ctx(cycle=cycle, date=date, days_to_election=days,
-            approval=approval,
-            approval_source="hand-set (Gallup basis); no live approval feed yet")
+            approval=approval, approval_source=appr_src)
+
+    # The dated structural inputs. A failure here degrades to the published
+    # constants rather than stopping the run, because a missing conditions
+    # table should cost us the backfill and not the live model.
+    try:
+        import conditions as _cond          # sibling import, like polling/fundamentals above
+        # LOCKERBIE'S NARROWER DEFINITION, not the all-open count. See
+        # conditions.lockerbie_open_seats: his |OpenInt| runs about 16
+        # below "no incumbent on the ballot" in every midterm tested.
+        c.open_seats, c.open_seats_source = \
+            _cond.lockerbie_open_seats(date, cycle)
+        c.dem_senate_retirements, sen_src = _cond.dem_senate_retirements(date)
+        c.dem_governors, gov_src = _cond.dem_governors(date)
+        c.structural_source = f"{sen_src}; governors: {gov_src}"
+        c.pct_expect_worse, c.pct_expect_worse_source = \
+            _cond.lockerbie_worse(date)
+    except Exception as e:                                # noqa: BLE001
+        c.notes.append(f"dated structural inputs unavailable ({e}) — the "
+                       f"published constants are used instead")
 
     got = fundamentals.income_from_archive(cycle)
     if got:
@@ -566,6 +608,108 @@ LOCKERBIE_RECENT_MONTHS = [("Mar 2026", 39.0), ("Apr 2026", 41.0),
 # to. Same figure fundamentals.py uses.
 LOCKERBIE_SEATS_BEFORE = 220
 
+# The month his specification names. Points before it are ours, not his.
+LOCKERBIE_SPEC_DATE = "2026-06-01"
+
+# THE EQUATION IS VERIFIED AGAINST THE AUTHOR'S OWN DATA FILE.
+#
+# Refitting lm(Hchange ~ NYWorseJ + OpenInt) on Hforecast.xlsx, 35 elections
+# from 1954 to 2022, reproduces what this file already carried:
+#
+#     refit    Hchange = 5.363 - 0.778*NYWorseJ + 0.410*OpenInt   R2 0.417
+#     ours     Hchange = 5.360 - 0.780*NYWorseJ + 0.410*OpenInt   R2 0.42
+#
+# Three decimal places on every coefficient. The implementation is right.
+#
+# HIS OWN R SCRIPT IS NOT A RELIABLE SECOND SOURCE and the data file is: the
+# leave-one-out blocks in forecastEq.R give 2010 and 2020 the same newdata
+# (NYWorseJ 3, OpenInt -40) while the data file has 2010 at 13/-40 and 2020 at
+# 8/0. Copy-paste slips in a replication script. Read the data.
+#
+# THE 2022 RESIDUAL IS +29.6 — predicted -39.6, actual -10 — and 2010's is
+# -42.9. Two of the three largest misses in the series are the two most recent
+# midterms, both in the direction of overstating the president's party's
+# losses. That is the model's character, not our arithmetic.
+
+# WHICH OPEN SEATS — SETTLED, from the author's own replication code.
+#
+# `forecastEq.R` fits the House model as
+#
+#     lm(Hchange ~ NYWorseJ + OpenInt)
+#
+# and the leave-one-out blocks carry the OpenInt value for all 36 elections
+# from 1952 to 2022. Two things fall straight out of them.
+#
+# IT IS NOT PARTY-SPECIFIC. The midterm magnitudes run 28 to 56 with a mean of
+# 41, which is far too large to be one party's open seats and matches total
+# open seats closely — 1994 comes in at 52 and 2018 at 56. An earlier version
+# of this comment argued at length that the variable had to be the president's
+# party's open seats, on the grounds that an out-party open seat increasing the
+# president's party's losses has no mechanism behind it. That reasoning was
+# tidy and it was wrong: the model does not have a mechanism there, it has a
+# correlation, and open-seat totals are themselves higher in years when the
+# exposed party is shedding members. Reading a coefficient as if it were a
+# causal story is how you end up correcting an author's specification into
+# something they did not write.
+#
+# THE SIGN IS THE YEAR DIRECTION, confirmed rather than inferred: OpenInt is
+# negative in all eighteen midterms in the sample and is 0 or either sign in
+# presidential years. That is exactly the `opens * direction` this file
+# already implements.
+#
+# So the "all open seats" reading stands and nothing here needed changing.
+LOCKERBIE_OPEN_SEATS_BASIS = "all"      # verified against forecastEq.R, 2026-08-25
+
+# WHAT IS ACTUALLY WRONG WITH THE 2026 RUN, AND IT IS NOT THE DEFINITION.
+#
+# Both inputs are outside the range the model was fitted on:
+#
+#     NYWorseJ    sample 3 to 32  (max 2022)   ours 37
+#     |OpenInt|   sample 0 to 56  (max 2018)   ours 66
+#
+# Consumer pessimism is at a record and open seats are at a record, and the
+# model is a linear extrapolation into territory it has never seen on BOTH
+# regressors at once. That is the whole reason it lands at 266 D seats. Capping
+# both inputs at their sample maxima gives 258 instead, so the off-scale part
+# is worth about eight seats; the rest is the model genuinely reading a very
+# bad year for the president's party.
+#
+# WORTH KNOWING BEFORE TREATING THIS AS A BUG. Run on 2022's own inputs the
+# equation predicts the president's party losing 39.7 seats. They lost 9. A
+# 31-seat miss on the most recent midterm, in the same direction as its 2026
+# forecast. Running hot against the incumbent party is characteristic of this
+# model rather than a fault in our implementation of it, and the published
+# out-of-sample MAE of 16.8 seats is the author saying so.
+LOCKERBIE_SAMPLE_MAX = {"pct_expect_worse": 32.0, "open_seats": 56}
+
+# AND OUR OPEN-SEAT COUNT IS PROBABLY TOO HIGH, WHICH IS THE LIVE ISSUE.
+#
+# We feed the count of seats with no incumbent on the ballot, which is what
+# Cook's roster flags. Reconstructing the same quantity from MEDSL returns for
+# the eight midterms where districts are matchable, and comparing it with the
+# OpenInt his file actually uses:
+#
+#     1986  his 43  ours-style 50      1998  his 34  ours-style 44
+#     1990  his 28  ours-style 41      2006  his 30  ours-style 39
+#     1994  his 52  ours-style 66      2010  his 40  ours-style 57
+#     2014  his 46  ours-style 58      2018  his 56  ours-style 83
+#
+# HIS COUNT IS LOWER EVERY SINGLE YEAR, by 7 to 27 and by 13.6 on average. So
+# his "open seat" is stricter than "nobody who won last time is running" — it
+# plausibly excludes incumbents who lost primaries and seats already refilled
+# by special election, though the gap is too variable to pin the rule down.
+#
+# On that adjustment 2026 lands near 52, which is mid-range for his sample
+# rather than above it, and the forecast moves from 265 D seats to about 260.
+# So the extrapolation warning below is partly an artefact of OUR definition
+# being looser than his, not of 2026 being unprecedented.
+#
+# NYWorseJ is a different matter: 37 is above his sample maximum of 32 on any
+# definition, because it is read straight off the same Michigan table he uses.
+# That part of the extrapolation is real.
+#
+# TO SETTLE IT: his paper's appendix, or ask him. Worth about five seats.
+
 
 def _published_tide_seat_pairs(cycle: int) -> list:
     """(tide, expected D seats) from today's projections, for inversion.
@@ -622,8 +766,23 @@ def implied_tide_for_seats(pairs: list, seats: float):
 
 
 def run_lockerbie(c: Ctx) -> Result | None:
-    worse = LOCKERBIE_INPUTS.get("pct_expect_worse")
-    opens = LOCKERBIE_INPUTS.get("open_seats")
+    # DATED WHERE WE HAVE IT, published constant where we do not.
+    #
+    # THE MONTH IS PART OF THE SPECIFICATION and that has not changed: his
+    # equation reads June of the election year. Running it in March on March's
+    # numbers is not his forecast, it is our estimate of what his equation
+    # would have said, and the result carries `spec_date_reached` so a reader
+    # can tell the two apart. Before June 2026 this line is ours; from June it
+    # is his.
+    worse = c.pct_expect_worse
+    worse_src = c.pct_expect_worse_source
+    if worse is None:
+        worse = LOCKERBIE_INPUTS.get("pct_expect_worse")
+        worse_src = "published constant — no dated Michigan reading for this date"
+    opens = c.open_seats if c.open_seats is not None \
+        else LOCKERBIE_INPUTS.get("open_seats")
+    opens_src = c.open_seats_source or "published constant"
+    spec_reached = c.date >= LOCKERBIE_SPEC_DATE
     if worse is None or opens is None:
         return None
 
@@ -654,6 +813,22 @@ def run_lockerbie(c: Ctx) -> Result | None:
         notes.append("that seat count falls outside the range of tides the "
                      "other models produced today, so the inversion is "
                      "extrapolated rather than interpolated")
+    off = [f"{k} = {v:g}, above the sample maximum of "
+           f"{LOCKERBIE_SAMPLE_MAX[k]:g}"
+           for k, v in (("pct_expect_worse", worse), ("open_seats", opens))
+           if v > LOCKERBIE_SAMPLE_MAX[k]]
+    if off:
+        notes.append(
+            "OUTSIDE THE FITTED RANGE on " + " and ".join(off) +
+            ". The model was fit on 1952-2022 and this is a linear "
+            "extrapolation beyond anything in that sample, which is most of "
+            "why it is the most Democratic forecast on this site.")
+    if not spec_reached:
+        notes.append(
+            f"BEFORE THE SPECIFICATION DATE. Lockerbie's equation reads June of "
+            f"the election year; this point is dated {c.date} and uses that "
+            f"date's inputs instead. It is our estimate of what his equation "
+            f"would have said then, not a forecast he published.")
     notes.append(LOCKERBIE_MIDTERM_RULE)
     notes.append(f"published out-of-sample mean absolute error is "
                  f"{k['out_of_sample_mae_seats']} seats — the interval is his, "
@@ -683,6 +858,10 @@ def run_lockerbie(c: Ctx) -> Result | None:
             "year_direction": dirn,
             "year_direction_label": LOCKERBIE_DIRECTION_LABEL[dirn],
             "seats_before": LOCKERBIE_SEATS_BEFORE,
+            "pct_expect_worse_source": worse_src,
+            "open_seats_source": opens_src,
+            "spec_date_reached": spec_reached,
+            "outside_fitted_range": bool(off),
         },
         diagnostics={
             "coefficients": {kk: vv for kk, vv in k.items()
@@ -780,6 +959,10 @@ LBQ_HOUSE = {
 #                           holds this as polling.HOLDOVER_D_DEFAULT and uses
 #                           it in every Senate simulation, so taking it from
 #                           there keeps the two from disagreeing.
+# Their governor count is specified at roughly six months out. Same rule as
+# Lockerbie: before this, the line is our extrapolation of their equation.
+LBQ_SPEC_DATE = "2026-05-03"
+
 LBQ_INPUTS: dict = {
     "dem_federal_dominance": 0,
     "post_vra_1965": 1,
@@ -819,8 +1002,16 @@ def _lbq_predict(spec: dict, inputs: dict) -> float | None:
 
 
 def run_lbq(c: Ctx) -> Result | None:
-    house = _lbq_predict(LBQ_HOUSE, LBQ_INPUTS)
-    senate = _lbq_predict(LBQ_SENATE, LBQ_INPUTS)
+    # Two of these move through a cycle and one steps once; the rest are
+    # institutional facts that do not change at all. Dated where we have it.
+    inputs = dict(LBQ_INPUTS)
+    if c.dem_senate_retirements is not None:
+        inputs["dem_senate_retirements"] = c.dem_senate_retirements
+    if c.dem_governors is not None:
+        inputs["dem_governors"] = c.dem_governors
+    spec_reached = c.date >= LBQ_SPEC_DATE
+    house = _lbq_predict(LBQ_HOUSE, inputs)
+    senate = _lbq_predict(LBQ_SENATE, inputs)
     if house is None:
         return None
 
@@ -845,7 +1036,8 @@ def run_lbq(c: Ctx) -> Result | None:
     return Result(
         margin_D=tide,
         interval_80=None,
-        inputs={k: v for k, v in LBQ_INPUTS.items()},
+        inputs={**inputs, "structural_source": c.structural_source,
+                "spec_date_reached": spec_reached},
         diagnostics={
             "house_D_seats": round(house, 1),
             "senate_D_seats": round(senate, 1) if senate is not None else None,
@@ -984,6 +1176,12 @@ MODELS = [
         "run": run_enns,
     },
 ]
+
+
+# Keyed lookup, so the backfill can attach a model's published name and
+# categories to a result without a second copy of the registry drifting out of
+# step with this one.
+MODELS_BY_KEY = {m["key"]: m for m in MODELS if m.get("key")}
 
 
 # ---------------------------------------------------------------------------
@@ -1201,17 +1399,23 @@ def backfill(cycle: int, approval: float, include_referendum: bool,
             cur += dt.timedelta(days=step_days)
             continue
         margin, n_polls = got
-        c = Ctx(cycle=cycle, date=cur.isoformat(),
-                days_to_election=(dt.date.fromisoformat(ELECTION_DAY) - cur).days,
-                approval=approval,
-                approval_source="hand-set (Gallup basis) — CONSTANT across the "
-                                "backfill, so anything driven by it is flat by "
-                                "construction and not by evidence",
-                generic_ballot_D=margin,
-                generic_ballot_source=(f"reconstructed: unweighted mean of "
-                                       f"{n_polls} raw poll margin(s) in the "
-                                       f"{RECONSTRUCT_WINDOW_DAYS} days to "
-                                       f"{cur.isoformat()}"))
+        # BUILD THE FULL CONTEXT FOR THE DATE, not a hand-assembled one.
+        #
+        # This loop used to construct a Ctx by hand with four fields in it,
+        # which is why it could only ever run BEW: nothing else had its inputs.
+        # build_ctx reads approval, income and the dated structural inputs for
+        # whatever date it is given, so every model that can be honestly run
+        # for a past date now can be. The generic ballot is overridden
+        # afterwards because the reconstruction from the poll list is better
+        # than what build_ctx would find in the snapshot archive — the archive
+        # only starts carrying a generic ballot in August 2026.
+        c = build_ctx(cycle, cur.isoformat(),
+                      approval if approval is not None else None)
+        c.generic_ballot_D = margin
+        c.generic_ballot_source = (f"reconstructed: unweighted mean of "
+                                   f"{n_polls} raw poll margin(s) in the "
+                                   f"{RECONSTRUCT_WINDOW_DAYS} days to "
+                                   f"{cur.isoformat()}")
         day: dict[str, dict] = {}
         res = run_bew(c)
         if res is not None:
@@ -1226,21 +1430,63 @@ def backfill(cycle: int, approval: float, include_referendum: bool,
                 "diagnostics": res.diagnostics,
                 "provenance": BACKFILL_PROVENANCE,
             }
-        # The referendum model is NOT backfilled here at all, whatever the
-        # flag says, and the flag's help text says why: its approval term is a
-        # hand-set constant and its income term is not re-read per date, so
-        # every point would be identical. A flat line is a claim that approval
-        # and the economy did not move, which we have no evidence for. It is
-        # better to have no academic referendum history than a fabricated one.
+        # EVERY OTHER MODEL WHOSE INPUTS ARE NOW DATED.
+        #
+        # The referendum model used to be excluded here on the grounds that
+        # its approval term was a hand-set constant, so its line would be flat
+        # by construction rather than by evidence. That was the right call
+        # then and it is the wrong call now: approval is read per date from the
+        # poll record, income comes from the dated FRED capture, and the two
+        # structural models read open seats, Senate retirements and governors
+        # as of the date. So each of them is included exactly when its own
+        # inputs are genuinely available for that date, and skipped when they
+        # are not.
+        #
+        # A MODEL THAT RETURNS A CONSTANT IS STILL INCLUDED, as long as the
+        # constant is a real property of the model rather than an artefact of
+        # a frozen input. LBQ barely moves because institutional facts barely
+        # move, and a flat LBQ line is the finding. The test is not "does it
+        # vary" but "is every input the value that input actually had".
+        for key, fn, gate in (
+                ("academic_referendum", run_referendum,
+                 lambda c: c.approval is not None and c.income is not None),
+                ("academic_economic_pessimism", run_lockerbie,
+                 lambda c: c.pct_expect_worse is not None
+                 and c.open_seats is not None),
+                ("academic_political_history", run_lbq,
+                 lambda c: c.dem_senate_retirements is not None),
+        ):
+            if not gate(c):
+                continue
+            try:
+                r = fn(c)
+            except Exception:                                 # noqa: BLE001
+                continue
+            if r is None:
+                continue
+            lo2, hi2 = r.interval_80 or (None, None)
+            meta = MODELS_BY_KEY.get(key, {})
+            day[key] = {
+                "name": meta.get("name", key),
+                "categories": meta.get("categories", ["academic"]),
+                "category": "academic", "publication": "individual",
+                "margin_D": round(r.margin_D, 2),
+                "margin_D_80_low": round(lo2, 2) if lo2 is not None else None,
+                "margin_D_80_high": round(hi2, 2) if hi2 is not None else None,
+                "inputs": r.inputs,
+                "diagnostics": r.diagnostics,
+                "provenance": BACKFILL_PROVENANCE,
+            }
+
         if day:
             out[cur.isoformat()] = {"snapshot_date": cur.isoformat(),
                                     "models": day}
         cur += dt.timedelta(days=step_days)
 
     if include_referendum:
-        print("  --backfill-referendum: IGNORED. Its inputs do not vary by "
-              "date, so the line would be flat by construction. See the note "
-              "in backfill().")
+        print("  --backfill-referendum: no longer needed. Every model whose "
+              "inputs are datable is backfilled by default; the flag is kept "
+              "so existing workflow files do not break.")
 
     print(f"  reconstructed {len(out)} date(s)")
     if empty_windows:
@@ -1265,7 +1511,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Published academic models, reimplemented.")
     ap.add_argument("--cycle", type=int, default=2026)
     ap.add_argument("--date", default=None)
-    ap.add_argument("--approval", type=float, default=38.0,
+    ap.add_argument("--approval", type=float, default=None,
                     help="president's approval, Gallup basis — same caveat as "
                          "fundamentals.py, do not feed a poll average")
     ap.add_argument("--step-days", type=int, default=7,

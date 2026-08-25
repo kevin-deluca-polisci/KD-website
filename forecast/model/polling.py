@@ -609,8 +609,36 @@ def house_incumbency(cycle: int = 2026) -> dict[str, int]:
         if str(r.get("open_seat")).strip().lower() in ("true", "1", "yes"):
             out[rid] = 0
             continue
+        # AN INCUMBENT WITH AN UNEXPECTED PARTY CODE IS STILL AN INCUMBENT.
+        #
+        # This used to read `1 if D else -1 if R else 0`, and 0 means OPEN
+        # everywhere downstream. So a party code that was neither D nor R
+        # silently converted a held seat into an open one: no incumbency term
+        # in the projection, and one extra seat in every open-seat count built
+        # off this roster. It produced a perfectly plausible number and no
+        # error, which is why it survived.
+        #
+        # CA-06 is the live case and it is not a typo. Kevin Kiley was elected
+        # as a Republican and is seeking re-election as an INDEPENDENT, so
+        # Cook's table carries him as `I` with `open_seat` unset — correctly,
+        # because the seat is not open. He holds it and he is running for it.
+        #
+        # The sign is the awkward part rather than the openness. An
+        # independent's incumbency advantage does not accrue to either party in
+        # a D-minus-R margin, and pretending otherwise would be a guess. What
+        # is NOT in doubt is that the seat is harder for a Democrat than an
+        # open seat would be, so the advantage sits on the non-Democratic side,
+        # which is where he was elected from. Recorded here rather than
+        # smuggled in as a party relabel.
         p = str(r.get("party") or "").strip().upper()[:1]
-        out[rid] = 1 if p == "D" else -1 if p == "R" else 0
+        if p == "D":
+            out[rid] = 1
+        elif p == "R":
+            out[rid] = -1
+        elif p:
+            out[rid] = -1        # incumbent, not open; see the note above
+        else:
+            out[rid] = 0
     return out
 
 

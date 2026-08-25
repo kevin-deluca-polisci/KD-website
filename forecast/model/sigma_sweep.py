@@ -69,26 +69,38 @@ def setup(cycle: int = 2026):
     # The baseline PVI_PREFERENCE would actually pick, not the default: this
     # module exists to describe the model the site runs, and a sweep carrying
     # the wrong index's slope and sigmas describes a different one.
-    hs = polling.calibrate_sigma_house(
-        cycle, baseline=polling.BASELINE_CALIBRATION.get(
-            polling.PVI_PREFERENCE[0], "dra"))
-    if not hs.get("ok"):
-        raise SystemExit(f"no house calibration: {hs.get('why')}")
 
     pm = json.loads((DERIVED / "polling_model.json").read_text())
     tide = float(pm.get("nowcast_tide_D")
                  if pm.get("nowcast_tide_D") is not None
                  else pm["election_day_tide_D"])
 
+    # BOTH BASELINE SHAPES, exactly as house_forecast resolves them. The first
+    # version of this read only the `pvi` quantity, which meant that the day
+    # DRA became the preferred index this module silently kept projecting
+    # Cook's -- and said nothing, because 435 districts came back either way.
+    # The guard in main() caught it on the first run after the switch, which is
+    # the only reason this comment exists rather than a wrong table.
     by: dict[str, dict[str, float]] = {}
     for r in rows:
         if r["quantity"] == "pvi" and r["chamber"] == "house" and r["race_id"]:
             by.setdefault(r["source_id"], {}).setdefault(
                 r["race_id"], float(r["value"]))
+    dra_cur, dra_pri, _ = polling.dra_baseline(rows, cycle)
+    if dra_cur:
+        by["dra"] = dra_cur
     src = next((s for s in polling.PVI_PREFERENCE if by.get(s)),
                next(iter(by), None))
     pvi = by[src]
-    cur, prior = maps.split_rows(rows, src)
+    # The calibration has to follow the index that was actually selected, for
+    # the same reason house_forecast does it that way: a slope and a sigma
+    # belong to the index they were fitted against.
+    hs = polling.calibrate_sigma_house(
+        cycle, baseline=polling.BASELINE_CALIBRATION.get(src, "dra"))
+    if not hs.get("ok"):
+        raise SystemExit(f"no house calibration: {hs.get('why')}")
+    cur, prior = ((dra_cur, dra_pri) if src == "dra"
+                  else maps.split_rows(rows, src))
     if prior:
         pvi, _ = maps.baseline_asof(cur or pvi, prior, date)
 

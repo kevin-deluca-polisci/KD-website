@@ -79,6 +79,219 @@ def fit(winsorise_2022=True):
 INCOME_QUANTITY = "income_growth_ytd"
 
 
+# ---------------------------------------------------------------------------
+# Presidential approval, as of a date
+# ---------------------------------------------------------------------------
+# THE FALLBACK IS THE POINT OF THIS FUNCTION, not an afterthought.
+#
+# Approval was a typed-in constant for the whole of this archive's life, and a
+# constant is invisible: nothing downstream could tell "38.0 because the polls
+# say so on this date" from "38.0 because nobody has wired up a feed". Both
+# produced the same number and the same chart.
+#
+# So the two cases are now different objects. A value read from dated polls
+# carries the window it was computed over and how many polls were in it. The
+# constant carries a source string that says it is a constant, and every model
+# that uses it propagates that string into its own output. A backfilled line
+# built on the constant is therefore self-identifying: the reason it is flat is
+# written on it.
+from pathlib import Path as _Path
+
+APPROVAL_FALLBACK = 38.0
+APPROVAL_WINDOW_DAYS = 14
+
+
+# GALLUP HAS STOPPED POLLING PRESIDENTIAL APPROVAL, and the model was fit on
+# Gallup. That is the whole problem this constant exists to solve.
+#
+# The coefficients come from a Gallup-only column running back to 1946, so the
+# model wants a number on the GALLUP SCALE. It no longer matters whether we
+# would prefer Gallup; there is no more Gallup to prefer. The choice is between
+# feeding it something else and pretending the scales match, or measuring the
+# gap and correcting for it.
+#
+# MEASURED, on the 128 dated polls in the archive. Gallup published three
+# readings before it stopped, and for each one we can compute what the rest of
+# the field said in the same fortnight:
+#
+#     2025-01-27   gallup 47.0   field 50.53 (n=32)   -3.53
+#     2025-02-16   gallup 45.0   field 49.47 (n=36)   -4.47
+#     2025-03-16   gallup 43.0   field 47.08 (n=24)   -4.08
+#                                        mean -4.03, sd 0.39
+#
+# Three points is a small sample and the spread across them is a third of a
+# point, which is about as stable as a house effect ever looks. The approval
+# coefficient is 0.1338 on the president's-party vote share, so 4.03 points of
+# approval is 0.54 of share and about 1.08 points of D margin. That is the size
+# of the bias we would carry by swapping the series without adjusting, and it
+# is the same order as the per-cycle translation error we already carry
+# knowingly. Too big to ignore, small enough that the n=3 uncertainty around it
+# does not dominate.
+#
+# WHAT WOULD CHANGE THIS. The offset is measured on early-2025 data and a house
+# effect can drift, particularly for a pollster that has since left the field
+# and cannot be re-measured. If a better-attested Gallup-to-aggregate offset
+# turns up, use it and say so. If the fundamentals model is ever refit on a
+# non-Gallup column, delete this and the adjustment together.
+GALLUP_HOUSE_EFFECT = -4.03     # gallup minus the field, in approval points
+GALLUP_HOUSE_EFFECT_N = 3
+
+
+# THE HISTORICAL COLUMN IS GALLUP, AND THAT DECIDES WHAT MAY BE FED IN.
+#
+# Both models that take approval — this one and the referendum model — were fit
+# on a Gallup-only approval series running back to 1946. A pollster's house
+# effect on presidential approval is worth a couple of points, this model's
+# approval coefficient is large, and so substituting a multi-pollster average
+# for Gallup does not make the model better informed. It makes it a different
+# model reported under the same name, which is the one thing this file exists
+# not to do. The CLI help has warned about it since the model was written; the
+# archive lookup has to obey the same warning.
+#
+# Measured on the 2026-08-25 capture: 128 dated approval polls in the archive,
+# of which THREE are Gallup, all from early 2025. So the basis we need is
+# exactly the basis we do not have, and the honest response is to keep the
+# constant and say why rather than quietly swap the series.
+# GALLUP POLLS APPROVAL MONTHLY, so the window that suits a dense
+# multi-pollster feed is the wrong window for it. Fourteen days would reject
+# the very readings the basis check exists to prefer: one Gallup poll in a
+# month IS the Gallup series, not a thin sample of it.
+APPROVAL_WINDOW_GALLUP = 35
+
+
+def approval_from_archive(cycle: int, asof: str | None = None,
+                          basis: str = "gallup") -> tuple[float, str, int]:
+    """(approval, source, n). Three tiers, and each says which one it used.
+
+    1. INDIVIDUAL POLLS whose field period ended on or before `asof`, from the
+       raw Wikipedia captures. This is the only tier that makes a past value a
+       computation rather than a reconstruction, and it is the one the model
+       backfill needs.
+    2. THE AGGREGATOR TABLE, if no poll falls in the window. Their numbers are
+       real and dated, but they are somebody's model output rather than raw
+       interviews, and for a past date they are only as good as the day we
+       happened to capture them.
+    3. THE CONSTANT, which announces itself.
+
+    COVERAGE, measured on 2026-08-25: 123 individual polls in 2025 and 5 in
+    2026. The page has largely stopped carrying monthly nationwide tables for
+    the election year. So tier 1 supports a 2025 backfill and does NOT support
+    a 2026 one, which is the half the fundamentals models actually need. Silver
+    Bulletin publishes the same polls densely and is the intended second
+    source; nothing here assumes Wikipedia is the only one.
+    """
+    import datetime as _dt
+    import sys as _sys
+    _sys.path.insert(0, str(REPO / "forecast" / "collect"))
+    try:
+        import wiki_approval as _wa
+    except ImportError:
+        return (APPROVAL_FALLBACK,
+                "hand-set constant — collect/wiki_approval.py not importable",
+                0)
+
+    everything = _wa.load_history(cycle)
+    gallup = [p for p in everything
+              if "gallup" in (p.get("pollster") or "").lower()]
+    field = [p for p in everything
+             if "gallup" not in (p.get("pollster") or "").lower()]
+
+    # THE END DATE IS THE DATE BEING ASKED ABOUT, never "the last date this
+    # particular subset happens to hold". Defaulting it per-subset is how the
+    # first version of this returned March 2025's Gallup reading as today's
+    # approval: Gallup stopped publishing, so `gallup[-1]` is seventeen months
+    # old, and the model ran on it without a word. `asof=None` means now.
+    end = asof or _dt.date.today().isoformat()
+
+    # ROUTE ONE IS OFF BY DEFAULT, and the reason is consistency rather than
+    # accuracy. Where a real Gallup reading exists it is unarguably the better
+    # number: it is the exact basis the coefficients were fit on and it needs
+    # no adjustment. But Gallup has left the field, so it exists for the first
+    # three months of 2025 and nowhere else, and preferring it would put a
+    # visible seam in the middle of every backfilled series — unadjusted Gallup
+    # until March 2025, shifted field thereafter, with the join reading as a
+    # change in the world rather than a change in the instrument.
+    #
+    # One instrument for the whole series, even where a better one exists for
+    # part of it, is the same trade the chained-index decision made and it goes
+    # the same way. `basis="gallup_raw"` still gets the unadjusted readings for
+    # anyone comparing the two.
+    if basis == "gallup_raw" and gallup:
+        cut = (_dt.date.fromisoformat(end)
+               - _dt.timedelta(days=APPROVAL_WINDOW_GALLUP)).isoformat()
+        win = [p["approve"] for p in gallup if cut <= p["date"] <= end]
+        if win:
+            return (round(sum(win) / len(win), 2),
+                    f"mean of {len(win)} Gallup reading(s) in the "
+                    f"{APPROVAL_WINDOW_GALLUP} days to {end} — the basis the "
+                    f"coefficients were fit on, unadjusted "
+                    f"(Wikipedia, CC BY-SA)", len(win))
+
+    # ROUTE TWO: the rest of the field, shifted onto the Gallup scale.
+    polls = field if basis == "gallup" else everything
+    adj = GALLUP_HOUSE_EFFECT if basis == "gallup" else 0.0
+    if polls and end:
+        cut = (_dt.date.fromisoformat(end)
+               - _dt.timedelta(days=APPROVAL_WINDOW_DAYS)).isoformat()
+        win = [p["approve"] for p in polls if cut <= p["date"] <= end]
+        if win:
+            raw = sum(win) / len(win)
+            note = (f" then shifted {GALLUP_HOUSE_EFFECT:+.2f} onto the Gallup "
+                    f"scale the model was fit on (offset measured on "
+                    f"{GALLUP_HOUSE_EFFECT_N} overlapping readings)"
+                    if adj else "")
+            return (round(raw + adj, 2),
+                    f"mean of {len(win)} approval poll(s) in the "
+                    f"{APPROVAL_WINDOW_DAYS} days to {end}{note} "
+                    f"(Wikipedia, CC BY-SA)", len(win))
+
+    # TIER 2 GETS THE SAME SHIFT. An aggregator's average is multi-pollster by
+    # definition, so it sits on the field scale rather than the Gallup one and
+    # needs the identical correction. An earlier version of this refused tier 2
+    # on a Gallup basis entirely, which was right while the plan was to feed
+    # the model actual Gallup and wrong once Gallup stopped publishing: it left
+    # the model on a hand-set constant forever rather than on the best
+    # available number, correctly scaled.
+    #
+    # Tier 2 only fires for a date at or after the capture that holds it: an
+    # aggregator row is stamped with the day it was read, and reaching back
+    # with it would put August's reading on a March projection.
+    import glob as _glob
+    import json as _json
+    files = sorted(f for f in _glob.glob(str(
+        DATA / str(cycle) / "raw" / "wiki_approval" / "*" / "*.json"))
+        if not f.endswith(".meta.json"))
+    for f in reversed(files):
+        day = _Path(f).parent.name
+        if asof and day > asof:
+            continue
+        try:
+            got = _wa.extract(_wa.read_capture(_Path(f)))
+        except Exception:
+            continue
+        vals = [g["approve"] for g in got["aggregators"]
+                if g.get("approve") is not None]
+        if vals:
+            adj = GALLUP_HOUSE_EFFECT if basis == "gallup" else 0.0
+            note = (f", shifted {GALLUP_HOUSE_EFFECT:+.2f} onto the Gallup "
+                    f"scale" if adj else "")
+            return (round(sum(vals) / len(vals) + adj, 2),
+                    f"mean of {len(vals)} published aggregator(s) as read on "
+                    f"{day}{note} — aggregates, NOT individual polls "
+                    f"(Wikipedia, CC BY-SA)", len(vals))
+
+    if basis == "gallup":
+        return (APPROVAL_FALLBACK,
+                f"hand-set constant — the archive holds {len(polls)} Gallup "
+                f"reading(s), and this model was fit on a Gallup-only column, "
+                f"so a multi-pollster average would be a different model under "
+                f"the same name. Anything driven by this is flat by "
+                f"construction and not by evidence", len(polls))
+    return (APPROVAL_FALLBACK,
+            "hand-set constant — no dated approval in the archive, so anything "
+            "driven by this is flat by construction and not by evidence", 0)
+
+
 def income_from_archive(cycle: int) -> tuple[float, str] | None:
     """(value, provenance) from the newest parsed date that carries FRED."""
     for f in sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")), reverse=True):
@@ -119,7 +332,7 @@ def main(argv=None) -> int:
     #   3. check the referendum model separately. Its fitted approval
     #      coefficient is 0.026, so a live feed will move this model and barely
     #      touch that one, and that difference is the finding rather than a bug.
-    ap.add_argument("--approval", type=float, default=38.0,
+    ap.add_argument("--approval", type=float, default=None,
                     help="president's approval (Gallup basis — do NOT feed a poll "
                          "average, the historical column is Gallup-only and the "
                          "house effect is a couple of points)")
@@ -145,6 +358,15 @@ def main(argv=None) -> int:
             income, income_prov, placeholder = 1.5, "PLACEHOLDER (no FRED capture found)", True
     a.income = income
 
+    # APPROVAL COMES FROM THE ARCHIVE UNLESS FORCED. --approval still wins, so
+    # a class can ask what the model says at 45%; what changed is which way
+    # round the default runs.
+    if a.approval is None:
+        a.approval, approval_src, approval_n = approval_from_archive(a.cycle)
+    else:
+        approval_src = (f"forced to {a.approval} on the command line, not read "
+                        f"from the archive")
+        approval_n = 0
     pp = predict(b, a.approval, a.income, a.seats_before)   # president's party share
     margin_d = 100 - 2*pp                                    # D minus R
     z = 1.2816                                               # 80%
@@ -154,7 +376,8 @@ def main(argv=None) -> int:
         "coefficients": {"intercept": round(b[0],4), "approval": round(b[1],4),
                          "income_growth": round(b[2],4), "seats_before": round(b[3],4)},
         "r2": round(r2,3), "loeo_rmse": round(loeo,3),
-        "inputs": {"approval": a.approval, "income_growth": a.income,
+        "inputs": {"approval": a.approval, "approval_source": approval_src,
+                   "approval_n": approval_n, "income_growth": a.income,
                    "seats_before": a.seats_before,
                    "income_is_placeholder": placeholder,
                    "income_source": income_prov,
@@ -177,7 +400,7 @@ def main(argv=None) -> int:
         print("           capture has not run yet. ./forecast/run.sh will fix it.")
     else:
         print(f"  income growth {a.income:+.2f}%  ({income_prov})")
-    print(f"  approval {a.approval:.1f} — hand-set, not pulled from a live feed")
+    print(f"  approval {a.approval:.2f} — {approval_src}")
     return 0
 
 if __name__ == "__main__":

@@ -60,12 +60,12 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": true,
-      "margin_D": 8.28,
-      "margin_D_80_low": 0.13,
-      "margin_D_80_high": 16.43,
+      "margin_D": 8.52,
+      "margin_D_80_low": 0.36,
+      "margin_D_80_high": 16.67,
       "inputs": {
-        "approval": 38.0,
-        "approval_source": "hand-set (Gallup basis); no live approval feed yet",
+        "approval": 33.45,
+        "approval_source": "mean of 11 published aggregator(s) as read on 2026-08-25, shifted -4.03 onto the Gallup scale \u2014 aggregates, NOT individual polls (Wikipedia, CC BY-SA)",
         "income_growth": -0.096,
         "income_source": "FRED income_growth_ytd as of 2026-08-25, 6 month(s) of the year in hand"
       },
@@ -78,7 +78,7 @@
         "r2": 0.273,
         "loeo_rmse": 3.18,
         "fitted_on": "20 midterms, 1946-2022",
-        "pres_party_two_party_vote": 45.86,
+        "pres_party_two_party_vote": 45.74,
         "benchmark": {
           "claim": "Republicans lose about 28 House seats and the House",
           "authors": "Charles Tien and Michael S. Lewis-Beck",
@@ -102,16 +102,19 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 14.63,
-      "margin_D_80_low": 8.52,
-      "margin_D_80_high": 20.57,
+      "margin_D": 15.35,
+      "margin_D_80_low": 9.23,
+      "margin_D_80_high": 21.2,
       "inputs": {
         "pct_expect_worse": 37.0,
-        "pct_expect_worse_source": "Michigan Surveys of Consumers, Table 8, June of the election year",
+        "pct_expect_worse_source": "University of Michigan Surveys of Consumers, Table 8, WORSE OFF row, monthly, 2026-06 (carried forward from 2026-06)",
         "open_seats": 60,
         "year_direction": -1,
         "year_direction_label": "a bad year for the president's party \u2014 the midterm rule",
-        "seats_before": 220
+        "seats_before": 220,
+        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-08-25 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
+        "spec_date_reached": true,
+        "outside_fitted_range": true
       },
       "diagnostics": {
         "coefficients": {
@@ -179,6 +182,7 @@
       "notes": [
         "forecasts SEAT CHANGE directly \u2014 the margin shown is our own seat curve run backwards from that seat count, and is not a number Lockerbie publishes",
         "that seat count falls outside the range of tides the other models produced today, so the inversion is extrapolated rather than interpolated",
+        "OUTSIDE THE FITTED RANGE on pct_expect_worse = 37, above the sample maximum of 32 and open_seats = 60, above the sample maximum of 56. The model was fit on 1952-2022 and this is a linear extrapolation beyond anything in that sample, which is most of why it is the most Democratic forecast on this site.",
         "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
         "published out-of-sample mean absolute error is 16.8 seats \u2014 the interval is his, not ours, and it is very wide"
       ]
@@ -194,7 +198,7 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 2.29,
+      "margin_D": 3.25,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
@@ -204,7 +208,9 @@
         "dem_holdover_senate": 34,
         "dem_governors": 24,
         "strong_gop_senate_states": 14,
-        "dem_senate_retirements": 4
+        "dem_senate_retirements": 4,
+        "structural_source": "4 Democratic Senate retirement(s) known by 2026-08-25 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
+        "spec_date_reached": true
       },
       "diagnostics": {
         "house_D_seats": 213.8,

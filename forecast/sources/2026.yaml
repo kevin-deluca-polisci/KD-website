@@ -298,6 +298,15 @@ sources:
       urls:
         - name: generic_ballot_polls
           url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRsvXNCZ0ubJr8D_yNcU5q6C0_HBa35K7oDK03KpO7Ca43UwdXaIdvVLWoXEmHHph0EREz5430Hm5yZ/pub?output=csv"
+        # SECOND SHEET, SAME PUBLISHER, SAME ANALYSIS. Added 2026-08-25 because
+        # Wikipedia's nationwide approval tables are dense for 2025 and hold
+        # five polls for the whole of 2026 — the half the fundamentals backfill
+        # needs. This is the same published-to-web Google Sheet pattern as the
+        # generic ballot above, so the robots reasoning and the licence
+        # reasoning in these notes cover it unchanged: collect yes, republish
+        # the individual rows no.
+        - name: approval_polls
+          url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-FKWVTTFtJT6u56e0bqdfoMcXvDO1DUChsJ3jQAMB2lZk2SMqVfmg7dGjclTYkYWz-Pm5lfcLPjp4/pub?output=csv"
     notes: >
       THIS IS THE POLLING CATEGORY. Roughly 350 individual generic-ballot polls
       from Aug 2025 onward, 25 columns, updated near-daily. Columns include both
@@ -619,6 +628,44 @@ sources:
       double-count into expert_ordinal; pick one at render time.
 
   # ----------------------------------------------------- ratings aggregator --
+
+  - id: wiki_approval
+    name: Presidential approval polling (Wikipedia, second Trump presidency)
+    category: fundamentals         # an INPUT to the fundamentals family, not a forecast
+    method: wikipedia
+    enabled: true
+    cadence: daily
+    publication: individual        # CC BY-SA 4.0, attribution required
+    declared_inputs: []
+    license: permitted
+    robots_checked: 2026-08-25
+    config:
+      api: https://en.wikipedia.org/w/api.php
+      pages:
+        - "Opinion polling on the second Trump presidency"
+    notes: >
+      WHY THIS EXISTS. Presidential approval is the last hand-set input in the
+      fundamentals model (approval=38.0, typed in) and the reason two of the
+      five fundamentals-family models have no history: they cannot be
+      reconstructed for a past date without knowing what approval was on that
+      date, and inventing one would draw a flat line that asserts approval did
+      not move.
+      POLL LEVEL, NOT AN AGGREGATE, and that is the whole point. Wikipedia's
+      table is one row per poll with its own field dates, so the average as of
+      any past date is a COMPUTATION over the polls published by then rather
+      than an estimate of what they said. That is the same property that makes
+      the generic ballot able to backfill BEW, and it is what turns
+      `class_fundamentals` and `academic_referendum` from unbackfillable into
+      backfillable.
+      WHY WIKIPEDIA AND NOT SILVER. Silver Bulletin publishes the same polls as
+      a downloadable sheet and we already capture his generic ballot file, so
+      he is the obvious alternative and is worth adding as a CROSS-CHECK. But
+      his sheet carries no stated licence, and this series is meant to be
+      published as a model input. Wikipedia is CC BY-SA, which is
+      redistributable with attribution. Primary here, cross-check there.
+      NOT A FORECAST. `approval_pct` and `disapproval_pct` are in
+      NOT_A_FORECAST in aggregate.py, so they never enter a category average.
+      Same treatment as the FRED income series, for the same reason.
 
   - id: wikipedia
     name: Wikipedia race ratings
