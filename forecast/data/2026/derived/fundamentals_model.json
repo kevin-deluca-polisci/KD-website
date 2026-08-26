@@ -13,10 +13,10 @@
     "approval": 34.86,
     "approval_source": "mean of 7 adults-sample approval poll(s) in the 14 days to 2026-08-26. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
     "approval_n": 7,
-    "income_growth": -0.096,
+    "income_growth": -0.039,
     "seats_before": 220,
     "income_is_placeholder": false,
-    "income_source": "FRED income_growth_ytd as of 2026-08-26, 6 month(s) of the year in hand",
+    "income_source": "FRED income_growth_ytd as of 2026-08-26, 7 month(s) of the year in hand",
     "approval_field": 39.83,
     "approval_field_n": 21,
     "approval_aggregate": 37.48,
@@ -25,30 +25,30 @@
     "approval_aggregate_high": 39.5,
     "approval_aggregate_date": "2026-08-26"
   },
-  "pres_party_two_party_vote": 44.34,
-  "margin_D": 11.32,
-  "margin_D_80_low": 5.45,
-  "margin_D_80_high": 17.19,
+  "pres_party_two_party_vote": 44.36,
+  "margin_D": 11.28,
+  "margin_D_80_low": 5.41,
+  "margin_D_80_high": 17.16,
   "sensitivity": [
     {
       "approval": 30.9,
-      "margin_D": 12.39
+      "margin_D": 12.35
     },
     {
       "approval": 32.9,
-      "margin_D": 11.85
+      "margin_D": 11.82
     },
     {
       "approval": 34.9,
-      "margin_D": 11.32
+      "margin_D": 11.28
     },
     {
       "approval": 36.9,
-      "margin_D": 10.78
+      "margin_D": 10.75
     },
     {
       "approval": 38.9,
-      "margin_D": 10.25
+      "margin_D": 10.21
     }
   ]
 }

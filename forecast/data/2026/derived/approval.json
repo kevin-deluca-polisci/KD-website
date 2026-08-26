@@ -823,25 +823,6 @@
       "source": "Wikipedia's approval aggregator table (CC BY-SA), excluding the row Wikipedia computes itself. Starts at the first capture: an aggregator's average is overwritten in place, so a past value is only recoverable if we were there to read it.",
       "points": [
         {
-          "date": "2026-08-25",
-          "approve": 37.48,
-          "n": 10,
-          "low": 35.0,
-          "high": 39.5,
-          "members": {
-            "Ballotpedia": 39.0,
-            "CNN": 36.0,
-            "Decision Desk HQ": 38.7,
-            "FiftyPlusOne": 36.1,
-            "Race to the WH": 37.0,
-            "Real Clear Politics": 39.5,
-            "Silver Bulletin": 38.1,
-            "The Economist": 35.0,
-            "The New York Times": 37.0,
-            "VoteHub": 38.4
-          }
-        },
-        {
           "date": "2026-08-26",
           "approve": 37.48,
           "n": 10,
@@ -998,13 +979,12 @@
         }
       },
       "aggregate": {
-        "polyline": "631.0,133.3 632.0,133.3",
-        "label": "Average of the published aggregators",
-        "end": {
+        "dot": {
           "x": 632.0,
           "y": 133.3,
           "v": 37.48
-        }
+        },
+        "label": "Average of the published aggregators"
       },
       "gallup": {
         "marks": [
