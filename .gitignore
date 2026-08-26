@@ -18,5 +18,8 @@ public/
 # depend on remembering.
 _*.py
 
+# Scratch JSON from those same throwaway scripts — snapshots, diffs, probes.
+_*.json
+
 # scratch: files the Cowork bridge cannot delete without a permission grant
 _to_delete/

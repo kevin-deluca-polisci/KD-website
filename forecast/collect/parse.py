@@ -190,7 +190,8 @@ def parse_date(cycle: int, date: str, registry: dict,
 
 
 def write_parsed(cycle: int, date: str, rows: list[P.Row],
-                 only: set[str] | None = None) -> Path:
+                 only: set[str] | None = None,
+                 backdated: bool = False) -> Path:
     """
     Write one date's parsed rows.
 
@@ -199,6 +200,25 @@ def write_parsed(cycle: int, date: str, rows: list[P.Row],
     would leave you with a day containing nothing but MEDSL, and the loss is
     invisible until you go looking for something that used to be there.
     Re-parsing everything restores it, but only if you notice.
+
+    A CAPTURED ROW IS NEVER DISPLACED BY A BACKDATED ONE, which is what
+    `backdated` exists for, and the reason is a bug this function had for a
+    week. Race to the WH publishes a trend running months back, so parsing
+    2026-08-26 produces a bucket of rows whose own date is 2026-08-25. Those
+    were written with the merge key {race_to_the_wh}, which drops that
+    source's existing rows for 08-25 and replaces them — so the 1,419 rows
+    CAPTURED from their site on the 25th were overwritten by the 38 rows their
+    trend line happens to place on that date. Every day, silently, to the day
+    before.
+
+    The old comment here worried about exactly this shape of loss and guarded
+    the wrong half: it protected the OTHER sources on a backdated date and left
+    the source's own captured rows unprotected.
+
+    So a backdated write may only FILL a date, never overwrite one. Where the
+    source already has captured rows for that date, they stay and the backdated
+    rows for it are dropped. Where it has none — most of the archive, since the
+    trend reaches back further than our capture does — they land as before.
     """
     out = DATA_DIR / str(cycle) / "parsed"
     out.mkdir(parents=True, exist_ok=True)
@@ -208,11 +228,20 @@ def write_parsed(cycle: int, date: str, rows: list[P.Row],
 
     if only and path.exists():
         kept = []
+        protected: set[str] = set()
         with path.open(encoding="utf-8") as fh:
             for existing in csv.DictReader(fh):
-                # Drop the sources we just re-parsed; keep everyone else.
-                if existing.get("source_id") not in only:
-                    kept.append({f: existing.get(f, "") for f in P.FIELDS})
+                sid = existing.get("source_id")
+                row = {f: existing.get(f, "") for f in P.FIELDS}
+                if sid not in only:
+                    kept.append(row)                      # someone else's day
+                elif backdated and (existing.get("provenance") or "") == "captured":
+                    kept.append(row)                      # captured beats backdated
+                    protected.add(sid)
+                # otherwise: this source is being re-parsed, so drop and rewrite
+        if protected:
+            records = [r for r in records
+                       if r.get("source_id") not in protected]
         records = kept + records
 
     with path.open("w", newline="", encoding="utf-8") as fh:
@@ -270,7 +299,7 @@ def main(argv=None) -> int:
                 # exact failure write_parsed's docstring warns about, arriving
                 # by a route it did not anticipate.
                 key = only if asof == d else {r.source_id for r in group}
-                write_parsed(a.cycle, asof, group, key)
+                write_parsed(a.cycle, asof, group, key, backdated=(asof != d))
             if len(buckets) > 1:
                 back = sorted(k for k in buckets if k != d)
                 print(f"  {d}  backfilled {len(rows) - len(buckets.get(d, [])):5d} "

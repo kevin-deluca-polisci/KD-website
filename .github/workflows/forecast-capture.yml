@@ -207,6 +207,15 @@ jobs:
           # capture: the model now moves with the data, and skipping it froze
           # the published figure at D+9.5 while the model itself had moved to
           # D+10.5. A frozen number on a live page is worse than no number.
+          # approval.py BEFORE fundamentals, and it was missing from this list
+          # entirely — added to run.sh and not here, which is the same mistake
+          # the comment above describes, made again. It builds
+          # derived/approval.json, the three-construction approval panel, and
+          # fundamentals.py reads the aggregator consensus out of it to print
+          # beside its own input. Left out, the panel freezes at whatever date
+          # it was last built by hand and the model file quotes a stale
+          # aggregate — a frozen number on a live page, again.
+          python3 forecast/model/approval.py    --cycle "$CYCLE"
           python3 forecast/model/fundamentals.py --cycle "$CYCLE"
           POLL_ARGS=""
           [ "${{ inputs.backfill_academic }}" = "true" ] && POLL_ARGS="--backfill"
