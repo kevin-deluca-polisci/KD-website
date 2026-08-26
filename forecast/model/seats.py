@@ -719,6 +719,31 @@ def main(argv=None) -> int:
                     print(f"    {i}/{len(todo)} dates")
             print(f"  backfilled {filled} academic projection(s) across "
                   f"{len(todo)} date(s)")
+            # THE STEP THAT IS EASY TO FORGET, AND THE ONE THAT BREAKS THE
+            # DAILY RUN WHEN IT IS.
+            #
+            # A backfill run on a laptop writes TWO things: derived/, which is
+            # committed to the public repo, and model_private/, which is
+            # gitignored there and reaches the private archive only when the
+            # daily Action rsyncs it. Push the public side alone and the two
+            # halves disagree: the committed derived/ carries the backfilled
+            # rows, while the Action rebuilds from an archive that has never
+            # seen them and produces a shorter file.
+            #
+            # aggregate.py's shortening guard then refuses to write, which is
+            # correct and is also the first anyone hears about it — the daily
+            # run fails with a message about missing inputs rather than about
+            # an unsynced history. It happened on 2026-08-26: 84 dates "lost
+            # category fundamentals" because class_fundamentals existed only in
+            # a laptop's model_private/.
+            print()
+            print("  NEXT, AND THE DAILY RUN WILL FAIL IF YOU SKIP IT:")
+            print("    model_private/ is gitignored here and lives in the raw")
+            print("    archive. Copy this run's history files there, commit and")
+            print("    push, THEN push this repo. Pushing derived/ on its own")
+            print("    leaves the Action rebuilding from a history that does")
+            print("    not contain what you just built, and aggregate.py will")
+            print("    refuse the run.")
 
     hist_p.write_text(json.dumps(hist, indent=1, sort_keys=True))
     print(f"  wrote {hist_p.relative_to(REPO)}   PRIVATE — "
