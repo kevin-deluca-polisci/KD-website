@@ -19704,16 +19704,16 @@
         "n_races": 35,
         "expected_D_seats_up": 13.22,
         "D_seats_up_80pct": [
-          10,
+          9,
           16
         ],
         "expected_D_total": 47.22,
         "D_total_80pct": [
-          44,
+          43,
           50
         ],
-        "prob_D_50_plus": 0.1331,
-        "prob_D_51_plus": 0.0558
+        "prob_D_50_plus": 0.159,
+        "prob_D_51_plus": 0.0925
       },
       "races": {
         "AK": {
@@ -19895,19 +19895,19 @@
       "house": {
         "map_vintage": "current map as of 2026-08-26",
         "n_districts": 435,
-        "expected_D_seats": 208.68,
+        "expected_D_seats": 208.92,
         "D_seats_80pct": [
-          190,
-          228
+          181,
+          237
         ],
-        "prob_D_majority": 0.2639,
+        "prob_D_majority": 0.3312,
         "majority_at": 218,
         "pvi_source": "dra",
         "sigma_source": "house-calibrated on 768 district-cycles [2022, 2024], baseline dra, with_incumbency",
-        "sigma_national": 3.9557,
+        "sigma_national": 6.0,
         "sigma_state": 4.19,
         "sigma_district": 8.82,
-        "sigma_total": 10.54,
+        "sigma_total": 11.46,
         "baseline_detail": {
           "ok": true,
           "n_current": 435,

@@ -213,7 +213,7 @@ def sigma_national_on(asof: str | None) -> float:
                            + (SIGMA_NATIONAL_FAR ** 2 - SIGMA_NATIONAL ** 2) * f), 4)
 
 
-def set_horizon(asof: str | None) -> float:
+def set_horizon(asof: str | None, floor: float | None = None) -> float:
     """Point the simulations at `asof`'s national sigma. Returns what was set.
 
     A MODULE-LEVEL SWITCH RATHER THAN A THREADED ARGUMENT, deliberately and
@@ -227,6 +227,23 @@ def set_horizon(asof: str | None) -> float:
     """
     global _SIGMA_NAT
     _SIGMA_NAT = sigma_national_on(asof)
+    # A MODEL THAT PUBLISHES ITS OWN ERROR GETS ITS OWN ERROR.
+    #
+    # The horizon term is what OUR national number is worth; it is 538's
+    # polling error, and it is the right instrument for a model whose input is
+    # a poll average. It is the wrong one for a forecaster who states his own
+    # uncertainty and whose is larger. Fair writes "the standard error is about
+    # 3 percentage points" of vote share, which is 6 of margin — wider than
+    # anything the horizon curve reaches — and projecting him through 3.6 gave
+    # his forecast a precision he does not claim.
+    #
+    # A FLOOR RATHER THAN A REPLACEMENT, so the horizon can still widen a
+    # source beyond its published error at long range if it ever exceeds it.
+    # Whichever is larger is the honest one: a published error does not shrink
+    # because the election is close, and the horizon term does not shrink
+    # because a forecaster is confident.
+    if floor is not None:
+        _SIGMA_NAT = max(_SIGMA_NAT, float(floor))
     return _SIGMA_NAT
 SIGMA_STATE_FLOOR = 3.0     # idiosyncratic error never falls below this
 

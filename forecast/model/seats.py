@@ -214,8 +214,32 @@ def public_house(h: dict | None) -> dict | None:
     return {k: h[k] for k in HOUSE_PUBLIC_FIELDS if k in h}
 
 
+# WHAT EACH OUTSIDE FORECASTER SAYS ITS OWN ERROR IS, in MARGIN points.
+#
+# Only sources that publish a number belong here, and the number has to be
+# theirs rather than our reading of their track record. Fair states it on the
+# prediction page itself:
+#
+#     "The standard error is about 3 percentage points, so the election is
+#      too close to call given the economic values."
+#
+# Three points of VOTE SHARE. Everything in this archive is a margin, and
+# margin = 2*(share - 50), so his three becomes six — the same factor-of-two
+# trap the fair parser's docstring warns about for the point estimate.
+#
+# THIS SHOULD EVENTUALLY BE A PARSED FIELD rather than a constant here. It is a
+# fact his page publishes, and facts his page publishes belong in the capture.
+# It is a constant today because extracting it means reading a sentence of
+# prose, and a regex over prose that silently stops matching is worse than a
+# number with a quote beside it.
+PUBLISHED_SIGMA_MARGIN = {
+    "fair": 6.0,        # "about 3 percentage points" of share, read 2026-08-26
+}
+
+
 def project(tide: float, pvi: dict, states: list, rows: list,
-            sigma: float, holdover_D: int, asof: str | None = None) -> dict:
+            sigma: float, holdover_D: int, asof: str | None = None,
+            sigma_floor: float | None = None) -> dict:
     """One tide in, one full set of seat answers out.
 
     `asof` is the date being projected, and it selects TWO things.
@@ -229,7 +253,7 @@ def project(tide: float, pvi: dict, states: list, rows: list,
     value — leaving it to the caller to remember is how the previous date's
     sigma silently leaks into the next projection.
     """
-    polling.set_horizon(asof)
+    polling.set_horizon(asof, floor=sigma_floor)
     sen = polling.senate_forecast(tide, pvi, states, sigma, holdover_D)
     house = public_house(polling.house_forecast(tide, rows, sigma, asof=asof))
     out = {
@@ -480,7 +504,8 @@ def main(argv=None) -> int:
 
     projections = {}
     for name, (category, tide, tier, margin_elsewhere) in sorted(tides.items()):
-        p = project(tide, pvi, states, rows, sigma, a.holdover_d, asof=date)
+        p = project(tide, pvi, states, rows, sigma, a.holdover_d, asof=date,
+                    sigma_floor=PUBLISHED_SIGMA_MARGIN.get(name))
         # The category travels WITH the projection. aggregate.py files each
         # one under it, so adding a model is a registry entry plus a line in
         # EXTERNAL_TIDE_SOURCES and nothing downstream has to learn its name.
@@ -684,7 +709,30 @@ def main(argv=None) -> int:
                   "academic.py --backfill and/or polling.py --backfill first")
         else:
             ah = {d0: {"models": mm} for d0, mm in ah.items()}
-            todo = sorted(d0 for d0 in ah if d0 != date)
+            # EVERY STORED DATE, not only the ones the model histories cover.
+            #
+            # `ah` is the union of the academic, polling and fundamentals
+            # history grids, and those grids are chosen by where each family's
+            # inputs can be reconstructed — they do not include every date the
+            # archive holds a projection for. Dates captured live sat outside
+            # them and were therefore never revisited, which produced two
+            # visible artefacts at once: 2026-08-20 had no Fair projection
+            # while 08-19 and 08-21 did, putting an eleven-point notch in the
+            # fundamentals line; and 08-19 through 08-25 kept sigma 3.606 after
+            # the horizon curve landed, so a week of the series was a tenth of
+            # a point more confident than its neighbours.
+            #
+            # Projecting every stored date fixes both. Where `ah` has no entry
+            # the model loop writes nothing and only the outside tides are
+            # filled, so a live date keeps its own academic numbers.
+            #
+            # WHAT IT COSTS: an outside tide already stored for a live date is
+            # RECOMPUTED here and restamped. That is honest — the value changes
+            # because the sigma changed, so it is no longer the number the
+            # model emitted that morning — but it does mean a handful of days
+            # stop being `captured` and become `backfilled`.
+            todo = sorted(set(ah) | set(hist))
+            todo = [d0 for d0 in todo if d0 != date]
             if a.backfill_from:
                 todo = [d0 for d0 in todo if d0 >= a.backfill_from]
             if a.backfill_to:
@@ -698,7 +746,7 @@ def main(argv=None) -> int:
             for i, d0 in enumerate(todo, 1):
                 day = hist.get(d0) or {"snapshot_date": d0, "projections": {}}
                 day.setdefault("projections", {})
-                for key, m in (ah[d0].get("models") or {}).items():
+                for key, m in ((ah.get(d0) or {}).get("models") or {}).items():
                     if m.get("margin_D") is None:
                         continue
                     # THE DATE GOES IN. This loop re-projected every past
@@ -721,6 +769,43 @@ def main(argv=None) -> int:
                     p0["provenance"] = m.get("provenance") or "backfilled"
                     day["projections"][key] = p0
                     filled += 1
+
+                # OUTSIDE TIDES BELONG IN THE BACKFILL TOO, and leaving them
+                # out is what put the step in the fundamentals line.
+                #
+                # Fair publishes a vote share four times a cycle and the parser
+                # backdates each to its publication day, so his MARGIN runs
+                # from 2025-12-23. His SEAT COUNT did not: seats come from this
+                # projection, this loop only ever projected the model-history
+                # families, and external_tides was called on the live path
+                # alone. So the fundamentals family had Fair's margin for eight
+                # months and his win probability only from the day we started
+                # capturing him — and the day it appeared the category average
+                # dropped eleven points, purely from the membership changing.
+                #
+                # external_tides already does the right thing for a past date:
+                # it reads every parsed file up to that date, takes each
+                # source's most recent prediction, and refuses anything
+                # published later. Calling it here is the whole fix.
+                #
+                # SEATS ONLY, never the margin. An outside tide's margin is
+                # already a parsed row in its own category on that date;
+                # emitting it again would put the same forecaster into the
+                # category mean twice. The publication tier travels with it, so
+                # a gated source still cannot be named.
+                for sid, t in external_tides(a.cycle, d0).items():
+                    p0 = project(float(t["margin"]), pvi, states, rows,
+                                 sigma, a.holdover_d, asof=d0,
+                                 sigma_floor=PUBLISHED_SIGMA_MARGIN.get(sid))
+                    p0["category"] = t["category"]
+                    p0["categories"] = [t["category"]]
+                    p0["publication"] = t["publication"]
+                    p0["margin_published_elsewhere"] = True
+                    p0["as_of"] = t["as_of"]
+                    p0["provenance"] = "backfilled"
+                    day["projections"][sid] = p0
+                    filled += 1
+
                 day["snapshot_date"] = d0
                 hist[d0] = day
                 if i % 20 == 0 or i == len(todo):
