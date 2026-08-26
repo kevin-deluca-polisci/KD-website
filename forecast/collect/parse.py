@@ -256,6 +256,19 @@ def main(argv=None) -> int:
     ap.add_argument("--cycle", type=int, default=2026)
     ap.add_argument("--date")
     ap.add_argument("--all", action="store_true", help="every stored date")
+    # WINDOWING A FULL RE-PARSE. --all over the whole archive is minutes of
+    # work, which does not fit every shell it has to run in, and a run killed
+    # halfway leaves the store half-rebuilt. These take a slice.
+    #
+    # ASCENDING ORDER IS LOad-BEARING, and slices must be run oldest first. A
+    # date is written wholesale from its own captures; the backdated rows that
+    # belong in it arrive later, from the parses of dates after it. Run a
+    # slice out of order and the wholesale write lands after the backfill it
+    # was supposed to keep, and the backfill is gone.
+    ap.add_argument("--from", dest="date_from", default=None,
+                    help="with --all, earliest date to parse (inclusive)")
+    ap.add_argument("--to", dest="date_to", default=None,
+                    help="with --all, latest date to parse (inclusive)")
     ap.add_argument("--only", help="comma-separated source ids")
     ap.add_argument("--inspect", metavar="SOURCE",
                     help="print the stored structure for a source and exit")
@@ -268,6 +281,10 @@ def main(argv=None) -> int:
     only = {s.strip() for s in a.only.split(",")} if a.only else None
     if a.all:
         dates = stored_dates(a.cycle)
+        if a.date_from:
+            dates = [d for d in dates if d >= a.date_from]
+        if a.date_to:
+            dates = [d for d in dates if d <= a.date_to]
     else:
         dates = [a.date or dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")]
     if not dates:
