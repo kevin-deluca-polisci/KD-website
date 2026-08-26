@@ -158,6 +158,76 @@ SHRINK_TAU_DAYS = 265.7
 # model/sigma_sweep.py for the market cross-checks and the argument — then
 # estimate it and stop borrowing.
 SIGMA_NATIONAL = 3.606      # 538 2024 House: 3.0 national (+) 2.0 generic-ballot
+
+# ---------------------------------------------------------------------------
+# THE SAME SIGMA WAS BEING USED TWENTY MONTHS OUT AND ON ELECTION EVE
+# ---------------------------------------------------------------------------
+# SIGMA_NATIONAL is 538's TERMINAL error — what the national number is worth
+# once the campaign has happened. Applying it to a projection dated 2025-03-05,
+# 608 days from the election, claims we knew as much then as we will on the
+# morning of the third. That is how the backfilled fundamentals line came to
+# sit at 93% in March 2025 and stay pinned above 90% for a year: not because
+# the models were confident, but because nothing widened their error at range.
+#
+# THE SHAPE IS A RANDOM WALK, which is why variance is linear in time and sigma
+# therefore grows as the square root. A tide that drifts a little each day
+# accumulates variance in proportion to the days remaining; that is the same
+# reasoning every published model uses to fan its cone out toward the horizon.
+# A straight line in sigma has no such story behind it, and — measured on this
+# archive — lands within 0.003 of the square root at these endpoints anyway, so
+# nothing is bought by the version that cannot be justified.
+#
+#     sigma(d) = sqrt( TERMINAL^2 + (FAR^2 - TERMINAL^2) * min(d, FAR_DAYS)/FAR_DAYS )
+#
+# FAR is 6.0, roughly a two-in-three chance of landing within six points of the
+# eventual national margin a year and a half out. It is a judgment call and is
+# recorded as one; the honest alternative was to keep asserting 3.606, which is
+# also a judgment call and a worse one.
+#
+# WHAT IT DOES NOT FIX, said here so nobody expects it to: most of the flatness
+# in the academic and fundamentals lines is SATURATION, not overconfidence.
+# Four of the five models sit far enough above 218 that probability cannot
+# respond to them, and Lockerbie is pinned at 1.00 under every sigma tried.
+# Widening the horizon removes false precision from the early series. Giving
+# each model its own published error is the separate change that would give
+# those lines shape.
+SIGMA_NATIONAL_FAR = 6.0
+SIGMA_WIDEN_DAYS = 600.0
+ELECTION_DAY_ISO = "2026-11-03"
+
+_SIGMA_NAT = SIGMA_NATIONAL     # the ACTIVE value; set_horizon moves it
+
+
+def sigma_national_on(asof: str | None) -> float:
+    """The national term for a projection dated `asof`. None means today."""
+    import datetime as _dt
+    if asof is None:
+        asof = _dt.date.today().isoformat()
+    try:
+        days = (_dt.date.fromisoformat(ELECTION_DAY_ISO)
+                - _dt.date.fromisoformat(asof)).days
+    except (TypeError, ValueError):
+        return SIGMA_NATIONAL
+    f = min(max(float(days), 0.0), SIGMA_WIDEN_DAYS) / SIGMA_WIDEN_DAYS
+    return round(math.sqrt(SIGMA_NATIONAL ** 2
+                           + (SIGMA_NATIONAL_FAR ** 2 - SIGMA_NATIONAL ** 2) * f), 4)
+
+
+def set_horizon(asof: str | None) -> float:
+    """Point the simulations at `asof`'s national sigma. Returns what was set.
+
+    A MODULE-LEVEL SWITCH RATHER THAN A THREADED ARGUMENT, deliberately and
+    not happily. SIGMA_NATIONAL is read in eight places across two simulation
+    functions and their outputs; threading a parameter through all of them is
+    the cleaner design and a larger change than is wise two days before a
+    freeze. seats.py sets it once per projection date, immediately before
+    projecting. If a caller forgets, the value stays at whatever the previous
+    call left, which is the failure mode this comment exists to warn about —
+    so seats.project() sets it unconditionally, including for today.
+    """
+    global _SIGMA_NAT
+    _SIGMA_NAT = sigma_national_on(asof)
+    return _SIGMA_NAT
 SIGMA_STATE_FLOOR = 3.0     # idiosyncratic error never falls below this
 
 N_SIMS = 20000
@@ -476,7 +546,7 @@ def calibrate_sigma(cycle: int) -> dict:
 
 def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
                     sigma_total: float, holdover_D: int | None) -> dict:
-    sigma_state = math.sqrt(max(sigma_total ** 2 - SIGMA_NATIONAL ** 2,
+    sigma_state = math.sqrt(max(sigma_total ** 2 - _SIGMA_NAT ** 2,
                                 SIGMA_STATE_FLOOR ** 2))
     races = {}
     for st in states:
@@ -493,7 +563,7 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
     order = sorted(races)
     wins = []
     for _ in range(N_SIMS):
-        nat = rng.gauss(0.0, SIGMA_NATIONAL)
+        nat = rng.gauss(0.0, _SIGMA_NAT)
         w = 0
         for st in order:
             m = races[st]["expected_margin_D"] + nat + rng.gauss(0.0, sigma_state)
@@ -505,7 +575,7 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
     out = {
         "n_races": len(races),
         "sigma_total": round(sigma_total, 2),
-        "sigma_national": SIGMA_NATIONAL,
+        "sigma_national": _SIGMA_NAT,
         "sigma_state": round(sigma_state, 2),
         "expected_D_seats_up": round(statistics.fmean(wins), 2),
         "D_seats_up_80pct": [wins[int(0.10 * N_SIMS)], wins[int(0.90 * N_SIMS)]],
@@ -954,7 +1024,7 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float,
         # output, because a silent fallback is how a model quietly stops being
         # the model that was documented.
         sigma_st = 0.0
-        sigma_d = math.sqrt(max(sigma_total ** 2 - SIGMA_NATIONAL ** 2,
+        sigma_d = math.sqrt(max(sigma_total ** 2 - _SIGMA_NAT ** 2,
                                 SIGMA_STATE_FLOOR ** 2))
         sigma_used = sigma_total
         sigma_src = f"FALLBACK, senate-calibrated ({hs.get('why', '?')})"
@@ -994,7 +1064,7 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float,
     order = sorted(districts)
     wins = []
     for _ in range(N_SIMS):
-        nat = rng.gauss(0.0, SIGMA_NATIONAL)
+        nat = rng.gauss(0.0, _SIGMA_NAT)
         eff = ({s: rng.gauss(0.0, sigma_st) for s in states} if sigma_st > 0
                else {s: 0.0 for s in states})
         w = 0
@@ -1011,10 +1081,17 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float,
         "map_vintage": vintage,
         "n_districts": len(districts),
         "sigma_source": sigma_src,
-        "sigma_national": SIGMA_NATIONAL,
+        "sigma_national": _SIGMA_NAT,
         "sigma_state": round(sigma_st, 2),
         "sigma_district": round(sigma_d, 2),
-        "sigma_total": round(sigma_used, 2),
+        # THE THREE TERMS THAT WERE ACTUALLY DRAWN, not the calibration input.
+        # sigma_used is the total the calibration was fitted at; once the
+        # national term widens with the horizon it is no longer the total the
+        # simulation ran on, and reporting it alongside sigma_national = 6.0
+        # published a triple that does not satisfy its own Pythagoras.
+        "sigma_total": round(math.sqrt(_SIGMA_NAT ** 2 + sigma_st ** 2
+                                       + sigma_d ** 2), 2),
+        "sigma_total_calibrated": round(sigma_used, 2),
         "baseline_slope": round(slope, 4),
         "incumbency_pts": round(inc_pts, 2),
         "n_incumbents": n_inc,
@@ -1252,8 +1329,8 @@ def main(argv=None) -> int:
         # its uncertainty simply had not been written down. SIGMA_NATIONAL is
         # exactly this quantity: how wrong the national number can be after
         # shrinkage, hitting every race at once.
-        "tide_D_80_low": round(tide - 1.2816 * SIGMA_NATIONAL, 3),
-        "tide_D_80_high": round(tide + 1.2816 * SIGMA_NATIONAL, 3),
+        "tide_D_80_low": round(tide - 1.2816 * _SIGMA_NAT, 3),
+        "tide_D_80_high": round(tide + 1.2816 * _SIGMA_NAT, 3),
         "sigma_source": sigma_src, "calibration": cal,
         "constants": {"SHRINK_ASYMPTOTE": SHRINK_ASYMPTOTE,
                       "SHRINK_TAU_DAYS": SHRINK_TAU_DAYS,

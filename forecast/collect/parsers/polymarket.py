@@ -232,6 +232,75 @@ _PV_EVENT = re.compile(r"popular\s+vote\s+margin|margin\s+of\s+victory", re.I)
 _JOINT_CONTROL = re.compile(
     r"balance\s+of\s+power.*\b[RD]\s+senate\b.*\b[RD]\s+house\b"
     r"|\b[RD]\s+senate\s*,\s*[RD]\s+house\b", re.I)
+# --------------------------------------------------------------------------
+# THE JOINT EVENT IS NOT USELESS — IT IS A JOINT DISTRIBUTION
+# --------------------------------------------------------------------------
+# "Balance of Power: 2026 Midterms" lists one contract per (Senate, House)
+# combination: Democrats Sweep, D Senate R House, R Senate D House,
+# Republicans Sweep, Other. The rule above — never file one of those legs as a
+# chamber probability — is right and stays. But the legs are mutually
+# exclusive and jointly exhaustive, so a CHAMBER probability is a marginal of
+# the joint, and marginalising is a sum, not a substitution:
+#
+#     P(D House)  = P(Democrats Sweep) + P(R Senate, D House)
+#     P(D Senate) = P(Democrats Sweep) + P(D Senate, R House)
+#
+# WHY THIS IS WORTH THE CODE. Polymarket's dedicated chamber-control markets
+# are captured from 2026-02-20. This event is captured from 2025-07-19 and
+# priced coherently the whole way — its five legs summed to 1.009 on the first
+# day. Reading it takes the Polymarket line back seven months and gives the
+# market family a second contributor through late 2025, where it currently
+# rests on a single thin Kalshi ladder.
+#
+#     2025-07-19   0.185 + 0.525 = 0.710
+#     2025-11-01   0.250 + 0.405 = 0.655
+#     2026-02-20   0.395 + 0.435 = 0.830
+#
+# THE SAME MASS TEST THE KALSHI LADDER USES, for the same reason: a marginal
+# computed from a fragment of a joint distribution is not a marginal. If the
+# legs do not sum to roughly one, the event is incomplete and we emit nothing.
+_JOINT_EVENT = re.compile(r"balance\s+of\s+power", re.I)
+_JOINT_MASS_MIN, _JOINT_MASS_MAX = 0.90, 1.15
+
+#                       leg label              -> (senate, house)
+_JOINT_LEGS = (
+    (re.compile(r"democrat\w*\s+sweep", re.I),                    ("D", "D")),
+    (re.compile(r"republican\w*\s+sweep", re.I),                  ("R", "R")),
+    (re.compile(r"\bD\s+senate\b.*\bR\s+house\b", re.I),          ("D", "R")),
+    (re.compile(r"\bR\s+senate\b.*\bD\s+house\b", re.I),          ("R", "D")),
+)
+
+
+def _joint_rows(ev: dict, title: str, art, ctx) -> list:
+    """P(D House) and P(D Senate) marginalised out of the joint event."""
+    mass = 0.0
+    marg = {"house": 0.0, "senate": 0.0}
+    seen = 0
+    for m in ev.get("markets", []) or []:
+        label = str(m.get("groupItemTitle") or m.get("question") or "")
+        prices = _prices(m)
+        if not prices:
+            continue
+        yes = prices[0]
+        mass += yes                      # "Other" counts toward mass, no marginal
+        for pat, (sen, hou) in _JOINT_LEGS:
+            if pat.search(label):
+                seen += 1
+                if sen == "D":
+                    marg["senate"] += yes
+                if hou == "D":
+                    marg["house"] += yes
+                break
+    if seen < 4 or not (_JOINT_MASS_MIN <= mass <= _JOINT_MASS_MAX):
+        return []                        # incomplete joint — no marginal from it
+    out = []
+    for chamber, rid in (("house", NATIONAL_HOUSE), ("senate", NATIONAL_SENATE)):
+        out.append(ctx.row(art, race_id=rid, chamber="national", state="",
+                           district="", quantity="win_prob_D",
+                           value=round(marg[chamber] / mass, 4), unit="prob"))
+    return out
+
+
 _PV_BETWEEN = re.compile(
     r"\b(democratic|republican)\b.{0,120}?between\s+(\d+(?:\.\d+)?)\s*%?\s*and\s+"
     r"(\d+(?:\.\d+)?)\s*%", re.I | re.S)
@@ -291,6 +360,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     if not artifacts:
         raise ValueError("no Polymarket artifacts stored for this date")
     rows: list[Row] = []
+    joint: dict[str, Row] = {}      # race_id -> marginal from the joint event
     seen_events = 0
     pv_only = True          # every event so far was one we recognise and skip
     for art in artifacts.values():
@@ -321,6 +391,20 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             # enforce it when the ladder was short.
             if _PV_EVENT.search(title):
                 rows.extend(_pv_rows(ev, title, art, ctx) or [])
+                continue
+            # MARGINALISE THE JOINT EVENT BEFORE SKIPPING IT. Same reasoning
+            # as the popular-vote gate above: recognise the event by its title
+            # and act on that, rather than letting a handler's success decide
+            # whether the skip fires.
+            if _JOINT_EVENT.search(title):
+                # HELD BACK, NOT EMITTED. A marginal of the joint distribution
+                # and Polymarket's own chamber-control market are the same
+                # exchange pricing the same question two ways; emitting both
+                # would put one venue into the market average twice. Keyed by
+                # race so a paged capture listing the event more than once
+                # contributes it once.
+                for r in _joint_rows(ev, title, art, ctx):
+                    joint[r.race_id] = r
                 continue
             if _JOINT_CONTROL.search(title) or all(
                     _JOINT_CONTROL.search(str(m.get("question") or ""))
@@ -369,6 +453,16 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                     rows.append(ctx.row(art, race_id=rid, chamber=chamber, state=state,
                                         district=district, quantity=f"win_prob_{side}",
                                         value=round(price, 4), unit="prob"))
+    # THE DEDICATED MARKET WINS; THE MARGINAL FILLS THE GAP BEFORE IT EXISTED.
+    #
+    # Polymarket listed chamber-control contracts from 2026-02-20. Before that
+    # the joint event is the only thing they priced on the question, and it is
+    # priced coherently back to 2025-07-19. So the marginal is used exactly
+    # where the direct market is silent, which is a seven-month extension at
+    # the front of the series and nothing at all after February.
+    direct = {r.race_id for r in rows if r.quantity == "win_prob_D"}
+    rows.extend(r for rid, r in sorted(joint.items()) if rid not in direct)
+
     if not rows:
         # NOTHING TO EMIT IS NOT THE SAME AS NOTHING UNDERSTOOD.
         #

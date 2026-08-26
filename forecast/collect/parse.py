@@ -140,11 +140,28 @@ def inspect(cycle: int, source_id: str, date: str | None) -> int:
 # --------------------------------------------------------------------------
 
 def parse_date(cycle: int, date: str, registry: dict,
-               only: set[str] | None) -> tuple[list[P.Row], list[str]]:
+               only: set[str] | None) -> tuple[list[P.Row], list[str], set[str]]:
+    """(rows, problems, attempted).
+
+    `attempted` is every source whose parser we actually RAN for this date,
+    whether it returned rows, returned nothing, or raised. It is the authority
+    for what this run is entitled to overwrite: a source we tried to parse owns
+    its rows for that date, and if it produced none then none is the answer.
+
+    THIS IS WHAT MAKES A FAILED PARSE VISIBLE. Without it, a parser that raises
+    contributes no rows, the caller writes only the rows it received, and
+    whatever that source wrote on an earlier run survives untouched — so the
+    archive keeps serving a number the current code cannot reproduce and no
+    longer believes. 2026-02-11 sat at P(D House) = 0.688 for exactly this
+    reason: the Kalshi ladder reader had started refusing that day's
+    reconstruction, and the refusal changed nothing because the old row was
+    never cleared.
+    """
     raw_root = DATA_DIR / str(cycle) / "raw"
     rows: list[P.Row] = []
     problems: list[str] = []
     missing: list[str] = []
+    attempted: set[str] = set()
 
     for src in registry.get("sources", []):
         sid = src["id"]
@@ -161,6 +178,7 @@ def parse_date(cycle: int, date: str, registry: dict,
                             f"({len(arts)} artifacts waiting)")
             continue
         ctx = P.Context(source=src, snapshot_date=date)
+        attempted.add(sid)
         try:
             got = mod.parse(arts, ctx)
         except NotImplementedError as e:
@@ -186,7 +204,7 @@ def parse_date(cycle: int, date: str, registry: dict,
             "NO RAW DATA for enabled source(s): " + ", ".join(absent) +
             "\n      These are probably sitting in the private archive. parse.py does"
             "\n      not sync — run:  ./forecast/run.sh --from parse")
-    return rows, problems
+    return rows, problems, attempted
 
 
 def write_parsed(cycle: int, date: str, rows: list[P.Row],
@@ -298,9 +316,9 @@ def main(argv=None) -> int:
     total = 0
     all_problems: list[str] = []
     for d in dates:
-        rows, problems = parse_date(a.cycle, d, registry, only)
+        rows, problems, attempted = parse_date(a.cycle, d, registry, only)
         all_problems += [f"{d}  {p}" for p in problems]
-        if rows:
+        if rows or attempted:
             # Rows are bucketed by their OWN date, not by the capture date.
             # A parser may backdate — Race to the WH publishes a trend running
             # back to February — and those observations belong in February's
@@ -309,13 +327,47 @@ def main(argv=None) -> int:
             buckets: dict[str, list] = {}
             for r in rows:
                 buckets.setdefault(r.snapshot_date, []).append(r)
+            # THE DATE'S OWN BUCKET ALWAYS EXISTS, even when empty. A source we
+            # attempted and that produced nothing must still clear what it wrote
+            # last time; skipping the write because there is nothing to add is
+            # how a stale row outlives the code that made it.
+            buckets.setdefault(d, [])
             for asof, group in sorted(buckets.items()):
                 # A backdated bucket carries only the sources that backfilled.
                 # Writing it without a merge key would replace that date's whole
                 # file, deleting every other source already parsed for it — the
                 # exact failure write_parsed's docstring warns about, arriving
                 # by a route it did not anticipate.
-                key = only if asof == d else {r.source_id for r in group}
+                # MERGE ON WHAT WE ATTEMPTED, never a wholesale write.
+                #
+                # The same-date write used to pass `only`, which is None on a
+                # full parse and made write_parsed replace the file entire.
+                # That cleared stale rows, and it also deleted every BACKDATED
+                # row a later date had written into this one — re-parsing
+                # 2026-06-01 on its own took race_to_the_wh from 38 rows to 1,
+                # because the 37 backfilled from later captures went with it.
+                #
+                # Keying on `attempted` does both jobs properly: the sources we
+                # ran own their rows for this date and get replaced (including
+                # down to nothing, which is the fix above), and a source we did
+                # not run — because it has no bytes on this date and only ever
+                # reached it by backfill — is left alone.
+                # THE KEY IS BOTH: what we RAN and what we EMITTED.
+                #
+                # `attempted` alone is wrong, and wrong in a way that silently
+                # doubles rows. A parser's source id is not always the id on
+                # the rows it produces — the Wikipedia aggregator table runs as
+                # `wikipedia` and emits rows attributed to `ddhq`, `rcp`,
+                # `votehub` and `fiftyplusone`. Keyed on `attempted` those ids
+                # never matched, so the previous run's copies were kept and the
+                # new ones appended beside them.
+                #
+                # Union covers both jobs: a source we ran that produced nothing
+                # still gets cleared, an emitted id replaces its own previous
+                # rows, and an id that only ever reached this date by backfill
+                # from a later capture is in neither set and survives.
+                key = ((attempted | {r.source_id for r in group}) if asof == d
+                       else {r.source_id for r in group})
                 write_parsed(a.cycle, asof, group, key, backdated=(asof != d))
             if len(buckets) > 1:
                 back = sorted(k for k in buckets if k != d)

@@ -218,10 +218,18 @@ def project(tide: float, pvi: dict, states: list, rows: list,
             sigma: float, holdover_D: int, asof: str | None = None) -> dict:
     """One tide in, one full set of seat answers out.
 
-    `asof` is the date being projected, and it selects the DISTRICT MAP: see
-    model/maps.py. The Senate run ignores it because no Senate seat was
-    redistricted; only the House baseline moves.
+    `asof` is the date being projected, and it selects TWO things.
+
+    THE DISTRICT MAP: see model/maps.py. The Senate run ignores it because no
+    Senate seat was redistricted; only the House baseline moves.
+
+    THE NATIONAL SIGMA: a projection 600 days out carries a wider national
+    error than one made on election eve. Set unconditionally on every call,
+    including for today, because polling.set_horizon moves a module-level
+    value — leaving it to the caller to remember is how the previous date's
+    sigma silently leaks into the next projection.
     """
+    polling.set_horizon(asof)
     sen = polling.senate_forecast(tide, pvi, states, sigma, holdover_D)
     house = public_house(polling.house_forecast(tide, rows, sigma, asof=asof))
     out = {

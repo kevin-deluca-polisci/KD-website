@@ -227,6 +227,52 @@ def _bucket(label: str):
     return None
 
 
+# HOW MUCH OF THE LADDER HAS TO BE THERE BEFORE NORMALISING IS HONEST.
+#
+# The prices are normalised by their own sum, which is right when the ladder is
+# whole — mid-points carry each contract's spread, so a complete ladder sums a
+# little above one. It is catastrophic when the ladder is not whole, because
+# normalising rescales whatever fragment arrived up to a full distribution.
+#
+# 2026-02-11 is the case that found this. Kalshi's markets endpoint returned
+# THREE of the twelve D-House-seats buckets — 214-217, 242-245, 246-249 — with
+# an empty cursor, so nothing downstream could tell it was short. Those three
+# carried 0.16 of the mass between them. Normalising turned 16% of a
+# distribution into 100% of one and published P(D House) = 0.688 for a day,
+# between two days of 0.833. It was not a market move; it was three contracts
+# standing in for twelve.
+#
+# THE TEST IS THE MASS, NOT THE COUNT. A missing bucket count is the wrong
+# guard: 39 of 239 dates are short a bucket or two, and on 37 of them the
+# missing buckets are dead tails whose absence moves nothing. Measured across
+# the archive, complete ladders sum 0.94 to 1.04 (median 1.04) and the whole
+# corpus sits inside 0.70-1.30 except three days: 2026-02-11 at 0.160,
+# 2026-02-12 at 0.520, and 2026-01-12 at 2.915 — a day so illiquid that every
+# bid was zero and every ask wide. The band below admits the 236 good days and
+# refuses exactly those three.
+#
+# REFUSING MEANS EMITTING NOTHING for that date, not falling back to a guess. A
+# gap in a market line is a fact about the market; a normalised fragment is a
+# number nobody traded at.
+LADDER_MASS_MIN = 0.70
+LADDER_MASS_MAX = 1.60
+
+
+class IncompleteLadder(ValueError):
+    """Raised when a priced ladder holds too little of the distribution."""
+
+
+def _check_ladder_mass(buckets: list, what: str) -> float:
+    mass = sum(pr for _, pr in buckets if pr is not None)
+    if not (LADDER_MASS_MIN <= mass <= LADDER_MASS_MAX):
+        raise IncompleteLadder(
+            f"{what}: {len(buckets)} priced bucket(s) summing to {mass:.3f}, "
+            f"outside [{LADDER_MASS_MIN}, {LADDER_MASS_MAX}]. Normalising this "
+            f"would rescale a fragment into a full distribution. Emitting "
+            f"nothing for this date.")
+    return mass
+
+
 def _seat_stats(buckets: list, threshold: int, total: int):
     """(expected_seats, P(at or above threshold)) from a priced ladder.
 
@@ -245,6 +291,7 @@ def _seat_stats(buckets: list, threshold: int, total: int):
     alternative, using the chamber maximum, would have "above 249" imply a
     342-seat average.
     """
+    _check_ladder_mass(buckets, f"seat ladder to {threshold}")
     closed = [(lo, hi) for (lo, hi), _ in buckets if lo is not None and hi is not None]
     width = (sum(hi - lo + 1 for lo, hi in closed) / len(closed)) if closed else 1.0
 
@@ -410,7 +457,28 @@ def _seat_rows(markets: list, art, ctx) -> list:
             # of whichever half of the ladder happened to be quoted.
             continue
         total = 435 if chamber == "house" else 100
-        exp, maj = _seat_stats(picked, threshold, total)
+        # A REFUSED LADDER FALLS THROUGH RATHER THAN FAILING THE PARSE. `done`
+        # is not marked, so the complement ladder below still gets its turn —
+        # a day where the D buckets came back short may have complete R ones.
+        try:
+            exp, maj = _seat_stats(picked, threshold, total)
+        except IncompleteLadder:
+            # REFUSED IS NOT THE SAME AS ABSENT, and conflating them put a
+            # 15-point step in the market line.
+            #
+            # The complement ladder below exists because the R series was the
+            # only House ladder Kalshi listed until 2025-12-31; where the D
+            # series is ABSENT, reflecting the R one is the only way to have a
+            # number at all. But the two price the chamber differently — on
+            # 2026-02-11 the D ladder implied 0.833 and the R ladder 0.688 —
+            # so substituting one for the other on a single bad day does not
+            # repair the series, it swaps the instrument underneath it and
+            # draws exactly the one-day dip this guard was added to remove.
+            #
+            # So a refused D ladder blocks the chamber outright. Absent is
+            # still absent, and the R path below still covers late 2025.
+            done.add(chamber)
+            continue
         if exp is None:
             continue
         out.append(ctx.row(art, race_id=rid, chamber="national", state="",
@@ -431,7 +499,10 @@ def _seat_rows(markets: list, art, ctx) -> list:
         flipped = [(b, p) for b, p in flipped if b is not None]
         if len(flipped) < 3:
             continue
-        exp, maj = _seat_stats(flipped, threshold, total)
+        try:
+            exp, maj = _seat_stats(flipped, threshold, total)
+        except IncompleteLadder:
+            continue
         if exp is None:
             continue
         out.append(ctx.row(art, race_id=rid, chamber="national", state="",

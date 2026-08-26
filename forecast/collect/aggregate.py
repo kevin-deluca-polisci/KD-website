@@ -1104,10 +1104,16 @@ def main(argv=None) -> int:
         return 1
     print("\n  publication audit: PASS")
 
-    if a.check:
-        print("  --check: nothing written")
-        return 0
-
+    # --check USED TO RETURN HERE, which made it blind to the one thing people
+    # run it for. The shrink guard is the reason this command exists as a
+    # dry run: you want to know whether the real run will refuse BEFORE you
+    # spend forty minutes rebuilding. Returning above the guard meant --check
+    # printed "PASS ... nothing written" on a run that the write would refuse,
+    # which is worse than not offering the flag at all.
+    #
+    # So the guard now runs in both modes and only the WRITE is skipped.
+    # --check exits 1 when the real run would refuse, so a script can branch
+    # on it.
     if nibbles:
         # Allowed, but never silent. A handful of rows leaving a published date
         # is what a parser correction looks like; on a day nobody touched a
@@ -1120,6 +1126,21 @@ def main(argv=None) -> int:
             print(f"      … and {len(nibbles) - 8} more")
         print("    Expected after a parser fix that stops emitting a bad cell. "
               "Unexpected otherwise.")
+
+    if a.check:
+        if shrunk:
+            print(f"\n  *** --check: the real run WOULD REFUSE. "
+                  f"{len(shrunk)} date(s) shorten: ***")
+            for line in shrunk[:8]:
+                print(f"      {line}")
+            if len(shrunk) > 8:
+                print(f"      … and {len(shrunk) - 8} more")
+            print("    Re-run without --check to see the full explanation, or "
+                  "with --force if the shortening is what you mean.")
+            return 1
+        print("\n  --check: no date shortens. The real run would write. "
+              "Nothing written.")
+        return 0
 
     if shrunk and not a.force:
         print("\n  *** REFUSING TO WRITE: this run would shorten the archive ***")

@@ -721,7 +721,19 @@ def main(argv=None) -> int:
 
     b, loeo, r2 = fit()
     if a.backfill:
-        return backfill(a)
+        # BACKFILL THEN CONTINUE, rather than returning here.
+        #
+        # This used to `return backfill(a)`, so `fundamentals.py --backfill`
+        # wrote the history and left derived/fundamentals_model.json untouched
+        # — still holding whatever the last live run produced. A rebuild
+        # sequence that runs the backfill in place of a live run therefore ends
+        # with a stale live model, and sanity.py catches it as "model was built
+        # with income_growth=-0.039 but the archive now says -0.096" and
+        # publishes nothing. Correct of sanity, and an avoidable trap: the
+        # backfill and the live run read the same inputs, so doing both is
+        # free and the command sequence becomes order-independent.
+        backfill(a)
+        print()
     if a.income is not None:
         income, income_prov, placeholder = a.income, "command line", False
     else:
