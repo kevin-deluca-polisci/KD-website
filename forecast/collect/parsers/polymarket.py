@@ -225,6 +225,13 @@ def _target(blob: str, q: str):
 # --------------------------------------------------------------------------
 
 _PV_EVENT = re.compile(r"popular\s+vote\s+margin|margin\s+of\s+victory", re.I)
+
+# "2026 Balance of Power: R Senate, R House" is a contract on BOTH chambers at
+# once. Its price is not either chamber's probability and must never be filed
+# as one.
+_JOINT_CONTROL = re.compile(
+    r"balance\s+of\s+power.*\b[RD]\s+senate\b.*\b[RD]\s+house\b"
+    r"|\b[RD]\s+senate\s*,\s*[RD]\s+house\b", re.I)
 _PV_BETWEEN = re.compile(
     r"\b(democratic|republican)\b.{0,120}?between\s+(\d+(?:\.\d+)?)\s*%?\s*and\s+"
     r"(\d+(?:\.\d+)?)\s*%", re.I | re.S)
@@ -285,6 +292,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         raise ValueError("no Polymarket artifacts stored for this date")
     rows: list[Row] = []
     seen_events = 0
+    pv_only = True          # every event so far was one we recognise and skip
     for art in artifacts.values():
         payload = art.json()
         events = payload if isinstance(payload, list) else payload.get("data", [payload])
@@ -295,9 +303,30 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             title = str(ev.get("title") or ev.get("question") or "")
             # The margin ladder is read across markets, so it cannot go through
             # the per-market loop below. Handled first and the event is done.
-            if (pv := _pv_rows(ev, title, art, ctx)):
-                rows.extend(pv)
+            # THE GATE IS THE TITLE, NOT WHETHER THE HANDLER SUCCEEDED.
+            #
+            # This read `if (pv := _pv_rows(...)):`, which skips the generic
+            # path only when a margin row could actually be built. When the
+            # ladder is too thin to have an expectation — Polymarket sometimes
+            # lists two buckets and no more — _pv_rows returns nothing, the
+            # `continue` never fires, and the event's sub-markets fall through
+            # to the chamber-control reader.
+            #
+            # On 2026-04-08 and 04-10 that put "Will the Democratic Party win
+            # the popular vote ... by 8 to 10 points" on the board as
+            # win_prob_D for NATL_HOUSE at 0.19, against Kalshi's 0.93 for the
+            # actual chamber, and the market line on the tracker dropped from
+            # 93% to 55% for a day. The comment above _pv_rows already said
+            # win_prob_D on this event would be wrong; the code just did not
+            # enforce it when the ladder was short.
+            if _PV_EVENT.search(title):
+                rows.extend(_pv_rows(ev, title, art, ctx) or [])
                 continue
+            if _JOINT_CONTROL.search(title) or all(
+                    _JOINT_CONTROL.search(str(m.get("question") or ""))
+                    for m in (ev.get("markets") or []) or [{}]):
+                continue                      # joint-chamber contract, not ours
+            pv_only = False
             # Accumulate per EVENT, then emit. A candidate-winner event lists
             # one market per candidate, so a party's chance is the SUM over
             # its candidates, not any one of them and not their mean — two
@@ -341,5 +370,18 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                                         district=district, quantity=f"win_prob_{side}",
                                         value=round(price, 4), unit="prob"))
     if not rows:
-        raise ValueError(f"parsed 0 rows from {seen_events} Polymarket events")
+        # NOTHING TO EMIT IS NOT THE SAME AS NOTHING UNDERSTOOD.
+        #
+        # Some days Polymarket's House capture holds only a popular-vote margin
+        # ladder too thin to have an expectation, plus a JOINT "R Senate, R
+        # House" contract, which is a different event from either chamber and
+        # must not be filed as one. Every event was recognised and correctly
+        # produced no row. Raising there marks a healthy day as a parser
+        # failure and, worse, invites the next person to loosen the filters
+        # until something comes out.
+        if pv_only:
+            return []
+        raise ValueError(
+            f"parsed 0 rows from {seen_events} Polymarket event(s), and none "
+            f"of them was a shape this parser recognises")
     return rows

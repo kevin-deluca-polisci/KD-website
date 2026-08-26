@@ -312,6 +312,50 @@ def load_history(cycle: int = 2026) -> list[dict]:
     return sorted(out, key=lambda r: r["date"])
 
 
+# The row Wikipedia computes itself. It is the mean of the rows above it, so
+# averaging it in with them counts every aggregator twice and gives the mean a
+# spurious extra vote. Their arithmetic is fine; it is just not a member.
+WIKI_OWN_AVERAGE = re.compile(r"^'*\s*average\s*'*$", re.I)
+
+
+def aggregator_history(cycle: int = 2026) -> dict[str, dict[str, float]]:
+    """{capture_date: {aggregator: approve}} across every capture.
+
+    KEYED ON THE CAPTURE DATE, not on the date printed in the row, and the
+    difference matters. An aggregator's published average is a live figure that
+    is overwritten in place; the page shows today's value with today's date on
+    it, and yesterday's value is gone. So the only date we can honestly attach
+    is the day WE read it. That also means this series cannot be backfilled: it
+    starts on the first capture and grows forward, one point a day.
+
+    This is why the model is fed the poll-level file instead. That file is a
+    list of individual polls with their own field dates, so a past value is a
+    computation; this is a list of somebody's current opinion, so a past value
+    is only recoverable if we were there to read it.
+    """
+    out: dict[str, dict[str, float]] = {}
+    for f in sorted(glob.glob(str(DATA / str(cycle) / "raw" / "wiki_approval"
+                                  / "*" / "*.json"))):
+        if f.endswith(".meta.json"):
+            continue
+        day = Path(f).parent.name
+        try:
+            got = extract(read_capture(Path(f)))
+        except Exception:
+            continue
+        rows = {}
+        for g in got["aggregators"]:
+            who = (g.get("aggregator") or "").strip()
+            if not who or g.get("approve") is None:
+                continue
+            if WIKI_OWN_AVERAGE.match(who):
+                continue
+            rows[who] = float(g["approve"])
+        if rows:
+            out[day] = rows
+    return out
+
+
 def _self_test() -> int:
     fails = 0
 

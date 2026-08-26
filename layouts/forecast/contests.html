@@ -307,10 +307,9 @@
     </div>
     <div class="note">
       <strong>Why so many districts share a margin.</strong>
-      Cook publishes PVI as a whole number — CA-22 is R+5, not R+5.3 — and this
-      model maps one point of PVI to two points of margin. Every district
-      margin is therefore the same national tide plus an even number, so they
-      land on a 2-point grid: 435 districts take only
+      Every district margin is the same national tide plus twice that
+      district&rsquo;s lean, and the lean is carried at low resolution, so the
+      margins land on a coarse grid: 435 districts take only
       {{ len $L0.seats }} drawn values, and a dozen or more can share one. It is
       arithmetic rather than a bug, but it has a consequence worth knowing:
       inside a tied group the seat ORDER is arbitrary, so the district named at
@@ -320,8 +319,7 @@
     </div>
     <p class="thin-note">◀ marks the seat that reaches the majority. Showing
        {{ $L0.n_drawn }} of {{ $L0.n_races }} districts; the rest are safe at
-       either end. The full set is in
-       <code>forecast/data/2026/derived/seat_projections.json</code>.</p>
+       either end. The full set is in the published data files.</p>
     {{- end }}
   </div>
   {{- end }}

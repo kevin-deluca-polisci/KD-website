@@ -53,6 +53,7 @@ import csv
 import datetime as dt
 import glob
 import json
+import pathlib
 import sys
 from pathlib import Path
 
@@ -157,10 +158,26 @@ def external_tides(cycle: int, today: str) -> dict[str, dict]:
     Sorted filenames mean a later date overwrites an earlier one, so what
     survives per source is its newest prediction.
     """
+    # NOTHING PUBLISHED AFTER THE DATE BEING PROJECTED, EVER.
+    #
+    # "The most recent value anywhere in the archive" was written for the live
+    # run, where the newest row is always today's and the sentence is harmless.
+    # It is not harmless when a PAST date is projected. Rebuilding 2026-08-21
+    # pulled Decision Desk HQ's and RCP's margins from 2026-08-25 and stamped
+    # the result 08-21 — four days of hindsight in a file whose entire purpose
+    # is to record what was knowable at the time.
+    #
+    # The staleness check below did not catch it, and could not: it computes
+    # `age = today - as_of`, which goes NEGATIVE for a future row, and a
+    # negative age passes a "too old?" test comfortably.
     out: dict[str, dict] = {}
     for f in sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv"))):
+        if pathlib.Path(f).stem > today:
+            continue
         with open(f, encoding="utf-8") as fh:
             for r in csv.DictReader(fh):
+                if r.get("snapshot_date", "") > today:
+                    continue
                 if (r.get("source_id") in EXTERNAL_TIDE_SOURCES
                         and r.get("race_id") == NATL_HOUSE
                         and r.get("quantity") == "margin_D"):
@@ -258,6 +275,23 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Seat projections from each tide.")
     ap.add_argument("--cycle", type=int, default=2026)
     ap.add_argument("--holdover-d", type=int, default=polling.HOLDOVER_D_DEFAULT)
+    ap.add_argument("--date", default=None,
+                    help="rebuild ONE past date from its own parsed rows, "
+                         "instead of projecting today. For repairing a day "
+                         "whose live run was incomplete. Everything written is "
+                         "stamped `retrospective`, because it is today's model "
+                         "on that date's evidence rather than what the model "
+                         "said at the time.")
+    # WINDOWING THE BACKFILL. It is roughly four seconds per model per date,
+    # so a full archive is tens of minutes and will not survive a shell that
+    # gets closed. These let it be run in slices and resumed: every slice
+    # updates the same history file in place, so the pieces add up.
+    ap.add_argument("--backfill-from", default=None,
+                    help="earliest date to backfill (inclusive)")
+    ap.add_argument("--backfill-to", default=None,
+                    help="latest date to backfill (inclusive)")
+    ap.add_argument("--backfill-limit", type=int, default=None,
+                    help="stop after this many dates")
     ap.add_argument("--backfill-history", action="store_true",
                     help="project every date in the model history files "
                          "(academic and polling) rather than only today. The "
@@ -273,7 +307,53 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
 
     d = DATA / str(a.cycle) / "derived"
-    date, rows = polling.latest_parsed(a.cycle)
+
+    # REBUILDING ONE PAST DATE FROM ITS OWN PARSED ROWS.
+    #
+    # --backfill-history can only reach projections whose tide it can
+    # reconstruct, which is the academic and polling-reconstructed families.
+    # Everything else was captured live on the day, and if that day's run was
+    # incomplete the hole is permanent: 2026-08-21 carries three projections
+    # where 08-20 has eleven and 08-22 has twelve, because the code was being
+    # changed underneath it.
+    #
+    # The inputs are not lost. parsed/2026-08-21.csv holds the same sources as
+    # its neighbours, so the projections can be rebuilt exactly — same rows,
+    # same map vintage for that date, today's model.
+    #
+    # WHAT THIS COSTS, and it is not nothing. A rebuilt projection is no longer
+    # the number the model produced on that date; it is today's model run on
+    # that date's evidence. Under score/RULES.md that is `retrospective`, not
+    # `captured`, and it is stamped so. Use it to repair a run that failed, not
+    # to restate history that merely looks wrong now.
+    if a.date:
+        # THE DATE GOVERNS THE TIDES. THE BASELINE COMES FROM THE ARCHIVE.
+        #
+        # The first version of this read the target date's parsed file for
+        # everything, which is wrong in a way that is worth keeping written
+        # down. A district partisan index is a STATIC ARTEFACT — it is imported
+        # once and carries forward, and which lines were in force on a given
+        # date is already handled by maps.baseline_asof through `asof`. So
+        # 2026-08-21's file predates the DRA import and simply has no baseline
+        # in it, and reading it produced a six-district House.
+        #
+        # What genuinely has to respect the date is the TIDES: a forecast
+        # published on 08-25 must not appear in a projection stamped 08-21.
+        # That is external_tides' job and it now refuses future rows.
+        #
+        # So: latest rows for the baseline, target date for everything else.
+        # This is the same split --backfill-history has always used.
+        date = a.date
+        f = DATA / str(a.cycle) / "parsed" / f"{date}.csv"
+        if not f.exists():
+            raise SystemExit(f"no parsed rows for {date} — nothing to rebuild "
+                             f"from. Looked for {f}")
+        _latest, rows = polling.latest_parsed(a.cycle)
+        print(f"  REBUILDING {date}. Tides as of that date; district baseline "
+              f"from the archive ({_latest}), with the map vintage selected for "
+              f"{date}. Everything written is stamped `retrospective`.")
+    else:
+        date, rows = polling.latest_parsed(a.cycle)
     pvi = polling.reconstructed_state_pvi(a.cycle)
     states = polling.senate_states_up(rows)
 
@@ -428,6 +508,9 @@ def main(argv=None) -> int:
 
     out = {
         "snapshot_date": date,
+        # A rebuilt day is not a captured one. See the note in main().
+        **({"provenance": "retrospective",
+            "rebuilt_at": dt.date.today().isoformat()} if a.date else {}),
         "sigma": round(sigma, 2),
         "holdover_D": a.holdover_d,
         "majority_at": {"house": HOUSE_MAJORITY, "senate_tie": 50, "senate_majority": 51},
@@ -560,12 +643,46 @@ def main(argv=None) -> int:
                     "margin_published_elsewhere": False,
                 }
 
+        # OUR OWN FUNDAMENTALS MODEL, which the comment above named as one of
+        # the things that could NOT be backfilled: "polling_model.json and
+        # fundamentals_model.json are overwritten every run". That was a fact
+        # about the files and never about the model. All three of its inputs
+        # are datable now — approval from the poll list by each poll's own end
+        # date, income from an ALFRED vintage or a released-months truncation,
+        # and seats_before is 220 either way — so fundamentals.py --backfill
+        # writes a history exactly like academic.py's and it lands here.
+        #
+        # IT CONTRIBUTES ITS MARGIN, unlike class_polling, for the same reason
+        # the live path does: this tide exists nowhere else as a row, so
+        # emitting it counts nothing twice.
+        fh_p = priv / "fundamentals_model_history.json"
+        if fh_p.exists():
+            for d0, m in json.loads(fh_p.read_text()).items():
+                if m.get("margin_D") is None:
+                    continue
+                ah.setdefault(d0, {})["class_fundamentals"] = {
+                    "margin_D": float(m["margin_D"]),
+                    "margin_D_80_low": m.get("margin_D_80_low"),
+                    "margin_D_80_high": m.get("margin_D_80_high"),
+                    "category": "fundamentals", "categories": ["fundamentals"],
+                    "publication": "individual",
+                    "provenance": m.get("provenance") or "backfilled",
+                    "inputs": m.get("inputs") or {},
+                    "margin_published_elsewhere": False,
+                }
+
         if not ah:
             print("  --backfill-history: no history files — run "
                   "academic.py --backfill and/or polling.py --backfill first")
         else:
             ah = {d0: {"models": mm} for d0, mm in ah.items()}
             todo = sorted(d0 for d0 in ah if d0 != date)
+            if a.backfill_from:
+                todo = [d0 for d0 in todo if d0 >= a.backfill_from]
+            if a.backfill_to:
+                todo = [d0 for d0 in todo if d0 <= a.backfill_to]
+            if a.backfill_limit:
+                todo = todo[:a.backfill_limit]
             print(f"\n  backfilling academic projections for {len(todo)} "
                   f"date(s) — about {len(todo) * 4}s, one Monte Carlo per "
                   f"model per date")

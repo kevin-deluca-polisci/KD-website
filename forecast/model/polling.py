@@ -730,6 +730,11 @@ DRA_AT_LARGE = ("AK", "DE", "ND", "SD", "VT", "WY")
 # not `pvi`.
 DRA_QUANTITIES = ("composite_share", "composite_share_prior")
 
+# Below this, the DRA rows for a snapshot are treated as absent rather
+# than as a baseline. 400 of 435 leaves room for a state missing from an
+# export without accepting a table that is obviously a fragment.
+DRA_MIN_DISTRICTS = 400
+
 # Which calibration each baseline source needs. The slope, the incumbency
 # coefficient and the three sigmas are all properties of the index they were
 # fitted against, so this map is not a convenience -- reading it wrong means
@@ -881,8 +886,26 @@ def house_forecast(tide: float, rows: list[dict], sigma_total: float,
             by_source.setdefault(r["source_id"], {}).setdefault(
                 r["race_id"], float(r["value"]))
     dra_cur, dra_pri, dra_detail = dra_baseline(rows)
-    if dra_cur:
+    # A HANDFUL OF DISTRICTS IS NOT A BASELINE, and accepting one produced the
+    # most dangerous kind of failure: a plausible-looking run.
+    #
+    # Rebuilding 2026-08-21 read that date's parsed rows, which predate the DRA
+    # snapshot, so `composite_share` was absent and dra_baseline returned only
+    # the six at-large states it fills from the MEDSL composite. PVI_PREFERENCE
+    # picked `dra` because it was non-empty, the House was projected over SIX
+    # districts, and the answer — 2.73 expected Democratic seats — was written
+    # to the archive without a single warning.
+    #
+    # The floor is deliberately low. It is not trying to judge whether a
+    # baseline is good; it is refusing one that cannot possibly be complete, so
+    # the preference falls through to Cook instead of silently succeeding.
+    if dra_cur and len(dra_cur) >= DRA_MIN_DISTRICTS:
         by_source["dra"] = dra_cur
+    elif dra_cur:
+        print(f"  dra: only {len(dra_cur)} district(s) in this snapshot — not a "
+              f"usable baseline, falling through to the next source in "
+              f"PVI_PREFERENCE")
+        dra_cur, dra_pri = {}, {}
 
     source = next((s for s in PVI_PREFERENCE if by_source.get(s)),
                   next(iter(by_source), None))

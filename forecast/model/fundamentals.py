@@ -19,7 +19,7 @@ needed — which matters, because the course does not cover simulation.
 Publication: `individual`. It is our model; we can publish whatever we like.
 """
 from __future__ import annotations
-import argparse, csv, glob, json, statistics, sys
+import argparse, csv, datetime as dt, glob, json, statistics, sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -97,7 +97,17 @@ INCOME_QUANTITY = "income_growth_ytd"
 # written on it.
 from pathlib import Path as _Path
 
-APPROVAL_FALLBACK = 38.0
+_WA_CACHE: dict[int, list] = {}
+_FRED_CACHE: dict = {}
+
+# LAST-RESORT CONSTANT, and it is on the ADULTS scale like everything else
+# here. It was 38.0 chosen as a Gallup-ish level when approval was typed in;
+# on the adults scale that same moment reads about 35, and a fallback quietly
+# sitting three points off the series it stands in for is the exact bug class
+# the approval work was done to remove. It should now essentially never fire —
+# the Silver poll list covers every date in the archive — and anything driven
+# by it says so in its own source string.
+APPROVAL_FALLBACK = 35.0
 APPROVAL_WINDOW_DAYS = 14
 
 
@@ -159,8 +169,69 @@ GALLUP_HOUSE_EFFECT_N = 3
 APPROVAL_WINDOW_GALLUP = 35
 
 
+def field_approval(cycle: int, asof: str | None = None):
+    """(value, n) over the WHOLE field — the number published trackers show.
+
+    NOT A MODEL INPUT, and it exists so the page does not have to leave that
+    difference unexplained. Our approval is the average of adults-sample polls,
+    because the coefficients were fit on a Gallup column and Gallup interviewed
+    adults. Published trackers average every population, and likely-voter
+    samples run seven to eight points better for this president than adult
+    samples do. The two numbers are both right about different questions, and a
+    reader who sees only ours will reasonably conclude we have made a mistake.
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(REPO / "forecast" / "collect"))
+    try:
+        import sb_approval as _sb
+    except ImportError:
+        return None
+    import datetime as _dt
+    hist = _sb.load_history(cycle)
+    if not hist:
+        return None
+    return _sb.field_average(hist, asof or _dt.date.today().isoformat())
+
+
+def aggregate_approval(cycle: int):
+    """The published aggregators' consensus, for display beside our input.
+
+    NOT AN INPUT, for two reasons that are worth keeping distinct. It carries
+    the same whole-field offset as any other tracker, so it is 4 to 5 points
+    off the instrument these coefficients were fitted on. And it has no
+    history: an aggregator overwrites its average in place, so a past value is
+    recoverable only if we happened to read it that day, and the backfill needs
+    a value for every date back to January 2025.
+
+    It is the number most readers will recognise, which is exactly why it
+    belongs on the page. model/approval.py writes the full series.
+    """
+    import json as _json
+    f = DATA / str(cycle) / "derived" / "approval.json"
+    if not f.exists():
+        return None
+    try:
+        latest = _json.loads(f.read_text())["series"]["aggregate"]["latest"]
+    except (KeyError, ValueError):
+        return None
+    if not latest:
+        return None
+    return {"approval_aggregate": latest["approve"],
+            "approval_aggregate_n": latest["n"],
+            "approval_aggregate_low": latest["low"],
+            "approval_aggregate_high": latest["high"],
+            "approval_aggregate_date": latest["date"]}
+
+
+# THE DEFAULT BASIS IS "adults", AND IT USED TO BE A SHIFTED ONE. The reasoning
+# for the change is written out in collect/sb_approval.py and comes down to
+# this: the population is the large term and the house effect is the small one,
+# the small one drifts, and it cannot be re-measured now that Gallup has
+# stopped polling. GALLUP_HOUSE_EFFECT below is kept for the Wikipedia fallback
+# route it was measured on, which is reached only when the Silver capture is
+# missing.
 def approval_from_archive(cycle: int, asof: str | None = None,
-                          basis: str = "gallup") -> tuple[float, str, int]:
+                          basis: str = "adults") -> tuple[float, str, int]:
     """(approval, source, n). Three tiers, and each says which one it used.
 
     1. INDIVIDUAL POLLS whose field period ended on or before `asof`, from the
@@ -190,7 +261,40 @@ def approval_from_archive(cycle: int, asof: str | None = None,
                 "hand-set constant — collect/wiki_approval.py not importable",
                 0)
 
-    everything = _wa.load_history(cycle)
+    # SILVER BULLETIN FIRST, and this is the tier that made the others
+    # theoretical. Wikipedia's nationwide tables carry 123 polls for 2025 and
+    # five for 2026, so tier 1 below supported a 2025 backfill and not a 2026
+    # one — which meant every date from August 2025 to May 2026 fell through to
+    # the constant, and both approval-driven models drew a flat line across ten
+    # months because of a missing feed rather than a still electorate. Silver's
+    # sheet carries 1,323 headline polls across both years with no month below
+    # 38, and collect/sb_approval.py does the reading.
+    #
+    # IT ALSO CORRECTS THE OFFSET THIS FILE MEASURED. GALLUP_HOUSE_EFFECT below
+    # is -4.03, measured on the three overlapping readings Wikipedia carried.
+    # Silver's file carries twelve, running to Gallup's last poll on
+    # 2025-12-15, and on those twelve the gap against the whole field is -5.35
+    # and drifting, while the gap against ADULTS-POPULATION polls alone is
+    # -1.87 and roughly flat. Gallup interviews adults; three quarters of the
+    # "house effect" was a population effect. The reasoning is written out in
+    # sb_approval.py, and the constants below are kept for the Wikipedia route
+    # they were measured on rather than being quietly restated.
+    _sb = None
+    try:
+        import sb_approval as _sb
+    except ImportError:
+        pass
+    if _sb is not None:
+        hist = _sb.load_history(cycle)
+        if hist:
+            got = _sb.approval_on(hist, asof or _dt.date.today().isoformat(),
+                                  basis=basis)
+            if got:
+                return got
+
+    if cycle not in _WA_CACHE:
+        _WA_CACHE[cycle] = _wa.load_history(cycle)
+    everything = _WA_CACHE[cycle]
     gallup = [p for p in everything
               if "gallup" in (p.get("pollster") or "").lower()]
     field = [p for p in everything
@@ -228,8 +332,8 @@ def approval_from_archive(cycle: int, asof: str | None = None,
                     f"(Wikipedia, CC BY-SA)", len(win))
 
     # ROUTE TWO: the rest of the field, shifted onto the Gallup scale.
-    polls = field if basis == "gallup" else everything
-    adj = GALLUP_HOUSE_EFFECT if basis == "gallup" else 0.0
+    polls = field if basis in ("adults", "gallup") else everything
+    adj = GALLUP_HOUSE_EFFECT if basis in ("adults", "gallup") else 0.0
     if polls and end:
         cut = (_dt.date.fromisoformat(end)
                - _dt.timedelta(days=APPROVAL_WINDOW_DAYS)).isoformat()
@@ -272,7 +376,7 @@ def approval_from_archive(cycle: int, asof: str | None = None,
         vals = [g["approve"] for g in got["aggregators"]
                 if g.get("approve") is not None]
         if vals:
-            adj = GALLUP_HOUSE_EFFECT if basis == "gallup" else 0.0
+            adj = GALLUP_HOUSE_EFFECT if basis in ("adults", "gallup") else 0.0
             note = (f", shifted {GALLUP_HOUSE_EFFECT:+.2f} onto the Gallup "
                     f"scale" if adj else "")
             return (round(sum(vals) / len(vals) + adj, 2),
@@ -280,7 +384,7 @@ def approval_from_archive(cycle: int, asof: str | None = None,
                     f"{day}{note} — aggregates, NOT individual polls "
                     f"(Wikipedia, CC BY-SA)", len(vals))
 
-    if basis == "gallup":
+    if basis in ("adults", "gallup"):
         return (APPROVAL_FALLBACK,
                 f"hand-set constant — the archive holds {len(polls)} Gallup "
                 f"reading(s), and this model was fit on a Gallup-only column, "
@@ -292,28 +396,285 @@ def approval_from_archive(cycle: int, asof: str | None = None,
             "driven by this is flat by construction and not by evidence", 0)
 
 
-def income_from_archive(cycle: int) -> tuple[float, str] | None:
-    """(value, provenance) from the newest parsed date that carries FRED."""
-    for f in sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")), reverse=True):
-        vals = {}
-        with open(f, encoding="utf-8") as fh:
-            for r in csv.DictReader(fh):
-                if r["source_id"] == "fred":
-                    try:
-                        vals[r["quantity"]] = float(r["value"])
-                    except (TypeError, ValueError):
-                        pass
-        if INCOME_QUANTITY in vals:
-            months = vals.get("income_ytd_months")
-            where = Path(f).stem
-            prov = (f"FRED {INCOME_QUANTITY} as of {where}"
-                    + (f", {int(months)} month(s) of the year in hand" if months else ""))
-            return vals[INCOME_QUANTITY], prov
+def income_from_archive(cycle: int,
+                        asof: str | None = None) -> tuple[float, str] | None:
+    """(value, provenance) from the newest parsed date at or before `asof`.
+
+    `asof` IS WHAT MAKES A BACKFILL HONEST. Without it this returns today's
+    FRED reading for every date it is asked about, and a reconstructed series
+    would carry August's income growth back to January — a number nobody could
+    have had. With it, each past date gets the last reading published by then,
+    which is exactly what the model would have run on.
+    """
+    # Read every parsed file ONCE and keep only the dates that carry FRED. The
+    # backfill calls this per date and the archive is hundreds of files.
+    if cycle not in _FRED_CACHE:
+        found = []
+        for f in sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv"))):
+            vals = {}
+            with open(f, encoding="utf-8") as fh:
+                for r in csv.DictReader(fh):
+                    if r["source_id"] == "fred":
+                        try:
+                            vals[r["quantity"]] = float(r["value"])
+                        except (TypeError, ValueError):
+                            pass
+            if INCOME_QUANTITY in vals:
+                months = vals.get("income_ytd_months")
+                where = Path(f).stem
+                found.append((where, vals[INCOME_QUANTITY],
+                              f"FRED {INCOME_QUANTITY} as of {where}"
+                              + (f", {int(months)} month(s) of the year in hand"
+                                 if months else "")))
+        _FRED_CACHE[cycle] = found
+    for where, v, prov in reversed(_FRED_CACHE[cycle]):
+        if asof and where > asof:
+            continue
+        return v, prov
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Income growth, as of a date
+# ---------------------------------------------------------------------------
+# THREE ROUTES, IN DESCENDING ORDER OF HOW MUCH THEY DESERVE TO BE BELIEVED,
+# and each one says which it is rather than all three returning a bare float.
+#
+#   1. CAPTURED   the parsed FRED row from a snapshot at or before the date.
+#                 A commitment we made on the day. Available from 2026-08-20,
+#                 when the FRED capture started.
+#   2. ARCHIVAL   an ALFRED vintage: BEA's figure AS PUBLISHED on that date,
+#                 stored by collect/alfred_income.py. Not our commitment, but
+#                 the source's own dated one, which is the next best thing and
+#                 the thing score/RULES.md ss10 calls archival.
+#   3. RETROSPECTIVE  today's monthly series, truncated to the months that had
+#                 been RELEASED by that date. The truncation is right and the
+#                 revisions are not: a month published in June 2025 has been
+#                 revised since, and this route reads the revised figure. It
+#                 is today's data restricted to yesterday's calendar.
+#
+# WHY ROUTE 3 EXISTS AT ALL, given route 2 is strictly better. ALFRED is
+# reachable from a normal terminal and not from every environment this repo
+# gets edited in, so the vintages have to be captured deliberately rather than
+# arriving with the daily run. Route 3 keeps the backfill working in the
+# meantime and LABELS ITSELF, and the moment the vintages land route 2 takes
+# over with no change to any caller. Anything scored as real-time should be
+# checking `income_basis`, not assuming.
+#
+# THE RELEASE RULE, checked against three known vintages rather than assumed:
+# month M (the observation dated M-01) is on the record from the first day of
+# month M+2. BEA publishes personal income for month M near the end of M+1.
+#     ALFRED vintage 2025-06-02  ->  last observation 2025-04-01   consistent
+#     ALFRED vintage 2026-08-03  ->  last observation 2026-06-01   consistent
+#     FRED capture  2026-08-25   ->  last observation 2026-06-01   consistent
+INCOME_RELEASE_LAG_MONTHS = 2
+
+
+def _ytd_growth(monthly: dict[str, float], asof: str) -> tuple[float, int] | None:
+    """(year-to-date growth vs the prior full year, months in hand).
+
+    The same arithmetic collect/parsers/fred.py does for income_growth_ytd —
+    an average of the year's months against an average of the prior year's —
+    restricted to observations released by `asof`. Deliberately the same shape
+    as the fitted quantity, which is an annual average against an annual
+    average; a last-month-over-last-month figure is a different variable.
+    """
+    y, m = int(asof[:4]), int(asof[5:7])
+    cutoff = y * 12 + (m - 1) - INCOME_RELEASE_LAG_MONTHS
+    by_year: dict[int, list[float]] = {}
+    for d0, v in monthly.items():
+        yy, mm = int(d0[:4]), int(d0[5:7])
+        if yy * 12 + (mm - 1) > cutoff:
+            continue
+        by_year.setdefault(yy, []).append(v)
+    if y not in by_year or (y - 1) not in by_year:
+        return None
+    cur = sum(by_year[y]) / len(by_year[y])
+    prev = sum(by_year[y - 1]) / len(by_year[y - 1])
+    if not prev:
+        return None
+    return (cur - prev) / prev * 100, len(by_year[y])
+
+
+def _newest_fred_monthly(cycle: int) -> dict[str, float]:
+    if "monthly" in _FRED_CACHE:
+        return _FRED_CACHE["monthly"]
+    out: dict[str, float] = {}
+    base = DATA / str(cycle) / "raw" / "fred"
+    if base.exists():
+        days = sorted((d for d in base.iterdir() if d.is_dir()), reverse=True)
+        for day in days:
+            f = day / "income_monthly.csv"
+            if not f.exists():
+                continue
+            for row in csv.reader(f.open(encoding="utf-8", errors="replace")):
+                if len(row) < 2 or not row[0][:1].isdigit():
+                    continue
+                try:
+                    out[row[0].strip()] = float(row[1])
+                except ValueError:
+                    continue
+            break
+    _FRED_CACHE["monthly"] = out
+    return out
+
+
+def income_as_of(cycle: int, asof: str | None = None):
+    """(value, provenance string, basis) or None. basis names the route taken."""
+    end = asof or dt.date.today().isoformat()
+
+    got = income_from_archive(cycle, asof)
+    if got:
+        return got[0], got[1], "captured"
+
+    import sys as _sys
+    _sys.path.insert(0, str(REPO / "forecast" / "collect"))
+    try:
+        import alfred_income as _al
+    except ImportError:
+        _al = None
+    if _al is not None:
+        vs = [v for v in _al.vintages_on_disk(cycle) if v <= end]
+        if vs:
+            obs = _al.read_vintage(cycle, vs[-1])
+            g = _ytd_growth(obs, end)
+            if g:
+                return (round(g[0], 3),
+                        f"ALFRED vintage {vs[-1]} of {_al.SERIES} — BEA's "
+                        f"figure as published on that date, {g[1]} month(s) of "
+                        f"{end[:4]} in hand", "archival")
+
+    monthly = _newest_fred_monthly(cycle)
+    if monthly:
+        g = _ytd_growth(monthly, end)
+        if g:
+            return (round(g[0], 3),
+                    f"today's FRED capture truncated to the {g[1]} month(s) of "
+                    f"{end[:4]} released by {end} — RETROSPECTIVE: the calendar "
+                    f"is right and the revisions are not, because a month "
+                    f"published then has been revised since. Run "
+                    f"collect/alfred_income.py --capture to replace this with "
+                    f"BEA's own dated figure", "retrospective")
     return None
 
 
 def predict(b, approval, income, seats_before):
     return b[0] + b[1]*approval + b[2]*income + b[3]*seats_before
+
+
+# ---------------------------------------------------------------------------
+# Backfill
+# ---------------------------------------------------------------------------
+# WHY THIS IS ALLOWED HERE AND REFUSED ELSEWHERE. seats.py carries a standing
+# rule that a projection cannot be recomputed for a past date, because the
+# inputs are overwritten every run and a rebuilt number is today's model on
+# today's evidence wearing an old date. It names THIS FILE as one of the
+# reasons: "polling_model.json and fundamentals_model.json are overwritten
+# every run".
+#
+# That was true of the file and never true of the model. This equation has
+# three inputs and all three are now datable:
+#
+#     approval        the poll list, by each poll's own end date
+#     income growth   the FRED capture, by the date it was parsed
+#     seats_before    220, a fact about 2024 that does not move
+#
+# So a past point is a computation over the evidence that existed on that date,
+# not a reconstruction of one, which is the same standard academic.py's BEW
+# backfill had to meet. The coefficients are today's, and they are today's for
+# every date including this one — they are fit on 1946-2022 and do not change
+# within a cycle.
+#
+# STAMPED `backfilled`, NOT `captured`, all the same. The evidence is the
+# evidence of the day; the code that read it is the code of today. Anyone
+# scoring this series should know which points the model actually emitted at
+# the time (from 2026-08-19, when the run went daily) and which it did not.
+BACKFILL_PROVENANCE = "backfilled"
+
+
+def backfill_dates(cycle: int) -> list[str]:
+    return sorted(Path(f).stem for f in
+                  glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")))
+
+
+def backfill(a) -> int:
+    """Run the equation on every archived date and write the history file."""
+    b, loeo, _ = fit()
+    z = 1.2816
+    dates = backfill_dates(a.cycle)
+
+    # ALIGN TO THE ACADEMIC GRID BY DEFAULT, because two families plotted on
+    # different date grids read as two families disagreeing. academic.py picks
+    # its dates from where the poll record can actually support a
+    # reconstruction; borrowing that grid means every backfilled day on the
+    # chart carries both, and a gap in one is a gap in both for the same
+    # reason. --every overrides it for anyone who wants the dense version.
+    ah = DATA / str(a.cycle) / "model_private" / "academic_models_history.json"
+    if a.every == 1 and ah.exists():
+        want = set(json.loads(ah.read_text()))
+        aligned = sorted(want & set(dates))
+        if len(aligned) >= 10:
+            print(f"  aligned to the academic grid: {len(aligned)} date(s) "
+                  f"({len(want - set(dates))} academic date(s) have no parsed "
+                  f"file and are skipped)")
+            dates = aligned
+    if a.every > 1:
+        # Keep the two ends: the first date anchors the series and the last is
+        # today, which the daily run writes anyway. Thinning the middle is a
+        # cost decision, not a modelling one.
+        dates = sorted(set(dates[::a.every]) | {dates[0], dates[-1]})
+    hist: dict[str, dict] = {}
+    priv = DATA / str(a.cycle) / "model_private"
+    p = priv / "fundamentals_model_history.json"
+    if p.exists():
+        hist = json.loads(p.read_text())
+
+    flat = 0
+    for date in dates:
+        ap_v, ap_src, ap_n = approval_from_archive(a.cycle, date)
+        got = income_as_of(a.cycle, date)
+        if got is None:
+            continue
+        # A DATE WITH NO REAL APPROVAL IS SKIPPED, not filled with the
+        # constant. That is the whole lesson of the ten flat months this
+        # backfill exists to remove: a fallback value plotted as a point is a
+        # claim that approval sat still, and the chart cannot tell the reader
+        # otherwise. No point is better than a flat one.
+        if ap_n == 0 or "hand-set" in ap_src:
+            flat += 1
+            continue
+        income, income_prov, income_basis = got
+        pp = predict(b, ap_v, income, a.seats_before)
+        hist[date] = {
+            "margin_D": round(100 - 2 * pp, 2),
+            "margin_D_80_low": round(100 - 2 * (pp + z * loeo), 2),
+            "margin_D_80_high": round(100 - 2 * (pp - z * loeo), 2),
+            "inputs": {"approval": ap_v, "approval_source": ap_src,
+                       "approval_n": ap_n, "income_growth": income,
+                       "income_source": income_prov,
+                       "income_basis": income_basis,
+                       "seats_before": a.seats_before},
+            "provenance": BACKFILL_PROVENANCE,
+        }
+
+    priv.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(hist, indent=2, sort_keys=True))
+    vals = [h["margin_D"] for h in hist.values()]
+    print(f"  wrote model_private/fundamentals_model_history.json   PRIVATE — "
+          f"{len(hist)} date(s)")
+    if flat:
+        print(f"  skipped {flat} date(s) with no dated approval — a fallback "
+              f"constant is not a data point")
+    if vals:
+        ks = sorted(hist)
+        print(f"  {ks[0]} .. {ks[-1]}   margin_D {min(vals):+.2f} .. "
+              f"{max(vals):+.2f}")
+        for k in (ks[0], ks[len(ks)//2], ks[-1]):
+            h = hist[k]
+            print(f"      {k}  D{h['margin_D']:+6.2f}   approval "
+                  f"{h['inputs']['approval']:.2f} (n={h['inputs']['approval_n']})"
+                  f"   income {h['inputs']['income_growth']:+.2f}")
+    return 0
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
@@ -333,22 +694,38 @@ def main(argv=None) -> int:
     #      coefficient is 0.026, so a live feed will move this model and barely
     #      touch that one, and that difference is the finding rather than a bug.
     ap.add_argument("--approval", type=float, default=None,
-                    help="president's approval (Gallup basis — do NOT feed a poll "
-                         "average, the historical column is Gallup-only and the "
-                         "house effect is a couple of points)")
+                    help="president's approval, ADULTS basis. The historical "
+                         "column is Gallup and Gallup interviewed adults, so a "
+                         "whole-field or likely-voter average is 4 to 5 points "
+                         "off the instrument. See derived/approval.json for the "
+                         "three constructions side by side.")
     ap.add_argument("--income", type=float, default=None,
                     help="real income growth, pct. Default: read from the FRED "
                          "capture (income_growth_ytd). Pass a value to override.")
     ap.add_argument("--seats-before", type=float, default=220,
                     help="seats the president's party won last time (R won 220 in 2024)")
-    ap.add_argument("--date", default=None)
+    ap.add_argument("--date", default=None,
+                    help="run the model as of a past date: approval from the "
+                         "polls that had ended by then, income from the last "
+                         "FRED reading published by then.")
+    ap.add_argument("--backfill", action="store_true",
+                    help="run the equation on every archived date and write "
+                         "model_private/fundamentals_model_history.json, which "
+                         "seats.py --backfill-history projects into seats. "
+                         "Dates with no dated approval are SKIPPED, not filled "
+                         "with the fallback constant.")
+    ap.add_argument("--every", type=int, default=1,
+                    help="with --backfill, keep every Nth date. The two ends "
+                         "are always kept.")
     a = ap.parse_args(argv)
 
     b, loeo, r2 = fit()
+    if a.backfill:
+        return backfill(a)
     if a.income is not None:
         income, income_prov, placeholder = a.income, "command line", False
     else:
-        got = income_from_archive(a.cycle)
+        got = income_from_archive(a.cycle, a.date)
         if got:
             income, income_prov, placeholder = got[0], got[1], False
         else:
@@ -362,7 +739,8 @@ def main(argv=None) -> int:
     # a class can ask what the model says at 45%; what changed is which way
     # round the default runs.
     if a.approval is None:
-        a.approval, approval_src, approval_n = approval_from_archive(a.cycle)
+        a.approval, approval_src, approval_n = approval_from_archive(
+            a.cycle, a.date)
     else:
         approval_src = (f"forced to {a.approval} on the command line, not read "
                         f"from the archive")
@@ -381,14 +759,32 @@ def main(argv=None) -> int:
                    "seats_before": a.seats_before,
                    "income_is_placeholder": placeholder,
                    "income_source": income_prov,
-                   "approval_source": "hand-set; no live approval feed yet"},
+                   # For display only. Nothing multiplies by this; it is here
+                   # so the page can print the number every other approval
+                   # tracker is showing beside the one the model eats, and
+                   # name the difference as a population difference.
+                   **({"approval_field": _fa[0], "approval_field_n": _fa[1]}
+                      if (_fa := field_approval(a.cycle, a.date)) else {}),
+                   **(_ag if (_ag := aggregate_approval(a.cycle)) else {})},
+        # NOTE: `approval_source` used to appear TWICE in this dict, the second
+        # one a literal "hand-set; no live approval feed yet". A later key wins
+        # in a Python literal, so the real source string — window, poll count,
+        # adjustment and all — was computed, passed in, and thrown away on the
+        # next line. Every consumer of this file, including the methods page,
+        # read "hand-set" no matter what the model had actually done.
         "pres_party_two_party_vote": round(pp,2),
         "margin_D": round(margin_d,2),
         "margin_D_80_low": round(100-2*(pp+z*loeo),2),
         "margin_D_80_high": round(100-2*(pp-z*loeo),2),
-        "sensitivity": [{"approval": v,
-                         "margin_D": round(100-2*predict(b,v,a.income,a.seats_before),2)}
-                        for v in (34,36,38,40,42)],
+        # CENTRED ON THE ACTUAL VALUE, not on a hard-coded 38. The ladder used
+        # to run 34 to 42, which was a sensible bracket when approval was a
+        # typed-in 38 and is the wrong bracket now that it is read from polls
+        # on the adults scale. A sensitivity table whose centre drifts away
+        # from the model's own input stops answering the question it is for.
+        "sensitivity": [{"approval": round(a.approval + k, 1),
+                         "margin_D": round(100-2*predict(
+                             b, a.approval + k, a.income, a.seats_before), 2)}
+                        for k in (-4, -2, 0, 2, 4)],
     }
     d = DATA / str(a.cycle) / "derived"; d.mkdir(parents=True, exist_ok=True)
     (d / "fundamentals_model.json").write_text(json.dumps(out, indent=2))
@@ -401,6 +797,11 @@ def main(argv=None) -> int:
     else:
         print(f"  income growth {a.income:+.2f}%  ({income_prov})")
     print(f"  approval {a.approval:.2f} — {approval_src}")
+    fa = out["inputs"].get("approval_field")
+    if fa is not None:
+        print(f"  for comparison, the whole field (every population) reads "
+              f"{fa:.2f} over {out['inputs']['approval_field_n']} poll(s). "
+              f"The {fa - a.approval:.1f}-point gap is population, not error.")
     return 0
 
 if __name__ == "__main__":

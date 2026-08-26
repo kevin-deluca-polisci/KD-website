@@ -25,8 +25,7 @@
        published forecast said, stores the raw bytes unchanged, and re-derives
        the tables and charts from that store.</p>
     <p>The display is the <em>disagreement between methods</em>, not another
-       trend line. There are already good single-number forecasts, and adding a
-       thirteenth would teach nobody anything. What is harder to find, and what a
+       trend line. There are already many good single-number forecasts, and one more would add little. What is harder to find, and what a
        class can actually learn from, is a like-for-like view of how far apart
        five different ways of forecasting the same election are on the same day —
        and how that distance moves as the election gets closer.</p>
@@ -61,16 +60,16 @@
               defending. Fit on past midterms.</td>
           <td class="wrap muted">Candidates, scandals, and everything that has
               happened since the last election it was fit on.</td></tr>
-      <tr><td><strong>Professional</strong>
-              <span class="muted">· nothing published today</span></td>
+      <tr><td><strong>Professional</strong></td>
           <td class="wrap muted">Published statistical forecasts combining most of
               the above plus candidate quality, fundraising and local
-              knowledge. Collected daily; we publish no individual
-              forecaster's numbers, and this family is below the floor needed
-              to show an average.
+              knowledge. Collected daily. Individual forecasts appear only where the publisher's
+              terms allow it, so this family shows an average when enough of
+              them do.
               <a href="/forecast/methods/#professional">More</a>.</td>
-          <td class="wrap muted">Its own method, usually. Most are documented in
-              outline and none are reproducible from the outside.</td></tr>
+          <td class="wrap muted">How much of its own method a reader can check.
+              These are documented in outline rather than published as
+              equations.</td></tr>
       <tr><td><strong>Academic</strong></td>
           <td class="wrap muted">Published political-science specifications, run
               by us on inputs we collected ourselves. The equation is somebody
@@ -104,9 +103,8 @@
        own audience has not agreed to have their live numbers mirrored somewhere
        else during the election. The full per-forecaster archive is released,
        documented and citable, after the votes are counted.</p>
-    <p class="thin-note">The rule is enforced in
-       <code>forecast/collect/aggregate.py</code>, which audits its own output
-       and refuses to write anything if the audit fails. A rule you have to
+    <p class="thin-note">The rule is enforced in code that audits its own output and refuses to
+       write anything if the audit fails. A rule you have to
        remember is a rule you will forget at 11pm in late October.</p>
   </div>
 
@@ -149,58 +147,47 @@
 
     <p>Each line on the tracker is the average of the forecasts in that family
        on that date. When a family gains or loses a member, the average moves,
-       and nobody's forecast has changed. On 20 August 2026 the fundamentals
-       family went from one model to five in a single day; its line stepped from
-       D+1.8 to D+7.2, and every one of those five points was bookkeeping rather
-       than news.</p>
+       and nobody&rsquo;s forecast has changed. That has happened here more than
+       once: a family that held one model on Monday and five on Tuesday steps on
+       Tuesday, and every point of the step is bookkeeping.</p>
 
-    <p>The number plotted is the plain mean of that day's members, and the
-       member count is shown beside it. That is the honest answer to "what does
-       this family predict today", which is the question a tracker is read for.
-       It is not the honest answer to "how much has this family moved", and the
-       two are different questions whenever membership is unstable.</p>
+    <p>The number plotted is the plain mean of that day&rsquo;s members, and the
+       member count is shown beside it. That is the honest answer to &ldquo;what
+       does this family predict today&rdquo;, which is the question a tracker is
+       read for. It is not the honest answer to &ldquo;how much has this family
+       moved&rdquo;, and the two come apart whenever membership is unstable.</p>
 
     <h3>What we also compute, and why it is not what you see</h3>
 
-    <p>The archive carries a second version of every category average, called
-       the <em>chained</em> level, computed the way a price index handles a
-       change of basket. Rather than comparing today's members with yesterday's
-       different members, it compares the ones present on <em>both</em> days and
+    <p>The archive carries a second version of every category average, the
+       <em>chained</em> level, computed the way a price index handles a change of
+       basket. Rather than comparing today&rsquo;s members with yesterday&rsquo;s
+       different ones, it compares those present on <em>both</em> days and
        carries the level forward by that change:</p>
 
     <p class="thin-note"><code>level(t) = level(t&minus;1) + [ mean of common members (t)
        &minus; mean of common members (t&minus;1) ]</code></p>
 
-    <p>A model that joins today contributes nothing to today's movement; it
-       enters from tomorrow, once it has two observations to move between. Every
-       wiggle on a chained line is therefore somebody changing their mind. That
-       is a real and useful property, and it is why the chain is computed at
-       all.</p>
+    <p>A model that joins today contributes nothing to today&rsquo;s movement; it
+       enters tomorrow, once it has two observations to move between. Every
+       wiggle on a chained line is therefore somebody changing their mind, which
+       is the property worth having and the reason the chain is computed.</p>
 
-    <p>It was published as the headline until 25 August 2026, and taking it down
-       is worth explaining rather than doing quietly. A chained level is an index
-       anchored at the first date, so it drifts away from the mean of the current
-       members, and after a large enough composition change it stops describing
-       them at all. When the fundamentals family went from one model to five, the
-       chain had exactly one member in common between the two days, correctly
-       moved on that one member, and left the level where a one-model family had
-       put it. Five days later the page was showing a fundamentals margin of
-       D+2.1 beside a seat count of 239 — two numbers that cannot both be true,
-       because no D+2 national environment produces 239 Democratic seats.</p>
+    <p>It was the headline until 25 August 2026, and it is worth saying why it
+       is not any more. A chained level is an index anchored at the first date,
+       so it drifts from the mean of the current members, and after a large
+       enough change of composition it stops describing them. Two faults, worth
+       separating. One is a threshold: bridging a single common member into a
+       five-member family carries a fifth of the information and asserts all of
+       the level. The other is structural, and no threshold fixes it &mdash; each
+       quantity is chained on its own, and a seat count is not a linear function
+       of a national margin, so a chained margin and a chained seat count drift
+       apart by construction.</p>
 
-    <p>Two faults there are worth separating. One is a threshold: bridging a
-       single common member into a five-member family carries a fifth of the
-       information and asserts all of the level, and the chain should break and
-       re-anchor rather than carry it. The other is structural and no threshold
-       fixes it: each quantity is chained on its own, and a seat count is not a
-       linear function of a national margin, so a chained margin and a chained
-       seat count drift apart by construction.</p>
-
-    <p>So the chain stays in the published data as <code>mean_chained</code> in
-       <code>category_averages.csv</code>, next to <code>mean</code>,
-       <code>n_sources</code> and the number of members the two dates had in
-       common. It is a good way to ask how much of a family's movement was real.
-       It is not the level, and this site no longer prints it as one.</p>
+    <p>So the chain stays in the published data, in a column beside the level,
+       the member count, and the number of members the two dates had in common.
+       It is a good way to ask how much of a family&rsquo;s movement was real. It
+       is not the level, and this site no longer prints it as one.</p>
 
     <p class="thin-note">The practical consequence for a reader: a step in one of
        these lines is not always news. Check the member count beside it. Where
@@ -246,8 +233,9 @@
       <tr><td><strong>Economic data</strong></td>
           <td class="wrap muted">Federal Reserve Bank of St. Louis (FRED)</td></tr>
     </table>
-    <p class="thin-note">Student forecasts are not published. Only the prize
-       winner's predictions are made public, at the end of the cycle.</p>
+    <p class="thin-note">Student forecasts are not published during the cycle,
+       and there is no leaderboard. At the end, with the winner&rsquo;s consent,
+       the prize-winning predictions are shared.</p>
   </div>
 
 </div>

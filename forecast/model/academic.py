@@ -183,7 +183,13 @@ def build_ctx(cycle: int, date: str, approval: float | None = None) -> Ctx:
         c.notes.append(f"dated structural inputs unavailable ({e}) — the "
                        f"published constants are used instead")
 
-    got = fundamentals.income_from_archive(cycle)
+    # DATED, like everything else in this context. This read the newest FRED
+    # capture regardless of `date`, which put August 2026's income growth on a
+    # March 2025 projection — the referendum model's income coefficient is
+    # 0.68, the largest in it, so that was not a rounding matter. income_as_of
+    # prefers the captured row, then an ALFRED vintage, then today's series
+    # truncated to the months released by the date, and says which it used.
+    got = fundamentals.income_as_of(cycle, date)
     if got:
         c.income, c.income_source = got[0], got[1]
     else:

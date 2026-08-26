@@ -682,6 +682,24 @@ def main(argv=None) -> int:
     supp = rd(d / "suppressed.csv")
     model = json.loads((d / "fundamentals_model.json").read_text()) \
             if (d / "fundamentals_model.json").exists() else None
+
+    # THE APPROVAL PANEL. Three constructions of the same polls, published
+    # together because the model's input sits several points below every
+    # familiar tracker and a reader who sees only one of them will reasonably
+    # conclude we have made a mistake. model/approval.py builds it and its
+    # docstring carries the argument.
+    #
+    # The per-aggregator members ride along only on the LATEST point. Ten names
+    # a day for the rest of the cycle would be seventy rows a week in a file
+    # every visitor downloads, to say the same thing the spread already says.
+    approval = None
+    ap_f = d / "approval.json"
+    if ap_f.exists():
+        approval = json.loads(ap_f.read_text())
+        for k, v in approval.get("series", {}).items():
+            pts = v.get("points") or []
+            for pt in pts[:-1]:
+                pt.pop("members", None)
     polling = json.loads((d / "polling_model.json").read_text()) \
               if (d / "polling_model.json").exists() else None
     proj = json.loads((d / "seat_projections.json").read_text()) \
@@ -836,6 +854,7 @@ def main(argv=None) -> int:
         "headline": sorted(headline, key=lambda x: x["category"]),
         "series": {k: sorted(v) for k, v in series.items()},
         "fundamentals_model": model,
+        "approval": approval,
         "polling_model": senate,
         "academic_models": academic,
         # Without the district arrays. All 435 of them tripled the size of a

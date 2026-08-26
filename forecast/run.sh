@@ -191,6 +191,10 @@ if run_stage model; then
   #
   # seats.py is last: it reads what every step above just wrote.
   python3 forecast/model/state_pvi.py    --cycle "$CYCLE" || FAILED+=("state_pvi")
+  # BEFORE fundamentals, which reads derived/approval.json for the aggregator
+  # consensus it prints beside its own input. Ordering the other way round
+  # leaves the model file a day behind the panel it quotes.
+  python3 forecast/model/approval.py     --cycle "$CYCLE" || FAILED+=("approval")
   python3 forecast/model/fundamentals.py --cycle "$CYCLE" || FAILED+=("fundamentals")
   python3 forecast/model/polling.py      --cycle "$CYCLE" || FAILED+=("polling")
   python3 forecast/model/academic.py     --cycle "$CYCLE" || FAILED+=("academic")

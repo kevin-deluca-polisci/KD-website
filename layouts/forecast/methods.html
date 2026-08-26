@@ -46,9 +46,9 @@
         <tr><td><strong>Fundamentals</strong></td>
             <td class="muted">Predicts from conditions rather than opinion: the economy, presidential approval, seats defended. Knows nothing about candidates or polls.</td></tr>
         <tr><td><strong>Professional</strong></td>
-            <td class="muted">Published statistical forecasts combining most of the above plus candidate quality, fundraising and local knowledge. <strong>Currently draws no line on the chart</strong> — this site publishes no individual forecaster's numbers, and the category average needs more contributors than we have. <a href="#professional">More</a>.</td></tr>
+            <td class="muted">Published statistical forecasts combining most of the above plus candidate quality, fundraising and local knowledge. Shown as an average once enough of them are collected on terms permitting it; individual numbers appear only where a publisher allows. <a href="#professional">More</a>.</td></tr>
         <tr><td><strong>Academic</strong></td>
-            <td class="muted">Specifications published in the political-science forecasting literature, rebuilt here and run on our data. <a href="#academic">Four of them</a>, disagreeing more with each other than any other family does.</td></tr>
+            <td class="muted">Specifications published in the political-science forecasting literature, rebuilt here and run on our data. <a href="#academic">Published equations</a>, run on our own inputs, which spread more widely than any other family.</td></tr>
       </table>
       {{/* The one thing about this table that is genuinely confusing, said
            rather than left for the reader to work out. */}}
@@ -70,7 +70,8 @@
       <p class="sub">Everything in our two models that is a judgment rather than a
          measurement. The academic models carry their own, listed with each
          model in the <a href="#academic">academic section</a> — Lockerbie's
-         open-seat term is the starkest, since it is a sign somebody types in.</p>
+         open-seat term is the clearest example, since its sign is set by hand
+         rather than estimated.</p>
       <table>
         <tr><th>Choice</th><th>What we did</th><th>Why it is arguable</th></tr>
         <tr><td>Generic-ballot shrinkage</td>
@@ -89,8 +90,8 @@
             <td>None applied</td>
             <td class="muted">Generic-ballot bias is conditional on approval rather than constant.</td></tr>
         <tr><td>Approval input</td>
-            <td>Hand-set</td>
-            <td class="muted">The last input not on a live feed, and the model is sensitive to it.</td></tr>
+            <td>Adults-sample polls only</td>
+            <td class="muted">The two models that use approval were fitted on a Gallup series, and Gallup interviewed all adults. Likely-voter samples currently run about eight points better for this president than adult samples, so the population is the choice that matters. It puts our approval several points below every published tracker, which average all three populations together.</td></tr>
         <tr><td>Two-party assumption</td>
             <td>Every race modelled as D versus R</td>
             <td class="muted">Nebraska has no Democrat and a serious independent; the model cannot represent that.</td></tr>
@@ -109,6 +110,139 @@
       <p class="sub">Presidential approval, real income growth, and seats
          defended. Fit on all 20 midterms from 1946 to 2022 and scored by
          leave-one-election-out error.</p>
+      <div class="note">
+        <strong>Why our approval number is lower than everyone else&rsquo;s.</strong>
+        {{/* NOTHING IN THIS PARAGRAPH IS TYPED IN. Every figure here was a
+             literal in the first draft, in a card whose whole subject is a
+             number moving, on a page carrying a comment elsewhere that says a
+             hardcoded count has already been wrong twice. */}}
+        Approval polls sample one of three populations: all adults, registered
+        voters, or likely voters, and right now those three disagree by a great
+        deal.
+        {{- with $d.approval }}{{ with .populations }} On the polls in the field
+        this fortnight the president&rsquo;s approval is
+        {{- range $i, $v := . }}{{ if $i }}{{ if eq $i 2 }} and{{ else }},{{ end }}{{ end }}
+        {{ printf "%.1f" $v.approve }}% among {{ $v.label }}
+        {{- end }} &mdash; the same question, the same weeks, three
+        samples.{{ end }}{{ end }}
+        Published trackers average all three, which is why they cluster higher.
+        {{- with $f.inputs.approval_aggregate }} On the most recent reading the
+        {{ $f.inputs.approval_aggregate_n }} trackers we collect ran from
+        {{ printf "%.1f" $f.inputs.approval_aggregate_low }} to
+        {{ printf "%.1f" $f.inputs.approval_aggregate_high }}, averaging
+        {{ printf "%.1f" . }}.{{ end }}
+        {{- with $d.approval }}
+        {{- $ap := . }}{{ with $ap.chart }}{{ $ac := . }}
+        {{/* THE APPROVAL PANEL. Not one of charts.py's timeline panels, and
+             deliberately so: those are forecasts, scored and averaged and
+             governed by the disclosure floor, and approval is a right-hand-side
+             variable. Same drawing conventions, own payload — built in
+             model/approval.py.
+
+             COLOUR. --c-fundamentals for the model input, because that is what
+             it is an input to and the palette on this site means FAMILY. The
+             other three wear ink rather than borrowing another family's hue,
+             which would assert a relationship that does not exist. The one
+             coloured line is also the one the reader should look at.
+
+             $ac, NOT $. Inside this template `$` is the Page, not the data
+             file, so `$.approval` would silently be nothing and every width
+             would render empty. Capture the payload in a variable and use it. */}}
+        <div class="viz" style="margin:14px 0 4px">
+          <svg viewBox="0 0 {{ $ac.w }} {{ $ac.h }}" role="img"
+               aria-label="Presidential approval on four constructions of the same polls">
+            {{- range $ac.yticks }}
+            <line class="gridline" x1="34" x2="{{ $ac.w }}" y1="{{ .y }}" y2="{{ .y }}"/>
+            <text class="tick" x="28" y="{{ add .y 3.5 }}" text-anchor="end">{{ .v }}</text>
+            {{- end }}
+            {{- range $ac.xticks }}
+            <text class="tick" x="{{ .x }}" y="{{ sub $ac.h 4 }}" text-anchor="middle">{{ .label }}</text>
+            {{- end }}
+            {{- with index $ac.lines "field" }}
+            <polyline fill="none" stroke="var(--ink-3)" stroke-width="1.5"
+                      stroke-dasharray="5 4" stroke-linejoin="round" opacity="0.85"
+                      points="{{ .polyline }}"/>
+            {{- end }}
+            {{- with index $ac.lines "gallup" }}
+            {{/* Twelve readings, drawn as twelve open marks. Gallup polled
+                 monthly, so a line between them would draw a trend it never
+                 published, and hollow marks keep them from competing with the
+                 model input for the reader's eye. */}}
+            {{- range .marks }}
+            <circle cx="{{ .x }}" cy="{{ .y }}" r="3" fill="none"
+                    stroke="var(--ink-3)" stroke-width="1.5"/>
+            {{- end }}
+            {{- end }}
+            {{- with index $ac.lines "aggregate" }}
+            {{- with .polyline }}
+            <polyline fill="none" stroke="var(--ink-2)" stroke-width="2"
+                      stroke-linejoin="round" points="{{ . }}"/>
+            {{- end }}
+            {{/* One capture so far draws a dot, not a line. A polyline of a
+                 single point renders as nothing at all, which would read as a
+                 missing series rather than a young one. */}}
+            {{- with .dot }}
+            <circle cx="{{ .x }}" cy="{{ .y }}" r="4" fill="var(--ink-2)"
+                    stroke="var(--surface)" stroke-width="2"/>
+            {{- end }}
+            {{- with .end }}
+            <circle cx="{{ .x }}" cy="{{ .y }}" r="4" fill="var(--ink-2)"
+                    stroke="var(--surface)" stroke-width="2"/>
+            {{- end }}
+            {{- end }}
+            {{- with index $ac.lines "model_input" }}
+            <polyline fill="none" stroke="var(--c-fundamentals)" stroke-width="2"
+                      stroke-linejoin="round" stroke-linecap="round"
+                      points="{{ .polyline }}"/>
+            {{- with .end }}
+            <circle cx="{{ .x }}" cy="{{ .y }}" r="4.5"
+                    fill="var(--c-fundamentals)" stroke="var(--surface)" stroke-width="2"/>
+            {{- end }}
+            {{- end }}
+          </svg>
+        </div>
+        <p class="thin-note" style="margin:0 0 10px">
+          <i class="swatch" style="background:var(--c-fundamentals)"></i> adults only, what the models use &nbsp;
+          <i class="swatch" style="background:var(--ink-2)"></i> aggregator average &nbsp;
+          <span style="color:var(--ink-3)">&ndash; &ndash;</span> all polls, any population &nbsp;
+          <span style="color:var(--ink-3)">&#9702;</span> Gallup&rsquo;s own readings, to Dec&nbsp;2025
+        </p>
+        {{- end }}{{ end }}
+
+        <p style="margin:10px 0 0">This model cannot. Its coefficients were
+           fitted on a Gallup series running back to 1946, and Gallup
+           interviewed all adults, so feeding it a mixed-population average
+           would be a different model reported under the same name. We average
+           the adults polls, and the gap you see against other trackers is that
+           choice rather than a disagreement about the polls. Both numbers are
+           in the table above.</p>
+        <p style="margin:10px 0 0">Gallup stopped polling presidential approval
+           in December 2025, but it published twelve readings first, and those
+           twelve are the only real test of which construction stands in for it
+           best. Scored on how closely each reproduces an actual Gallup number:
+           the adults average misses by 2.1 points on average, a
+           house-effect-adjusted whole-field average by 4.0, and the raw
+           whole-field average by 5.2. All three are equally noisy; the
+           difference is almost entirely a constant offset. That is the
+           argument, and it is why the choice is not a matter of taste.</p>
+        <p style="margin:10px 0 0">Gallup&rsquo;s own remaining house effect,
+           measured against the rest of the adults field, is about two points.
+           We do not correct for it. The estimate drifts across those twelve
+           months, an independent estimate from a published model puts it nearer
+           three quarters of a point, and it can never be checked again now that
+           Gallup has left the field. It stays in the error bar.</p>
+      </div>
+
+      <p class="thin-note">Its lineage, since people ask: the first two terms are
+         the referendum specification that goes back to Tufte (1975) &mdash; a
+         midterm as a verdict on the administration and the economy. The third is
+         an exposure term, in the sense of Oppenheimer, Stimson and Waterman
+         (1986): a party defending more seats has more to lose. It is not
+         Abramowitz&rsquo;s &ldquo;Time for Change&rdquo;, which is a
+         presidential-year model with different inputs and a different dependent
+         variable. The <a href="#academic">academic section</a> runs the
+         unconditioned referendum specification beside this one, and the gap
+         between the two lines is the exposure term doing its work.</p>
       {{- with .coefficients }}
       <p style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;
                 background:var(--bg);border:1px solid var(--border);border-radius:7px;
@@ -120,9 +254,19 @@
       {{- end }}
       <table>
         <tr><th>Input</th><th class="num">Value</th><th>Source</th></tr>
-        {{- with .inputs }}
+        {{/* $in, NOT $. `$` is the Page in a Hugo template, not this data file,
+             so `$.inputs` is a build error rather than a blank. Capture it. */}}
+        {{- with .inputs }}{{ $in := . }}
         <tr><td>Presidential approval</td><td class="num">{{ .approval }}%</td>
-            <td class="muted">hand-set, not yet a live feed</td></tr>
+            <td class="muted">{{ with .approval_n }}{{ . }} poll{{ if ne . 1.0 }}s{{ end }}{{ else }}Polls{{ end }} of <strong>all adults</strong> in the past fortnight, unadjusted</td></tr>
+        {{- with .approval_aggregate }}
+        <tr><td class="muted">&nbsp;&nbsp;for comparison: the aggregators</td><td class="num muted">{{ . }}%</td>
+            <td class="muted">Mean of {{ $in.approval_aggregate_n }} published approval trackers{{ with $in.approval_aggregate_low }}, spanning {{ printf "%.1f" . }}% to {{ printf "%.1f" $in.approval_aggregate_high }}%{{ end }}. Not a model input.</td></tr>
+        {{- end }}
+        {{- with .approval_field }}
+        <tr><td class="muted">&nbsp;&nbsp;for comparison: all polls, any population</td><td class="num muted">{{ . }}%</td>
+            <td class="muted">The same polls with the population filter off. Not a model input.</td></tr>
+        {{- end }}
         <tr><td>Real income growth</td><td class="num">{{ .income_growth }}%</td>
             <td class="muted"><a href="https://fred.stlouisfed.org/series/A229RX0">FRED / BEA</a>, year to date</td></tr>
         <tr><td>Seats held going in</td><td class="num">{{ index . "seats_before" }}</td>
@@ -217,8 +361,7 @@
       <p class="thin-note">Why this family exists at all: an academic model
          publishes an <em>equation</em>, where a commercial forecaster publishes
          a <em>number</em>. Rebuilding an equation and running it on inputs we
-         captured ourselves is ordinary scholarship, so nothing here waits on a
-         licence — which is the opposite of the professional section below.</p>
+         captured ourselves is ordinary scholarship, so nothing here waits on a licence.</p>
     </div>
 
     {{- range $key, $m := ($am.models | default dict) }}
@@ -255,13 +398,11 @@
          rather fewer. The seats equation was fitted on 1946–2002 and carries the
          mid-century House’s seat bonus, which current districts do not give.
          We use the vote equation, so this model is comparable with every other
-         line on the site, and leave the gap on show rather than resolving it
-         quietly.</p>
+         line on the site, and leave the gap on show.</p>
       {{- end }}
       {{- with .sensitivity_month }}
       <p class="thin-note"><strong>The month is part of the specification.</strong>
-         Lockerbie reads June of the election year, and June 2026 came in below
-         the months around it — possibly survey noise. We feed it June anyway:
+         Lockerbie reads June of the election year, and June 2026 came in below the months around it. We feed it June anyway:
          swapping in a smoothed average would be estimating a different model
          and reporting it under his name. Here is what the choice is worth.</p>
       <table style="max-width:460px">
@@ -299,18 +440,13 @@
         </tr>
         {{- end }}
       </table>
-      <p class="thin-note">Most forecasting models carry judgment calls — a
-         shrinkage curve somebody chose, a year somebody winsorised, a window
-         somebody drew — and they are usually buried in the machinery. This
+      <p class="thin-note">Any model of this kind carries judgment calls — a shrinkage curve, a winsorised year, the width of a window. This
          model puts one in the open as a variable with a sign, which is why it
          is worth pausing on even though the midterm case turns out to be
          specified rather than chosen. In an on-year election the author calls
          it “a little more complicated”, and there the judgment really would be
          a judgment. The highlighted row is the one we publish.</p>
-      <p class="thin-note">Read the point estimate with its error bar and not
-         without it. Across 35 elections this model’s out-of-sample mean
-         absolute error is <strong>16.8 seats</strong>, and single misses have
-         been far larger — 2010 was forecast at −11 against an actual −64. The
+      <p class="thin-note">Read the point estimate with its error bar and not without it. The author publishes an out-of-sample mean absolute error of <strong>16.8 seats</strong> across 35 elections, and individual years have missed by more. The interval is his own, and it is wide by design. The
          interval on the figure above is built from that published error, which
          is why it is so wide.</p>
       {{- end }}
@@ -403,7 +539,7 @@
         <tr><td><a href="https://www.natesilver.net/">Silver Bulletin</a></td>
             <td class="muted">Generic-ballot average with house-effect adjustments and recency weighting. The series this model reads.</td></tr>
         <tr><td><a href="https://www.realclearpolling.com/latest-polls/2026">RealClearPolling</a></td>
-            <td class="muted">Simpler unweighted average of recent polls. <strong>Not collected directly</strong>: the site returns 403 to every automated request, and getting round a bot filter is not something this project will do and still describe its own methods honestly. It reaches us second-hand, attributed, through the Wikipedia aggregator table below.</td></tr>
+            <td class="muted">Simpler unweighted average of recent polls. <strong>Not collected directly</strong>: their site is not open to automated collection. Their average reaches us only where a third party republishes it with attribution.</td></tr>
         <tr><td><a href="https://www.racetothewh.com/allpolls">Race to the WH</a></td>
             <td class="muted">Per-race poll list, collected for the Senate.</td></tr>
         <tr><td><a href="https://en.wikipedia.org/wiki/2026_United_States_House_of_Representatives_elections">Wikipedia's aggregator table</a></td>
@@ -411,9 +547,8 @@
                 generic-ballot averages side by side — Decision Desk HQ, RealClearPolling,
                 Silver Bulletin, Race to the WH and others. Each row is attributed to the
                 aggregator that produced it and inherits that aggregator's own licence,
-                so nothing is republished that its owner has not permitted. This is what
-                gives the polling category enough contributors to clear the disclosure
-                floor, and it is the reason a polling average appears at all.</td></tr>
+                so nothing is republished that its owner has not permitted. It is a substantial part of what the polling
+                average is built from.</td></tr>
       </table>
       <p class="thin-note">Silver Bulletin and Race to the WH permit collection
          but not per-poll republication during the cycle. Note what the polling category average
@@ -432,13 +567,14 @@
       <p class="sub">Published models combining polling, fundamentals, candidate
          quality and money. The category we are least free to reproduce.</p>
       <div class="note">
-        <strong>Why this family shows nothing today.</strong>
-        This site publishes no individual forecaster's numbers in any category —
-        what it shows is the average across a family, which is a wisdom-of-crowds
-        figure rather than a pick. That average needs at least three contributors
-        collected under licences permitting it, and the professional family is
-        below that floor: most of these forecasters permit collection but not
-        per-forecaster republication during the cycle.
+        <strong>Why this family may show nothing on a given day.</strong>
+        What this site shows for a family is the average across it, a
+        wisdom-of-crowds figure rather than a pick, and an individual
+        forecaster&rsquo;s own numbers appear only where their terms allow it.
+        An average needs at least three contributors on those terms. Most
+        professional forecasters permit collection but not per-forecaster
+        republication during the cycle, so the family sits below that floor
+        for now.
         <p style="margin:10px 0 0">So the professional line is absent, not late.
            Collection continues daily and every row is kept; the full series will
            be in the post-election release, when the licence questions that
@@ -450,13 +586,13 @@
         <tr><td><a href="https://grantbw4.github.io/2026-midterms-forecast/">Grant Williams</a></td>
             <td class="muted">An open-source district- and state-level model built on partisan lean, polling, incumbency and candidate quality. MIT-licensed. Collected daily.</td></tr>
         <tr><td><a href="https://votes.decisiondeskhq.com/forecast/2026">Decision Desk HQ</a></td>
-            <td class="muted">Polls-plus-fundamentals model paired with a live results operation. Their forecast page is <strong>not collected</strong> — their robots file disallows it — but their race ratings reach us, attributed, through Wikipedia.</td></tr>
-        <tr><td><a href="https://www.economist.com/interactive/us-midterms-2026">The Economist</a></td>
-            <td class="muted">Bayesian model pooling polls across states with a fundamentals prior. Behind a paywall and <strong>not collected</strong>; their race ratings reach us, attributed, through Wikipedia.</td></tr>
+            <td class="muted">Polls-plus-fundamentals model paired with a live results operation. Their forecast page is <strong>not collected</strong>, at their request. Their race ratings reach us, attributed, where a third party republishes them.</td></tr>
+        <tr><td><a href="https://www.economist.com/">The Economist</a></td>
+            <td class="muted">Bayesian model pooling polls across states with a fundamentals prior. Subscriber-only and <strong>not collected</strong>. Their race ratings reach us, attributed, where a third party republishes them.</td></tr>
         <tr><td><a href="https://www.racetothewh.com/senate/26">Race to the WH</a></td>
             <td class="muted">Race-by-race probabilities with a long published history of its own trend lines.</td></tr>
         <tr><td><a href="https://www.theargumentmag.com/p/split-ticket-2026-midterms-model">Split Ticket</a></td>
-            <td class="muted">Candidate-quality metrics — how far a nominee runs ahead of or behind the seat's baseline. Now published at The Argument. Registered but <strong>not yet collected</strong>: permission requested, not granted.</td></tr>
+            <td class="muted">Candidate-quality metrics — how far a nominee runs ahead of or behind the seat's baseline. Now published at The Argument. Registered but <strong>not collected</strong>.</td></tr>
         <tr><td><a href="https://www.gelliottmorris.com/">FiftyPlusOne</a></td>
             <td class="muted">G. Elliott Morris, successor to earlier work at The Economist and FiveThirtyEight.</td></tr>
         <tr><td><a href="https://votehub.com/">VoteHub</a></td>
@@ -466,11 +602,9 @@
       <table>
         <tr><th>Forecaster</th><th class="wrap">Why not</th></tr>
         <tr><td><a href="https://projects.cnalysis.com/">CNalysis</a></td>
-            <td class="wrap muted">Shut down in 2025. This entry used to say no
-                2026 product existed <em>yet</em>, which was wrong about the
-                reason and so wrong about the remedy: there is no page coming.
-                Kept here because a reader looking for a forecaster that used to
-                exist deserves to be told what happened to it.</td></tr>
+            <td class="wrap muted">Shut down in 2025. Kept here because a reader looking for a
+                forecaster that used to exist deserves to be told what happened
+                to it.</td></tr>
         <tr><td><a href="https://elections-daily.com/election-ratings/">Elections Daily</a></td>
             <td class="wrap muted">Same: their ratings hub still shows 2024.</td></tr>
         <tr><td><a href="https://jhkforecasts.com/">JHK Forecasts</a></td>
@@ -494,9 +628,8 @@
            What this page publishes for the professional category is the
            average, on the comparisons page. This card's job is to say who is in
            it and link to them. */}}
-      <p class="thin-note">No individual forecaster's numbers are shown on this
-         site. What we publish for this category is the average across everyone
-         in it — wisdom of the crowd rather than a pick — and it is on the
+      <p class="thin-note">What we publish for this category is the average
+         across everyone in it — wisdom of the crowd rather than a pick — and it is on the
          <a href="/forecast/comparisons/">comparisons page</a>. Most of these
          forecasters permit collection but not per-forecaster republication
          during the cycle anyway; see
@@ -517,8 +650,7 @@
         <tr><th>Market</th><th>What it is</th><th class="num">Today</th></tr>
         <tr><td><a href="https://polymarket.com/">Polymarket</a></td>
             <td class="muted">Real-money markets on chamber control and individual
-                races, plus a national popular-vote margin ladder that resolves
-                both tails — the best-resolved margin market of the three.</td>
+                races, plus a national popular-vote margin ladder that resolves both tails.</td>
             <td class="num">{{ with index $mi "polymarket" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ with .house_win_prob_D }}<br>{{ printf "%.0f%%" (mul . 100) }} D House{{ end }}{{ with .house_margin_D }}<br>D+{{ printf "%.1f" . }} margin{{ end }}{{ else }}—{{ end }}</td></tr>
         <tr><td><a href="https://kalshi.com/">Kalshi</a></td>
             <td class="muted">CFTC-regulated US event exchange running the same
@@ -526,17 +658,14 @@
                 which is where the market seat projection comes from.</td>
             <td class="num">{{ with index $mi "kalshi" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ with .house_seats_D }}<br>{{ printf "%.0f" . }} D House seats{{ end }}{{ with .senate_seats_D }}<br>{{ printf "%.0f" . }} D Senate seats{{ end }}{{ with .house_margin_D }}<br>D+{{ printf "%.1f" . }} margin{{ end }}{{ else }}—{{ end }}</td></tr>
         <tr><td><a href="https://www.predictit.org/">PredictIt</a></td>
-            <td class="muted">Real-money exchange with an $850 position cap and the
-                longest academic record of the three — the market economists have
-                actually studied. Alone among them it lists individual Senate
+            <td class="muted">Real-money exchange with an $850 position cap and the longest academic record of the three. Alone among them it lists individual Senate
                 races, which is where the market column on the comparisons page
                 comes from.</td>
             <td class="num">{{ with index $mi "predictit" }}{{ with .senate_win_prob_D }}{{ printf "%.0f%%" (mul . 100) }} D Senate{{ end }}{{ with .house_win_prob_D }}<br>{{ printf "%.0f%%" (mul . 100) }} D House{{ end }}{{ else }}—{{ end }}</td></tr>
       </table>
       <p class="thin-note">A price here is the LAST TRADE, which on a thin market
          can be hours old and on either side of a wide spread. Nothing smooths
-         it, and no market on this page is adjusted for the longshot bias its
-         own literature documents.</p>
+         it, and no market on this page is adjusted for longshot bias.</p>
       <div class="note">
         <strong>Markets price control, not 50 seats.</strong>
         Democratic Senate control needs 51, because a 50–50 tie is broken by a
@@ -568,34 +697,24 @@
          have “Above 249” imply an average of 342 seats.</p>
 
       <div class="note">
-        <strong>Kalshi’s Republican bucket is coarse, and this is what it costs.</strong>
-        On the margin ladder Kalshi resolves the Democratic side in two-point
-        steps but collapses every Republican outcome into a single “Republicans
-        win” contract — one bucket holding about 9% of the mass and spanning the
-        entire other half of the line. A value has to be assumed for it. On the
-        2026-08-21 book:
-        <table style="margin-top:10px">
-          <tr><th>Assume that bucket sits at</th><th class="num">Implied margin</th></tr>
-          <tr><td class="muted">R+1 — one neighbour’s width, what we use</td><td class="num">D+7.83</td></tr>
-          <tr><td class="muted">R+2</td><td class="num">D+7.74</td></tr>
-          <tr><td class="muted">R+3</td><td class="num">D+7.65</td></tr>
-          <tr><td class="muted">R+5</td><td class="num">D+7.47</td></tr>
-          <tr><td class="muted">R+8 — a Republican wave</td><td class="num">D+7.19</td></tr>
-        </table>
-        <p style="margin:10px 0 0">Polymarket resolves both tails — Republicans
-           0–2, 2–4, 4–6 and 6%+ — so it needs no such assumption, and on the
-           same day it read <strong>D+7.58</strong>. That lands between the R+2
-           and R+3 rows, which says the convention overstates the Democratic
-           margin by roughly a quarter of a point. Both exchanges are collected
-           partly so that this can be checked rather than asserted: the
-           better-resolved market is a standing measurement of how much the
-           coarser one’s missing tail is worth.</p>
+        <strong>Where a ladder needs an assumption, and what it is worth.</strong>
+        The exchanges divide the line differently. Some resolve both tails in
+        narrow steps; some offer a single contract covering everything on one
+        side, which has to be given a representative value before it can be
+        read as a margin. We use one neighbour’s width. Running the same
+        ladder with that bucket placed anywhere from one to eight points out
+        moves the implied margin by about six-tenths of a point end to end,
+        which is why both kinds of ladder are collected: comparing a
+        finely-divided market with a coarsely-divided one on the same day
+        measures what the assumption is worth instead of leaving it asserted.
+        Checked that way, the two have so far agreed to within about a quarter
+        of a point.
       </div>
 
-      <p class="thin-note">PredictIt also runs a seat-count market in buckets
-         (“192 or fewer”), but its ladder is too coarse to read as a
-         distribution and is deliberately not parsed as one. Its contribution
-         here is chamber and per-race probabilities.</p>
+      <p class="thin-note">PredictIt’s seat-count market uses wide buckets
+         (“192 or fewer”), too wide to read as a distribution, so it is not
+         parsed as one. Its contribution here is chamber and per-race
+         probabilities.</p>
     </div>
   </section>
 
@@ -634,7 +753,7 @@
       <table>
         <tr><th>Question</th><th>Answer fixed in advance</th></tr>
         <tr><td>Who is scored</td>
-            <td class="muted">Every source and every category average, by the same code. Our own class models get no exemption. Student forecasts run through the same machinery.</td></tr>
+            <td class="muted">Every source and every category average, by the same code. Our own class models get no exemption.</td></tr>
         <tr><td>When</td>
             <td class="muted">Nine fixed horizons &mdash; 180, 120, 90, 60, 30, 14, 7 and 1 day out, plus the last value before polls open. A forecast staler than 21 days at a horizon is recorded absent rather than carried forward or penalised.</td></tr>
         <tr><td>On what</td>
@@ -646,7 +765,7 @@
         <tr><td>Truth</td>
             <td class="muted">Certified returns as they stand on 6 January 2027, after any runoff state law requires. Stored in the archive with its hash, so the numbers that resolved the scores can be checked rather than taken on trust.</td></tr>
         <tr><td>Against what</td>
-            <td class="muted">Four naive baselines, scored by the same code: a coin flip, the postwar base rate, the 2024 result carried forward, and the final polling average. A forecast that cannot beat &ldquo;no change&rdquo; has not shown anything.</td></tr>
+            <td class="muted">Four naive baselines, scored by the same code: a coin flip, the postwar base rate, the 2024 result carried forward, and the final polling average. The no-change baseline is what every other entry is read against.</td></tr>
       </table>
       <h3>Redistricting, and which map a past number was computed on</h3>
       <p>Ten states redrew their congressional maps during this cycle and 123 of
@@ -688,8 +807,8 @@
          a value at each horizon, so a gap can be closed while there is still
          time. It has already found one &mdash; most named forecasters were not
          being captured before 19 August 2026, so the three earliest horizons
-         will only ever carry the category averages and the sources whose history
-         could be reconstructed.</p>
+         carry the category averages and the sources whose history could be
+         reconstructed, which now includes both of our own models.</p>
       <p class="thin-note">This archive is maintained by the same person who
          wrote two of the models being scored. The protections are that the rules
          were fixed in advance, that the code path is identical for every source,
@@ -717,12 +836,9 @@
 
       <h3>Licensed indices, and why there is no House table</h3>
       <p class="muted">District forecasts are built from a licensed partisan
-         index. Given the national tide, which we publish, that index is exactly
-         recoverable from any district forecast:</p>
-      <p style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
-                background:var(--bg);border:1px solid var(--border);border-radius:7px;
-                padding:12px 14px;margin:14px 0">PVI = (district margin − national tide) ÷ 2</p>
-      <p class="muted">So no district margins are published. Chamber totals are:
+         index, and because we publish the national tide, a district margin
+         and that index are recoverable from one another. So no district
+         margins are published. Chamber totals are:
          a seat count is a sum over 435 districts and cannot be inverted back to
          any of them. The Senate has no such problem — its state lean is our own
          reconstruction from
