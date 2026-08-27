@@ -38,7 +38,11 @@ import csv
 import datetime as dt
 import json
 import math
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import facets   # noqa: E402
 
 TIMELINE_FIELDS = ["snapshot_date", "series", "panel", "unit",
                    "value", "low", "high", "band_kind", "n_sources", "label"]
@@ -123,18 +127,20 @@ COLORS = {
 # forecasting the same number should put them on equal footing; tagging two of
 # them "(class model)" in the legend made the axis look like it was about
 # provenance rather than method.
-LABELS = {
-    "fundamentals": "Fundamentals",
-    "polling":      "Polling",
-    "professional": "Professional",
-    "market":       "Markets",
-    "academic":     "Academic",
-}
+# Both facets. See facets.py for what type and source mean and why the field
+# had to be split; `market` appears in both by design and carries the same
+# average either way.
+LABELS = {**facets.TYPE_LABEL, **facets.SOURCE_LABEL}
+FACET_OF = {**{g: "type" for g in facets.TYPE_ORDER},
+            **{g: "source" for g in facets.SOURCE_ORDER
+               if g not in facets.TYPE_ORDER},
+            "market": "both"}
 # Least modelled to most modelled, matching CATEGORY_ORDER in publish.py. The
 # two lists are written out separately because charts.py and publish.py do not
 # import each other; if you reorder one, reorder the other, or the legend and
 # the table disagree about what order the reader is being asked to think in.
-ORDER = ["polling", "market", "fundamentals", "professional", "academic"]
+ORDER = facets.TYPE_ORDER + [g for g in facets.SOURCE_ORDER
+                             if g not in facets.TYPE_ORDER]
 
 # Time windows the tracker offers, and the one it opens on.
 #

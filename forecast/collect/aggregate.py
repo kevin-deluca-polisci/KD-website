@@ -44,6 +44,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
+import facets  # noqa: E402  — after sys.path, same directory
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = REPO_ROOT / "forecast" / "data"
 
@@ -456,18 +458,41 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
 
     public_by_source contains ONLY rows whose source is publication=individual.
     """
+    # EVERY ROW IS AVERAGED TWICE, ONCE PER FACET.
+    #
+    # `category` used to hold five values answering two different questions —
+    # polling/fundamentals/market said what a forecast was built from,
+    # professional/academic said who built it. A model could only appear on
+    # both readings by being cross-listed into two categories, which is how
+    # three of the four academic models came to be three of the five
+    # fundamentals members. The two lines tracked each other because they were
+    # substantially the same models, not because two methods agreed.
+    #
+    # collect/facets.py maps each row to exactly one group per facet. The same
+    # values are averaged along both axes and the result carries a `facet`
+    # column saying which axis it belongs to, so a consumer picks a view and
+    # reads one facet's rows. Reading both at once double-counts.
+    #
+    # Reference rows — Cook's PVI, FRED income, MEDSL results — are dropped
+    # here as well as by NOT_A_FORECAST. They are inputs, and an input has no
+    # place on either axis.
     groups: dict[tuple, list[dict]] = defaultdict(list)
     for r in rows:
         if (r["quantity"] in NO_AVERAGE or r["quantity"] in NEVER_PUBLISH
                 or r["quantity"] in NOT_A_FORECAST):
             continue
-        key = (r["snapshot_date"], r["category"], r["race_id"],
-               r["chamber"], r["state"], r["district"], r["quantity"], r["unit"])
-        groups[key].append(r)
+        got = facets.facets(r["source_id"], r["category"])
+        if got is None or got[0] == "reference":
+            continue
+        for facet, grp in (("type", got[0]), ("source", got[1])):
+            key = (r["snapshot_date"], facet, grp, r["race_id"],
+                   r["chamber"], r["state"], r["district"], r["quantity"],
+                   r["unit"])
+            groups[key].append(r)
 
     averages, suppressed = [], []
     for key, members in sorted(groups.items()):
-        date, cat, rid, ch, st, dist, q, unit = key
+        date, facet, cat, rid, ch, st, dist, q, unit = key
         # One value per source: a source contributing several markets for the
         # same race must not count as several forecasters.
         per_source: dict[str, list[float]] = defaultdict(list)
@@ -528,7 +553,8 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             sole = only if tiers.get(only) == "individual" else ""
 
         rec = {
-            "snapshot_date": date, "category": cat, "race_id": rid,
+            "snapshot_date": date, "facet": facet, "category": cat,
+            "race_id": rid,
             "chamber": ch, "state": st, "district": dist,
             "quantity": q, "unit": unit, "n_sources": n, "n_gated": n_gated,
             "n_retrospective": n_retrospective,
@@ -998,29 +1024,45 @@ def main(argv=None) -> int:
     # said "'professional' has one contributor", while 507 cells had in fact
     # just gained a second. Progress toward MIN_N is the thing worth watching
     # here, and it was the one thing the summary could not show.
-    cat_sources: dict[str, set] = defaultdict(set)
-    for r in rows:
-        cat_sources[r["category"]].add(r["source_id"])
+    # BOTH FACETS, REPORTED SEPARATELY. This used to key on the row's own
+    # `category`, which since the facet split is the wrong name in half the
+    # cases and misses `composite` and `class` entirely — it read
+    # "professional: 2 sources" while the professional line had eight.
+    # Contributors come from the averages rather than the raw rows for the
+    # same reason: only the average knows which group it landed in.
     # Counted by GATED contributors, which is what the floor actually tests.
     # Counting all contributors made this read "n=3, publishable" for a cell
     # that was in fact one open source and two gated ones.
-    cells: dict[str, dict] = defaultdict(lambda: defaultdict(int))
+    grp_sources: dict[tuple, set] = defaultdict(set)
+    cells: dict[tuple, dict] = defaultdict(lambda: defaultdict(int))
     for a_ in averages + suppressed:
-        cells[a_["category"]][int(a_.get("n_gated", a_["n_sources"]))] += 1
+        k = (a_.get("facet", "type"), a_["category"])
+        cells[k][int(a_.get("n_gated", a_["n_sources"]))] += 1
+        grp_sources[k].update(a_.get("_contributors") or ())
 
-    print()
-    for cat in sorted(cat_sources):
-        by_n = cells.get(cat, {})
-        if not by_n:
+    for facet, order, labels in (
+            ("type", facets.TYPE_ORDER, facets.TYPE_LABEL),
+            ("source", facets.SOURCE_ORDER, facets.SOURCE_LABEL)):
+        here = [g for (f, g) in cells if f == facet]
+        ranked = [g for g in order if g in here] + sorted(
+            g for g in here if g not in order)
+        if not ranked:
             continue
-        spread = ", ".join(f"n_gated={k}: {v}" for k, v in sorted(by_n.items()))
-        print(f"  {cat:14s} {len(cat_sources[cat])} source(s)  [{spread}]")
-        if max(by_n) < MIN_N and any(k > 0 for k in by_n):
-            need = MIN_N - max(by_n)
-            print(f"      no cell reaches MIN_N={MIN_N}: needs {need} more "
-                  f"GATED source(s) before any gated average may be published. "
-                  f"Adding an open source does not help — it is published by "
-                  f"name and subtracts straight back out.")
+        print(f"\n  by {facet.upper()}")
+        for grp in ranked:
+            by_n = cells.get((facet, grp), {})
+            if not by_n:
+                continue
+            spread = ", ".join(f"n_gated={k}: {v}"
+                               for k, v in sorted(by_n.items()))
+            print(f"    {labels.get(grp, grp):18s} "
+                  f"{len(grp_sources[(facet, grp)])} source(s)  [{spread}]")
+            if max(by_n) < MIN_N and any(k > 0 for k in by_n):
+                need = MIN_N - max(by_n)
+                print(f"        no cell reaches MIN_N={MIN_N}: needs {need} "
+                      f"more GATED source(s) before any gated average may be "
+                      f"published. Adding an open source does not help — it is "
+                      f"published by name and subtracts straight back out.")
 
     singles = {(a_["category"], a_["sole_source"]) for a_ in averages
                if a_["display"] == "single"}

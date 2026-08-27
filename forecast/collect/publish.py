@@ -13,6 +13,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import charts   # noqa: E402
+import facets   # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 DATA = REPO / "forecast" / "data"
@@ -79,10 +80,23 @@ def rd(p):
 # which is not.
 # ---------------------------------------------------------------------------
 
-CATEGORY_ORDER = ["polling", "market", "fundamentals", "professional", "academic"]
-CATEGORY_LABEL = {"polling": "Polling", "market": "Markets",
-                  "fundamentals": "Fundamentals", "professional": "Professional",
-                  "academic": "Academic"}
+# TWO FACETS, ONE FLAT LIST. `facets.py` is the taxonomy; these are its groups
+# in reading order, type first then source, because that is the order the
+# tracker offers them in.
+#
+# `market` is deliberately the one name that belongs to both facets — a traded
+# price is both a method and a kind of forecaster — and its two averages are
+# identical because they are taken over the same three exchanges. Keying by
+# group name alone is therefore unambiguous, and that is not luck: no other
+# group name is shared, and facets.py's audit fails if one ever is. Do not
+# "fix" the duplicate by renaming one of them.
+CATEGORY_ORDER = facets.TYPE_ORDER + [g for g in facets.SOURCE_ORDER
+                                      if g not in facets.TYPE_ORDER]
+CATEGORY_LABEL = {**facets.TYPE_LABEL, **facets.SOURCE_LABEL}
+CATEGORY_FACET = {**{g: "type" for g in facets.TYPE_ORDER},
+                  **{g: "source" for g in facets.SOURCE_ORDER
+                     if g not in facets.TYPE_ORDER},
+                  "market": "both"}
 
 
 def build_model_index(d: Path, latest: str) -> dict:
@@ -361,7 +375,8 @@ def build_movement(avgs: list[dict], latest: str) -> dict | None:
 
     rows = []
     for cat in CATEGORY_ORDER:
-        entry = {"category": cat, "label": CATEGORY_LABEL[cat], "metrics": {}}
+        entry = {"category": cat, "label": CATEGORY_LABEL[cat],
+                 "facet": CATEGORY_FACET.get(cat, "type"), "metrics": {}}
         for race, qty, name in (
             (NATL_HOUSE, "margin_D", "house_margin"),
             (NATL_HOUSE, "seats_D", "house_seats"),
