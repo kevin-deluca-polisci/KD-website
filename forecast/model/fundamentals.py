@@ -592,6 +592,41 @@ def predict(b, approval, income, seats_before):
 BACKFILL_PROVENANCE = "backfilled"
 
 
+# ---------------------------------------------------------------------------
+# MODEL IDENTITY AND VERSIONING
+# ---------------------------------------------------------------------------
+# The class model is going to change. Each homework adds to it — candidate
+# quality, incumbency, whatever comes next — and the point of putting it on the
+# site beside the professionals is to watch what each addition does.
+#
+# THAT ONLY WORKS IF A CHANGE OF SPECIFICATION IS A CHANGE OF IDENTITY.
+#
+# If v2 overwrites `class_fundamentals`, the archive holds one line whose
+# recipe silently changed halfway along. Every comparison the exercise is for
+# — did adding candidate quality move the forecast, and by how much — becomes
+# invisible, because the before and the after are the same series. publish.py
+# already carries a `mixed_recipe` flag for exactly this failure in the
+# academic family, so we know what it looks like when it happens.
+#
+# So: CHANGING THE SPECIFICATION MEANS A NEW MODEL_ID. The old id keeps its
+# history untouched, the new one starts its own, and both draw. Under the
+# frozen-alpha roster adjustment a new id is held out of the category line
+# until it has fourteen days of overlap, then gets its own lean and joins —
+# which is the correct treatment for a model nobody was running before.
+#
+# What counts as a new version: any change to the right-hand side, the
+# estimation sample, or the functional form. What does not: a bug fix that
+# makes the model compute what it always claimed to, or a new input VINTAGE
+# for the same variable.
+#
+# Bump MODEL_VERSION and MODEL_ID together, and add the new id to
+# collect/facets.py so it lands on the right two lines rather than falling
+# through to a default.
+MODEL_ID = "class_fundamentals"
+MODEL_VERSION = 1
+MODEL_SPEC = "approval + real income growth + seats defended; OLS on 1946-2022"
+
+
 def backfill_dates(cycle: int) -> list[str]:
     return sorted(Path(f).stem for f in
                   glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")))
@@ -630,10 +665,23 @@ def backfill(a) -> int:
         hist = json.loads(p.read_text())
 
     flat = 0
+    no_income = 0
+    no_income_eg: list[str] = []
     for date in dates:
         ap_v, ap_src, ap_n = approval_from_archive(a.cycle, date)
         got = income_as_of(a.cycle, date)
         if got is None:
+            # COUNTED, NOT SILENT. This branch dropped 97 of 582 dates on the
+            # first daily backfill without saying a word, which put a
+            # two-month hole in the middle of the class fundamentals line
+            # (2025-12-31 to 2026-03-01) that no line of the run log
+            # explained. The skip itself is right — no income vintage means no
+            # forecast, and inventing one would be the same sin as the flat
+            # approval constant below — but a gap the reader can see has to be
+            # a gap the operator was told about.
+            no_income += 1
+            if len(no_income_eg) < 3:
+                no_income_eg.append(date)
             continue
         # A DATE WITH NO REAL APPROVAL IS SKIPPED, not filled with the
         # constant. That is the whole lesson of the ten flat months this
@@ -655,6 +703,12 @@ def backfill(a) -> int:
                        "income_basis": income_basis,
                        "seats_before": a.seats_before},
             "provenance": BACKFILL_PROVENANCE,
+            # Identity travels with the row. seats.py keys the projection on
+            # `model_id`, so bumping it here is the whole of shipping a new
+            # version — nothing downstream needs editing.
+            "model_id": MODEL_ID,
+            "model_version": MODEL_VERSION,
+            "model_spec": MODEL_SPEC,
         }
 
     priv.mkdir(parents=True, exist_ok=True)
@@ -665,6 +719,11 @@ def backfill(a) -> int:
     if flat:
         print(f"  skipped {flat} date(s) with no dated approval — a fallback "
               f"constant is not a data point")
+    if no_income:
+        print(f"  skipped {no_income} date(s) with no income vintage in hand "
+              f"(e.g. {', '.join(no_income_eg)}) — these are the holes in the "
+              f"line. More ALFRED vintages would close them; see "
+              f"collect/alfred_income.py and INCOME_RELEASE_LAG_MONTHS.")
     if vals:
         ks = sorted(hist)
         print(f"  {ks[0]} .. {ks[-1]}   margin_D {min(vals):+.2f} .. "

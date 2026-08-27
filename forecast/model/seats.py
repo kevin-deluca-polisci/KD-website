@@ -123,6 +123,64 @@ EXTERNAL_TIDE_SOURCES = {
     "votehub", "fiftyplusone", "split_ticket",
 }
 
+# --------------------------------------------------------------------------
+# THE CLASS POLLING HANDOFF
+#
+# There are two class polling aggregates and they are deliberately different
+# numbers built from the same polls:
+#
+#   polling_reconstructed   our own arithmetic — an unweighted 21-day mean of
+#                           raw poll margins off Silver's poll-level file.
+#                           Written for every date back to 2025-01-20, and the
+#                           only polling evidence that exists at all before the
+#                           daily capture began.
+#   class_polling           Silver's house-effect-adjusted average carried
+#                           through the seat machinery. Exists from 2026-08-25.
+#
+# Both are filed under (polling, class) by collect/facets.py, which is correct:
+# they are two readings of this class's polling model, not two forecasters. But
+# it means that on any date where BOTH exist, the class polling average is a
+# blend of two estimators of the same thing, and they differ by about a point
+# of tide and four to eight seats. That is a double count.
+#
+# WHY THE SPLIT IS BY QUANTITY AND NOT BY DATE. The obvious fix — stop writing
+# polling_reconstructed once class_polling exists — breaks something else.
+# class_polling carries margin_published_elsewhere=True, because its tide IS
+# Silver's published average and Silver is already on the margin panel in his
+# own right; emitting it would count him twice. So class_polling contributes
+# NO national margin, and dropping polling_reconstructed would leave the class
+# polling line with seats and no tide behind it. That exact regression is
+# recorded further down this file as one that had to be fixed once already.
+#
+# So they split the work instead of taking turns:
+#
+#     national margin_D          polling_reconstructed, on every date
+#     seats, win probs, races    polling_reconstructed before the handoff,
+#                                class_polling from the handoff on
+#
+# which leaves exactly one contributor per (date, quantity) and no gap in
+# either line.
+#
+# The date is class_polling's first day, and it is a constant rather than
+# "whenever class_polling happens to exist" on purpose: derived from the data,
+# it would move every time the history is rebuilt, and a boundary that moves
+# silently re-dates published numbers.
+SEATS_HANDOFF: dict[str, str] = {
+    "polling_reconstructed": "2026-08-25",
+}
+
+
+def seats_elsewhere(source_id: str, date: str) -> bool:
+    """True when some OTHER source owns the seat quantities on this date.
+
+    The mirror image of margin_published_elsewhere: that flag says "my margin
+    is already a row, publish my seats only", this one says "my seats are
+    already a row, publish my margin only".
+    """
+    cut = SEATS_HANDOFF.get(source_id)
+    return bool(cut and date >= cut)
+
+
 # Spelled the same way the parsers spell it.
 NATL_HOUSE = "NATL_HOUSE_2026"
 
@@ -334,6 +392,71 @@ def project(tide: float, pvi: dict, states: list, rows: list,
     return out
 
 
+
+def baseline_audit(hist: dict) -> bool:
+    """Is the whole history built on ONE district baseline, with sigma recorded?
+
+    WHY THIS EXISTS. Until 2026-08-27 the archive held a patchwork. The code
+    was already right — a projection takes its district baseline from the
+    LATEST parsed rows and its tide from the target date — but the history is
+    written incrementally, and entries produced by runs on different days
+    inherited whatever baseline existed on the day they ran. DRA is a manual,
+    sporadic export first captured 2026-08-25, so every entry written before
+    that fell through PVI_PREFERENCE to Cook. Merging those runs gave
+    consecutive dates on different indices.
+
+    What that costs is not subtle. On 2026-08-21 academic_bew read 216.11
+    expected seats on DRA; on 08-22, at a tide nine hundredths of a point
+    higher, it read 218.97 on Cook. Eight points of win probability, moving
+    the wrong way, from the baseline and not from the election.
+
+    A mixed history cannot be detected by looking at any one date, so it is
+    checked here across the whole file after every backfill. This does not
+    refuse the write — the history is still better than what it replaced, and
+    refusing would strand a chunked run halfway — but it prints loudly enough
+    that a patchwork cannot be mistaken for a clean rebuild.
+    """
+    src: dict[str, set] = {}
+    nosigma: list[tuple[str, str]] = []
+    for d0, day in sorted(hist.items()):
+        for sid, m in ((day or {}).get("projections") or {}).items():
+            h = (m or {}).get("house") or {}
+            if not h:
+                continue
+            src.setdefault(str(h.get("pvi_source")), set()).add(d0)
+            if not h.get("sigma_national"):
+                nosigma.append((d0, sid))
+
+    print("\n  BASELINE AUDIT")
+    for k, v in sorted(src.items(), key=lambda kv: -len(kv[1])):
+        print(f"    pvi_source {k:12s} {len(v):4d} date(s)")
+    ok = True
+    if len(src) > 1:
+        ok = False
+        minority = min(src.items(), key=lambda kv: len(kv[1]))
+        eg = sorted(minority[1])[:6]
+        print(f"    MIXED. {minority[0]} appears on {len(minority[1])} date(s), "
+              f"e.g. {', '.join(eg)}")
+        print(f"    Those dates were written by a run that could not see the "
+              f"majority baseline. Re-run --backfill-history over the whole "
+              f"range in one pass, or over at least those dates, so every "
+              f"projection sits on the same district index.")
+    if nosigma:
+        ok = False
+        by_model: dict[str, int] = {}
+        for _, sid in nosigma:
+            by_model[sid] = by_model.get(sid, 0) + 1
+        print(f"    sigma_national UNRECORDED on {len(nosigma)} model-day(s): "
+              + ", ".join(f"{k} x{v}" for k, v in
+                          sorted(by_model.items(), key=lambda kv: -kv[1])[:5]))
+        print(f"    The simulation used a sigma — a true zero would put every "
+              f"probability at 0 or 1 — but the archive cannot say which, so "
+              f"those days cannot be audited or rescored.")
+    if ok:
+        print("    PASS: one baseline throughout, sigma recorded everywhere.")
+    return ok
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Seat projections from each tide.")
     ap.add_argument("--cycle", type=int, default=2026)
@@ -467,6 +590,41 @@ def main(argv=None) -> int:
             tides["class_polling"] = ("polling", float(m[tide_key]),
                                       "individual", True)
 
+    # THE RECONSTRUCTION, ON THE LIVE PATH TOO.
+    #
+    # This used to be built only inside --backfill-history, which had a
+    # consequence nobody asked for: polling_reconstructed existed on every date
+    # the backfill had touched and on none of the days since, so the class
+    # polling line's national margin appeared and disappeared according to when
+    # the backfill was last run rather than according to what the polls said.
+    # On 2026-08-27 it was simply absent.
+    #
+    # polling.py writes polling_model_history.json every run and today's entry
+    # is already on disk by the time this executes — stage 3 of run.sh orders
+    # polling.py before seats.py. So this reads the number that already exists
+    # rather than computing a second copy of it here, which would be a second
+    # implementation to keep in step.
+    #
+    # margin_elsewhere is False: this is our own arithmetic on the poll list,
+    # it differs measurably from Silver's published average, and no parsed row
+    # carries it. It is the class polling line's margin.
+    ph = DATA / str(a.cycle) / "model_private" / "polling_model_history.json"
+    if ph.exists():
+        try:
+            hm = (json.loads(ph.read_text()) or {}).get(date) or {}
+        except (json.JSONDecodeError, OSError):
+            hm = {}
+        t0 = hm.get("nowcast_tide_D")
+        if t0 is not None:
+            tides["polling_reconstructed"] = ("polling", float(t0),
+                                              "individual", False)
+        else:
+            # Loud, because a silent skip here is how the margin went missing
+            # in the first place.
+            print(f"  polling_reconstructed: no nowcast_tide_D for {date} in "
+                  f"polling_model_history.json — the class polling margin will "
+                  f"be absent today. Run polling.py first.")
+
     # ACADEMIC MODELS. Published specifications we reimplemented, run on our
     # own inputs — see model/academic.py for why these are a family of their
     # own rather than more fundamentals.
@@ -556,6 +714,10 @@ def main(argv=None) -> int:
         # is, this projection contributes seats and no margin, or the same
         # forecaster lands in the category mean twice.
         p["margin_published_elsewhere"] = bool(margin_elsewhere)
+        # And the mirror flag: whether some other source owns the SEAT
+        # quantities on this date. See SEATS_HANDOFF at the top of the file.
+        # Only polling_reconstructed sets it, and only from 2026-08-25.
+        p["seats_published_elsewhere"] = seats_elsewhere(name, date)
         # When this model last spoke. Ours speak today by construction; an
         # external tide may be weeks old, and aggregate.py copies this onto the
         # rows it emits so the seat count carries the same date stamp as the
@@ -704,11 +866,18 @@ def main(argv=None) -> int:
                 # began it is the only polling evidence that exists at all.
                 # Withholding it is what left the polling margin line with five
                 # points against fifty-two on the seats panel.
+                # SEATS ONLY UNTIL class_polling EXISTS. From the handoff date
+                # this entry still carries the margin — it is the only source
+                # of the class polling tide — but class_polling owns the seat
+                # count, so the seat quantities are suppressed downstream
+                # rather than averaged against it. See SEATS_HANDOFF above.
                 ah.setdefault(d0, {})["polling_reconstructed"] = {
                     "margin_D": t, "category": "polling",
                     "categories": ["polling"], "publication": "individual",
                     "provenance": m.get("provenance") or "backfilled",
                     "margin_published_elsewhere": False,
+                    "seats_published_elsewhere": seats_elsewhere(
+                        "polling_reconstructed", d0),
                 }
 
         # OUR OWN FUNDAMENTALS MODEL, which the comment above named as one of
@@ -728,7 +897,15 @@ def main(argv=None) -> int:
             for d0, m in json.loads(fh_p.read_text()).items():
                 if m.get("margin_D") is None:
                     continue
-                ah.setdefault(d0, {})["class_fundamentals"] = {
+                # KEYED ON THE MODEL'S OWN ID, not on a literal. The class
+                # model is versioned — see MODEL_ID in model/fundamentals.py —
+                # because each homework changes its specification and a change
+                # of specification has to be a change of identity or the
+                # before and after become one line with a silent seam in it.
+                # Reading the id from the row means shipping v2 is a one-line
+                # edit there and nothing here.
+                mid = m.get("model_id") or "class_fundamentals"
+                ah.setdefault(d0, {})[mid] = {
                     "margin_D": float(m["margin_D"]),
                     "margin_D_80_low": m.get("margin_D_80_low"),
                     "margin_D_80_high": m.get("margin_D_80_high"),
@@ -736,6 +913,8 @@ def main(argv=None) -> int:
                     "publication": "individual",
                     "provenance": m.get("provenance") or "backfilled",
                     "inputs": m.get("inputs") or {},
+                    "model_version": m.get("model_version"),
+                    "model_spec": m.get("model_spec"),
                     "margin_published_elsewhere": False,
                 }
 
@@ -801,8 +980,18 @@ def main(argv=None) -> int:
                     # and no tide behind it.
                     p0["margin_published_elsewhere"] = bool(
                         m.get("margin_published_elsewhere", False))
+                    # The mirror flag, carried from the model-history entry.
+                    # Falls back to the registry so a projection written before
+                    # the flag existed still lands on the right side of the
+                    # handoff when the history is rebuilt.
+                    p0["seats_published_elsewhere"] = bool(
+                        m.get("seats_published_elsewhere",
+                              seats_elsewhere(key, d0)))
                     p0["as_of"] = d0
                     p0["provenance"] = m.get("provenance") or "backfilled"
+                    if m.get("model_version") is not None:
+                        p0["model_version"] = m["model_version"]
+                        p0["model_spec"] = m.get("model_spec")
                     day["projections"][key] = p0
                     filled += 1
 
@@ -848,6 +1037,7 @@ def main(argv=None) -> int:
                     print(f"    {i}/{len(todo)} dates")
             print(f"  backfilled {filled} academic projection(s) across "
                   f"{len(todo)} date(s)")
+            baseline_audit(hist)
             # THE STEP THAT IS EASY TO FORGET, AND THE ONE THAT BREAKS THE
             # DAILY RUN WHEN IT IS.
             #

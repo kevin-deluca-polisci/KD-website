@@ -173,11 +173,30 @@ BY_CATEGORY: dict[str, tuple[str, str]] = {
 }
 
 
+# Versioned class models. Each homework changes the specification, and a
+# change of specification is a change of identity — see MODEL_ID in
+# model/fundamentals.py for why. That produces ids like
+# `class_fundamentals_v2`, and they must not fall through to a default that
+# would file the class's own model under `professional`.
+#
+# The prefix rule means a new version lands correctly without anyone
+# remembering to edit this file. The audit below still prints where it landed,
+# so a wrong guess is visible on the first run rather than in November.
+BY_PREFIX: tuple[tuple[str, tuple[str, str]], ...] = (
+    ("class_fundamentals", ("fundamentals", "class")),
+    ("class_polling", ("polling", "class")),
+    ("class_", ("fundamentals", "class")),
+)
+
+
 def facets(source_id: str, category: str) -> tuple[str, str] | None:
     """(type, source) for a row, or None if we cannot say."""
     got = BY_PAIR.get((source_id, category)) or BY_SOURCE.get(source_id)
     if got:
         return got
+    for pre, val in BY_PREFIX:
+        if source_id.startswith(pre):
+            return val
     return BY_CATEGORY.get(category)
 
 

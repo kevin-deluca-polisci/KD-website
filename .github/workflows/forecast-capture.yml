@@ -135,6 +135,25 @@ jobs:
           if [ -d "/tmp/rawrepo/${CYCLE}/model_private" ]; then
             cp -r "/tmp/rawrepo/${CYCLE}/model_private" "forecast/data/${CYCLE}/model_private"
           fi
+          # THE ARCHIVE CARRIES SHARDS, NOT THE MONOLITH, so the copy above no
+          # longer brings seat_projections_history.json with it and this line
+          # is what puts it back.
+          #
+          # From 2026-08-27 the archive holds model_private/history/, one file
+          # per date. The monolith was 348 MB, which GitHub rejects outright at
+          # over 100 MB; gzipping it cleared that but not the growth, because a
+          # new date changes the compressed bytes throughout and gzip does not
+          # delta-compress, so every nightly push committed a fresh 34 MB blob.
+          # Shards cost one ~600 KB file a day instead.
+          #
+          # WITHOUT THIS LINE the failure is quiet and total: seats.py finds no
+          # history, starts from empty, and writes a one-date file. aggregate
+          # and publish then run on it and the site's timeline collapses to
+          # today. --unshard refuses if a monolith is already present, so it is
+          # safe to run unconditionally.
+          if [ -d "forecast/data/${CYCLE}/model_private/history" ]; then
+            python3 forecast/history_merge.py --cycle "$CYCLE" --unshard
+          fi
  
       - name: Capture
         id: capture
@@ -251,7 +270,25 @@ jobs:
           # NOT --delete, unlike the raw push. raw/ is an authoritative mirror
           # of what was captured; this directory ACCUMULATES, and a run that
           # fails before the models write must not be able to empty it.
-          rsync -a "forecast/data/${CYCLE}/model_private/" \
+          # SHARD BEFORE PUSHING, and this is the other half of the --unshard
+          # above. seats.py writes the monolith; the archive stores per-date
+          # shards; nothing else refreshes them. Without this line the shard
+          # directory freezes at whatever the last human run left there and
+          # today's model state exists only on a runner that is about to be
+          # destroyed — the archive silently stops recording the history while
+          # every green check keeps saying it worked.
+          #
+          # Bare, with no --from and no --git: those union in older copies,
+          # which is a recovery tool and would resurrect rows deliberately
+          # removed. No --prune either; deleting a date's last copy is not a
+          # thing an unattended job should do.
+          python3 forecast/history_merge.py --cycle "$CYCLE" --write
+          # The monolith itself is gitignored in the archive. rsync copies it
+          # anyway and git ignores it, which is harmless but pointless, so it
+          # is excluded here too — along with any .bak or one-off .gz sitting
+          # beside it under the same name.
+          rsync -a --exclude="seat_projections_history.json*" \
+                   "forecast/data/${CYCLE}/model_private/" \
                    "/tmp/rawrepo/${CYCLE}/model_private/"
           cd /tmp/rawrepo
           git config user.name  "forecast-archive[bot]"

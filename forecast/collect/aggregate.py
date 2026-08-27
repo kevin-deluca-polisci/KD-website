@@ -426,10 +426,32 @@ def class_model_rows(cycle: int) -> list[dict]:
           elsewhere = model.get("margin_published_elsewhere")
           if elsewhere is None:
               elsewhere = source_id in MARGIN_FROM_ELSEWHERE
+          # THE MIRROR FLAG. margin_published_elsewhere means "my margin is
+          # already a row, take my seats only". This one means the opposite:
+          # some other source owns the seat quantities on this date, so take my
+          # margin only.
+          #
+          # It exists for the class polling line, which has two aggregates.
+          # polling_reconstructed is our own arithmetic on the poll list and
+          # carries the tide; class_polling is Silver's adjusted average and
+          # carries the seats. Both are (polling, class), so without this they
+          # are averaged against each other from 2026-08-25 and the class line
+          # is a blend of two estimators of the same thing, about a point of
+          # tide and four to eight seats apart. See SEATS_HANDOFF in
+          # model/seats.py for why the split is by quantity rather than by date.
+          #
+          # Absent on payloads written before the flag existed, and absent
+          # means False — the old behaviour, so nothing silently changes shape
+          # on a history this run did not rebuild.
+          seats_elsewhere = bool(model.get("seats_published_elsewhere"))
           for cat in cats:
               if not elsewhere:
                   emit(source_id, cat, NATL_HOUSE, "national", "", "", "margin_D",
                        model.get("tide_D"), "pct")
+              if seats_elsewhere:
+                  # Margin only. Nothing derived by the seat machinery, which
+                  # includes the per-state rows at the bottom of this loop.
+                  continue
               emit(source_id, cat, NATL_HOUSE, "national", "", "", "seats_D",
                    house.get("expected_D_seats"), "seats")
               emit(source_id, cat, NATL_HOUSE, "national", "", "", "win_prob_D",

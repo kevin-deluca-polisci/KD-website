@@ -7,6 +7,8 @@
 #   ./forecast/run.sh --dry-run        show what would change, commit nothing
 #   ./forecast/run.sh --no-push        do the work, commit locally, do not push
 #   ./forecast/run.sh --no-sync        skip the private-archive pull and push
+#   ./forecast/run.sh --restore-history  rebuild the seat-projection history
+#                                      from the archived shards, then exit
 #
 # The private archive lives outside Dropbox. Clone it once before the first run:
 #   git clone https://github.com/kevin-deluca-polisci/plsc2219-raw.git \
@@ -25,6 +27,7 @@ DRY=0
 PUSH=1
 BACKFILL=""
 SYNC=1
+RESTORE_HISTORY=0
 
 # The private archive: raw captures and per-forecaster parsed values, which
 # cannot be public during the cycle. Deliberately OUTSIDE Dropbox — Dropbox
@@ -41,7 +44,8 @@ while [[ $# -gt 0 ]]; do
     --no-push)  PUSH=0; shift ;;
     --backfill) BACKFILL="--backfill"; shift ;;
     --no-sync)  SYNC=0; shift ;;
-    -h|--help)  sed -n '2,16p' "$0"; exit 0 ;;
+    --restore-history) RESTORE_HISTORY=1; shift ;;
+    -h|--help)  sed -n '2,18p' "$0"; exit 0 ;;
     *) echo "unknown argument: $1" >&2; exit 1 ;;
   esac
 done
@@ -64,14 +68,100 @@ FAILED=()
 # Copy a directory tree, additively. rsync ships with macOS, but falling back to
 # cp keeps this working on a bare container or a stripped-down Linux box — the
 # archive should never fail to sync because a utility is missing.
-copy_tree() {   # copy_tree SRC/ DEST/
-  local src="$1" dest="$2"
+#
+# The optional third argument is a basename PREFIX to skip. It exists for one
+# family of files — see HISTORY_JSON below — and it is a prefix rather than an
+# exact name because of what happened the first time it was exact: it excluded
+# seat_projections_history.json and then cheerfully copied
+# seat_projections_history.json.bak (20 MB) and a one-off
+# seat_projections_history.json.pre-classpolling-cleanup.gz (38 MB) into the
+# archive, where they were committed. Anything sitting beside the monolith
+# under that name is a working copy of the same data and belongs in the archive
+# no more than the monolith does.
+copy_tree() {   # copy_tree SRC/ DEST/ [SKIP_PREFIX]
+  local src="$1" dest="$2" skip="${3:-}"
   mkdir -p "$dest"
   if command -v rsync >/dev/null 2>&1; then
-    rsync -a "$src" "$dest"
+    if [[ -n "$skip" ]]; then
+      rsync -a --exclude="${skip}*" "$src" "$dest"
+    else
+      rsync -a "$src" "$dest"
+    fi
   else
-    ( shopt -s dotglob nullglob; cp -R "$src"* "$dest" 2>/dev/null || true )
+    ( shopt -s dotglob nullglob
+      for f in "$src"*; do
+        [[ -n "$skip" && "$(basename "$f")" == "$skip"* ]] && continue
+        cp -R "$f" "$dest" 2>/dev/null || true
+      done )
   fi
+}
+
+# ---- the history travels as shards, not as one file -----------------------
+# seat_projections_history.json is one JSON object holding every model-day we
+# have. Daily backfill to 2025-01-20 took it from 59 MB to 348 MB.
+#
+# TWO SEPARATE PROBLEMS, AND GZIP ONLY SOLVED THE FIRST.
+#
+# Size: GitHub warns at 50 MB and HARD-REJECTS any single file over 100 MB, so
+# a 348 MB file could never be pushed at all. Gzip fixed that — 33 MB.
+#
+# Growth: it did NOT fix this, and this is the one that would have hurt. Each
+# day adds a date, which changes the compressed bytes from that point on, and
+# gzip does not delta-compress. So every nightly sync committed a fresh ~33 MB
+# blob. Sixty-eight nights to the election is about 2.2 GB of pack on top of
+# the 225 MB already there.
+#
+# One file per date costs a day for a day: the nightly run changes one date, so
+# one ~600 KB shard changes, roughly 40 MB across the whole stretch. Sharding
+# was already in the tree for a different reason — a degraded run can only
+# damage the day it ran, and `--verify` proves no shard ever dropped a
+# (date, model) the manifest knows about — so the archive simply carries the
+# shards and stops carrying the monolith in any form.
+#
+# The monolith stays LOCAL. Every other script reads it, seats.py rewrites it,
+# and it is gitignored here. `--restore-history` rebuilds it on a fresh clone.
+HISTORY_JSON="seat_projections_history.json"
+MERGE_PY="forecast/history_merge.py"
+
+shard_history() {   # refresh the per-date shards from the local monolith
+  [[ -f "forecast/data/$CYCLE/model_private/$HISTORY_JSON" ]] || return 0
+  [[ -f "$MERGE_PY" ]] || { echo "  WARNING: $MERGE_PY missing — shards not refreshed"; return 1; }
+  # BARE. No --from and no --git: those union in older copies, which is a
+  # recovery tool and not a nightly one, and it would resurrect rows that were
+  # removed deliberately.
+  #
+  # No --prune either. Deleting a date's only surviving copy is not a thing a
+  # nightly job should do unattended; --write reports stale shards and a person
+  # decides.
+  python3 "$MERGE_PY" --cycle "$CYCLE" --write | sed -n \
+    -e 's/^  \([0-9]* shard(s) written.*\)/  \1/p' \
+    -e '/STALE shard/,/--prune/p'
+  return "${PIPESTATUS[0]}"
+}
+
+restore_history() {   # rebuild the monolith from the archive's shards
+  raw_repo_ready || return 1
+  local src="$RAW_REPO/$CYCLE/model_private/history"
+  local dest_dir="forecast/data/$CYCLE/model_private"
+  if [[ ! -d "$src" ]]; then
+    echo "  no shard directory in the archive at:"
+    echo "      $src"
+    return 1
+  fi
+  # Refuse rather than overwrite. The local copy is the one seats.py has been
+  # writing all cycle; the archive is a snapshot of some earlier run. Which is
+  # newer is a question for a person, not for a default — the same accident
+  # sync_raw_down() avoids by not mirroring model_private at all. history_merge
+  # --unshard refuses too; this is the earlier and clearer of the two messages.
+  if [[ -f "$dest_dir/$HISTORY_JSON" ]]; then
+    echo "  $dest_dir/$HISTORY_JSON already exists — refusing to overwrite it."
+    echo "  Move it aside first if you really mean to restore from the archive."
+    return 1
+  fi
+  mkdir -p "$dest_dir/history"
+  copy_tree "$src/" "$dest_dir/history/"
+  echo "  copied $(ls "$dest_dir/history" | wc -l | tr -d ' ') shard(s) from the archive"
+  python3 "$MERGE_PY" --cycle "$CYCLE" --unshard
 }
 
 raw_repo_ready() {
@@ -153,13 +243,45 @@ sync_raw_up() {
   # Deliberately NOT mirrored in sync_raw_down(). Copying model_private DOWN
   # would let an older archived copy overwrite a newer local one, which is the
   # same accident pointing the other way.
-  [[ -d "forecast/data/$CYCLE/model_private" ]] && \
+  #
+  # The monolith is EXCLUDED and never travels — see HISTORY_JSON above. What
+  # travels is model_private/history/, refreshed FIRST so the shards the
+  # archive receives are the ones seats.py just wrote rather than whatever was
+  # left there the last time somebody remembered to run the merge by hand.
+  # That gap is real: on 2026-08-27 the shard directory was three months stale
+  # and --verify was guarding a history that no longer resembled the live one.
+  if [[ -d "forecast/data/$CYCLE/model_private" ]]; then
+    shard_history || FAILED+=("shard-history")
     copy_tree "forecast/data/$CYCLE/model_private/" \
-              "$RAW_REPO/$CYCLE/model_private/"
+              "$RAW_REPO/$CYCLE/model_private/" "$HISTORY_JSON"
+  fi
   git -C "$RAW_REPO" add -A
   if git -C "$RAW_REPO" diff --staged --quiet; then
     echo "  private archive already up to date"
     return 0
+  fi
+  # Last line of defence against GitHub's 100 MB per-file ceiling. Checking it
+  # HERE, before the commit, turns an oversized file into a message on this
+  # machine. Checking it nowhere — which is what happened until 2026-08-27 —
+  # turns it into a rejected push with the work already committed, and a blob
+  # that then has to be rewritten out of history to unstick the repo.
+  #
+  # 90 MB, not 100: gzip ratios drift, and a threshold you only hit on the day
+  # you exceed the real limit is not a warning.
+  local big
+  big=$(git -C "$RAW_REPO" diff --staged --name-only -z \
+        | while IFS= read -r -d '' f; do
+            [[ -f "$RAW_REPO/$f" ]] || continue
+            if [[ $(wc -c < "$RAW_REPO/$f") -gt 94371840 ]]; then
+              printf '      %s  (%s)\n' "$f" "$(du -h "$RAW_REPO/$f" | cut -f1)"
+            fi
+          done)
+  if [[ -n "$big" ]]; then
+    echo "  REFUSING TO COMMIT: file(s) over 90 MB, which GitHub will reject:"
+    echo "$big"
+    echo "  Nothing was committed. Compress or gitignore these in the archive,"
+    echo "  then re-run. (git -C \"\$RAW_REPO\" reset  to unstage.)"
+    return 1
   fi
   local n
   n=$(git -C "$RAW_REPO" diff --staged --name-only | wc -l | tr -d " ")
@@ -174,6 +296,16 @@ sync_raw_up() {
     echo "  committed ${n} files locally (--no-push)"
   fi
 }
+
+# ---- restore-only: unpack the archived history and stop ------------------
+# Not a stage. A fresh clone has no seat_projections_history.json, because the
+# archive carries per-date shards instead of the monolith; this is the one
+# command that turns them back into the file every other script reads.
+if [[ $RESTORE_HISTORY -eq 1 ]]; then
+  banner "restore  <-  private archive   [PRIVATE]"
+  restore_history
+  exit $?
+fi
 
 # ---- 0. sync down from the private archive --------------------------------
 if [[ $SYNC -eq 1 && $DRY -eq 0 ]]; then

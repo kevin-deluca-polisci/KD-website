@@ -16,12 +16,12 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 3.86,
-      "margin_D_80_low": -0.73,
-      "margin_D_80_high": 8.45,
+      "margin_D": 3.79,
+      "margin_D_80_low": -0.8,
+      "margin_D_80_high": 8.38,
       "inputs": {
-        "generic_ballot_D": 6.485,
-        "generic_ballot_share_deviation": 3.243,
+        "generic_ballot_D": 6.344,
+        "generic_ballot_share_deviation": 3.172,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
         "days_to_election": 68,
         "president_party": "R",
@@ -42,8 +42,8 @@
           "constant": -0.45,
           "root_mse": 3.71
         },
-        "bew_direct_D_seat_share": 54.68,
-        "bew_direct_D_seats": 237.9
+        "bew_direct_D_seat_share": 54.61,
+        "bew_direct_D_seats": 237.6
       },
       "notes": [
         "tide is BEW's vote equation; their separate seats equation is reported as a diagnostic and is not used downstream"
