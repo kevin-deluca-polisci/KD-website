@@ -122,6 +122,20 @@ COLORS = {
     "professional": ("#eda100", "#c98500"),
     "market":       ("#e87ba4", "#d55181"),
     "academic":     ("#0077a8", "#2f9fbd"),
+    # ADDED WITH THE FACET SPLIT. `class` is the only new line that draws
+    # today; composite and expert are defined so a group cannot fall through
+    # to grey the day it clears the disclosure floor.
+    #
+    # class is aqua because it is the only hue left that nothing else uses.
+    # Violet and green both validate better against the source view's other
+    # three, and both are taken — violet by fundamentals, green by polling —
+    # and a hue that means two things depending on which toggle you are on is
+    # worse than a warn-band pair that carries a direct label. Validated
+    # light: worst normal-vision pair 19.6, worst CVD 6.1 (deutan), which is
+    # the 6-8 band and legal here because every series is direct-labelled.
+    "class":        ("#1baf7a", "#199e70"),
+    "composite":    ("#2a78d6", "#3987e5"),
+    "expert":       ("#e34948", "#e66767"),
 }
 # Labels name the METHOD, not who built it. A chart comparing four ways of
 # forecasting the same number should put them on equal footing; tagging two of
@@ -785,6 +799,9 @@ def build_panel(rows: list[dict], panel: str,
         # date and reads as today's number. It is not.
         series.append({
             "key": key, "label": LABELS.get(key, key),
+            # Which axis this series belongs to. The tracker draws one facet at
+            # a time; `market` is on both and carries "both" so it never hides.
+            "facet": FACET_OF.get(key, "type"),
             "color": COLORS.get(key, ("#666", "#999"))[0],
             "color_dark": COLORS.get(key, ("#666", "#999"))[1],
             "points": coords,

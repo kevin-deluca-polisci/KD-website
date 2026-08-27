@@ -24,8 +24,15 @@
   <div class="card">
     {{/* Counted, not asserted. This said "Four ways" as a literal and went
          on saying it after academic became the fifth — the chart below draws
-         whatever series exist, so the heading has to as well. */}}
-    <h2>{{ len $d.charts.margin.series }} ways of forecasting, one chart</h2>
+         whatever series exist, so the heading has to as well.
+         Now there are two counts, because there are two facets and the chart
+         shows one at a time. Counting all the series would name a number no
+         view actually displays, which is the same fault in a new place. */}}
+    {{- $ser := $d.charts.margin.series }}
+    {{- $nt := len (where $ser "facet" "in" (slice "type" "both")) }}
+    {{- $ns := len (where $ser "facet" "in" (slice "source" "both")) }}
+    <h2><span data-fk="type">{{ $nt }} ways of forecasting</span><span
+        data-fk="source">{{ $ns }} kinds of forecaster</span>, one chart</h2>
 
     <div class="segs" data-toggle-group="tracker">
       <span class="seglabel">Chamber</span>
@@ -43,6 +50,17 @@
              to make someone click for the seat count. */}}
         <button type="button" data-value="seats" aria-selected="false">Democratic seats</button>
         <button type="button" data-value="prob" aria-selected="true">Chance of a majority</button>
+      </div>
+      {{/* GROUPING. Two facets, one at a time — see facets.py. Type asks what
+           a forecast is built from, source asks who built it, and the old
+           single `category` field answered both at once, which is why the
+           academic and fundamentals lines used to be three of the same four
+           models drawn twice. Showing both facets together would put one
+           forecaster on the chart twice under two names. */}}
+      <span class="seglabel">Grouped by</span>
+      <div class="seg" data-dim="facet">
+        <button type="button" data-value="type" aria-selected="true">Forecast type</button>
+        <button type="button" data-value="source" aria-selected="false">Forecast source</button>
       </div>
       {{/* Third dimension. The toggle script reads every .seg[data-dim] and
            matches it against data-<dim> on the panels, so this needed no
@@ -92,6 +110,7 @@
 
         {{- range $s := $pan.series }}
         {{- $col := printf "var(--c-%s)" $s.key }}
+        <g data-fk="{{ $s.facet }}">
         {{- with $s.band }}
         {{- $x := add $L (mul (div $s.last.x 100.0) $W) }}
         <line x1="{{ $x }}" y1="{{ add $T (mul (div .y_high 100.0) $H) }}"
@@ -122,6 +141,7 @@
               fill="{{ $col }}"{{ if $s.stale }} opacity=".65"{{ end }}>
           {{- if eq $pan.unit "prob" }}{{ printf "%.0f%%" (mul $s.last.v 100) }}{{ else }}{{ printf "%.0f" $s.last.v }}{{ end -}}
         </text>
+        </g>
         {{- end }}
 
         <line class="gridline" x1="{{ $L }}" y1="{{ add $T $H }}" x2="{{ add $L $W }}" y2="{{ add $T $H }}"/>
@@ -148,7 +168,7 @@
 
       <div class="legend">
         {{- range $pan.series }}
-        <span><i class="swatch" style="background:var(--c-{{ .key }})"></i>{{ .label }}{{ if .stale }} <span class="muted">· last {{ .last_date }}</span>{{ end }}</span>
+        <span data-fk="{{ .facet }}"><i class="swatch" style="background:var(--c-{{ .key }})"></i>{{ .label }}{{ if .stale }} <span class="muted">· last {{ .last_date }}</span>{{ end }}</span>
         {{- end }}
       </div>
 
@@ -492,7 +512,11 @@
       var col = getComputedStyle(poly).stroke;
       var byDate = {};
       sr.i.forEach(function (di, k) { byDate[di] = { p: pts[k], v: sr.v[k] }; });
-      series.push({ k: sr.k, label: sr.l, byDate: byDate, col: col });
+      // The facet toggle hides series with CSS, so the polyline is still in
+      // the DOM and querySelector still finds it. Without this the tooltip
+      // would keep listing lines that are not on the chart.
+      var grp = poly.closest ? poly.closest("g[data-fk]") : null;
+      series.push({ k: sr.k, label: sr.l, byDate: byDate, col: col, grp: grp });
     });
     if (!series.length) return;
 
@@ -548,7 +572,8 @@
       var rows = [], anyY = null;
       series.forEach(function (sr, n) {
         var hit = sr.byDate[di];
-        if (!hit) { dots[n].setAttribute("r", "0"); return; }
+        var off = sr.grp && getComputedStyle(sr.grp).display === "none";
+        if (!hit || off) { dots[n].setAttribute("r", "0"); return; }
         dots[n].setAttribute("r", "4.5");
         dots[n].setAttribute("cx", hit.p.x);
         dots[n].setAttribute("cy", hit.p.y);

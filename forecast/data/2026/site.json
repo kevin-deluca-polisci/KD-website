@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated_at": "2026-08-27T14:34:59.736018+00:00",
+  "generated_at": "2026-08-27T14:49:03.113376+00:00",
   "latest_snapshot": "2026-08-27",
   "snapshot_count": 431,
   "headline": [
@@ -8176,6 +8176,7 @@
         {
           "key": "polling",
           "label": "Polling",
+          "facet": "type",
           "color": "#008300",
           "color_dark": "#199e70",
           "points": [
@@ -9125,6 +9126,7 @@
         {
           "key": "market",
           "label": "Markets",
+          "facet": "both",
           "color": "#e87ba4",
           "color_dark": "#d55181",
           "points": [
@@ -10344,6 +10346,7 @@
         {
           "key": "fundamentals",
           "label": "Fundamentals",
+          "facet": "type",
           "color": "#4a3aa7",
           "color_dark": "#9085e9",
           "points": [
@@ -10639,6 +10642,7 @@
         {
           "key": "professional",
           "label": "Professional",
+          "facet": "source",
           "color": "#eda100",
           "color_dark": "#c98500",
           "points": [
@@ -11504,6 +11508,7 @@
         {
           "key": "academic",
           "label": "Academic",
+          "facet": "source",
           "color": "#0077a8",
           "color_dark": "#2f9fbd",
           "points": [
@@ -11799,8 +11804,9 @@
         {
           "key": "class",
           "label": "This class",
-          "color": "#666",
-          "color_dark": "#999",
+          "facet": "source",
+          "color": "#1baf7a",
+          "color_dark": "#199e70",
           "points": [
             {
               "x": 2.11,
@@ -13914,6 +13920,7 @@
         {
           "key": "polling",
           "label": "Polling",
+          "facet": "type",
           "color": "#008300",
           "color_dark": "#199e70",
           "points": [
@@ -14191,6 +14198,7 @@
         {
           "key": "market",
           "label": "Markets",
+          "facet": "both",
           "color": "#e87ba4",
           "color_dark": "#d55181",
           "points": [
@@ -15611,6 +15619,7 @@
         {
           "key": "fundamentals",
           "label": "Fundamentals",
+          "facet": "type",
           "color": "#4a3aa7",
           "color_dark": "#9085e9",
           "points": [
@@ -15888,6 +15897,7 @@
         {
           "key": "professional",
           "label": "Professional",
+          "facet": "source",
           "color": "#eda100",
           "color_dark": "#c98500",
           "points": [
@@ -16165,6 +16175,7 @@
         {
           "key": "academic",
           "label": "Academic",
+          "facet": "source",
           "color": "#0077a8",
           "color_dark": "#2f9fbd",
           "points": [
@@ -16442,8 +16453,9 @@
         {
           "key": "class",
           "label": "This class",
-          "color": "#666",
-          "color_dark": "#999",
+          "facet": "source",
+          "color": "#1baf7a",
+          "color_dark": "#199e70",
           "points": [
             {
               "x": 2.52,
@@ -18213,6 +18225,7 @@
         {
           "key": "polling",
           "label": "Polling",
+          "facet": "type",
           "color": "#008300",
           "color_dark": "#199e70",
           "points": [
@@ -18490,6 +18503,7 @@
         {
           "key": "market",
           "label": "Markets",
+          "facet": "both",
           "color": "#e87ba4",
           "color_dark": "#d55181",
           "points": [
@@ -19955,6 +19969,7 @@
         {
           "key": "fundamentals",
           "label": "Fundamentals",
+          "facet": "type",
           "color": "#4a3aa7",
           "color_dark": "#9085e9",
           "points": [
@@ -20232,6 +20247,7 @@
         {
           "key": "professional",
           "label": "Professional",
+          "facet": "source",
           "color": "#eda100",
           "color_dark": "#c98500",
           "points": [
@@ -20509,6 +20525,7 @@
         {
           "key": "academic",
           "label": "Academic",
+          "facet": "source",
           "color": "#0077a8",
           "color_dark": "#2f9fbd",
           "points": [
@@ -20786,8 +20803,9 @@
         {
           "key": "class",
           "label": "This class",
-          "color": "#666",
-          "color_dark": "#999",
+          "facet": "source",
+          "color": "#1baf7a",
+          "color_dark": "#199e70",
           "points": [
             {
               "x": 2.52,
@@ -22579,6 +22597,7 @@
         {
           "key": "polling",
           "label": "Polling",
+          "facet": "type",
           "color": "#008300",
           "color_dark": "#199e70",
           "points": [
@@ -22856,6 +22875,7 @@
         {
           "key": "market",
           "label": "Markets",
+          "facet": "both",
           "color": "#e87ba4",
           "color_dark": "#d55181",
           "points": [
@@ -24276,6 +24296,7 @@
         {
           "key": "fundamentals",
           "label": "Fundamentals",
+          "facet": "type",
           "color": "#4a3aa7",
           "color_dark": "#9085e9",
           "points": [
@@ -24553,6 +24574,7 @@
         {
           "key": "professional",
           "label": "Professional",
+          "facet": "source",
           "color": "#eda100",
           "color_dark": "#c98500",
           "points": [
@@ -24830,6 +24852,7 @@
         {
           "key": "academic",
           "label": "Academic",
+          "facet": "source",
           "color": "#0077a8",
           "color_dark": "#2f9fbd",
           "points": [
@@ -25107,8 +25130,9 @@
         {
           "key": "class",
           "label": "This class",
-          "color": "#666",
-          "color_dark": "#999",
+          "facet": "source",
+          "color": "#1baf7a",
+          "color_dark": "#199e70",
           "points": [
             {
               "x": 2.52,
@@ -26878,6 +26902,7 @@
         {
           "key": "polling",
           "label": "Polling",
+          "facet": "type",
           "color": "#008300",
           "color_dark": "#199e70",
           "points": [
@@ -27155,6 +27180,7 @@
         {
           "key": "market",
           "label": "Markets",
+          "facet": "both",
           "color": "#e87ba4",
           "color_dark": "#d55181",
           "points": [
@@ -28620,6 +28646,7 @@
         {
           "key": "fundamentals",
           "label": "Fundamentals",
+          "facet": "type",
           "color": "#4a3aa7",
           "color_dark": "#9085e9",
           "points": [
@@ -28897,6 +28924,7 @@
         {
           "key": "professional",
           "label": "Professional",
+          "facet": "source",
           "color": "#eda100",
           "color_dark": "#c98500",
           "points": [
@@ -29174,6 +29202,7 @@
         {
           "key": "academic",
           "label": "Academic",
+          "facet": "source",
           "color": "#0077a8",
           "color_dark": "#2f9fbd",
           "points": [
@@ -29451,8 +29480,9 @@
         {
           "key": "class",
           "label": "This class",
-          "color": "#666",
-          "color_dark": "#999",
+          "facet": "source",
+          "color": "#1baf7a",
+          "color_dark": "#199e70",
           "points": [
             {
               "x": 2.52,
@@ -31051,6 +31081,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -31208,6 +31239,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -31425,6 +31457,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -31534,6 +31567,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -31679,6 +31713,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -31788,8 +31823,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 3.33,
@@ -32289,6 +32325,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -32392,6 +32429,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -32600,6 +32638,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -32703,6 +32742,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -32806,6 +32846,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -32909,8 +32950,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 3.33,
@@ -33383,6 +33425,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -33486,6 +33529,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -33703,6 +33747,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -33806,6 +33851,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -33909,6 +33955,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -34012,8 +34059,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 3.33,
@@ -34496,6 +34544,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -34599,6 +34648,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -34807,6 +34857,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -34910,6 +34961,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -35013,6 +35065,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -35116,8 +35169,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 3.33,
@@ -35590,6 +35644,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -35693,6 +35748,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -35910,6 +35966,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -36013,6 +36070,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -36116,6 +36174,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -36219,8 +36278,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 3.33,
@@ -36731,6 +36791,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -36978,6 +37039,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -37375,6 +37437,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -37508,6 +37571,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -37725,6 +37789,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -37858,8 +37923,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 5.0,
@@ -38587,6 +38653,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -38714,6 +38781,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -39102,6 +39170,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -39229,6 +39298,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -39356,6 +39426,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -39483,8 +39554,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 5.0,
@@ -40147,6 +40219,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -40274,6 +40347,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -40671,6 +40745,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -40798,6 +40873,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -40925,6 +41001,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -41052,8 +41129,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 5.0,
@@ -41726,6 +41804,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -41853,6 +41932,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -42241,6 +42321,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -42368,6 +42449,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -42495,6 +42577,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -42622,8 +42705,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 5.0,
@@ -43286,6 +43370,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -43413,6 +43498,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -43810,6 +43896,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -43937,6 +44024,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -44064,6 +44152,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -44191,8 +44280,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 5.0,
@@ -45038,6 +45128,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -45987,6 +46078,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -47206,6 +47298,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -47501,6 +47594,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -48366,6 +48460,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -48661,8 +48756,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 2.11,
@@ -50776,6 +50872,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -51053,6 +51150,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -52473,6 +52571,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -52750,6 +52849,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -53027,6 +53127,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -53304,8 +53405,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 2.52,
@@ -55075,6 +55177,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -55352,6 +55455,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -56817,6 +56921,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -57094,6 +57199,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -57371,6 +57477,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -57648,8 +57755,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 2.52,
@@ -59441,6 +59549,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -59718,6 +59827,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -61138,6 +61248,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -61415,6 +61526,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -61692,6 +61804,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -61969,8 +62082,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 2.52,
@@ -63740,6 +63854,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -64017,6 +64132,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -65482,6 +65598,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -65759,6 +65876,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -66036,6 +66154,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -66313,8 +66432,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 2.52,
@@ -68172,6 +68292,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -69529,6 +69650,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -70748,6 +70870,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -71349,6 +71472,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -72346,6 +72470,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -72947,8 +73072,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 0.0,
@@ -76057,6 +76183,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -76634,6 +76761,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -78708,6 +78836,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -79285,6 +79414,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -79610,6 +79740,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -80187,8 +80318,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 0.0,
@@ -83237,6 +83369,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -83814,6 +83947,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -86275,6 +86409,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -86852,6 +86987,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -87177,6 +87313,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -87754,8 +87891,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 0.0,
@@ -90836,6 +90974,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -91413,6 +91552,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -92899,6 +93039,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -93476,6 +93617,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -93801,6 +93943,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -94378,8 +94521,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 0.0,
@@ -97148,6 +97292,7 @@
             {
               "key": "polling",
               "label": "Polling",
+              "facet": "type",
               "color": "#008300",
               "color_dark": "#199e70",
               "points": [
@@ -97725,6 +97870,7 @@
             {
               "key": "market",
               "label": "Markets",
+              "facet": "both",
               "color": "#e87ba4",
               "color_dark": "#d55181",
               "points": [
@@ -100186,6 +100332,7 @@
             {
               "key": "fundamentals",
               "label": "Fundamentals",
+              "facet": "type",
               "color": "#4a3aa7",
               "color_dark": "#9085e9",
               "points": [
@@ -100763,6 +100910,7 @@
             {
               "key": "professional",
               "label": "Professional",
+              "facet": "source",
               "color": "#eda100",
               "color_dark": "#c98500",
               "points": [
@@ -101088,6 +101236,7 @@
             {
               "key": "academic",
               "label": "Academic",
+              "facet": "source",
               "color": "#0077a8",
               "color_dark": "#2f9fbd",
               "points": [
@@ -101665,8 +101814,9 @@
             {
               "key": "class",
               "label": "This class",
-              "color": "#666",
-              "color_dark": "#999",
+              "facet": "source",
+              "color": "#1baf7a",
+              "color_dark": "#199e70",
               "points": [
                 {
                   "x": 0.0,

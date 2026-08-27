@@ -30,6 +30,7 @@ document.documentElement.className+=" js";})();
     --c-fundamentals:#4a3aa7; --c-polling:#008300;
     --c-professional:#eda100; --c-market:#e87ba4;
     --c-academic:#0077a8;
+    --c-class:#1baf7a; --c-composite:#2a78d6; --c-expert:#e34948;
     --grid:#e6e6e2; --warn-bg:#fff8e6; --warn-line:#d9a520; --warn-ink:#7a5c00;
     --alert-bg:#fdecea; --alert-line:#b02a2a; --alert-ink:#7a1c1c;
   }
@@ -45,6 +46,7 @@ document.documentElement.className+=" js";})();
       --c-fundamentals:#9085e9; --c-polling:#199e70;
       --c-professional:#c98500; --c-market:#d55181;
       --c-academic:#2f9fbd;
+      --c-class:#199e70; --c-composite:#3987e5; --c-expert:#e66767;
       --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
       --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
     }
@@ -57,6 +59,7 @@ document.documentElement.className+=" js";})();
     --c-fundamentals:#9085e9; --c-polling:#199e70;
     --c-professional:#c98500; --c-market:#d55181;
     --c-academic:#2f9fbd;
+    --c-class:#199e70; --c-composite:#3987e5; --c-expert:#e66767;
     --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
     --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
   }
@@ -233,6 +236,22 @@ document.documentElement.className+=" js";})();
   .swatch.professional{background:var(--c-professional)}
   .swatch.market{background:var(--c-market)}
   .swatch.academic{background:var(--c-academic)}
+  .swatch.class{background:var(--c-class)}
+  .swatch.composite{background:var(--c-composite)}
+  .swatch.expert{background:var(--c-expert)}
+
+  /* ONE FACET AT A TIME.
+     `category` used to answer two questions at once — what a forecast is made
+     of, and who made it — so the academic and fundamentals lines were largely
+     the same models drawn twice. They are separate axes now, and the tracker
+     shows one of them, because showing both would put the same forecaster on
+     the chart twice under two names.
+     The toggle stamps data-view-facet on the panel box; every series carries
+     data-fk. Markets are "both" — a traded price is a method AND a kind of
+     forecaster, and it is the same three exchanges either way — so it never
+     hides and the two views stay comparable. */
+  [data-view-facet="type"]   [data-fk="source"],
+  [data-view-facet="source"] [data-fk="type"]   { display:none }
 
   /* The across-families row of the comparison table. Set apart by a rule and
      weight rather than by a fill, because it is a summary of the rows above
