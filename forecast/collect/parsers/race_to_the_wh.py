@@ -682,17 +682,49 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     skipped_books: list[str] = []
     header_samples: list[str] = []
 
+    # PREFERRED ARTIFACT — WHY THE TREND BOOKS ARE READ FIRST.
+    #
+    # Race to the WH publishes the same numbers in more than one Infogram, and
+    # before this ordering existed both reached the archive. Every Senate race
+    # got two margin rows on 39 races across 7 dates, and aggregate.py averaged
+    # them within the source, so the published margin was the mean of two
+    # readings that were not the same reading.
+    #
+    # They are not two roundings. On 2026-08-26 the state-trend workbook was
+    # refreshed at 11:34Z with a row dated Aug 26, while Sen-26 Main Graphics
+    # was refreshed two minutes later carrying its own "Last Updated on Aug 25"
+    # stamp. Main Graphics is a day behind. That is SEN_IA at -1.15 against
+    # -0.90: a lag, not a rounding.
+    #
+    # So the time series wins any cell it covers on the current date, and the
+    # snapshot books fill in what only they have — the 435 per-district
+    # probabilities, the Senate per-race chance-to-win, the seat ratings. The
+    # mechanism is the `seen` claim set both paths already share; ordering is
+    # all that had to change.
+    #
+    # SELECT BY EMBED ID, NOT TITLE, if this ever needs tightening further.
+    # `Sen-26 - Main Graphics` exists under two different embed ids
+    # (6911ecb8 and d6de4ea5) and only one of them yields rows, so a title is
+    # not a unique name for a workbook here.
+    trend_books: list[tuple[str, LoadedArtifact, str | None]] = []
+    other_books: list[tuple[str, LoadedArtifact, str | None]] = []
     for name, art in artifacts.items():
+        is_live = name.startswith("live__") or _live_payload(art) is not None
+        kind = trend_kind(str(art.meta.get("live_title") or name)) if is_live else None
+        (trend_books if kind else other_books).append((name, art, kind))
+
+    for name, art, kind in trend_books + other_books:
         # The live-data workbooks first — since handle_infogram was added these
         # are where every actual number comes from.
         if name.startswith("live__") or _live_payload(art) is not None:
             live_payloads += 1
             title = str(art.meta.get("live_title") or name)
-            kind = trend_kind(title)
             if kind:
                 # A time series, not a snapshot. Every row is backdated to its
                 # own observation date; see the BACKFILL section at the bottom.
-                got = _parse_trend(art, ctx, kind)
+                # Rows landing on TODAY also claim their cell, so the snapshot
+                # books below do not emit it again.
+                got = _parse_trend(art, ctx, kind, seen)
                 (used_books if got else skipped_books).append(f"{title} [trend]")
                 rows.extend(got)
                 continue
@@ -973,7 +1005,16 @@ def _pct_or_num(cell: str) -> float | None:
     return _number(_cell(cell).replace("%", ""))
 
 
-def _parse_trend(art: LoadedArtifact, ctx: Context, kind: str) -> list[Row]:
+def _parse_trend(art: LoadedArtifact, ctx: Context, kind: str,
+                 seen: set | None = None) -> list[Row]:
+    """Parse one time-series workbook.
+
+    `seen` is the same (race_id, quantity) claim set `_parse_live` uses. A
+    trend row dated at the CURRENT snapshot registers its claim there, which
+    is what stops the snapshot books emitting the same cell a second time —
+    see the PREFERRED ARTIFACT note above parse(). Backdated rows never
+    claim: they are for dates the snapshot books say nothing about.
+    """
     payload = _live_payload(art)
     if payload is None:
         return []
@@ -1025,6 +1066,8 @@ def _parse_trend(art: LoadedArtifact, ctx: Context, kind: str) -> list[Row]:
                 v = _pct_or_num(r[col])
                 if v is None:
                     continue
+                if seen is not None and asof == ctx.snapshot_date:
+                    seen.add((rid, qty))
                 rows.append(ctx.row(art, snapshot_date=asof, race_id=rid,
                                     chamber=ch, state=st_, quantity=qty,
                                     value=round(v * scale, 4), unit=unit))

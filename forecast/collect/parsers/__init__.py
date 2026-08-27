@@ -86,6 +86,12 @@ QUANTITIES = {
     "composite_share",
     "composite_share_prior",   # same, on the PREVIOUS map
     "margin_D_adjusted",      # house-effect / likely-voter adjusted polling margin
+    # Diagnostic companions to a polling aggregator's margin_D. Both are in
+    # NOT_A_FORECAST: they exist so the archive keeps the comparison, not so
+    # anything averages them.
+    "margin_D_raw_poll_mean",        # our unweighted mean of a source's RAW poll rows
+    "margin_D_wikipedia_reported",   # what the Wikipedia table said for a source
+                                     # we also capture directly
     "margin_D_pres_2024",     # statewide 2024 presidential two-party margin
     "margin_D_prior_senate",  # statewide 2024 Senate two-party margin
     # Economic inputs to the fundamentals model. NOT forecasts — they are

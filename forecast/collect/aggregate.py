@@ -38,7 +38,7 @@ import json
 import re
 import statistics
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -87,6 +87,13 @@ NEVER_PUBLISH = {"pvi", "pvi_prior"}
 # forecast category would be a category error in the literal sense.
 NOT_A_FORECAST = {
     "margin_D_pres_2024", "margin_D_prior_senate",
+    # SECOND READINGS OF A SOURCE WE ALREADY HAVE. Averaging these would count
+    # one forecaster twice: `margin_D_raw_poll_mean` is our arithmetic on a
+    # source's raw poll list beside its own published average, and
+    # `margin_D_wikipedia_reported` is Wikipedia's rounded copy of a source we
+    # fetch directly. Both are kept for comparison and neither is anybody's
+    # additional forecast.
+    "margin_D_raw_poll_mean", "margin_D_wikipedia_reported",
     # Economic inputs, not predictions. Averaging "real income growth" across
     # forecasters would be meaningless — there is one true value and FRED
     # publishes it. They live in the archive because the fundamentals model
@@ -820,158 +827,88 @@ def small_drops(cycle: int, averages: list[dict],
     return out
 
 
-# ---------------------------------------------------------------------------
-# Chaining
-# ---------------------------------------------------------------------------
-# THE PROBLEM. A category average is the mean of whoever is in the category
-# that day, and the membership changes. When Lockerbie and Lewis-Beck & Quinlan
-# were added, the academic line moved. When the academic models were also filed
-# under fundamentals, the fundamentals line moved thirteen seats in an
-# afternoon. Nobody's forecast had changed. A reader watching the chart cannot
-# tell that kind of movement from the kind that matters, and the chart does not
-# currently tell them.
-#
-# THE FIX is the one price indices have used for a century. Do not compare
-# today's basket with yesterday's basket. Compare the items in BOTH baskets,
-# and carry the level forward by that change:
-#
-#     level(t) = level(t-1) + [ mean_common(t) - mean_common(t-1) ]
-#
-# where common = the sources present on both dates. A source that joins today
-# contributes NOTHING to today's movement — it enters the level from tomorrow
-# on, once it has two observations to move between. A source that leaves stops
-# contributing rather than yanking the level as it goes.
-#
-# WHAT THIS BUYS AND WHAT IT COSTS. Every movement on a chained line is a real
-# movement: forecasters changed their minds, or the data did. That is the whole
-# point. The cost is that the LEVEL is no longer "the mean of who we have
-# today" — it is an index anchored at the first date and moved by common-member
-# changes ever since, so it can drift away from the simple mean. Both numbers
-# are published: `mean` is what the category says today, `mean_chained` is how
-# it got there. The comparison table uses the mean; the timeline uses the
-# chain.
-#
-# WHEN CHAINING IS IMPOSSIBLE. If two consecutive dates share no source at all,
-# there is no common basket and no honest way to bridge them. The chain BREAKS:
-# the level restarts at that day's simple mean and the row is flagged. A broken
-# chain is not a bug to be smoothed over — it means the category was rebuilt
-# from scratch and the two segments are not comparable.
-#
-# PROBABILITIES are chained additively like everything else and then clamped to
-# (0,1). Strictly they should be chained in log-odds, which cannot leave the
-# interval; additive chaining plus a clamp is the cruder choice, taken because
-# a probability that has drifted to the clamp is a visible signal that the
-# category has been rebuilt underneath the reader, where a log-odds chain would
-# quietly absorb it.
-PROB_CLAMP = (0.005, 0.995)
+def promote_second_readings(rows: list[dict]) -> list[str]:
+    """Let a second-hand reading stand in where we have no first-hand one.
 
+    collect/parsers/wikipedia.py files a source we capture directly under
+    `margin_D_wikipedia_reported` rather than `margin_D`, so a forecaster does
+    not enter the polling average twice at two values. That is right on the
+    days both readings exist. It is wrong on the days only Wikipedia's does.
 
-def chain_index(rows: list[dict], averages: list[dict]) -> None:
-    """Add `mean_chained`, `n_common` and `chain_note` to each average, in place.
+    We began capturing Silver's own sheet on 2026-08-19. Before that the
+    Wikipedia aggregator table was the ONLY reading of him this archive holds,
+    on 117 dates. Dropping it would not remove a duplicate, it would remove
+    him — 117 polling averages losing a member for no reason but the date.
 
-    THE MEMBER SET COMES FROM THE PUBLISHED AVERAGE, NOT FROM THE RAW ROWS, and
-    the first version of this function got that wrong in a way worth recording.
-
-    It computed each date's mean over every source in `rows`. But an average is
-    not always over every source: when a cell holds gated contributors and
-    cannot clear MIN_N, aggregate() publishes a `partial` row computed over the
-    OPEN SUBSET only. Chaining over the full set and publishing the result
-    beside that partial mean would have put the gated contribution back on the
-    page in a second column — the disclosure floor walked around by arithmetic,
-    in code written to fix a charting problem.
-
-    So the chain reads `_contributors`, which is the exact list aggregate()
-    used for that row, and never sees a source the row itself excluded. If the
-    published member set changes because a source became disclosable rather
-    than because it changed its mind, that is a composition change like any
-    other and the chain treats it as one.
+    So: promote a `margin_D_wikipedia_reported` row to `margin_D` when, and
+    only when, that same source has no `margin_D` of its own for that cell on
+    that date. Provenance is unaffected — the row still carries its raw_path
+    back to the Wikipedia capture, so anyone can see which readings were
+    second-hand and the methodology page can say so plainly.
     """
-    KEYS = ("category", "race_id", "chamber", "state", "district", "quantity", "unit")
-
-    # (cell, date) -> {source: value}, one value per source.
-    per: dict[tuple, dict[str, list]] = defaultdict(lambda: defaultdict(list))
+    direct: set[tuple] = set()
     for r in rows:
-        q = r["quantity"]
-        if q in NO_AVERAGE or q in NEVER_PUBLISH or q in NOT_A_FORECAST:
+        if r["quantity"] == "margin_D":
+            direct.add((r["snapshot_date"], r["source_id"], r["race_id"],
+                        r["chamber"], r["state"], r["district"]))
+    out: list[str] = []
+    n = Counter()
+    for r in rows:
+        if r["quantity"] != "margin_D_wikipedia_reported":
             continue
-        try:
-            v = float(r["value"])
-        except (TypeError, ValueError):
+        key = (r["snapshot_date"], r["source_id"], r["race_id"],
+               r["chamber"], r["state"], r["district"])
+        if key in direct:
             continue
-        cell = tuple(r[k] for k in KEYS)
-        per[(cell, r["snapshot_date"])][r["source_id"]].append(v)
-    src_means = {k: {s: statistics.fmean(vs) for s, vs in d.items()}
-                 for k, d in per.items()}
+        r["quantity"] = "margin_D"
+        n[r["source_id"]] += 1
+    for sid, k in sorted(n.items()):
+        out.append(f"{sid}: {k} date(s) stood on the Wikipedia reading "
+                   f"(no direct capture that day)")
+    return out
 
-    # The members each PUBLISHED row actually averaged.
-    members: dict[tuple, list[str]] = {}
-    for a in averages:
-        cell = tuple(a[k] for k in KEYS)
-        members[(cell, a["snapshot_date"])] = list(a.get("_contributors") or ())
 
-    by_cell: dict[tuple, list[str]] = defaultdict(list)
-    for cell, date in members:
-        by_cell[cell].append(date)
-
-    def mean_over(cell, date, srcs):
-        vals = [src_means[(cell, date)][s] for s in srcs
-                if s in src_means.get((cell, date), {})]
-        return statistics.fmean(vals) if vals else None
-
-    chained: dict[tuple, tuple] = {}
-    for cell, dates in by_cell.items():
-        dates.sort()
-        is_prob = cell[KEYS.index("unit")] == "prob"
-        level, prev_date = None, None
-        for date in dates:
-            cur = set(members[(cell, date)])
-            if not cur:
-                continue
-            if level is None:
-                m = mean_over(cell, date, cur)
-                if m is None:
-                    continue
-                level, prev_date = m, date
-                chained[(cell, date)] = (level, len(cur), "start")
-                continue
-            prev = set(members[(cell, prev_date)])
-            common = cur & prev
-            m_now = mean_over(cell, date, common) if common else None
-            m_then = mean_over(cell, prev_date, common) if common else None
-            if m_now is not None and m_then is not None:
-                level = level + (m_now - m_then)
-                if cur == prev:
-                    note = ""
-                else:
-                    joined = sorted(cur - prev)
-                    left = sorted(prev - cur)
-                    bits = []
-                    if joined:
-                        bits.append(f"+{len(joined)}")
-                    if left:
-                        bits.append(f"-{len(left)}")
-                    note = (f"composition changed ({', '.join(bits)}); "
-                            f"chained on {len(common)} in common")
-            else:
-                level = mean_over(cell, date, cur)
-                note = "BREAK: no member in common with the previous date"
-            if level is None:
-                continue
-            if is_prob:
-                level = min(max(level, PROB_CLAMP[0]), PROB_CLAMP[1])
-            chained[(cell, date)] = (level, len(common), note)
-            prev_date = date
-
-    for a in averages:
-        cell = tuple(a[k] for k in KEYS)
-        got = chained.get((cell, a["snapshot_date"]))
-        if got is None:
-            a["mean_chained"], a["n_common"], a["chain_note"] = "", "", ""
-        else:
-            lvl, n_common, note = got
-            a["mean_chained"] = round(lvl, 4)
-            a["n_common"] = n_common
-            a["chain_note"] = note
+# ---------------------------------------------------------------------------
+# Chaining — RETIRED 2026-08-27
+# ---------------------------------------------------------------------------
+# `mean_chained`, `n_common` and `chain_note` are no longer computed and no
+# longer appear in category_averages.csv. The reasoning is kept here because
+# the problem the chain was built for is real and somebody will propose it
+# again.
+#
+# THE PROBLEM IT ADDRESSED IS GENUINE. A category average is the mean of
+# whoever reported that day, and the membership changes. When the academic
+# models were also filed under fundamentals, the fundamentals line moved
+# thirteen seats in an afternoon and nobody's forecast had changed.
+#
+# WHY THE CHAIN WAS THE WRONG ANSWER. Three faults, measured on this archive
+# on 2026-08-26:
+#
+#   1. Chain drift. `level(t) = level(t-1) + [mean_common(t) - mean_common(t-1)]`
+#      is path-dependent, which is a known property of chained indices and not
+#      an implementation bug. Two different entry orders do not converge.
+#      Published fundamentals margin that day: mean D+8.01, chained D+2.85.
+#
+#   2. Level-blindness. A joining model contributes only its CHANGES, never its
+#      level, so the index can wander arbitrarily far from the cross-sectional
+#      mean and never returns.
+#
+#   3. Each quantity chains on its own, and seats is a non-linear function of
+#      margin, so a chained margin and a chained seat count stop corresponding
+#      by construction. That is how a chained D+2.85 came to sit beside 235
+#      seats, which no D+2 environment produces.
+#
+# WHAT REPLACES IT. `mean` stays the published level: it is the only line for
+# which "this is what the field said on that date" is literally true, and a
+# step in it is a real change of membership rather than a smoothed one. The
+# roster artefact is handled instead by a frozen per-model offset — each
+# model's persistent lean estimated once, then subtracted before averaging —
+# which is path-independent, never revises a published date, and does nothing
+# at all on days when the whole roster reported. See model/ for that work.
+#
+# THE READER-FACING CONSEQUENCE IS UNCHANGED and still belongs on about.html:
+# a step in one of these lines is not always news, and `n_sources` beside it is
+# how you tell.
 
 
 def write(cycle: int, averages, by_source, suppressed, ratings) -> list[Path]:
@@ -1026,10 +963,11 @@ def main(argv=None) -> int:
               f"{type(e).__name__}: {e}")
         return 2
 
+    promoted = promote_second_readings(rows)
+
     averages, by_source, suppressed = aggregate(rows)
-    # After aggregate(), because it needs the finished rows; before
-    # write(), because the columns it adds have to reach disk.
-    chain_index(rows, averages)
+    # chain_index() used to run here. Retired 2026-08-27 — see the note above
+    # the `write` section for what it did, what it cost, and what replaced it.
     ratings = ratings_panel(rows)
     problems = audit(rows, averages, by_source, suppressed)
     shrunk = would_shrink(a.cycle, averages, suppressed)
@@ -1042,6 +980,9 @@ def main(argv=None) -> int:
     if carried:
         for line in carried:
             print(f"    carried forward  {line}")
+    if promoted:
+        for line in promoted:
+            print(f"    second reading   {line}")
     print(f"  {len(averages):6d} category averages out   (PUBLIC)")
     print(f"  {len(by_source):6d} per-source rows out     (PUBLIC — individual tier only)")
     print(f"  {len(ratings):6d} expert rating rows out   (PUBLIC, separate panel)")

@@ -391,6 +391,13 @@ _AGG_SOURCES = [
     ("SPLIT TICKET", ("split_ticket", "private")),
     ("ECONOMIST", ("economist", "aggregate_only")),
 ]
+
+# Aggregators this project fetches from the source itself. For these, the
+# Wikipedia table is a duplicate reading and must not enter an average — see
+# the note at the emit site in _generic_ballot(). Add an id here the moment a
+# dedicated parser starts producing that source's national margin, or the
+# category quietly counts them twice.
+_CAPTURED_DIRECTLY = {"silver_bulletin"}
 # The literal wikitext reads "Source of poll<br>aggregation". Neither \s+ nor
 # \W+ bridges that gap — \s+ because <br> is not whitespace, \W+ because the
 # "b" and "r" inside the tag are word characters. A bounded any-character gap
@@ -463,8 +470,20 @@ def _generic_ballot(text: str, art: LoadedArtifact, ctx: Context) -> list[Row]:
             # differs by a factor of two across aggregators — but they are not
             # a registered quantity, and inventing one here would put a column
             # into the archive that nothing else knows how to average.
+            #
+            # EXCEPT for aggregators we capture ourselves. For those this table
+            # is a SECOND reading of the same forecaster, rounded to one
+            # decimal and refreshed by whoever last edited the article — about
+            # every three days, with runs as long as thirteen. Filing it as
+            # margin_D put Silver into the polling average twice, at two values
+            # 1.1 points apart, and let a stale rounded figure reach
+            # model/polling.py's generic_ballot() as though it were his own
+            # file. It is kept as a cross-check quantity instead: same row,
+            # same tier, never averaged.
+            q = ("margin_D_wikipedia_reported" if sid in _CAPTURED_DIRECTLY
+                 else "margin_D")
             rows.append(ctx.row(art, source_id=sid, publication=tier,
                                 category="polling", race_id=NATIONAL_HOUSE,
-                                chamber="national", quantity="margin_D",
+                                chamber="national", quantity=q,
                                 value=round(margin, 3), unit="pct"))
     return rows

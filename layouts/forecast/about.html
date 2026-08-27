@@ -157,37 +157,34 @@
        read for. It is not the honest answer to &ldquo;how much has this family
        moved&rdquo;, and the two come apart whenever membership is unstable.</p>
 
-    <h3>What we also compute, and why it is not what you see</h3>
+    <h3>What we tried instead, and why we stopped</h3>
 
-    <p>The archive carries a second version of every category average, the
-       <em>chained</em> level, computed the way a price index handles a change of
-       basket. Rather than comparing today&rsquo;s members with yesterday&rsquo;s
-       different ones, it compares those present on <em>both</em> days and
-       carries the level forward by that change:</p>
+    <p>The archive used to carry a second version of every category average, a
+       <em>chained</em> level computed the way a price index handles a change of
+       basket: rather than comparing today&rsquo;s members with yesterday&rsquo;s
+       different ones, compare those present on <em>both</em> days and carry the
+       level forward by that change. It was the headline until 25 August 2026,
+       and it was removed from the published data on 27 August 2026.</p>
 
-    <p class="thin-note"><code>level(t) = level(t&minus;1) + [ mean of common members (t)
-       &minus; mean of common members (t&minus;1) ]</code></p>
+    <p>Three faults, all measured on this archive. A chained index is
+       path&#8209;dependent, so where it ends up depends on the order models
+       happened to arrive; on 26 August the fundamentals margin read D+8.0 as a
+       mean of its five members and D+2.9 as a chain. A model that joins
+       contributes only its subsequent <em>changes</em> and never its level, so
+       the index drifts away from the members it claims to describe and does not
+       come back. And each quantity chains on its own, while a seat count is not
+       a linear function of a national margin, so a chained margin and a chained
+       seat count stop corresponding by construction &mdash; which is how a
+       chained D+2.9 came to sit beside a projection of 235 seats, a number no
+       D+2 environment produces.</p>
 
-    <p>A model that joins today contributes nothing to today&rsquo;s movement; it
-       enters tomorrow, once it has two observations to move between. Every
-       wiggle on a chained line is therefore somebody changing their mind, which
-       is the property worth having and the reason the chain is computed.</p>
-
-    <p>It was the headline until 25 August 2026, and it is worth saying why it
-       is not any more. A chained level is an index anchored at the first date,
-       so it drifts from the mean of the current members, and after a large
-       enough change of composition it stops describing them. Two faults, worth
-       separating. One is a threshold: bridging a single common member into a
-       five-member family carries a fifth of the information and asserts all of
-       the level. The other is structural, and no threshold fixes it &mdash; each
-       quantity is chained on its own, and a seat count is not a linear function
-       of a national margin, so a chained margin and a chained seat count drift
-       apart by construction.</p>
-
-    <p>So the chain stays in the published data, in a column beside the level,
-       the member count, and the number of members the two dates had in common.
-       It is a good way to ask how much of a family&rsquo;s movement was real. It
-       is not the level, and this site no longer prints it as one.</p>
+    <p>The published level is the plain mean, which is the only line for which
+       &ldquo;this is what the field said on that date&rdquo; is simply true.
+       The membership problem is handled instead by estimating each model&rsquo;s
+       persistent lean once, fixing it, and subtracting it before averaging. That
+       correction cannot depend on arrival order, never changes a date that has
+       already been published, and does nothing at all on days when every member
+       reported.</p>
 
     <p class="thin-note">The practical consequence for a reader: a step in one of
        these lines is not always news. Check the member count beside it. Where

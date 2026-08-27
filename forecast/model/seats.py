@@ -237,6 +237,37 @@ PUBLISHED_SIGMA_MARGIN = {
 }
 
 
+def published_sigma(source_id: str, m: dict | None = None) -> float | None:
+    """A forecaster's OWN margin uncertainty, where the forecaster states one.
+
+    Two ways a model can tell us, and both are the model talking rather than us
+    guessing from its track record.
+
+    A CONSTANT, for a source that says it in prose. Fair writes "the standard
+    error is about 3 percentage points" on the page we capture, and nothing
+    machine-readable carries it, so it lives in the table above with the quote.
+
+    AN 80% INTERVAL, for anything that publishes one. academic.py already
+    builds these from each author's own reported error — Lockerbie's comes
+    from the 16.8-seat out-of-sample MAE in his Table 3, pushed back through
+    our seat curve — and an interval IS a sigma: (hi - lo) / (2 * 1.2816).
+
+    Reading it here rather than restating it means a model's interval and its
+    seat projection can never disagree, which they would the moment somebody
+    updated one and forgot the other.
+    """
+    fixed = PUBLISHED_SIGMA_MARGIN.get(source_id)
+    if fixed is not None:
+        return fixed
+    if not m:
+        return None
+    lo, hi = m.get("margin_D_80_low"), m.get("margin_D_80_high")
+    if lo is None or hi is None:
+        return None
+    sig = (float(hi) - float(lo)) / (2 * 1.2816)
+    return sig if sig > 0 else None
+
+
 def project(tide: float, pvi: dict, states: list, rows: list,
             sigma: float, holdover_D: int, asof: str | None = None,
             sigma_floor: float | None = None) -> dict:
@@ -454,6 +485,7 @@ def main(argv=None) -> int:
     # category is: if a model is ever added whose licence is not ours to give,
     # this loop must not be the thing that quietly publishes it.
     acad_categories: dict[str, list] = {}
+    acad_sigma: dict[str, float | None] = {}
     am = d / "academic_models.json"
     if am.exists():
         acad = json.loads(am.read_text())
@@ -468,6 +500,7 @@ def main(argv=None) -> int:
             # averages honour every membership while the across-family average
             # uses only the first.
             acad_categories[key] = cats
+            acad_sigma[key] = published_sigma(key, m)
             tides[key] = (cats[0], float(m["margin_D"]),
                           m.get("publication") or "individual", False)
         skipped = acad.get("not_implemented") or {}
@@ -505,7 +538,9 @@ def main(argv=None) -> int:
     projections = {}
     for name, (category, tide, tier, margin_elsewhere) in sorted(tides.items()):
         p = project(tide, pvi, states, rows, sigma, a.holdover_d, asof=date,
-                    sigma_floor=PUBLISHED_SIGMA_MARGIN.get(name))
+                    sigma_floor=(acad_sigma.get(name)
+                                 if name in acad_sigma
+                                 else published_sigma(name)))
         # The category travels WITH the projection. aggregate.py files each
         # one under it, so adding a model is a registry entry plus a line in
         # EXTERNAL_TIDE_SOURCES and nothing downstream has to learn its name.
@@ -754,7 +789,8 @@ def main(argv=None) -> int:
                     # March 2025 tide was being turned into seats using
                     # districts that did not exist until August.
                     p0 = project(float(m["margin_D"]), pvi, states, rows,
-                                 sigma, a.holdover_d, asof=d0)
+                                 sigma, a.holdover_d, asof=d0,
+                                 sigma_floor=published_sigma(key, m))
                     p0["category"] = m.get("category") or "academic"
                     p0["categories"] = (m.get("categories")
                                         or [p0["category"]])

@@ -345,14 +345,21 @@ def generic_ballot(rows: list[dict]) -> dict:
     for r in rows:
         if r["source_id"] != "silver_bulletin":
             continue
-        if r["quantity"] in ("margin_D", "margin_D_adjusted"):
+        # `margin_D` IS the adjusted figure as of 2026-08-27 — see the header
+        # of collect/parsers/silver_bulletin.py. The raw poll mean moved to its
+        # own quantity, and Wikipedia's rounded copy of him moved to
+        # margin_D_wikipedia_reported, which is why neither is read here: both
+        # used to arrive as `margin_D` and whichever row came last won.
+        if r["quantity"] in ("margin_D", "margin_D_adjusted",
+                             "margin_D_raw_poll_mean"):
             got[r["quantity"]] = float(r["value"])
     if not got:
         raise SystemExit(
             "no generic ballot rows in the latest parsed file.\n"
             "  silver_bulletin is the polling category — check it captured.")
     used = "margin_D_adjusted" if "margin_D_adjusted" in got else "margin_D"
-    return {"raw": got.get("margin_D"), "adjusted": got.get("margin_D_adjusted"),
+    return {"raw": got.get("margin_D_raw_poll_mean"),
+            "adjusted": got.get("margin_D_adjusted", got.get("margin_D")),
             "used": used, "value": got[used]}
 
 

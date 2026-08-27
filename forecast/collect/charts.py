@@ -257,13 +257,15 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
         #
         # So the level published everywhere is now the mean, the timeline and
         # the comparison table finally agree, and a composition change shows up
-        # as the step it actually is rather than being smoothed away. The chain
-        # is still computed and still in category_averages.csv as
-        # `mean_chained`; about.html explains what it measures and why a step
-        # in one of these lines is sometimes bookkeeping rather than news.
+        # as the step it actually is rather than being smoothed away.
+        #
+        # The chain was retired outright on 2026-08-27 and `mean_chained` is no
+        # longer a column, so there is nothing to fall back to: a row without a
+        # mean is a row with no level, and it is skipped. aggregate.py carries
+        # the full reasoning. about.html still explains why a step in one of
+        # these lines is sometimes bookkeeping rather than news — read the
+        # member count beside it.
         v = _f(r["mean"])
-        if v is None:
-            v = _f(r.get("mean_chained"))
         if v is None or cat not in LABELS:
             continue
         panel = PANEL_OF.get((r["race_id"], q))

@@ -135,6 +135,27 @@ sync_raw_up() {
   copy_tree "forecast/data/$CYCLE/raw/" "$RAW_REPO/$CYCLE/raw/"
   [[ -d "forecast/data/$CYCLE/parsed" ]] && \
     copy_tree "forecast/data/$CYCLE/parsed/" "$RAW_REPO/$CYCLE/parsed/"
+  # model_private/ TOO. This used to be a manual step and the manual step was
+  # skipped, which is how the archive came to hold 543 model-days of seat
+  # projections while the working tree held 806 — 88 of them surviving only
+  # inside an old commit, recovered later by _history_merge.py. The tree is
+  # gitignored HERE (it must never reach the public repo) and tracked THERE,
+  # so nothing but this line moves it across.
+  #
+  # No --delete, as above. That is not full protection: a thin local run can
+  # still overwrite a fatter archived FILE, which is exactly what happened
+  # before. What actually protects it now is the shard layout — one file per
+  # date under model_private/history/, so a bad run can only damage the day it
+  # ran — plus `_history_merge.py --verify`, which fails loudly if a shard has
+  # dropped a (date, model) the manifest already knows about. Run it after a
+  # sync you have any doubt about.
+  #
+  # Deliberately NOT mirrored in sync_raw_down(). Copying model_private DOWN
+  # would let an older archived copy overwrite a newer local one, which is the
+  # same accident pointing the other way.
+  [[ -d "forecast/data/$CYCLE/model_private" ]] && \
+    copy_tree "forecast/data/$CYCLE/model_private/" \
+              "$RAW_REPO/$CYCLE/model_private/"
   git -C "$RAW_REPO" add -A
   if git -C "$RAW_REPO" diff --staged --quiet; then
     echo "  private archive already up to date"
