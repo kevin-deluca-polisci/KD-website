@@ -987,6 +987,12 @@ def archive_report(rows: list[dict], per_date, dates) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Seats filled at a SPECIAL election this cycle. Kept beside titles() rather
+# than inside it so the list is greppable and dated when the next cycle's
+# specials are added.
+SENATE_SPECIAL = {"Florida", "Ohio"}
+
+
 def titles(cycle: int) -> list[str]:
     """Every article worth asking for, built from the naming convention.
 
@@ -1002,6 +1008,21 @@ def titles(cycle: int) -> list[str]:
     out = []
     for name in STATES:
         out.append(f"{cycle} United States Senate election in {name}")
+        # SPECIAL ELECTIONS ARE A SEPARATE ARTICLE WITH A SEPARATE TITLE, and
+        # omitting them silently lost two races for the whole life of this
+        # capture. Florida and Ohio each fill a seat at a special election in
+        # 2026 and neither holds a regular one, so the generated title 404s
+        # every day, the handler counts it as an expected absence, and nothing
+        # anywhere reports that a race is missing rather than merely unlisted.
+        # Ohio is a Toss-up carrying six poll aggregators; it was invisible.
+        #
+        # Both forms are emitted rather than a substitution, because a state
+        # CAN hold a regular and a special Senate election in the same year,
+        # and the one that does not exist costs one request and is counted as
+        # absent like any other planned title.
+        if name in SENATE_SPECIAL:
+            out.append(f"{cycle} United States Senate special election "
+                       f"in {name}")
         noun = "election" if name in AT_LARGE else "elections"
         out.append(f"{cycle} United States House of Representatives "
                    f"{noun} in {name}")
