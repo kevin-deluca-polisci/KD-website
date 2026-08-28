@@ -469,6 +469,56 @@ def income_from_archive(cycle: int,
 #     FRED capture  2026-08-25   ->  last observation 2026-06-01   consistent
 INCOME_RELEASE_LAG_MONTHS = 2
 
+# --------------------------------------------------------------------------
+# THE JANUARY HOLE, AND WHY THE ANSWER IS TO CARRY RATHER THAN TO RECOMPUTE
+#
+# income_as_of returns year-to-date growth: this year's months averaged against
+# last year's. _ytd_growth returns None when NO month of the current calendar
+# year has been released yet, and with a two-month release lag that is true of
+# every 1 January through to roughly 1 March.
+#
+# So the quantity went undefined for the first two months of every year, and
+# both models that read it — class_fundamentals and academic_referendum —
+# simply declined to run. Measured on the real history: class_fundamentals was
+# absent for 59 consecutive days (2025-12-31 to 2026-03-01) and
+# academic_referendum for 83 days across the Januaries and Februaries of both
+# years, in a weekly on-off flicker because the FIRST route in income_as_of
+# (income_from_archive) still worked on days a capture happened to exist.
+#
+# The visible damage was not the gap. It was that the fundamentals average is
+# a mean over whoever reported that day, so the line sawtoothed by about three
+# seats every week through both Januaries and then stepped 232.1 -> 236.7 in a
+# single day on 2026-03-01 when the fifth member came back. None of that was a
+# model changing its mind.
+#
+# WHAT WAS REJECTED. Redefining income as trailing-twelve-month growth would
+# remove the hole and is arguably the better statistic, but it is a different
+# variable from the one the models are fitted on — an annual average against an
+# annual average — so it is a change of specification, which by MODEL_ID above
+# is a change of model identity and a rebuild of the whole history.
+#
+# WHAT THIS DOES INSTEAD. On a date where no route resolves, fall back to the
+# last date at which one did, which is deterministically 31 December of the
+# prior year: the last day the completed year-to-date figure existed. The
+# value is unchanged, the specification is unchanged, and the models keep
+# reporting a constant number through January.
+#
+# THE LINE GOES FLAT, AND THAT IS THE HONEST SHAPE. In January these models
+# have no new information; a flat line says so, where a gap said something
+# false about the roster. The provenance string records the carry and the basis
+# is `carried`, so nothing downstream mistakes it for a fresh reading.
+#
+# ANCHORED, NOT ITERATIVE. The fallback always targets 31 December of the prior
+# year rather than "the last date this worked", so it is path-independent: the
+# answer for 2026-01-15 is the same whether computed on that day or rebuilt in
+# November, and it can never chain one carry onto another.
+#
+# The cap is a tripwire, not a policy. Two months is the expected carry; if
+# this is ever reaching back further than a third of a year the income capture
+# has been broken for a long time and the right outcome is the gap plus the
+# operator noticing, not a value from last spring plotted as today's.
+INCOME_CARRY_MAX_DAYS = 120
+
 
 def _ytd_growth(monthly: dict[str, float], asof: str) -> tuple[float, int] | None:
     """(year-to-date growth vs the prior full year, months in hand).
@@ -519,8 +569,14 @@ def _newest_fred_monthly(cycle: int) -> dict[str, float]:
     return out
 
 
-def income_as_of(cycle: int, asof: str | None = None):
-    """(value, provenance string, basis) or None. basis names the route taken."""
+def income_as_of(cycle: int, asof: str | None = None, carry: bool = True):
+    """(value, provenance string, basis) or None. basis names the route taken.
+
+    carry=False disables the January carry-forward described at
+    INCOME_CARRY_MAX_DAYS. It exists so the carry itself can recurse exactly
+    once, into a date where a real reading is expected, and never onto another
+    carried value.
+    """
     end = asof or dt.date.today().isoformat()
 
     got = income_from_archive(cycle, asof)
@@ -555,6 +611,24 @@ def income_as_of(cycle: int, asof: str | None = None):
                     f"published then has been revised since. Run "
                     f"collect/alfred_income.py --capture to replace this with "
                     f"BEA's own dated figure", "retrospective")
+
+    # Every route is dead. Before giving up, carry the last figure that
+    # existed — see INCOME_CARRY_MAX_DAYS above for why this is a carry and
+    # not a recomputation.
+    if carry:
+        anchor = f"{int(end[:4]) - 1}-12-31"
+        if anchor < end:
+            days = (dt.date.fromisoformat(end)
+                    - dt.date.fromisoformat(anchor)).days
+            if days <= INCOME_CARRY_MAX_DAYS:
+                got = income_as_of(cycle, anchor, carry=False)
+                if got:
+                    return (got[0],
+                            f"{got[1]} — CARRIED FORWARD {days} day(s) from "
+                            f"{anchor}: year-to-date growth for {end[:4]} does "
+                            f"not exist yet, because no month of {end[:4]} has "
+                            f"been released. Not a new reading",
+                            "carried")
     return None
 
 
@@ -679,6 +753,11 @@ def backfill(a) -> int:
             # forecast, and inventing one would be the same sin as the flat
             # approval constant below — but a gap the reader can see has to be
             # a gap the operator was told about.
+            # Since the carry-forward at INCOME_CARRY_MAX_DAYS this branch
+            # should be close to empty: it now means no income figure existed
+            # even at the end of the PRIOR year, which is a real hole in the
+            # capture rather than a January calendar artefact. A large count
+            # here is worth chasing.
             no_income += 1
             if len(no_income_eg) < 3:
                 no_income_eg.append(date)

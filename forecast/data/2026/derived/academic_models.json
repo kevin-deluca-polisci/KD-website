@@ -128,8 +128,8 @@
         },
         "pres_party_seat_change": -48.1,
         "implied_D_seats": 263.1,
-        "inversion_extrapolated": true,
-        "curve_points_used": 10,
+        "inversion_extrapolated": false,
+        "curve_points_used": 11,
         "sensitivity_month": [
           {
             "month": "Mar 2026",
@@ -181,7 +181,6 @@
       },
       "notes": [
         "forecasts SEAT CHANGE directly \u2014 the margin shown is our own seat curve run backwards from that seat count, and is not a number Lockerbie publishes",
-        "that seat count falls outside the range of tides the other models produced today, so the inversion is extrapolated rather than interpolated",
         "OUTSIDE THE FITTED RANGE on pct_expect_worse = 37, above the sample maximum of 32 and open_seats = 60, above the sample maximum of 56. The model was fit on 1952-2022 and this is a linear extrapolation beyond anything in that sample, which is most of why it is the most Democratic forecast on this site.",
         "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
         "published out-of-sample mean absolute error is 16.8 seats \u2014 the interval is his, not ours, and it is very wide"
