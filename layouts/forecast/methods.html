@@ -98,6 +98,9 @@
         <tr><td>Which district map</td>
             <td>The lines in force on the date being shown, not today&rsquo;s</td>
             <td class="muted">Ten states redrew mid-cycle. Where a map has no signature date &mdash; a court imposed it, or it took effect only when an injunction lifted &mdash; the date is a judgment call, and California&rsquo;s is worth about three and a half seats.</td></tr>
+        <tr><td>Income in January</td>
+            <td>The last complete year-to-date figure is carried forward until the new year&rsquo;s first month is published</td>
+            <td class="muted">Income enters both models as this year&rsquo;s months averaged against last year&rsquo;s, and on 1 January there are no months of the new year yet. With a two-month release lag the figure does not exist again until about 1 March. Carrying the last real value keeps the roster constant; the alternative was for two models to drop out and the family average to lurch every week. The cost is that these lines are flat by construction for the first two months of each year, and a reader cannot tell stability from an absence of data by looking. The provenance field on every affected row reads <code>carried</code>.</td></tr>
       </table>
     </div>
   </section>
@@ -581,6 +584,33 @@
            govern the cycle no longer apply.</p>
       </div>
 
+      <div class="note">
+        <strong>The seat counts beside an outside forecaster are ours, not
+        theirs.</strong>
+        Every source on this site contributes exactly one number to the seat
+        machinery: its national House margin. That margin is then pushed through
+        the same partisan lean, the same district baseline and the same
+        uncertainty as every other source, which is what makes the comparison
+        mean anything. A difference between two lines is a difference in the
+        tide and in nothing else.
+        <p style="margin:10px 0 0">The price is that a seat count shown against
+           a forecaster&rsquo;s name is our model reading their generic ballot,
+           not their own seat forecast, and the two can disagree. Race to the WH
+           is the clearest case: it publishes thirty-five Senate race margins of
+           its own, and none of them enter the Senate number shown here. Those
+           race-level figures are collected and do feed the race-level averages;
+           it is only the chamber totals that are reconstructed. Where a
+           forecaster publishes its own seat count, read theirs rather than
+           ours.</p>
+        <p style="margin:10px 0 0">One visible consequence: three aggregators
+           have published the same rounded generic ballot for several days
+           running, so their seat counts and chamber probabilities are identical
+           to the last decimal. That is the method working rather than a
+           duplicate row. It also means the number beside a family is not as
+           many independent readings as it appears, which is what the
+           contributor count beside it is for.</p>
+      </div>
+
       <table>
         <tr><th>Forecaster</th><th>What it is</th></tr>
         <tr><td><a href="https://grantbw4.github.io/2026-midterms-forecast/">Grant Williams</a></td>
@@ -794,6 +824,14 @@
          it on 4 November, and the ratification date is used. That single choice
          is worth 3.6 expected seats across the intervening seventy-five days,
          which is why it is written down rather than left in a comment.</p>
+      <p>What this looks like on the chart is worth saying plainly, because it
+         is easy to misread. Every line steps on each of the eleven dates a
+         state&rsquo;s new map took effect, and they step together, because the
+         ground moved rather than anyone&rsquo;s forecast. Florida on 4 May 2026
+         is the largest: about four and a half seats off every model on the same
+         day, including Ray Fair&rsquo;s, whose published vote share did not move
+         at all that week. A step that appears in one line is news. A step that
+         appears in all of them at once is the map.</p>
       <p>Two consequences for scoring, both fixed before any result exists. A
          race-level forecast is scored only if it was made under the map that
          decided the race, since a forecast of TX-09 in March 2025 is about

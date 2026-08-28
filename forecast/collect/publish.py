@@ -896,10 +896,26 @@ def main(argv=None) -> int:
             "Full per-forecaster data will be released as a documented archive "
             "after the election."),
     }
+    # COMPACT, NOT INDENTED, AND THE REASON IS THE PUBLIC REPO RATHER THAN THE
+    # BROWSER.
+    #
+    # `indent=2` on this payload costs 4.5 MB of pure whitespace: 7.54 MB
+    # pretty-printed against 3.02 MB compact, for byte-identical data. Over the
+    # wire it never mattered, because the host gzips and both forms land near
+    # 0.73 MB. What it costs is git. These two files are on publish.py's commit
+    # allowlist and change every single day, so the indentation alone was
+    # adding roughly 9 MB a day of blobs to the PUBLIC repository, for nothing.
+    #
+    # Nothing reads either file by hand. Hugo parses one at build time and the
+    # page fetches the other; a human wanting to look at the data has
+    # derived/*.csv, which stay readable. `python3 -m json.tool` prints either
+    # one if it is ever needed.
+    COMPACT = {"separators": (",", ":")}
     p = DATA / str(a.cycle) / "site.json"
-    p.write_text(json.dumps(out, indent=2))
+    p.write_text(json.dumps(out, **COMPACT))
     print(f"  wrote {p.relative_to(REPO)}  "
-          f"({len(headline)} categories, {len(dates)} snapshots)")
+          f"({len(headline)} categories, {len(dates)} snapshots, "
+          f"{p.stat().st_size / 1e6:.1f} MB)")
 
     # Hugo reads this at build time from assets/, NOT from data/.
     #
@@ -914,8 +930,9 @@ def main(argv=None) -> int:
     #      map entirely.
     hugo = REPO / "assets" / f"forecast_{a.cycle}.json"
     hugo.parent.mkdir(parents=True, exist_ok=True)
-    hugo.write_text(json.dumps(out, indent=2))
-    print(f"  wrote {hugo.relative_to(REPO)}  (Hugo build-time data)")
+    hugo.write_text(json.dumps(out, **COMPACT))
+    print(f"  wrote {hugo.relative_to(REPO)}  (Hugo build-time data, "
+          f"{hugo.stat().st_size / 1e6:.1f} MB)")
     return 0
 
 if __name__ == "__main__":
