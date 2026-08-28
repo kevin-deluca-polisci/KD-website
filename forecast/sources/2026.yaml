@@ -267,7 +267,7 @@ sources:
     publication: aggregate_only
     declared_inputs: [polymarket, kalshi]   # ingests BOTH markets by volume weight
     license: permission_pending
-    robots_checked: null
+    robots_checked: 2026-08-29
     config:
       urls:
         - name: forecast_2026
@@ -275,8 +275,29 @@ sources:
         - name: forecast_senate
           url: https://votes.decisiondeskhq.com/forecast/2026/senate
     notes: >
-      decisiondeskhq.com robots.txt is `Allow: /`, but the forecast lives on the
-      votes. SUBDOMAIN whose robots could not be retrieved during the audit.
+      ROBOTS: RESOLVED 2026-08-29. votes.decisiondeskhq.com/robots.txt reads
+      `User-Agent: * / Allow: /` with /api/, /admin/, /broadcast/, /onboarding/,
+      /sign-in and /sign-up disallowed. /forecast/2026 is permitted.
+      .
+      BUT /api/ IS DISALLOWED, and that is the operative constraint. The page is
+      a client-side app; the easy implementation is to call the JSON endpoint it
+      fetches, and that endpoint is exactly what robots forbids. A parser here
+      must read the rendered document, never the API behind it.
+      .
+      STILL DISABLED, on licence rather than robots. robots.txt governs crawler
+      access, not the right to store and republish, and license is the field
+      that governs FETCH here. Nobody at DDHQ has asked us not to collect; we
+      have simply never asked them. Resolving this is an email, not a technical
+      question.
+      .
+      DO NOT COLLECT FROM AN AUTHENTICATED SESSION. A logged-in or paid account
+      is governed by the terms accepted on sign-up, not by robots.txt, and those
+      terms commonly forbid automated extraction and redistribution outright. An
+      account makes the position weaker, not stronger.
+      .
+      IF EVER ENABLED: declared_inputs above is load-bearing. This model ingests
+      Polymarket and Kalshi by volume weight, so it is downstream of the market
+      category and must never be pooled into a composite average beside them.
       ACTION: fetch https://votes.decisiondeskhq.com/robots.txt by hand, and if
       clear, set enabled:true and license:permitted.
       Ingests Polymarket and Kalshi, so it is NOT independent of the market
@@ -674,7 +695,12 @@ sources:
     enabled: true
     cadence: daily
     publication: individual        # CC BY-SA 4.0, attribution required
-    declared_inputs: [cook, sabato, inside_elections, race_to_the_wh, economist, votehub, split_ticket]
+    declared_inputs: [cook, sabato, inside_elections, race_to_the_wh, economist, votehub, split_ticket,
+                      rcp, silver_bulletin, ddhq, fiftyplusone, twoseventy]
+    # The second list is the poll-AGGREGATION table, added 2026-08-28.
+    # This entry was declared downstream of the raters it republishes but
+    # not of the poll averages it republishes, which is the same omission
+    # in the other half of the page.
     license: permitted
     robots_checked: 2026-08-19
     config:
@@ -846,6 +872,79 @@ sources:
       ClaudeBot/GPTBot, so the open endpoint reads as an oversight rather than
       an invitation. Ask before enabling. Available second-hand via Wikipedia.
 
+  - id: twoseventy
+    name: 270toWin poll averages
+    category: polling
+    method: http
+    enabled: false                 # <-- blocked pending robots + licence check
+    cadence: daily
+    publication: aggregate_only
+    declared_inputs: []
+    license: permission_pending
+    robots_checked: ""
+    config:
+      urls:
+        - name: senate_2026
+          url: https://www.270towin.com/2026-senate-election/
+        - name: house_2026
+          url: https://www.270towin.com/2026-house-election/
+    notes: >
+      ADDED 2026-08-28 because their per-race averages already reach us by
+      name, in Wikipedia's general-election poll-aggregation tables. The Texas
+      article carries "270toWin, July 27 - August 24, 2026, Talarico +2.8%"
+      beside a Decision Desk HQ row. This entry exists so that number has a
+      named, tiered source instead of arriving anonymously inside a Wikipedia
+      row.
+      .
+      WHAT WE COLLECT TODAY IS THE WIKIPEDIA COPY, not this site. That path is
+      CC BY-SA and permitted; direct collection is not yet checked. The tier
+      travels with the number either way — a 270toWin average read out of
+      Wikipedia is still 270toWin's and is aggregate_only until somebody
+      establishes otherwise. This is the same rule already applied to Cook's
+      PVI, and it is why second-hand collection is not a way around a licence.
+      .
+      THIS IS A POLL AVERAGE, so it sits in the polling pool beside
+      silver_bulletin and the other aggregators rather than in a composite. Two
+      consequences. It must never be pooled with individual polls, which it is
+      built from. And it must not be counted twice when the same figure arrives
+      both directly and through wikipedia; the parser dedupes on
+      (source, race, as_of), preferring the direct row when both exist.
+      .
+      ACTION: fetch https://www.270towin.com/robots.txt by hand; if clear, fill
+      robots_checked and decide the licence separately. robots governs fetch,
+      not redistribution.
+
+  - id: twoseventy_ratings
+    name: 270toWin race ratings
+    category: expert_ordinal
+    method: http
+    enabled: false
+    cadence: sporadic
+    publication: aggregate_only
+    declared_inputs: []
+    license: permission_pending
+    robots_checked: ""
+    config:
+      urls:
+        - name: senate_ratings
+          url: https://www.270towin.com/2026-senate-election/
+        - name: house_ratings
+          url: https://www.270towin.com/2026-house-election/
+    notes: >
+      A SEPARATE ENTRY rather than a second quantity on `twoseventy`, following
+      the cook / cook_pvi / cook_state_pvi precedent: one entry per data
+      product, because the tier, the cadence and the parser all differ.
+      .
+      DECLARED_INPUTS IS THE OPEN QUESTION AND IT IS LOAD-BEARING, so it is
+      empty on purpose rather than by omission. 270toWin publishes editorial
+      ratings alongside a consensus assembled from other raters. If what we
+      capture is the consensus, this source is downstream of cook, sabato and
+      inside_elections and must never be pooled into an expert average beside
+      them — precisely the trap ddhq carries with respect to the markets.
+      Establish which of the two we are reading BEFORE enabling, and fill
+      declared_inputs accordingly. An expert average that silently counts Cook
+      twice is not visibly broken, which is what makes it dangerous.
+
   - id: fiftyplusone
     name: FiftyPlusOne (G. Elliott Morris)
     category: professional
@@ -955,7 +1054,7 @@ sources:
     publication: aggregate_only
     declared_inputs: []
     license: permission_pending
-    robots_checked: null
+    robots_checked: 2026-08-29
     config:
       urls:
         - name: senate
@@ -980,7 +1079,7 @@ sources:
     publication: aggregate_only
     declared_inputs: []
     license: permission_pending
-    robots_checked: null
+    robots_checked: 2026-08-29
     config: {urls: []}
     notes: >
       Registration-gated but free. robots.txt could not be retrieved.
@@ -1211,93 +1310,3 @@ sources:
       Caveat for the methods page rather than for the code: `lastTradePrice`
       is the last trade, which on a thin market can be hours old and on either
       side of a wide spread. We do not smooth it.
-
-  - id: cnalysis
-    name: CNalysis
-    category: professional
-    method: http
-    enabled: false                 # CLOSED — the organisation shut down
-    cadence: daily
-    publication: aggregate_only    # free to read; no republication grant
-    license: permitted
-    robots_checked: 2026-08-21
-    url_checked: 2026-08-21
-    closed: 2026-08-22             # not "waiting" — there is nothing to wait for
-    declared_inputs: []
-    config:
-      urls:
-        - name: house
-          url: https://projects.cnalysis.com/26g/house
-        - name: senate
-          url: https://projects.cnalysis.com/26g/senate
-    notes: >
-      CLOSED 2026-08-22. This entry used to say "no 2026 product exists yet"
-      and listed a route back in. That was wrong about the reason and therefore
-      wrong about the remedy: CNalysis shut down in 2025 and is not forecasting
-      the midterms. There is no page coming and the 404s were the end of the
-      story, not the start of one.
-      WHY THE DISTINCTION IS WORTH A FIELD OF ITS OWN. A source that is
-      disabled-and-waiting is a standing invitation to re-check, and every
-      re-check costs somebody a few minutes and a small amount of hope. A
-      source that is CLOSED should be re-checked never. Recording which is
-      which is most of what these notes are for.
-      WHAT WAS LOST: CNalysis was not one of the twelve raters reaching us
-      through Wikipedia, so this is a genuinely absent opinion rather than a
-      duplicate we can shrug at — one fewer route toward the three gated
-      contributors the professional category needs to clear MIN_N.
-      The URLs and config stay rather than being deleted, so that anyone
-      reading this entry later can see exactly what was tried.
-  - id: jhk_forecasts
-    name: JHK Forecasts
-    category: professional
-    method: http
-    enabled: false                 # forecasts moved behind a paywall
-    cadence: daily
-    publication: aggregate_only
-    license: permitted
-    robots_checked: 2026-08-21
-    url_checked: 2026-08-21
-    declared_inputs: []
-    config:
-      urls:
-        - name: home
-          url: https://www.jhkforecasts.com/2026-midterms
-    notes: >
-      DISABLED 2026-08-21. Two separate problems, either one disqualifying.
-      First the host: the certificate served for www.jhkforecasts.com does not
-      match that name, so a TLS client refuses it before any request is made.
-      Second, and the one that actually settles it, the site's forecast content
-      now routes to a Ghost subscription at jhk-forecasts-plus.ghost.io. Paid
-      sources are out of scope by decision rather than by accident — the brief
-      for this round was free sources only.
-      ROUTE BACK IN: only if JHK publishes a free 2026 page. A subscription
-      would also change the licence question entirely, because paying for
-      access is not permission to redistribute.
-  - id: elections_daily
-    name: Elections Daily
-    category: professional
-    method: http
-    enabled: false                 # no 2026 ratings published yet
-    cadence: daily
-    publication: aggregate_only
-    license: permitted
-    robots_checked: 2026-08-21
-    url_checked: 2026-08-22        # re-checked by hand; still nothing for 2026
-    declared_inputs: []
-    config:
-      urls:
-        - name: ratings
-          url: https://elections-daily.com/2026-senate-ratings/
-    notes: >
-      DISABLED 2026-08-21, re-checked 2026-08-22 and still nothing. The URL was
-      a guess and it 404s. Their ratings hub at /election-ratings/ shows the
-      2024 cycle, with archives back to 2020 and no 2026 section; there is no
-      page to capture.
-      STILL WAITING, unlike CNalysis on this same list — Elections Daily is a
-      going concern that has not published this cycle's ratings yet, not an
-      operation that closed. That is the difference the `closed:` field records,
-      and it is why this entry keeps its route back in and CNalysis does not.
-      ROUTE BACK IN: watch /election-ratings/ for a 2026 section. Elections
-      Daily is not among the twelve raters Wikipedia already gives us, so it
-      would add a real opinion and not a duplicate. Worth a monthly look rather
-      than a daily fetch; a daily fetch against a 404 is an alarm nobody reads.

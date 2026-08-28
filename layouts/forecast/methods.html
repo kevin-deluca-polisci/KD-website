@@ -343,6 +343,22 @@
          certified official returns under a public-domain dedication — the basis
          for our state partisan lean, and the reason the Senate table can be
          published at all.</p>
+      <p class="muted"><strong>The two chambers use different baselines, and
+         that is deliberate.</strong> House districts are leaned on
+         <a href="https://davesredistricting.org/">Dave&rsquo;s Redistricting
+         App</a>, whose composite we re-centre on the mean of the 435 current
+         districts so it means the same thing Cook&rsquo;s index does. States
+         are leaned on our own reconstruction from the MIT returns above.
+         The reason is availability rather than preference: DRA computes a
+         partisan composite per district and has no consistent statewide
+         product, so a Senate baseline built from it would have to be
+         reassembled from districts with vote weights we do not hold for every
+         state, and the six single-district states would still have to be
+         filled from the MIT composite regardless. Because the slope, the
+         incumbency coefficient and the three sigmas are all properties of the
+         index they were fitted against, each baseline carries its own
+         calibration and the two are never mixed. Every projection records
+         which baseline produced it.</p>
     </div>
   </section>
 
@@ -619,7 +635,7 @@
         <tr><td><a href="https://grantbw4.github.io/2026-midterms-forecast/">Grant Williams</a></td>
             <td class="muted">An open-source district- and state-level model built on partisan lean, polling, incumbency and candidate quality. MIT-licensed. Collected daily.</td></tr>
         <tr><td><a href="https://votes.decisiondeskhq.com/forecast/2026">Decision Desk HQ</a></td>
-            <td class="muted">Polls-plus-fundamentals model paired with a live results operation. Their forecast page is <strong>not collected</strong>, at their request. Their race ratings reach us, attributed, where a third party republishes them.</td></tr>
+            <td class="muted">Polls-plus-fundamentals model paired with a live results operation. Their forecast page is <strong>not collected</strong> &mdash; not at their request, which we wrongly said here until 29 August 2026, but because the licence question is open and we have not yet asked them. Their robots.txt permits the path. Their race ratings reach us, attributed, where a third party republishes them. Worth knowing if it is ever enabled: their model ingests Polymarket and Kalshi by volume weight, so it is downstream of the markets already collected here and could not be averaged beside them without counting those twice.</td></tr>
         <tr><td><a href="https://www.economist.com/">The Economist</a></td>
             <td class="muted">Bayesian model pooling polls across states with a fundamentals prior. Subscriber-only and <strong>not collected</strong>. Their race ratings reach us, attributed, where a third party republishes them.</td></tr>
         <tr><td><a href="https://www.racetothewh.com/senate/26">Race to the WH</a></td>
@@ -631,23 +647,7 @@
         <tr><td><a href="https://votehub.com/">VoteHub</a></td>
             <td class="muted">Polling aggregation and race ratings.</td></tr>
       </table>
-      <h3>Registered but not collecting</h3>
-      <table>
-        <tr><th>Forecaster</th><th class="wrap">Why not</th></tr>
-        <tr><td><a href="https://projects.cnalysis.com/">CNalysis</a></td>
-            <td class="wrap muted">Shut down in 2025. Kept here because a reader looking for a
-                forecaster that used to exist deserves to be told what happened
-                to it.</td></tr>
-        <tr><td><a href="https://elections-daily.com/election-ratings/">Elections Daily</a></td>
-            <td class="wrap muted">Same: their ratings hub still shows 2024.</td></tr>
-        <tr><td><a href="https://jhkforecasts.com/">JHK Forecasts</a></td>
-            <td class="wrap muted">Forecasts moved behind a paid subscription.
-                Paid sources are out of scope, and paying for access would not
-                be permission to republish in any case.</td></tr>
-      </table>
-      <p class="thin-note">Both CNalysis and Elections Daily would be genuinely
-         new opinions rather than duplicates: neither is among the raters
-         reaching us through Wikipedia's ratings tables.</p>
+
             {{/* No per-forecaster figures on this card, by policy.
 
            This card used to print one forecaster's national numbers under the

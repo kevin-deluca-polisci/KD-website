@@ -110,10 +110,8 @@ BY_SOURCE: dict[str, tuple[str, str]] = {
     "rcp": ("polling", "professional"),
     "votehub": ("polling", "professional"),
     "fiftyplusone": ("polling", "professional"),
+    "twoseventy": ("polling", "professional"),
     "economist": ("composite", "professional"),
-    "cnalysis": ("composite", "professional"),
-    "jhk_forecasts": ("composite", "professional"),
-    "elections_daily": ("composite", "professional"),
     "split_ticket": ("composite", "professional"),
     "grant_williams": ("composite", "professional"),
 
@@ -151,6 +149,7 @@ BY_SOURCE: dict[str, tuple[str, str]] = {
     "sabato": ("expert", "professional"),
     "inside_elections": ("expert", "professional"),
     "fox_power_rankings": ("expert", "professional"),
+    "twoseventy_ratings": ("expert", "professional"),
 
     # -- inputs, not forecasts ---------------------------------------------
     "cook_pvi": ("reference", "reference"),

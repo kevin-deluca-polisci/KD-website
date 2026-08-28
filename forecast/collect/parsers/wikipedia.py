@@ -56,8 +56,12 @@ FORECASTERS = [
     ("FIFTYPLUSONE", "fiftyplusone"), ("FIFTY PLUS ONE", "fiftyplusone"),
     ("SILVER BULLETIN", "silver_bulletin"),
     ("REALCLEARPOLITICS", "rcp"), ("REALCLEARPOLLING", "rcp"), ("RCP", "rcp"),
-    ("FOX", "fox_power_rankings"), ("CNALYSIS", "cnalysis"),
-    ("ELECTIONS DAILY", "elections_daily"), ("JHK", "jhk_forecasts"),
+    ("FOX", "fox_power_rankings"),
+    # 270toWin appears as a ROW in the poll-aggregation table, not as a
+    # ratings COLUMN, so this needle resolves to the polling product. If it
+    # ever turns up in a ratings table the parser has to disambiguate by
+    # table shape before this mapping can stand.
+    ("270TOWIN", "twoseventy"), ("270 TO WIN", "twoseventy"),
 ]
 
 # Headers that must never be read as a forecaster column, checked first.
