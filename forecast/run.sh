@@ -215,6 +215,30 @@ sync_raw_down() {
   else
     echo "  (private repo has no $CYCLE/raw yet — first run?)"
   fi
+
+  # THE HISTORY COMES DOWN TOO, BUT ONLY THE DAYS WE DO NOT ALREADY HAVE.
+  #
+  # For most of this project's life model_private was deliberately NOT mirrored
+  # down at all, because an older archived copy overwriting a newer local one
+  # is the accident the whole arrangement exists to prevent.
+  #
+  # That reasoning assumed one writer. The daily Action is a second, and it
+  # writes dates this laptop never sees — any day the Action runs and nobody
+  # runs locally. On 2026-08-28 the archive held 586 dates and the working tree
+  # 585. That one self-healed because the missing date was the current day and
+  # the next local run recomputed it. The day it does not self-heal, this tree
+  # keeps a permanent hole and every later publish is built from the copy with
+  # the hole in it.
+  #
+  # --fill-from-shards is the narrow version of mirroring down: it may ADD a
+  # date we lack and may never REVISE one we hold, so the original accident
+  # stays impossible. Everything else in model_private/ still does not travel
+  # downward.
+  if [[ -d "$RAW_REPO/$CYCLE/model_private/history" && -f "$MERGE_PY" ]]; then
+    python3 "$MERGE_PY" --cycle "$CYCLE" \
+      --fill-from-shards "$RAW_REPO/$CYCLE/model_private/history" \
+      || echo "  WARNING: could not fill the history from the archive"
+  fi
 }
 
 sync_raw_up() {

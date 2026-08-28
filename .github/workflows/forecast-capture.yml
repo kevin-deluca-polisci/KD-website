@@ -23,9 +23,32 @@
  
 name: Forecast capture (daily)
  
+# TWO ATTEMPTS, AND NEITHER ON THE HOUR. Measured, not guessed — every
+# Action-authored commit between 2026-08-24 and 2026-08-28, against a "0 11"
+# schedule:
+#
+#     08-24  11:33 UTC   on time
+#     08-25  —           never ran at all
+#     08-26  14:07 UTC   three hours late
+#     08-27  21:02 UTC   ten hours late
+#     08-28  —           dropped; run by hand at 16:12
+#
+# GitHub queues scheduled workflows at best effort, delays them under load and
+# drops them outright when contention is high, and the top of the hour is the
+# most contended minute on the platform because it is what everybody types.
+# Minute 37 is not magic; it is simply not minute 0.
+#
+# The second attempt is the part that actually buys reliability. The pipeline
+# is idempotent — capture is newest-wins, aggregate refuses a history that
+# shrinks, publish rewrites derived files that are pure functions of the data —
+# so a second run on a day the first succeeded is close to a no-op, and on a
+# day the first was dropped it is the difference between a captured day and a
+# hole in the record. A missing day cannot be recovered later: nobody archives
+# what a poll aggregator said last Tuesday.
 on:
   schedule:
-    - cron: "0 11 * * *"
+    - cron: "37 11 * * *"
+    - cron: "37 16 * * *"
   workflow_dispatch:
     inputs:
       only:     {description: "Comma-separated source ids (blank = all)", required: false, default: ""}

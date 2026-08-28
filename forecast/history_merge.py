@@ -40,6 +40,7 @@ USAGE
     python3 forecast/history_merge.py --write --prune     # ...and drop stale shards
     python3 forecast/history_merge.py --verify            # nothing lost since last write
     python3 forecast/history_merge.py --unshard           # shards -> monolith, fresh clone
+    python3 forecast/history_merge.py --fill-from-shards DIR   # add missing dates only
 
     CAREFUL WITH --from AND --git. They are for recovering a history that lost
     something. Because the merge unions and never deletes, pointing them at an
@@ -332,6 +333,86 @@ def write(cycle, days, prov, conflicts, day_meta, prune=False):
           f"once you have pushed the shards and confirmed --verify passes.")
 
 
+def fill_from_shards(cycle: int, shard_dir: Path) -> int:
+    """Add dates the local history is MISSING from a shard directory.
+
+    FILL-ONLY, AND THE ASYMMETRY IS THE WHOLE DESIGN.
+
+        A date the archive has and we do not is added. A date we already have
+        is never touched, whatever the archive says about it. So this can
+        recover a day and can never revise one.
+
+    WHY IT IS NEEDED
+
+        run.sh's sync_raw_down deliberately never mirrored model_private down,
+        because an older archived copy overwriting a newer local one is the
+        accident this whole arrangement exists to prevent. That was right while
+        one laptop was the only writer.
+
+        It stopped being right when the daily Action started writing too. Now
+        the archive can hold a date the laptop has never seen — any day the
+        Action runs and the laptop does not — and the old rule says to ignore
+        it. On 2026-08-28 the archive held 586 dates and the working tree 585.
+        That day it self-healed, because the missing date was today and the
+        next local run recomputed it. The day it does not self-heal is the day
+        the laptop's history acquires a permanent hole, and everything
+        published from that laptop afterwards is built from the copy with the
+        hole in it.
+
+        Fill-only closes that without reopening the original accident: the
+        archive may hand us a day we lack, and may never change a day we hold.
+
+    Shards with no projections are skipped: an empty day is not a recovered
+    day, and two of them were deliberately deleted on 2026-08-27.
+    """
+    base = DATA / str(cycle) / "model_private"
+    p = base / HIST_NAME
+    if not shard_dir.is_dir():
+        print(f"  no shard directory at {shard_dir} — nothing to fill from")
+        return 0
+    if not p.exists():
+        print(f"  no {HIST_NAME} to fill. This is a fresh tree — use --unshard,"
+              f" which builds it from the shards outright.")
+        return 0
+    try:
+        hist = json.loads(p.read_text())
+    except (json.JSONDecodeError, OSError) as e:
+        print(f"  cannot read {HIST_NAME} ({type(e).__name__}) — refusing to "
+              f"touch it")
+        return 0
+
+    added, empty = [], 0
+    for s in sorted(shard_dir.glob("*.json")):
+        d0 = s.stem
+        if d0 in hist:
+            continue
+        try:
+            day = json.loads(s.read_text())
+        except (json.JSONDecodeError, OSError):
+            print(f"  unreadable shard, skipped: {s.name}")
+            continue
+        if not (day.get("projections") or {}):
+            empty += 1
+            continue
+        day.setdefault("snapshot_date", d0)
+        hist[d0] = day
+        added.append(d0)
+
+    if not added:
+        print(f"  history already holds every date in the archive "
+              f"({len(hist)} date(s))")
+        return 0
+    tmp = p.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps({k: hist[k] for k in sorted(hist)}))
+    tmp.replace(p)
+    show = added if len(added) <= 6 else added[:5] + [f"... +{len(added)-5} more"]
+    print(f"  filled {len(added)} date(s) from the archive: {', '.join(show)}")
+    print(f"  {HIST_NAME} now holds {len(hist)} date(s)")
+    if empty:
+        print(f"  ({empty} empty shard(s) skipped)")
+    return len(added)
+
+
 def unshard(cycle: int) -> int:
     """Rebuild the monolith from the shards.
 
@@ -417,12 +498,20 @@ def main(argv=None):
     ap.add_argument("--unshard", action="store_true",
                     help="rebuild seat_projections_history.json from the "
                          "shards (for a fresh clone; refuses to overwrite)")
+    ap.add_argument("--fill-from-shards", dest="fill", default=None,
+                    metavar="DIR",
+                    help="add dates the local history lacks from a shard "
+                         "directory. Fill-only: never revises a date we "
+                         "already hold")
     a = ap.parse_args(argv)
 
     if a.verify:
         return verify(a.cycle)
     if a.unshard:
         return unshard(a.cycle)
+    if a.fill:
+        fill_from_shards(a.cycle, Path(a.fill))
+        return 0
     if a.prune and not a.write:
         print("  --prune only means anything with --write.")
         return 2

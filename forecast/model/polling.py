@@ -1167,6 +1167,93 @@ def newest_parsed_date_for(cycle: int) -> str | None:
     return Path(files[-1]).stem if files else None
 
 
+def history_entry(margin: float, n_polls: int, day: dt.date,
+                  provenance: str) -> dict:
+    """One row of polling_model_history.json.
+
+    Factored out so the backfill and the daily extension below cannot drift
+    into writing two different shapes into the same file.
+    """
+    days = (dt.date.fromisoformat(ELECTION_DAY) - day).days
+    return {
+        "snapshot_date": day.isoformat(),
+        "generic_ballot": {"raw": round(margin, 3), "adjusted": None,
+                           "used": "reconstructed_raw_mean",
+                           "value": round(margin, 3)},
+        "n_polls_in_window": n_polls,
+        "shrink_lambda": round(shrink_lambda(days), 4),
+        # The NOWCAST, matching what the live path feeds seats.py: the generic
+        # ballot as it stood, not shrunk toward November. Shrinking here would
+        # make the backfilled line a series of forecasts of election day while
+        # the live end of the same line is a nowcast, and the join would be a
+        # step with no cause.
+        "nowcast_tide_D": round(margin, 3),
+        "election_day_tide_D": round(margin * shrink_lambda(days), 3),
+        "provenance": provenance,
+    }
+
+
+def extend_history(cycle: int, date: str) -> tuple[int, float] | None:
+    """Append TODAY's reconstruction to polling_model_history.json.
+
+    WHY THIS EXISTS, AND WHAT BROKE WITHOUT IT
+
+        polling_model_history.json used to be written ONLY under --backfill,
+        which is a flag nobody passes on an ordinary day. So the file stopped
+        at whatever date somebody last ran the backfill by hand.
+
+        That was harmless while the file was only an input to
+        seats.py --backfill-history. It stopped being harmless on 2026-08-27,
+        when seats.py started reading it on the LIVE path to build
+        polling_reconstructed — the source that carries the class polling
+        line's national margin, because class_polling itself is
+        margin_published_elsewhere and contributes none.
+
+        The consequence showed up the very next morning: the 2026-08-28 run
+        found no entry for that date, skipped polling_reconstructed, and the
+        class polling margin went missing again — the exact gap the live-path
+        change had been written to close.
+
+        Recomputing the whole grid daily would cost minutes for one new value.
+        This appends one date instead.
+
+    PROVENANCE IS `computed`, NOT `backfilled`, and the distinction is not
+    cosmetic: aggregate.py maps `backfilled` to `retrospective`, meaning our
+    arithmetic on a poll record as it stands now, chosen with the cycle
+    visible, which must never be scored as a real-time forecast. A value
+    computed on its own day is a real-time forecast and is scored as one.
+    """
+    priv = DATA / str(cycle) / "model_private"
+    p = priv / "polling_model_history.json"
+    try:
+        hist = json.loads(p.read_text()) if p.exists() else {}
+    except (json.JSONDecodeError, OSError):
+        return None
+
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import academic  # noqa: E402  — the reconstruction lives there
+    polls = academic.load_poll_history(cycle)
+    if not polls:
+        return None
+    day = dt.date.fromisoformat(date)
+    got = academic.reconstruct_generic_ballot(polls, day)
+    if got is None:
+        return None
+    margin, n_polls = got
+
+    # Never overwrite a date that was already computed live. Re-running today
+    # is fine — it lands the same value — but a LATER --backfill sweeping
+    # across this date must not relabel a real-time reading as retrospective.
+    old = hist.get(date)
+    if old and old.get("provenance") == "computed":
+        return len(hist), old.get("nowcast_tide_D", margin)
+
+    hist[date] = history_entry(margin, n_polls, day, "computed")
+    priv.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps({k: hist[k] for k in sorted(hist)}, indent=2))
+    return len(hist), round(margin, 3)
+
+
 def backfill_history(cycle: int, step_days: int = 7) -> dict:
     """{date: {nowcast_tide_D, generic_ballot, ...}} from the poll record."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -1205,23 +1292,7 @@ def backfill_history(cycle: int, step_days: int = 7) -> dict:
             cur += dt.timedelta(days=step_days)
             continue
         margin, n_polls = got
-        days = (dt.date.fromisoformat(ELECTION_DAY) - cur).days
-        out[cur.isoformat()] = {
-            "snapshot_date": cur.isoformat(),
-            "generic_ballot": {"raw": round(margin, 3), "adjusted": None,
-                               "used": "reconstructed_raw_mean",
-                               "value": round(margin, 3)},
-            "n_polls_in_window": n_polls,
-            "shrink_lambda": round(shrink_lambda(days), 4),
-            # The NOWCAST, matching what the live path feeds seats.py: the
-            # generic ballot as it stood, not shrunk toward November. Shrinking
-            # here would make the backfilled line a series of forecasts of
-            # election day while the live end of the same line is a nowcast,
-            # and the join would be a step with no cause.
-            "nowcast_tide_D": round(margin, 3),
-            "election_day_tide_D": round(margin * shrink_lambda(days), 3),
-            "provenance": "backfilled",
-        }
+        out[cur.isoformat()] = history_entry(margin, n_polls, cur, "backfilled")
         cur += dt.timedelta(days=step_days)
 
     print(f"  reconstructed {len(out)} date(s)")
@@ -1405,14 +1476,48 @@ def main(argv=None) -> int:
             # breaking.
             priv = DATA / str(a.cycle) / "model_private"
             priv.mkdir(parents=True, exist_ok=True)
-            (priv / "polling_model_history.json").write_text(
-                json.dumps(hist, indent=2))
+            # MERGE, DO NOT REPLACE. Dates already written live carry
+            # provenance `computed` and must keep it: a backfill sweeping over
+            # them would relabel a real-time reading as retrospective, and
+            # aggregate.py scores those two differently. See extend_history.
+            p_hist = priv / "polling_model_history.json"
+            kept = 0
+            if p_hist.exists():
+                try:
+                    prior = json.loads(p_hist.read_text())
+                except (json.JSONDecodeError, OSError):
+                    prior = {}
+                for k, v in prior.items():
+                    if v.get("provenance") == "computed":
+                        hist[k] = v
+                        kept += 1
+            p_hist.write_text(json.dumps({k: hist[k] for k in sorted(hist)},
+                                         indent=2))
             print(f"  wrote model_private/polling_model_history.json"
-                  f"   PRIVATE — {len(hist)} date(s)")
+                  f"   PRIVATE — {len(hist)} date(s)"
+                  + (f", {kept} kept as live `computed`" if kept else ""))
             recon = hist.get(date, {}).get("nowcast_tide_D")
             live = out.get("nowcast_tide_D")
             print(f"  next: python3 forecast/model/seats.py --cycle {a.cycle} "
                   f"--backfill-academic   (projects these too)")
+    else:
+        # THE ORDINARY DAY, and the branch whose absence broke 2026-08-28.
+        # seats.py reads this file on the live path to build
+        # polling_reconstructed, which is what carries the class polling
+        # line's national margin. Without this the file stops growing on the
+        # day of the last hand-run backfill and the margin silently vanishes.
+        got = extend_history(a.cycle, date)
+        if got:
+            n, v = got
+            print(f"  wrote model_private/polling_model_history.json"
+                  f"   PRIVATE — {n} date(s), {date} reconstructed D{v:+.2f}")
+        else:
+            # Loud. seats.py will decline to build polling_reconstructed and
+            # say so too, but the cause is here.
+            print(f"  WARNING: could not reconstruct the generic ballot for "
+                  f"{date} — polling_model_history.json was NOT extended, and "
+                  f"seats.py will have no polling_reconstructed today. Check "
+                  f"that the Silver Bulletin poll list captured.")
     return 0
 
 
