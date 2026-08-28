@@ -568,15 +568,82 @@ def calibrate_sigma(cycle: int) -> dict:
 # The forecast
 # ---------------------------------------------------------------------------
 
+_SEN_CAL_CACHE: dict[int, dict] = {}
+
+
+def senate_slope(cycle: int = 2026) -> tuple[float, str]:
+    """(slope on the lean, where it came from).
+
+    THE SENATE WAS THE UNCALIBRATED HALF OF THIS MODEL, and the asymmetry was
+    invisible because both halves lived in this file.
+
+        house_forecast:   tide + slope x 2 x baseline + incumbency x c
+        senate_forecast:  tide +         2 x baseline
+
+    calibrate_sigma has been estimating that slope all along — 0.924 on 30
+    state-years — and senate_forecast used an implicit 1.0. Two consequences,
+    the second larger than it looks:
+
+        Safe seats were pushed too far out. Wyoming at D-40.5 rather than
+        D-36.9, West Virginia at -35.9 rather than -32.7.
+
+        The chamber probability moved with it. Not through the competitive
+        races, which shift about half a point, but through the lean seats that
+        compression brings within reach of the national shock. P(D 51+) on
+        2026-08-28 runs 4 to 6 points higher across every source once the
+        slope is applied, while expected seats move by half of one.
+
+    Corroborated independently three ways: 0.924 here on Senate returns, 0.921
+    on 768 House district-cycles with incumbency, and 0.902 implied by what
+    Grant Williams and Race to the WH separately think about the 2026 Senate
+    map. A composite index says districts are further apart than they turn out
+    to be, by about 8%.
+
+    THE SLOPE AND THE SIGMA COME FROM THE SAME FIT, always. calibrate_sigma
+    returns both, fitted together with no incumbency term, and callers pass
+    that same sigma_total in. When a Senate incumbency roster arrives the fit
+    has to be redone and BOTH have to move: pairing a no-incumbency slope with
+    a with-incumbency sigma claims an accuracy the projection has not earned.
+    house_forecast makes the same point at more length; this is the Senate's
+    copy of it, and the reason it is written twice is that the two were allowed
+    to drift apart once already.
+    """
+    if cycle not in _SEN_CAL_CACHE:
+        try:
+            _SEN_CAL_CACHE[cycle] = calibrate_sigma(cycle) or {}
+        except Exception:
+            _SEN_CAL_CACHE[cycle] = {}
+    cal = _SEN_CAL_CACHE[cycle]
+    if cal.get("ok") and cal.get("slope"):
+        return float(cal["slope"]), (
+            f"senate-calibrated on {cal.get('n')} state-year(s) "
+            f"{cal.get('years')}, baseline_only")
+    # Falls back to the OLD behaviour rather than to a guess, so a machine
+    # without the returns archive reproduces what this file did before.
+    return 1.0, "uncalibrated (no Senate returns) — slope 1.0"
+
+
 def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
-                    sigma_total: float, holdover_D: int | None) -> dict:
+                    sigma_total: float, holdover_D: int | None,
+                    slope: float | None = None) -> dict:
     sigma_state = math.sqrt(max(sigma_total ** 2 - _SIGMA_NAT ** 2,
                                 SIGMA_STATE_FLOOR ** 2))
+    slope_src = "caller"
+    if slope is None:
+        slope, slope_src = senate_slope()
     races = {}
     for st in states:
         if st not in pvi:
             continue
-        mu = tide + _pvi_to_margin(pvi[st])
+        # NO INCUMBENCY TERM HERE YET, and its absence is the largest known
+        # gap in this function. The House fit puts it at 5.49 margin points,
+        # and Maine is the case that shows what it costs: a Republican
+        # incumbent in a D+7.6 state, which both race-level forecasters put
+        # about eleven points more Republican than lean alone implies. Adding
+        # it needs a Senate roster the archive does not have — which party
+        # holds each of the 35 seats up, and who is retiring — and it must
+        # arrive together with a refitted slope and sigma, never alone.
+        mu = tide + slope * _pvi_to_margin(pvi[st])
         races[st] = {
             "expected_margin_D": round(mu, 2),
             "pvi": round(pvi[st], 2),
@@ -603,6 +670,12 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
         "sigma_state": round(sigma_state, 2),
         "expected_D_seats_up": round(statistics.fmean(wins), 2),
         "D_seats_up_80pct": [wins[int(0.10 * N_SIMS)], wins[int(0.90 * N_SIMS)]],
+        # The slope travels with the projection, the way the House records
+        # baseline_slope, so a stored row says which mapping produced it
+        # rather than leaving a reader to infer it from the date.
+        "baseline_slope": round(slope, 4),
+        "baseline_slope_source": slope_src,
+        "incumbency_pts": 0.0,
         "races": races,
     }
     if holdover_D is not None:

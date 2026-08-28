@@ -84,8 +84,11 @@
             <td>{{ with $p }}{{ printf "%.0f" .holdover_D }}{{ end }} Democratic holdovers</td>
             <td class="muted">Bookkeeping, not forecast — worth about twenty points of headline probability per seat.</td></tr>
         <tr><td>Lean to margin</td>
-            <td>Expected margin = national tide + 2 × state lean</td>
-            <td class="muted">Linear, and it overshoots at the tails where there are not enough voters left to swing.</td></tr>
+            <td>Expected margin = national tide + 0.92 × 2 × state lean</td>
+            <td class="muted">Linear, and it overshoots at the tails where there are not enough voters left to swing. The 0.92 is measured rather than assumed: a composite index says seats are about 8% further apart than they turn out to be. Three independent fits agree — 0.924 on Senate returns, 0.921 on 768 House district-cycles, and 0.902 implied by what two race-level forecasters separately think about the 2026 Senate map. Until 28 August 2026 the Senate model used 1.0 while the House model already used the fitted value, which is an inconsistency rather than a choice. Correcting it moves expected Senate seats by about half a seat and the probability of a Democratic majority by four to six points, because compression brings lean seats within reach of the national shock even though the competitive races barely move. The Senate fit rests on 30 state-years from one cycle; the House fit is what makes it credible.</td></tr>
+        <tr><td>No Senate incumbency term</td>
+            <td>None applied</td>
+            <td class="muted">The House model adds 5.49 margin points for the party holding the seat, fitted on 2022 and 2024. The Senate model adds nothing, because the archive has no roster of which party holds each of the 35 seats up or who is retiring. This is the largest known gap in the Senate numbers, and Maine shows the size of it: a Republican incumbent in a D+7.6 state, which two race-level forecasters independently put about eleven points more Republican than lean alone implies. When the roster arrives the slope and the uncertainty have to be refitted alongside it, since pairing a no-incumbency slope with a with-incumbency spread would claim an accuracy the projection has not earned.</td></tr>
         <tr><td>No bias correction</td>
             <td>None applied</td>
             <td class="muted">Generic-ballot bias is conditional on approval rather than constant.</td></tr>
