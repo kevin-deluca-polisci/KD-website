@@ -40,14 +40,13 @@ WHY THE ROWS ARE ATTRIBUTED, NOT FILED UNDER WIKIPEDIA
     Context.row's attribution override exists for. Attribution carries the
     category and the tier with it; it is not a route around a licence.
 
-WHY EVERY ROW IS PRIVATE
+WHAT TIER THESE ROWS CARRY
 
     These are other people's per-race averages. Reading DDHQ's number off
     Wikipedia does not make it ours to republish, and the same is true of RCP,
-    whose site we do not collect from directly at all. The tier is `private`
-    for all of them, uniformly, rather than a per-source map that would have to
-    be kept in step with the registry by hand -- and the uniform choice is also
-    the strictest, so it can never loosen a source's real tier.
+    whose site we do not collect from directly at all. Each row carries its own
+    source's registry tier, from TIERS below, and a source missing from that
+    map emits nothing.
 
     What we publish is the model output built from these: a national tide, a
     seat count, a win probability. That is our own computation and it is not a
@@ -103,16 +102,44 @@ AGGREGATORS = {
     "270 to win": "twoseventy",
     "decision desk hq": "ddhq",
     "ddhq": "ddhq",
-    "fiftyplusone": "fiftyplusone",
-    "fifty plus one": "fiftyplusone",
-    "g. elliott morris": "fiftyplusone",
-    "strength in numbers": "fiftyplusone",
+    # FiftyPlusOne is ABSENT ON PURPOSE; see TIERS below.
     "race to the wh": "race_to_the_wh",
     "race to the white house": "race_to_the_wh",
     "realclearpolitics": "rcp",
     "realclearpolling": "rcp",
     "rcp": "rcp",
     "silver bulletin": "silver_bulletin",
+}
+
+# THE TIER EACH ATTRIBUTED ROW CARRIES, and it must match the registry.
+#
+# `private` is not "keep it in the private repo", which is what the first
+# version of this parser assumed. In this schema `private` means the row may
+# not contribute to a published average AT ALL, and stamping every row that way
+# tripped the publication audit on nine races: "LEAK: private source(s)
+# ['race_to_the_wh', 'rcp'] contributed to the published average for
+# SEN_AK_2026/margin_D". The audit was right and the parser was wrong.
+#
+# `aggregate_only` is the tier that says what we actually mean: the average may
+# be published, the individual value may not. With MIN_N=3 gated contributors,
+# no single forecaster's number is recoverable from the average.
+#
+# A source absent from this map emits NO ROWS. That is the safe default: a tier
+# this parser has not thought about cannot leak, and a new aggregator appearing
+# in these tables is a decision, not an automatic inclusion.
+TIERS = {
+    "twoseventy": "aggregate_only",
+    "ddhq": "aggregate_only",
+    "race_to_the_wh": "aggregate_only",
+    "rcp": "aggregate_only",
+    "silver_bulletin": "aggregate_only",
+    # fiftyplusone is `publication: private` in the registry, so its number
+    # cannot enter a published average and it is excluded here. That is a
+    # tier decision, not a licence one -- it appears in six of the ten covered
+    # races, and dropping it costs Montana entirely, whose only other source is
+    # Race to the WH. Raising it to aggregate_only would be consistent with
+    # ddhq, which is also enabled:false and permission_pending yet tiered
+    # aggregate_only. That call belongs in the registry, not in a parser.
 }
 
 # Below this many recognised aggregators, the race gets no rows at all.
@@ -273,6 +300,8 @@ def read_table(tbl: str) -> tuple[list[tuple[str, float, str | None]], int]:
         if not cells:
             continue
         who = AGGREGATORS.get(_link_name(cells[0]).lower())
+        if who not in TIERS:
+            who = None
         if not who:
             # The Average row is a row too, and it is ours to compute, not to
             # read: Wikipedia averages whichever forecasters an editor
@@ -368,7 +397,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         rid = race_id("senate", st)
         for who, (margin, _upd) in sorted(seen.items()):
             rows.append(ctx.row(
-                art, publication="private", source_id=who, category="polling",
+                art, publication=TIERS[who], source_id=who, category="polling",
                 race_id=rid, chamber="senate", state=st,
                 quantity="margin_D", value=margin, unit="pct"))
     return rows
