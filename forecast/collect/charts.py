@@ -1215,9 +1215,12 @@ RATER_NAMES = {
     "fiftyplusone": "FiftyPlusOne",
     "split_ticket": "Split Ticket",
     "silver_bulletin": "Silver Bulletin",
-    "cnalysis": "CNalysis",
-    "elections_daily": "Elections Daily",
-    "jhk_forecasts": "JHK Forecasts",
+    # Ratings only, and only for three weeks of early 2025 before the editors
+    # dropped the column. The `_ratings` suffix keeps it distinct from
+    # `twoseventy`, which is their poll average and a different product; the
+    # reader should see one name for both.
+    "twoseventy_ratings": "270toWin",
+    "twoseventy": "270toWin",
 }
 
 

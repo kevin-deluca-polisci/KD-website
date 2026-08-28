@@ -57,11 +57,20 @@ FORECASTERS = [
     ("SILVER BULLETIN", "silver_bulletin"),
     ("REALCLEARPOLITICS", "rcp"), ("REALCLEARPOLLING", "rcp"), ("RCP", "rcp"),
     ("FOX", "fox_power_rankings"),
-    # 270toWin appears as a ROW in the poll-aggregation table, not as a
-    # ratings COLUMN, so this needle resolves to the polling product. If it
-    # ever turns up in a ratings table the parser has to disambiguate by
-    # table shape before this mapping can stand.
-    ("270TOWIN", "twoseventy"), ("270 TO WIN", "twoseventy"),
+    # 270toWin resolves to the RATINGS product, not the polling one, and
+    # that is not a guess. The needle was first written pointing at
+    # `twoseventy` on the assumption that Wikipedia carried their poll
+    # AVERAGES; the 2026-08-28 run then produced 1,135 rows, every one of
+    # them an ordinal rating ("Solid R", "Likely R"), dated 2025-01-22 to
+    # 2025-02-08, Senate and governor only. So they were a rater column in
+    # these tables for about two and a half weeks in early 2025 and the
+    # editors then dropped it.
+    #
+    # This list feeds the RATINGS tables. If the poll-aggregation table is
+    # ever parsed it needs its own name map, because a source can publish
+    # both an average and a rating and those are different objects with
+    # different tiers -- the same reason cook and cook_pvi are two entries.
+    ("270TOWIN", "twoseventy_ratings"), ("270 TO WIN", "twoseventy_ratings"),
 ]
 
 # Headers that must never be read as a forecaster column, checked first.
