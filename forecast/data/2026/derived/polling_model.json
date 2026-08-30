@@ -1,17 +1,17 @@
 {
-  "snapshot_date": "2026-08-29",
-  "days_to_election": 66,
+  "snapshot_date": "2026-08-30",
+  "days_to_election": 65,
   "generic_ballot": {
     "raw": 5.65,
-    "adjusted": 6.406,
+    "adjusted": 6.407,
     "used": "margin_D_adjusted",
-    "value": 6.406
+    "value": 6.407
   },
-  "shrink_lambda": 0.89,
-  "nowcast_tide_D": 6.406,
-  "election_day_tide_D": 5.701,
-  "tide_D_80_low": 1.785,
-  "tide_D_80_high": 11.027,
+  "shrink_lambda": 0.8915,
+  "nowcast_tide_D": 6.407,
+  "election_day_tide_D": 5.712,
+  "tide_D_80_low": 1.786,
+  "tide_D_80_high": 11.028,
   "sigma_source": "calibrated, n=30",
   "calibration": {
     "ok": true,
@@ -88,7 +88,7 @@
         "win_prob_D": 1.0
       },
       "FL": {
-        "expected_margin_D": -8.17,
+        "expected_margin_D": -8.16,
         "pvi": -5.39,
         "win_prob_D": 0.0642
       },
@@ -100,7 +100,7 @@
       "IA": {
         "expected_margin_D": -3.62,
         "pvi": -6.09,
-        "win_prob_D": 0.2502
+        "win_prob_D": 0.2503
       },
       "ID": {
         "expected_margin_D": -28.99,
@@ -118,7 +118,7 @@
         "win_prob_D": 0.0099
       },
       "KY": {
-        "expected_margin_D": -18.19,
+        "expected_margin_D": -18.18,
         "pvi": -14.94,
         "win_prob_D": 0.0004
       },
@@ -140,7 +140,7 @@
       "MI": {
         "expected_margin_D": 6.09,
         "pvi": -0.19,
-        "win_prob_D": 0.8717
+        "win_prob_D": 0.8718
       },
       "MN": {
         "expected_margin_D": 10.57,
@@ -160,7 +160,7 @@
       "NC": {
         "expected_margin_D": 4.1,
         "pvi": -1.4,
-        "win_prob_D": 0.7775
+        "win_prob_D": 0.7776
       },
       "NE": {
         "expected_margin_D": -16.2,
@@ -173,7 +173,7 @@
         "win_prob_D": 0.9643
       },
       "NJ": {
-        "expected_margin_D": 19.13,
+        "expected_margin_D": 19.14,
         "pvi": 4.27,
         "win_prob_D": 0.9998
       },
@@ -188,7 +188,7 @@
         "win_prob_D": 0.0689
       },
       "OK": {
-        "expected_margin_D": -22.14,
+        "expected_margin_D": -22.13,
         "pvi": -17.34,
         "win_prob_D": 0.0
       },
@@ -213,7 +213,7 @@
         "win_prob_D": 0.0
       },
       "TN": {
-        "expected_margin_D": -22.77,
+        "expected_margin_D": -22.76,
         "pvi": -14.26,
         "win_prob_D": 0.0
       },
@@ -239,11 +239,11 @@
       }
     },
     "holdover_D_assumed": 34,
-    "prob_D_50_plus": 0.3904,
-    "prob_D_51_plus": 0.1786,
+    "prob_D_50_plus": 0.3905,
+    "prob_D_51_plus": 0.1788,
     "prob_D_50_plus_sensitivity": {
-      "33": 0.1786,
-      "34": 0.3904,
+      "33": 0.1788,
+      "34": 0.3905,
       "35": 0.7097
     },
     "NOTE_holdover": "prob_D_50_plus depends on holdover_D, which is an ASSUMPTION passed in, not something derived from the archive. 50+ is stated rather than 'majority' because control at 50 turns on the vice-presidency."
