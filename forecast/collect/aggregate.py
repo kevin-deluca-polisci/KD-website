@@ -248,6 +248,33 @@ DAILY_CARRY_MAX_DAYS = 7
 # `retrospective` so it can be drawn and never scored.
 BACKFILL_TO_PANEL_START = {
     "ddhq", "rcp", "votehub", "fiftyplusone", "silver_bulletin", "twoseventy",
+    # ---- ADDED 2026-08-31, AND THESE TWO BREAK THE RULE ABOVE ON PURPOSE ----
+    #
+    # Ray Fair published nothing before 2025-12-23. Lockerbie's pessimism
+    # specification could not be run before 2025-06-01 because the series it
+    # needs did not exist yet. Neither absence is our gap; both are genuinely
+    # the forecaster's silence, and by the argument above neither qualifies.
+    #
+    # They are filled anyway, as a deliberate display decision. A category
+    # average that gains a member mid-series steps on the day it arrives, and
+    # the step is about our roster rather than about the election: Fair's entry
+    # moved the fundamentals margin 1.9 points and the House seat count by 7 on
+    # a single day in December, and every reader sees that as news. Holding his
+    # first forecast back across the earlier dates makes the line answer one
+    # question consistently — what does this family of methods say — instead of
+    # answering "what does whichever subset had published by then say".
+    #
+    # THE COST IS REAL AND IS PAID IN TWO PLACES. Every filled row is stamped
+    # `retrospective`, so it is outside REALTIME_PROVENANCE and no scoring path
+    # can see it: Fair is never credited with a January 2025 forecast he did not
+    # make. And `n_retrospective` on each average says how much of that point is
+    # fill, so the early stretch of a line is visibly mostly reconstruction.
+    #
+    # What a reader must not conclude is that Fair was saying D+1.78 in early
+    # 2025. He was saying nothing. The line says what his method implies given
+    # what he published later, which is a different and weaker claim, and the
+    # methods page has to say so in those words.
+    "fair", "academic_economic_pessimism",
 }
 
 

@@ -717,6 +717,11 @@ LOCKERBIE_SAMPLE_MAX = {"pct_expect_worse": 32.0, "open_seats": 56}
 # TO SETTLE IT: his paper's appendix, or ask him. Worth about five seats.
 
 
+# Models whose `tide_D` is not their own forecast but this file's inversion of
+# their seat count. They must never define the curve they are inverted through.
+INVERTED_MODELS = {"academic_political_history", "academic_economic_pessimism"}
+
+
 def _published_tide_seat_pairs(cycle: int) -> list:
     """(tide, expected D seats) from today's projections, for inversion.
 
@@ -743,7 +748,32 @@ def _published_tide_seat_pairs(cycle: int) -> list:
         except json.JSONDecodeError:
             continue
         pairs = []
-        for m in pr.values():
+        for sid, m in pr.items():
+            # NEVER INVERT AGAINST A MODEL THAT WAS ITSELF INVERTED.
+            #
+            # This function reads the published projections, and two of those
+            # projections ARE the output of this inversion: Lockerbie and the
+            # political-history model both forecast seats and get their tide
+            # from here. Including them made the curve self-referential —
+            # yesterday's inverted tide became today's curve input, so an error
+            # could not correct itself and instead compounded.
+            #
+            # It happened. On 2026-08-31 the political-history model reported
+            # tide 0.64 and 204.71 House seats, against 3.23 and 213.78 every
+            # day of the preceding week, with none of its own inputs changed:
+            # dem_governors 24 and dem_senate_retirements 4 on both days, and
+            # its own equation returning 213.773 throughout. The pair
+            # (0.64, 204.71) was then sitting in the curve, anchoring the low
+            # end of it, purely because the previous run had put it there.
+            # Re-inverting with these two excluded gives 3.205, back where it
+            # belongs.
+            #
+            # The models left are the ones whose tide is native — a generic
+            # ballot, a fundamentals equation, a market price — which is what
+            # the docstring above assumes when it calls this "the SAME curve
+            # the reader sees everywhere else".
+            if sid in INVERTED_MODELS:
+                continue
             t = m.get("tide_D")
             h = (m.get("house") or {}).get("expected_D_seats")
             if t is not None and h is not None:
@@ -1671,6 +1701,35 @@ def main(argv=None) -> int:
                   f"   PRIVATE — {len(hist)} date(s)")
             print(f"  next: python3 forecast/model/seats.py --cycle {a.cycle} "
                   f"--backfill-academic   (projects each of those dates)")
+    else:
+        # EXTEND THE HISTORY ON EVERY RUN, not only under --backfill.
+        #
+        # The write above sits inside `if a.backfill:`, so a normal daily run
+        # computed every academic model, published them, and then left the
+        # history untouched. The result was a file that stopped dead on
+        # 2026-08-27 while seat_projections_history carried academic tides
+        # through the 31st: the models were running, nothing recorded that they
+        # had. It also meant fundamentals.py, which aligns its own grid to this
+        # file, silently stopped four days short of today as well.
+        #
+        # This is the same regression polling.py already had and already fixed
+        # with extend_history(); the two files should behave the same way.
+        # A live point is stamped LIVE_PROVENANCE exactly as the backfill path
+        # stamps it, so nothing downstream can tell which branch wrote it.
+        priv = DATA / str(a.cycle) / "model_private"
+        f = priv / "academic_models_history.json"
+        try:
+            hist = json.loads(f.read_text()) if f.exists() else {}
+        except json.JSONDecodeError:
+            hist = {}
+        live = {k: {**v, "provenance": LIVE_PROVENANCE}
+                for k, v in out["models"].items()}
+        if live:
+            hist[date] = {"snapshot_date": date, "models": live}
+            priv.mkdir(parents=True, exist_ok=True)
+            f.write_text(json.dumps(hist, indent=2))
+            print(f"  extended model_private/academic_models_history.json"
+                  f"   PRIVATE — {len(hist)} date(s), newest {date}")
     return 0
 
 
