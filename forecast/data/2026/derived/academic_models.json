@@ -102,9 +102,9 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 15.21,
-      "margin_D_80_low": 8.93,
-      "margin_D_80_high": 20.94,
+      "margin_D": 14.13,
+      "margin_D_80_low": 7.19,
+      "margin_D_80_high": 20.63,
       "inputs": {
         "pct_expect_worse": 37.0,
         "pct_expect_worse_source": "University of Michigan Surveys of Consumers, Table 8, WORSE OFF row, monthly, 2026-06 (carried forward from 2026-06)",
@@ -129,7 +129,7 @@
         "pres_party_seat_change": -48.1,
         "implied_D_seats": 263.1,
         "inversion_extrapolated": false,
-        "curve_points_used": 10,
+        "curve_points_used": 7,
         "sensitivity_month": [
           {
             "month": "Mar 2026",
@@ -197,7 +197,7 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 3.23,
+      "margin_D": 0.64,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
