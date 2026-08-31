@@ -380,7 +380,51 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
                   else "pct" if panel == "margin" else "seats"),
             value=round(v, 4), low=low, high=high, band_kind=kind,
             n_sources=n, label=LABELS[cat]))
-    return out
+    return _drop_contributor_dips(out)
+
+
+def _drop_contributor_dips(rows: list[dict]) -> list[dict]:
+    """Remove points where a series momentarily lost a contributor.
+
+    THE ARTEFACT THIS EXISTS FOR. On 2025-03-31 the class line had one
+    contributor where every neighbouring day had two, because the fundamentals
+    model did not run that day, because no OTHER source filed a parsed row that
+    day. The average became `polling_reconstructed` alone, and since the two
+    class models disagree by a wide margin the published House probability fell
+    25 points and recovered the next morning. Nobody's forecast moved. Both
+    models had well-defined values; one of them simply was not projected.
+
+    WHY THE TEST IS LOCAL AND NOT "n == 1". A sustained stretch at one
+    contributor is a real state of the world and must be drawn: the market line
+    ran on Polymarket alone for 98 days because Kalshi had not listed a Senate
+    contract yet, and deleting that would be deleting the truth. What is never
+    real is a series carrying two sources on Monday, one on Tuesday and two on
+    Wednesday. No forecaster enters and leaves in a day.
+
+    So a point is dropped only when its contributor count is strictly below
+    BOTH neighbours'. That catches the one-day hole and every other instance of
+    the same shape, without a hardcoded date, and leaves a genuine low-n run
+    alone because its interior points have a neighbour just as low.
+
+    THE VALUE IS DROPPED, NOT PATCHED. The line closes over the gap, which is
+    honest: we are declining to publish an average that the aggregator itself
+    flags as not being one — its own rule is that a single-source cell must be
+    labelled rather than averaged. The underlying row stays in
+    category_averages.csv with its n_sources, so nothing is hidden from anyone
+    reading the data.
+    """
+    by: dict[tuple, list[dict]] = {}
+    for r in rows:
+        by.setdefault((r["panel"], r["series"]), []).append(r)
+    drop: set[int] = set()
+    for seq in by.values():
+        seq.sort(key=lambda r: r["snapshot_date"])
+        for i in range(1, len(seq) - 1):
+            n, before, after = (seq[i]["n_sources"], seq[i - 1]["n_sources"],
+                                seq[i + 1]["n_sources"])
+            if n < before and n < after:
+                drop.add(id(seq[i]))
+    return [r for r in rows if id(r) not in drop]
 
 
 def _all_snapshot_dates(derived: Path) -> list[str]:
