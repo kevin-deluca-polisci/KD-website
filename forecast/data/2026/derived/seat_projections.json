@@ -3305,8 +3305,8 @@
           50,
           58
         ],
-        "prob_D_50_plus": 0.9173,
-        "prob_D_51_plus": 0.8175
+        "prob_D_50_plus": 0.9177,
+        "prob_D_51_plus": 0.8179
       },
       "races": {
         "AK": {
@@ -3497,7 +3497,7 @@
         "majority_at": 218,
         "pvi_source": "dra",
         "sigma_source": "house-calibrated on 768 district-cycles [2022, 2024], baseline dra, with_incumbency",
-        "sigma_national": 4.693352059925093,
+        "sigma_national": 4.685549313358303,
         "sigma_state": 4.19,
         "sigma_district": 8.82,
         "sigma_total": 10.83,
