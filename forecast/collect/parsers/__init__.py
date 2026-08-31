@@ -26,6 +26,7 @@ FAIL LOUDLY
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 import importlib
 import json
 import re
@@ -560,27 +561,102 @@ def race_id(chamber: str, state: str = "", district: str = "",
     return "_".join(parts)
 
 
-def load(source_id: str, snapshot_date: str, raw_root: Path) -> dict[str, LoadedArtifact]:
-    """Read every stored artifact for one source on one date."""
+DATE_DIR = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def _bodies(d: Path) -> dict[str, Path]:
+    """{stem: path} for the real artifacts in one date directory."""
+    return {p.stem: p for p in sorted(d.iterdir())
+            if p.is_file() and not p.name.endswith(".meta.json")}
+
+
+def _metas(d: Path) -> dict[str, Path]:
+    return {p.name[: -len(".meta.json")]: p for p in sorted(d.iterdir())
+            if p.is_file() and p.name.endswith(".meta.json")}
+
+
+def _read_meta(p: Path | None) -> dict:
+    if not p or not p.exists():
+        return {}
+    try:
+        return json.loads(p.read_text())
+    except Exception:
+        return {}
+
+
+def load(source_id: str, snapshot_date: str, raw_root: Path,
+         follow_dedup: bool = True) -> dict[str, LoadedArtifact]:
+    """Read every stored artifact for one source on one date.
+
+    A DEDUPED SOURCE STORES A BODY ONLY WHEN THE PAGE CHANGED, and without
+    this that made a parser see a page appear and vanish day by day.
+
+    RawStore.write_dedup writes the metadata every day and the body only on
+    change, and its docstring promises "a day with no body is a day we checked
+    and found nothing new". Nothing used to act on that promise: load() read
+    the directory, found no body, and the parser produced no rows. Measured on
+    2026-08-30, that is not a theoretical loss. Georgia's published per-race
+    polling average had seven contributors on the 29th and five on the 30th,
+    and the mean moved from D+9.30 to D+10.13 -- about a point of movement in a
+    published number, caused by nobody editing a Wikipedia page that day rather
+    than by any forecaster changing their mind.
+
+    So an unchanged day now resolves to the bytes it matched. The metadata
+    stays TODAY'S, which is the point: `fetched_at` records that we looked
+    today and found the page unchanged, so the row is a statement about today
+    and its provenance is `captured`, not `archival`. Only the bytes are older.
+
+    WALKING, NOT ONE HOP. `previous_hash` finds the most recent prior META,
+    not the most recent prior BODY, so `matched_date` on an unchanged day often
+    points at another unchanged day. The pointer chains, and following it once
+    lands on a directory with no body in it. This walks back to the first date
+    that actually holds bytes.
+
+    AND IT VERIFIES. The carried body's hash must equal the hash the metadata
+    recorded. If they disagree the chain is inconsistent -- a hand-edited
+    archive, an interrupted sync, a slug collision -- and the artifact is left
+    absent rather than carried, because a parser silently reading the wrong
+    day's bytes is worse than one reading none.
+
+    `follow_dedup=False` restores the old behaviour for anything that wants to
+    see literally what one directory holds.
+    """
     d = raw_root / source_id / snapshot_date
     if not d.is_dir():
         return {}
+    metas = _metas(d)
     out: dict[str, LoadedArtifact] = {}
-    for p in sorted(d.iterdir()):
-        if p.suffix == ".json" and p.name.endswith(".meta.json"):
+    for stem, p in _bodies(d).items():
+        out[stem] = LoadedArtifact(name=stem, path=p, body=p.read_bytes(),
+                                   meta=_read_meta(metas.get(stem)))
+    if not follow_dedup:
+        return out
+
+    earlier: list[str] | None = None
+    for stem, mp in metas.items():
+        if stem in out:
             continue
-        if not p.is_file():
-            continue
-        meta_path = p.with_suffix("").with_suffix(".meta.json")
-        if not meta_path.exists():
-            meta_path = p.parent / (p.stem + ".meta.json")
-        meta = {}
-        if meta_path.exists():
-            try:
-                meta = json.loads(meta_path.read_text())
-            except Exception:
-                pass
-        out[p.stem] = LoadedArtifact(name=p.stem, path=p, body=p.read_bytes(), meta=meta)
+        meta = _read_meta(mp)
+        dd = meta.get("dedup") or {}
+        if dd.get("changed") is not False:
+            continue                      # not a deduped no-change day
+        if earlier is None:
+            src = raw_root / source_id
+            earlier = sorted((q.name for q in src.iterdir()
+                              if q.is_dir() and DATE_DIR.fullmatch(q.name)
+                              and q.name < snapshot_date), reverse=True)
+        want = dd.get("matched_sha256") or meta.get("sha256")
+        for dt_ in earlier:
+            hit = _bodies(raw_root / source_id / dt_).get(stem)
+            if not hit:
+                continue
+            body = hit.read_bytes()
+            if want and hashlib.sha256(body).hexdigest() != want:
+                break
+            m = dict(meta)
+            m["dedup"] = {**dd, "carried": True, "carried_from": dt_}
+            out[stem] = LoadedArtifact(name=stem, path=hit, body=body, meta=m)
+            break
     return out
 
 
