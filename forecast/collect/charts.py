@@ -109,19 +109,39 @@ VIEWS = {
 # comparison mark carries a distinct SHAPE from glyph.html, and a table view
 # ships alongside. Those are the secondary encodings that make the pair legal.
 #
-# ALREADY BROKEN BEFORE ACADEMIC ARRIVED, and someone should fix it: in dark
-# mode #d55181 (market) and #199e70 (polling) are ΔE 1.6 apart under
-# deuteranopia — indistinguishable, not merely close. Academic did not cause
-# this and cannot fix it; it needs one of those two hues re-stepped.
+# FIXED 2026-08-31. The defect this paragraph used to describe was real: in
+# dark mode #d55181 (market) and #199e70 (polling) were ΔE 1.6 apart under
+# deuteranopia — indistinguishable, not merely close, on the site's primary
+# chart. It was market that needed re-stepping, and the reason it was hard is
+# that market is the ONLY series drawn in both facets, so its hue has to clear
+# green (polling) in the type view and blue (academic) in the source view,
+# inside a dark lightness band of L 0.48-0.67.
 #
-# THE REAL CONCLUSION: five is the ceiling for this ramp. A sixth category must
+# The sets that actually render are three and four series, not five: `views`
+# in the payload shows type as polling+fundamentals+market and source as
+# professional+academic+class+market. Validating the imagined five was what
+# made this look unfixable. Against the real sets, all-pairs, both modes:
+#
+#     type   light  PASS      type   dark  PASS  (worst CVD 7.4 deutan)
+#     source light  PASS      source dark  PASS  (worst CVD 7.1 deutan)
+#
+# market dark #d55181 -> #dc63a8 and academic dark #2f9fbd -> #3a97c9. Moving
+# market alone left market/academic at 5.9, just under the floor; the pair of
+# changes clears everything. Light steps are untouched, so the site's default
+# appearance does not move.
+#
+# The remaining warns are all in the 6-8 CVD band, which is legal here for the
+# reason it has always been: every series is direct-labelled at its last point,
+# comparison marks carry distinct shapes, and a table view ships alongside.
+#
+# STILL TRUE: five simultaneous hues is beyond this ramp. A sixth category must
 # come with a re-stepped dark palette or it must not come as a hue at all.
 COLORS = {
     "fundamentals": ("#4a3aa7", "#9085e9"),
     "polling":      ("#008300", "#199e70"),
     "professional": ("#eda100", "#c98500"),
-    "market":       ("#e87ba4", "#d55181"),
-    "academic":     ("#0077a8", "#2f9fbd"),
+    "market":       ("#e87ba4", "#dc63a8"),
+    "academic":     ("#0077a8", "#3a97c9"),
     # ADDED WITH THE FACET SPLIT. `class` is the only new line that draws
     # today; composite and expert are defined so a group cannot fall through
     # to grey the day it clears the disclosure floor.
@@ -133,7 +153,28 @@ COLORS = {
     # worse than a warn-band pair that carries a direct label. Validated
     # light: worst normal-vision pair 19.6, worst CVD 6.1 (deutan), which is
     # the 6-8 band and legal here because every series is direct-labelled.
-    "class":        ("#1baf7a", "#199e70"),
+    #
+    # THE DARK STEP WAS #199e70 UNTIL 2026-08-31, WHICH IS POLLING'S DARK STEP
+    # EXACTLY. Only the light value above was ever validated; the dark one was
+    # taken from polling and the duplication went unnoticed because the two
+    # live in different facets and no chart has ever drawn them together. It
+    # measured ΔE 0.0 — not close, identical — and it also sat 11.8 from
+    # academic, below the 15-point normal-vision floor, so the SOURCE view's
+    # three lines could not be told apart in dark mode by a reader with full
+    # colour vision.
+    #
+    # #3fae5e was chosen by sweeping candidate greens against the source
+    # view's other two dark steps. It is the only one tried that clears the
+    # floor: 15.6 from academic #2f9fbd, 7.1 CVD from professional #c98500,
+    # inside the lightness band, above the chroma floor, over 3:1 on the dark
+    # surface. The 7.1 is in the 6-8 band and legal on the same grounds as the
+    # light pair — every series is direct-labelled and a table view ships.
+    #
+    # It does NOT separate class from polling: those two are still 6.3 apart
+    # in dark. That is tolerable only because the facet toggle means they never
+    # render together, and anything that puts a type series and a source series
+    # on one chart breaks it. Race pages honour that: they draw one facet.
+    "class":        ("#1baf7a", "#3fae5e"),
     "composite":    ("#2a78d6", "#3987e5"),
     "expert":       ("#e34948", "#e66767"),
 }

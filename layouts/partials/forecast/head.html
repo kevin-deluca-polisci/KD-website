@@ -21,6 +21,15 @@ document.documentElement.className+=" js";})();
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
 
+  /* THE PALETTE IS DEFINED TWICE: here, as the CSS custom properties that
+     actually paint, and in forecast/collect/charts.py COLORS, which stamps
+     `color` / `color_dark` into the chart payload. Both must be changed
+     together. That duplication is almost certainly how --c-class kept
+     polling's dark step (#199e70) unnoticed: the two are in different facets
+     and no chart draws them together, so an exact ΔE 0.0 collision was
+     invisible. Corrected to #3fae5e on 2026-08-31 — the only candidate green
+     tried that clears the 15-point normal-vision floor against academic
+     (15.6) while staying inside the dark lightness band. */
   /* ---- tokens. Light is the base; dark redefines the same names. ---- */
   :root{
     --bg:#f6f6f4; --surface:#ffffff; --border:#e4e4e0; --border-strong:#d4d4ce;
@@ -44,9 +53,9 @@ document.documentElement.className+=" js";})();
       --accent:#0d1b30; --accent-ink:#f4f4f0; --link:#79aef0;
       --D:#79aef0; --R:#e57373;
       --c-fundamentals:#9085e9; --c-polling:#199e70;
-      --c-professional:#c98500; --c-market:#d55181;
-      --c-academic:#2f9fbd;
-      --c-class:#199e70; --c-composite:#3987e5; --c-expert:#e66767;
+      --c-professional:#c98500; --c-market:#dc63a8;
+      --c-academic:#3a97c9;
+      --c-class:#3fae5e; --c-composite:#3987e5; --c-expert:#e66767;
       --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
       --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
     }
@@ -57,9 +66,9 @@ document.documentElement.className+=" js";})();
     --accent:#0d1b30; --accent-ink:#f4f4f0; --link:#79aef0;
     --D:#79aef0; --R:#e57373;
     --c-fundamentals:#9085e9; --c-polling:#199e70;
-    --c-professional:#c98500; --c-market:#d55181;
-    --c-academic:#2f9fbd;
-    --c-class:#199e70; --c-composite:#3987e5; --c-expert:#e66767;
+    --c-professional:#c98500; --c-market:#dc63a8;
+    --c-academic:#3a97c9;
+    --c-class:#3fae5e; --c-composite:#3987e5; --c-expert:#e66767;
     --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
     --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
   }
