@@ -207,17 +207,24 @@ ORDER = facets.TYPE_ORDER + [g for g in facets.SOURCE_ORDER
 # two months.
 #
 # The rolling windows stay, because "what has moved lately" is a different
-# question and 30/60 answer it better. "All" stays because the backfill reaches
-# to January 2025 and a reader should be able to see the whole thing. Neither
-# is what the page should open on.
+# question and 30/60 answer it better.
+#
+# CHANGED 2026-08-31: the page now opens on "All". The argument above for
+# "Since 2026" was about which window best frames a November forecast, and it
+# is still a good argument, but it was written when the pre-2026 history was
+# thin. The backfill now reaches to January 2025 for every category and that
+# span is the thing this archive has and nobody else does — opening on a view
+# that hides two thirds of it undersells the whole point. The narrower windows
+# are one click away.
 #
 # An entry's second element is EITHER an int (days back from the newest date)
-# or an ISO date string (an absolute floor). build_panel takes both.
+# or an ISO date string (an absolute floor), or None for no trimming at all.
+# build_panel takes all three.
 RANGES = [("30", 30), ("60", 60), ("2026", "2026-01-01"), ("all", None)]
 RANGE_LABELS = {"30": "30 days", "60": "60 days",
                 "2026": "Since 2026", "all": "All"}
-RANGE_DEFAULT = "2026"
-RANGE_DEFAULT_DAYS = "2026-01-01"
+RANGE_DEFAULT = "all"
+RANGE_DEFAULT_DAYS = None
 
 
 def _rd(p: Path) -> list[dict]:

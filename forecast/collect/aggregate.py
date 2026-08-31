@@ -81,6 +81,26 @@ THIN_OK = {"market"}
 # class discussion than buried in a script.
 NO_AVERAGE = {"rating_ordinal", "rating_numeric"}
 
+# SOURCES HELD AS DATA, NEVER AVERAGED AS A FORECASTER.
+#
+# grant_williams publishes an open-source district and state model under MIT,
+# and its partisan-lean and district numbers are genuinely useful to us. What
+# it is not is a professional forecaster in the sense this site uses the word:
+# the other names on that line are outfits whose business is publishing
+# election forecasts, and putting a personal open-source project beside them
+# implies a standing it does not claim for itself.
+#
+# So the forecast QUANTITIES are excluded from both facets while the data rows
+# stay. His `pvi` rows are already held by NEVER_PUBLISH and still feed
+# PVI_PREFERENCE in model/polling.py, which is where the value actually is.
+#
+# There is a second, duller reason. He entered the archive on 2026-08-19,
+# 76 days before the election, and he was the only member of the `composite`
+# type. A line that begins eleven weeks out and has exactly one contributor
+# cannot reach MIN_N and never published anything; excluding him retires an
+# empty category rather than removing a visible line.
+NOT_A_FORECASTER = {"grant_williams"}
+
 # Quantities that never leave the private tier regardless of which source
 # carried them. PVI is Cook's proprietary index; we hold it for class use only.
 NEVER_PUBLISH = {"pvi", "pvi_prior"}
@@ -198,6 +218,117 @@ EPISODIC_CADENCES = {"sporadic", "weekly", "monthly"}
 # import the other across the collect/model split.
 CARRY_FORWARD_MAX_DAYS = 200
 
+# The cap for a source that publishes every day and simply was not captured.
+# A week keeps a market line continuous across a missed run without ever
+# asserting a price nobody quoted.
+DAILY_CARRY_MAX_DAYS = 7
+
+
+# WHOSE ABSENCE BEFORE A DATE IS OUR GAP RATHER THAN THEIR SILENCE.
+#
+# A forecaster's line starting late means one of two very different things,
+# and the archive can tell them apart.
+#
+#   THEIR SILENCE. The Economist's ratings column appears in Wikipedia's table
+#   in April 2026, Split Ticket's in June, Fox's in July. The revision backfill
+#   reaches to January 2025 and those columns were not there, which is positive
+#   evidence they were not rating yet. Filling those backwards would invent
+#   forecasts nobody made. (Ratings are in NO_AVERAGE anyway, so they never
+#   reach an average; the principle is what matters.)
+#
+#   OUR GAP. The sources below publish a national number continuously and
+#   always have. What starts late is our record of it: Wikipedia's aggregation
+#   table gained a DDHQ row in October 2025 and a Silver Bulletin row in
+#   January 2026 because an editor added them then, and we began collecting
+#   270toWin only in August 2026. Silver's generic-ballot average plainly
+#   existed through 2025. Absence there is an editor's lag or our own start
+#   date, not the forecaster's silence.
+#
+# Only the second kind is filled backwards, and every filled row is stamped
+# `retrospective` so it can be drawn and never scored.
+BACKFILL_TO_PANEL_START = {
+    "ddhq", "rcp", "votehub", "fiftyplusone", "silver_bulletin", "twoseventy",
+}
+
+
+def carry_backward(rows: list[dict], registry: dict) -> list[str]:
+    """Show a late entrant's earliest value on the dates before it.
+
+    THE POINT IS THE READER, NOT THE RECORD. A category average that gains a
+    contributor mid-series steps on the day it arrives, and the step is an
+    artefact of our collection rather than news: the professional line moved
+    because we started reading a table, not because anyone changed their mind.
+    Filling the earliest value backwards makes the line continuous and moves
+    the discontinuity into a field where it can be handled honestly.
+
+    WHAT MAKES THIS DIFFERENT FROM LYING. Three things, and all three are
+    enforced rather than promised.
+    
+    The row is stamped `retrospective`, which is already outside
+    REALTIME_PROVENANCE, so nothing that scores a forecaster can see it. The
+    `as_of` keeps the date the value was really published, so the row says out
+    loud that it is a January 2026 number standing on a May 2025 date. And the
+    average carries `n_retrospective`, so a reader can see how much of any
+    given point is real-time evidence and how much is us filling in.
+
+    IT NEVER MANUFACTURES A SNAPSHOT. Like carry_forward, it only fills dates
+    the category was already measured on by somebody else. A backwards fill
+    cannot create a day the archive does not otherwise have.
+    """
+    skip = NO_AVERAGE | NEVER_PUBLISH | NOT_A_FORECAST
+    for r in rows:
+        r.setdefault("as_of", r["snapshot_date"])
+
+    cat_dates: dict[str, set] = defaultdict(set)
+    for r in rows:
+        cat_dates[r["category"]].add((r["snapshot_date"], r["source_id"]))
+
+    series: dict[tuple, dict[str, dict]] = defaultdict(dict)
+    for r in rows:
+        # NATIONAL ROWS ONLY, and this is the whole difference between
+        # recovering our gap and inventing a forecast.
+        #
+        # DDHQ published a national generic-ballot average continuously through
+        # 2025; Wikipedia's table simply did not carry a row for them until
+        # October. Filling that backwards recovers something that existed.
+        #
+        # Nobody published a MAINE-specific average in early 2025. The
+        # race-level rows begin on 2026-08-24 because that is when per-race
+        # aggregation tables started carrying them, and before that there was
+        # no number to miss. Filling those backwards would put a fabricated
+        # Maine margin on five hundred days and then draw it.
+        #
+        # Without this line the first run of carry_backward filled 3,493
+        # race-level rows for 270toWin alone, back to 2025-01-20, for races
+        # whose first real observation is seven days old.
+        if (r["source_id"] in BACKFILL_TO_PANEL_START
+                and r["source_id"] not in NOT_A_FORECASTER
+                and r["race_id"].startswith("NATL")
+                and r["quantity"] not in skip):
+            key = (r["source_id"], r["category"], r["race_id"], r["chamber"],
+                   r["state"], r["district"], r["quantity"], r["unit"])
+            series[key][r["snapshot_date"]] = r
+
+    added: list[dict] = []
+    stats: dict[str, dict] = defaultdict(lambda: {"rows": 0, "back_to": ""})
+    for key, observed in series.items():
+        sid, cat = key[0], key[1]
+        first = min(observed)
+        src = observed[first]
+        targets = sorted({d for d, s in cat_dates[cat] if s != sid and d < first})
+        for d in targets:
+            added.append({**src, "snapshot_date": d, "as_of": src["as_of"],
+                          "provenance": "retrospective"})
+            st = stats[sid]
+            st["rows"] += 1
+            if not st["back_to"] or d < st["back_to"]:
+                st["back_to"] = d
+
+    rows.extend(added)
+    return [f"{sid}: filled {v['rows']} row(s) backwards to {v['back_to']} "
+            f"(retrospective — drawn, never scored)"
+            for sid, v in sorted(stats.items())]
+
 
 def carry_forward(rows: list[dict], registry: dict) -> list[str]:
     """Fill an episodic source's most recent value onto later snapshot dates.
@@ -223,6 +354,25 @@ def carry_forward(rows: list[dict], registry: dict) -> list[str]:
     eligible = {s["id"] for s in registry.get("sources", [])
                 if s.get("enabled")
                 and (s.get("cadence") or "daily") in EPISODIC_CADENCES}
+
+    # DAILY SOURCES GET A SHORT CARRY TOO, and for a different reason.
+    #
+    # An episodic source is carried because its publisher is quiet: Ray Fair
+    # says nothing for three months and still stands behind his number. A daily
+    # source that is missing for a day is not quiet, it is a capture we missed,
+    # and the effect on the page is worse than a flat line. The market average
+    # holds one contributor on 192 days, two on 206 and three on 11, so it
+    # jumps whenever the panel changes rather than when a price does: Kalshi
+    # alone at 0.54 on 2026-04-17 against Kalshi plus Polymarket at ~0.44 the
+    # day either side.
+    #
+    # The cap is days, not months, because that is the honest lifetime of the
+    # claim. A market price from last week is a stale quote worth showing; a
+    # market price from March is not a price at all.
+    daily = {s["id"] for s in registry.get("sources", [])
+             if s.get("enabled")
+             and (s.get("cadence") or "daily") not in EPISODIC_CADENCES}
+    eligible |= daily
 
     for r in rows:
         r.setdefault("as_of", r["snapshot_date"])
@@ -267,7 +417,9 @@ def carry_forward(rows: list[dict], registry: dict) -> list[str]:
             src = observed[prior[-1]]
             age = (dt.date.fromisoformat(d)
                    - dt.date.fromisoformat(src["as_of"])).days
-            if age > CARRY_FORWARD_MAX_DAYS:
+            cap = (DAILY_CARRY_MAX_DAYS if sid in daily
+                   else CARRY_FORWARD_MAX_DAYS)
+            if age > cap:
                 continue
             added.append({**src, "snapshot_date": d, "as_of": src["as_of"]})
             st = stats[sid]
@@ -502,6 +654,8 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
     for r in rows:
         if (r["quantity"] in NO_AVERAGE or r["quantity"] in NEVER_PUBLISH
                 or r["quantity"] in NOT_A_FORECAST):
+            continue
+        if r["source_id"] in NOT_A_FORECASTER:
             continue
         got = facets.facets(r["source_id"], r["category"])
         if got is None or got[0] == "reference":
@@ -1002,7 +1156,13 @@ def main(argv=None) -> int:
 
     try:
         from parse import load_registry
-        carried = carry_forward(rows, load_registry(a.cycle))
+        _reg = load_registry(a.cycle)
+        # BACKWARDS FIRST, then forwards. The backward fill needs to see only
+        # genuine observations when it picks each series' earliest value; if
+        # carry_forward ran first its filled rows would already be in `rows`
+        # and the "earliest" could be a carried copy rather than the real one.
+        filled = carry_backward(rows, _reg)
+        carried = carry_forward(rows, _reg)
     except Exception as e:
         # Do not aggregate without knowing each source's cadence. Silently
         # skipping the carry-forward would republish the exact bug this was
@@ -1025,6 +1185,9 @@ def main(argv=None) -> int:
     print(f"aggregate · cycle {a.cycle}")
     print("=" * 70)
     print(f"  {len(rows):6d} parsed rows in   (private)")
+    if filled:
+        for line in filled:
+            print(f"    filled backward  {line}")
     if carried:
         for line in carried:
             print(f"    carried forward  {line}")

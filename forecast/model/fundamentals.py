@@ -19,7 +19,7 @@ needed — which matters, because the course does not cover simulation.
 Publication: `individual`. It is our model; we can publish whatever we like.
 """
 from __future__ import annotations
-import argparse, csv, datetime as dt, glob, json, statistics, sys
+import argparse, csv, datetime as dt, glob, json, re, statistics, sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -702,8 +702,40 @@ MODEL_SPEC = "approval + real income growth + seats defended; OLS on 1946-2022"
 
 
 def backfill_dates(cycle: int) -> list[str]:
-    return sorted(Path(f).stem for f in
-                  glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")))
+    """Every day in the archive's span, not every day somebody else filed one.
+
+    THIS USED TO RETURN THE PARSED FILENAMES, and that made our own model's
+    date grid depend on whether OTHER sources happened to produce a row. There
+    is no parsed/2025-03-31.csv, because nobody edited Wikipedia that day and
+    Race to the WH's trend sheet has no entry for it. So the fundamentals model
+    did not run on the 31st of March, `class_fundamentals` was missing from
+    that snapshot, and the published class average for both chambers fell to
+    `polling_reconstructed` alone — a visible one-day cliff of 25 points on the
+    House probability and 16 on the Senate, caused entirely by a quiet day on
+    somebody else's website.
+
+    Nothing about that date was actually missing on our side: income_as_of
+    returns a value for it, and academic_models_history has it too, which is
+    why the academic line has no matching notch.
+
+    The span is still taken from the parsed record rather than a hardcoded
+    floor, so the grid cannot run past what the archive covers, but every day
+    INSIDE the span is now offered to the model. Dates the model genuinely
+    cannot compute — no income vintage, no approval polls in window — are still
+    skipped in the loop below and counted, which is the right place for that
+    decision. A gap should mean "the inputs were not there", never "no other
+    source posted that day".
+    """
+    files = sorted(f for f in
+                   (Path(x).stem for x in
+                    glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv")))
+                   if re.fullmatch(r"\d{4}-\d{2}-\d{2}", f))
+    if not files:
+        return []
+    d0 = dt.date.fromisoformat(files[0])
+    d1 = dt.date.fromisoformat(files[-1])
+    return [(d0 + dt.timedelta(days=i)).isoformat()
+            for i in range((d1 - d0).days + 1)]
 
 
 def backfill(a) -> int:
