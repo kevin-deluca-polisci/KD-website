@@ -11,11 +11,55 @@ title = "Kevin DeLuca"
   author = "Kevin DeLuca"
   description = "Assistant Professor of Political Science at Yale University"
 
+  # WHO THIS SITE IS ABOUT, IN A FORM A MACHINE CAN READ.
+  #
+  # These feed the Person schema in layouts/partials/head-meta.html, which is
+  # emitted once on the homepage. A crawler reading a paper page learns about
+  # a paper; nothing tells it who wrote it or what else they do unless this
+  # says so. Keep it in step with the bio in content/_index.md -- the prose and
+  # the structured data disagreeing is worse than either being slightly stale.
+  # The homepage figure. Currently the Obama approval-vs-coverage image, to be
+  # replaced by the exported figure from the performance-cues paper. The caption
+  # no longer announces that it is provisional -- an internal note in config is
+  # the right place for that, a caption on a page a stranger is reading is not.
+  # Swapping it is an edit to these four lines and nothing else.
+  homeFigure        = "/blog-images/approval_vs_coverage_obama.png"
+  homeFigureAlt     = "Presidential approval plotted against the tone of news coverage"
+  homeFigureCaption = "News coverage and presidential approval move together. From work in progress on performance cues in news coverage."
+  homeFigureLink    = "/papers/performance-cues-in-news-coverage-predict-presidential-appro/"
+
+  jobTitle    = "Assistant Professor of Political Science"
+  affiliation = "Yale University"
+  email       = "kevin.deluca@yale.edu"
+  github      = "https://github.com/kevin-deluca-polisci"
+  knowsAbout  = [
+    "American politics",
+    "elections",
+    "election law",
+    "political communication",
+    "media and newspapers",
+    "candidate quality",
+    "redistricting",
+    "historical political economy",
+  ]
+  # `sameAs` -- how a crawler ties this site to the profiles that hold the
+  # citation record. ORCID is the canonical one: the bare identifier
+  # 0000-0001-9980-3900 resolves to the profile page below, so the URL form is
+  # what belongs here.
+  orcid   = "https://orcid.org/0000-0001-9980-3900"
+  scholar = "https://scholar.google.com/citations?user=2PVuLWcAAAAJ&hl=en"
+
   # Analytics. Provider is swappable here without touching any template:
   # "ga4" | "goatcounter" | "plausible" | "" to switch it off entirely.
   # See layouts/partials/analytics.html.
   [params.analytics]
-    provider          = "ga4"
+    provider          = "plausible"
+    # Plausible's per-site script. The identifier in the filename IS the site
+    # key; there is no separate domain attribute in this installation style.
+    plausible_src     = "https://plausible.io/js/pa-mXtxH_E5Kvyv06DKpArQ4.js"
+    # GA4 kept but INACTIVE -- one provider runs at a time. Switching back is a
+    # one-word edit to `provider` above, and the id is preserved so that switch
+    # does not require digging the property out of the Google console again.
     ga4_id            = "G-YJY2BZ0STQ"
     # goatcounter_code = "kevinmdeluca"        # -> kevinmdeluca.goatcounter.com
     # plausible_domain = "kevinmdeluca.com"
@@ -30,7 +74,13 @@ title = "Kevin DeLuca"
   [[menu.main]]
     identifier = "cv"
     name = "CV"
-    url = "/s/kdl_CV_short.pdf"
+    # LOWERCASE, MATCHING WHAT GIT ACTUALLY TRACKS.
+    #
+    # This said kdl_CV_short.pdf while the repository holds kdl_cv_short.pdf.
+    # macOS is case-insensitive so it resolved locally and looked fine; CI
+    # checks out on Linux and GitHub Pages serves case-sensitively, so the CV
+    # link in the nav -- on every page -- was a 404 on the live site.
+    url = "/s/kdl_cv_short.pdf"
     weight = 2
 
   [[menu.main]]

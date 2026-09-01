@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ partial "head-meta.html" . }}
     <title>{{ .Site.Title }}</title>
     <style>
         * {
@@ -117,9 +118,48 @@
         <div style="display: flex; gap: 30px; align-items: flex-start;">
             <div style="flex-shrink: 0; width: 250px;">
                 <img src="/images/profile.png" alt="Kevin DeLuca" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <div style="display: flex; gap: 12px; justify-content: center; margin-top: 10px;">
-                    <a href="https://github.com/kevin-deluca-polisci" target="_blank" style="color: #333;">
-                        <svg height="22" width="22" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                {{/* PROFILE LINKS, DRIVEN BY THE SAME PARAMS AS THE JSON-LD.
+                     Each href reads the config value that also populates `sameAs`
+                     in head-meta.html, so the icons a human clicks and the URLs a
+                     crawler follows cannot drift apart. Any of them left unset in
+                     config.toml simply does not render.
+
+                     Icons are inline SVG rather than an icon font or a CDN sprite:
+                     three small paths cost nothing, work offline, and add no
+                     third-party request to a page whose whole job is loading fast
+                     for someone who just met Kevin at a conference. */}}
+                <div style="display: flex; gap: 14px; justify-content: center; margin-top: 12px; align-items: center;">
+                    {{ with .Site.Params.scholar }}
+                    <a href="{{ . }}" target="_blank" rel="noopener" title="Google Scholar" aria-label="Google Scholar profile" style="color: #4285F4;">
+                        {{/* The mortarboard-over-G that academics recognise -- the
+                             same glyph Academicons ships as `ai-google-scholar`,
+                             drawn inline rather than loading an entire icon font
+                             for one mark. The earlier version here was a bare
+                             graduation cap, which is the generic "education" icon
+                             and reads as any university, not as Scholar. */}}
+                        <svg height="23" width="23" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2.3 4.4 6l7.6 3.6L19.6 6 12 2.3z" fill="currentColor"/>
+                            <circle cx="12" cy="16.8" r="7" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    stroke-dasharray="33 11" transform="rotate(-42 12 16.8)"/>
+                            <path d="M12.2 16.8h6.8" stroke="currentColor" stroke-width="2.5"/>
+                        </svg>
+                    </a>
+                    {{ end }}
+                    {{ with .Site.Params.orcid }}
+                    <a href="{{ . }}" target="_blank" rel="noopener" title="ORCID" aria-label="ORCID profile" style="color: #A6CE39;">
+                        <svg height="23" width="23" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                            <path d="M128 0C57.3 0 0 57.3 0 128s57.3 128 128 128 128-57.3 128-128S198.7 0 128 0z"/>
+                            <g fill="#fff">
+                                <path d="M86.3 186.2H70.9V79.1h15.4v107.1z"/>
+                                <path d="M108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7 0-21.5-13.7-39.7-43.7-39.7h-23.7v79.4z"/>
+                                <circle cx="78.6" cy="56.8" r="9.6"/>
+                            </g>
+                        </svg>
+                    </a>
+                    {{ end }}
+                    {{ with .Site.Params.github }}
+                    <a href="{{ . }}" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub profile" style="color: #333;">
+                        <svg height="23" width="23" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                             <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
                             0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52
                             -.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2
@@ -129,12 +169,39 @@
                             1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
                         </svg>
                     </a>
+                    {{ end }}
+                    {{ with .Site.Params.email }}
+                    <a href="mailto:{{ . }}" title="Email" aria-label="Email Kevin DeLuca" style="color: #555;">
+                        <svg height="23" width="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+                            <rect x="2.5" y="5" width="19" height="14" rx="2"/>
+                            <path d="M3 6.5l9 6.5 9-6.5"/>
+                        </svg>
+                    </a>
+                    {{ end }}
                 </div>
             </div>
             <div style="flex: 1;">
                 {{ .Content }}
             </div>
         </div>
+
+        {{/* ONE FIGURE, ABOVE THE PUBLICATION LIST. A stranger who has just
+             met Kevin at a conference wants to know what kind of researcher he
+             is before they read nine titles. The figure answers that in a
+             glance; the list answers it in a minute. Sourced from site params
+             so swapping it is a config edit, and absent by default so an
+             unset key renders nothing rather than a broken image. */}}
+        {{ with .Site.Params.homeFigure }}
+        <figure class="home-figure" style="margin: 35px 0 5px;">
+          <a href="{{ $.Site.Params.homeFigureLink | default "/papers/" }}">
+            <img src="{{ . }}" alt="{{ $.Site.Params.homeFigureAlt }}"
+                 style="width: 100%; border-radius: 6px; border: 1px solid #eee;">
+          </a>
+          {{ with $.Site.Params.homeFigureCaption }}
+          <figcaption style="font-size: 0.85em; color: #666; margin-top: 8px; line-height: 1.5;">{{ . | safeHTML }}</figcaption>
+          {{ end }}
+        </figure>
+        {{ end }}
 
         <h2>Publications</h2>
 

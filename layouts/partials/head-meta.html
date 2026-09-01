@@ -1,0 +1,76 @@
+{{/* ONE HEAD, INCLUDED EVERYWHERE, because there are nine of them.
+
+     layouts/ has nine standalone documents with their own <head> and only
+     four templates inherit baseof. That is the same shape the note in
+     baseof.html describes for the analytics tag -- pasted into eight files
+     and missing from four -- so this is deliberately a partial rather than a
+     block of tags copied around. Adding a field here reaches every page.
+
+     Emits description, canonical, Open Graph, Twitter card and JSON-LD. It
+     does NOT emit <title>: all nine of those files already have their own,
+     and a second one would win or lose unpredictably per crawler. */}}
+
+{{- $desc := "" -}}
+{{- with .Params.plain_answer }}{{ $desc = . }}{{ end -}}
+{{- if not $desc }}{{ with .Params.abstract }}{{ $desc = . }}{{ end }}{{ end -}}
+{{- if not $desc }}{{ with .Description }}{{ $desc = . }}{{ end }}{{ end -}}
+{{- if not $desc }}{{ with .Summary }}{{ $desc = . }}{{ end }}{{ end -}}
+{{- if not $desc }}{{ $desc = .Site.Params.description }}{{ end -}}
+{{/* ONE LINE, ALWAYS. The homepage bio is several paragraphs, and plainify
+     keeps the newlines between them, which lands a raw line break inside a
+     meta content="..." attribute. Collapsing every run of whitespace to a
+     single space is what makes this safe for any page's prose. */}}
+{{- $desc = $desc | plainify | replaceRE "\\s+" " " | chomp -}}
+{{- if gt (len $desc) 300 }}{{ $desc = printf "%s…" (substr $desc 0 297) }}{{ end -}}
+
+{{- $img := absURL "/images/profile.png" -}}
+{{- with .Params.image }}{{ $img = absURL . }}{{ end -}}
+
+<meta name="description" content="{{ $desc }}">
+<meta name="author" content="{{ .Site.Params.author }}">
+<link rel="canonical" href="{{ .Permalink }}">
+
+<meta property="og:site_name" content="{{ .Site.Title }}">
+<meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:type" content="{{ if eq .Section "papers" }}article{{ else }}website{{ end }}">
+<meta property="og:image" content="{{ $img }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+<meta name="twitter:description" content="{{ $desc }}">
+<meta name="twitter:image" content="{{ $img }}">
+
+{{/* PERSON SCHEMA, ON THE HOMEPAGE ONLY.
+
+     A crawler or an assistant reading one paper page learns about a paper; it
+     learns about the author only if something says so in a form it can parse.
+     This is that statement, emitted once rather than on every page, so there
+     is a single canonical node for the person instead of forty copies that
+     can disagree about affiliation.
+
+     papers/single.html already emits ScholarlyArticle per paper. This ties
+     them to a person, and `sameAs` is what lets a crawler connect this site
+     to the external profiles carrying the citation record. */}}
+{{- if .IsHome -}}
+{{- $sameAs := slice -}}
+{{- with .Site.Params.orcid }}{{ $sameAs = $sameAs | append . }}{{ end -}}
+{{- with .Site.Params.scholar }}{{ $sameAs = $sameAs | append . }}{{ end -}}
+{{- with .Site.Params.github }}{{ $sameAs = $sameAs | append . }}{{ end -}}
+{{- $person := dict
+      "@context" "https://schema.org"
+      "@type" "Person"
+      "name" .Site.Params.author
+      "url" .Site.BaseURL
+      "image" $img
+      "description" .Site.Params.description
+-}}
+{{- with .Site.Params.jobTitle }}{{ $person = merge $person (dict "jobTitle" .) }}{{ end -}}
+{{- with .Site.Params.email }}{{ $person = merge $person (dict "email" .) }}{{ end -}}
+{{- with .Site.Params.affiliation }}{{ $person = merge $person (dict "affiliation" (dict "@type" "Organization" "name" .)) }}{{ end -}}
+{{- with .Site.Params.knowsAbout }}{{ $person = merge $person (dict "knowsAbout" .) }}{{ end -}}
+{{- if $sameAs }}{{ $person = merge $person (dict "sameAs" $sameAs) }}{{ end -}}
+<script type="application/ld+json">
+{{ $person | jsonify (dict "indent" "  ") | safeJS }}
+</script>
+{{- end -}}

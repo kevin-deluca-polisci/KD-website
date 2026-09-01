@@ -37,8 +37,25 @@
 {{- end }}
 
 {{- else if eq $provider "plausible" -}}
-{{- with $a.plausible_domain }}
-<script defer data-domain="{{ . }}" src="https://plausible.io/js/script.outbound-links.js"></script>
+{{/*
+  PLAUSIBLE'S CURRENT SCRIPT, NOT THE data-domain ONE.
+
+  This branch used to emit `script.outbound-links.js` with a `data-domain`
+  attribute, which is Plausible's older installation style. Their current one
+  serves a per-site script whose filename carries the site identifier, and the
+  companion shim below defines `window.plausible` as a queue so that any
+  event fired before the script finishes loading is replayed rather than lost.
+  That queue is why kdTrack can call plausible() safely from anywhere.
+
+  The src comes from config rather than being pasted here, so the identifier
+  lives with the rest of the site's configuration and this file stays generic.
+*/}}
+{{- with $a.plausible_src }}
+<script async src="{{ . }}"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
 {{- end }}
 {{- end }}
 
@@ -67,6 +84,78 @@ window.kdTrack = function (name, props) {
     if (typeof plausible === "function") { plausible(name, { props: props }); }
   } catch (e) { /* analytics must never break the page */ }
 };
+
+/*
+  ONE DELEGATED LISTENER, NOT A TAG ON EVERY LINK.
+
+  kdTrack has existed for a while with ZERO call sites -- a helper nobody ever
+  called, so no download has ever been counted. Annotating each link by hand
+  would fix today's pages and quietly miss tomorrow's; a single listener on
+  document catches every matching click that will ever exist, including on the
+  blog and media-tracker pages that are not written yet.
+
+  WHAT IT RECORDS BEYOND THE URL. Plausible can count file downloads on its
+  own, but it records the link only. Section and kind are the two things worth
+  slicing by -- "are people downloading PAPERS or DATA" is a different question
+  from "which file is popular" -- so they are attached as properties here.
+
+  IF YOU ENABLE PLAUSIBLE'S OWN FILE-DOWNLOAD TRACKING IN THE DASHBOARD, each
+  download lands twice under two different event names. Pick one: either leave
+  their toggle off and keep this, or turn it on and delete this block.
+*/
+(function () {
+  var FILE = /\.(pdf|csv|tsv|xlsx?|json|zip|dta|rds?|do|sav)(\?|#|$)/i;
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if (!a) return;
+    var href = a.getAttribute("href") || "";
+    if (!href || href.charAt(0) === "#") return;
+
+    var url;
+    try { url = new URL(a.href, window.location.href); } catch (err) { return; }
+
+    var m = href.match(FILE);
+    if (m) {
+      /* WHAT KIND OF THING WAS DOWNLOADED, from the FILE's path -- not the
+         page's. "How many people took a paper" and "how many took data" are
+         the two questions worth answering, and neither can be read off a URL
+         list by eye once there are thirty files. Plausible's built-in download
+         tracking records the link and nothing else, which is why this exists.
+
+         The CV is special-cased because it is linked from the nav on every
+         page, so its own path (/s/) is meaningless as a category and it is
+         probably the single most-downloaded file on the site. */
+      var f = url.pathname.toLowerCase(), category;
+      if (f.indexOf("cv") !== -1 && f.slice(-4) === ".pdf") category = "cv";
+      else if (f.indexOf("/pdfs/") === 0)                   category = "paper";
+      else if (f.indexOf("/data") === 0)                    category = "data";
+      else if (f.indexOf("/forecast") === 0)                category = "forecast";
+      else                                                  category = "other";
+
+      window.kdTrack("Download", {
+        category: category,
+        file:     url.pathname,
+        kind:     m[1].toLowerCase(),
+        /* Where the visitor was standing when they clicked. Distinct from
+           category: a paper PDF taken from the homepage and the same PDF taken
+           from its own page are different behaviours. */
+        section:  (window.location.pathname.split("/").filter(Boolean)[0] || "home")
+      });
+      return;
+    }
+
+    /* Outbound clicks that are NOT files -- the coverage links on paper pages,
+       DOIs, co-author sites. Leave Plausible's own outbound toggle off or each
+       click lands twice under two names. */
+    if (url.host && url.host !== window.location.host) {
+      window.kdTrack("Outbound", {
+        url:     url.host + url.pathname,
+        domain:  url.host,
+        section: (window.location.pathname.split("/").filter(Boolean)[0] || "home")
+      });
+    }
+  }, true);
+})();
 </script>
 {{- end -}}
 {{- end -}}

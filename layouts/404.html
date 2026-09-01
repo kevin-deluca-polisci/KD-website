@@ -1,0 +1,50 @@
+{{ define "main" }}
+{{/*
+  404. Uses baseof, so it inherits the one head, the one nav and the one
+  analytics tag rather than being a tenth standalone document.
+
+  A dead end is where a visitor is most likely to leave, so this offers the
+  three things they were most plausibly looking for -- a paper, the CV, the
+  forecast -- instead of an apology and a link home.
+
+  Plausible records the hit as a pageview on /404.html with the referring page
+  attached, which is what makes broken inbound links findable. A paper URL
+  quoted in an article with a typo shows up here as repeat traffic rather than
+  as silence.
+*/}}
+<article class="notfound">
+  <h1 style="margin-bottom: 6px;">Page not found</h1>
+  <p style="color: #666; margin-bottom: 26px;">
+    That link is broken or the page has moved. A few places worth trying:
+  </p>
+
+  <ul style="list-style: none; padding: 0; line-height: 2;">
+    <li><a href="/papers/"><strong>Papers</strong></a> — published work and working papers, with abstracts and PDFs</li>
+    <li><a href="/"><strong>Home</strong></a> — publications list and contact</li>
+    <li><a href="/data/"><strong>Data</strong></a> — datasets and replication material</li>
+    <li><a href="/media/"><strong>Media</strong></a> — commentary and coverage</li>
+    <li><a href="/media-tracker/"><strong>Media Tracker</strong></a> — tracking news coverage over time</li>
+    <li><a href="/blog/"><strong>Blog</strong></a> — writing on elections, media and measurement</li>
+    <li><a href="/forecast/"><strong>2026 Forecast</strong></a> — the midterm election tracker</li>
+  </ul>
+
+  <p style="margin-top: 30px; font-size: 0.95em; color: #666;">
+    If you followed a link from somewhere else and it should work,
+    <a href="mailto:{{ .Site.Params.email }}">let me know</a> and I will fix it.
+  </p>
+</article>
+
+<script>
+  /* The referrer is the whole point of tracking a 404: it names the page that
+     holds the broken link. document.referrer is empty for direct hits and for
+     some privacy settings, which is why it is labelled rather than dropped. */
+  window.addEventListener("load", function () {
+    if (window.kdTrack) {
+      window.kdTrack("404", {
+        path: window.location.pathname,
+        from: document.referrer || "(direct or hidden)"
+      });
+    }
+  });
+</script>
+{{ end }}

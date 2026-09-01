@@ -15,4 +15,11 @@ plain_question: ""
 plain_answer: ""
 keywords: ["Bayesian methods", "machine learning", "redistricting", "racial representation", "elections"]
 preprint_url: ""
+# Drop a figure path here and it renders under the abstract. Empty = no slot.
+figure: ""
+figure_alt: ""
+figure_caption: ""
+# Coverage and explainers for THIS paper. Each entry: title, outlet, url, and
+# optionally date and note. Renders as its own section under the abstract.
+media: []
 ---

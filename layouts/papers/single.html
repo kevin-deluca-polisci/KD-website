@@ -2,24 +2,16 @@
 {{ $p := .Params }}
 <article class="paper">
 
-  {{/* The plain-language question goes ABOVE the title when it exists.
-       It is the heading a non-specialist would actually type into a search
-       box or an assistant, and burying it under the academic title wastes
-       the one thing on this page a journalist can use. */}}
-  {{ with $p.plain_question }}
-  <section class="plain-q">
-    <h1>{{ . }}</h1>
-    {{ with $p.plain_answer }}<p class="plain-a">{{ . }}</p>
-    {{ else }}<p class="plain-a todo">[Short answer to go here — four sentences, no jargon.]</p>{{ end }}
-  </section>
-  {{/* $.Title, not .Title. Inside `with $p.plain_question` the dot IS the
-       plain-language question — a string — so `.Title` asked a string for a
-       field and failed the build. The `else` branch below is fine as written,
-       because there the dot is still the page. */}}
-  <h2 class="paper-title">{{ $.Title }}</h2>
-  {{ else }}
+  {{/* SCHOLAR ORDER, THEN PLAIN LANGUAGE.
+       Title, credits, links, abstract, figure -- the things a colleague came
+       for -- and only then the plain-language exchange, for a reader who had a
+       question this paper answers and does not want to download a PDF to get
+       at it. The question used to sit ABOVE the title and demote it to an h2,
+       which made a research page read as an explainer. Position costs nothing
+       machine-side: extractors read the whole document, and the JSON-LD at the
+       foot carries the same fields regardless of where they appear. */}}
+
   <h1 class="paper-title">{{ .Title }}</h1>
-  {{ end }}
 
   <p class="paper-meta">
     {{ with $p.coauthors }}{{ . }} · {{ end }}
@@ -44,11 +36,53 @@
   {{ with $p.abstract }}
   <h3>Abstract</h3>
   <p class="abstract">{{ . }}</p>
-  {{ else }}
-  <p class="abstract todo">[Abstract to be added.]</p>
+  {{ end }}
+
+  {{/* ONE FIGURE, THE PAPER'S OWN. A reader deciding whether to download the
+       PDF is really asking what the result looks like, and a single figure
+       answers that faster than the abstract did. Absent by default: a slot
+       that renders a broken image when unset is worse than no slot. */}}
+  {{ with $p.figure }}
+  <figure class="paper-figure">
+    <img src="{{ . }}" alt="{{ $p.figure_alt | default (printf "Figure from %s" $.Title) }}" loading="lazy">
+    {{ with $p.figure_caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+  </figure>
   {{ end }}
 
   {{ .Content }}
+
+  {{/* NO PLAIN-LANGUAGE Q&A HERE, DELIBERATELY.
+       This page used to open with a plain-language question as its <h1>, which
+       demoted the actual title to an <h2> and made a research page read as an
+       explainer. Moving it below the abstract helped and did not fix it: the
+       register still belonged somewhere else. Plain-language summaries are
+       going into blog posts instead, where a whole piece can carry that voice
+       and link back here.
+
+       `plain_question` and `plain_answer` remain in the front matter. They are
+       drafted material for those posts, not dead keys -- but nothing on this
+       page reads them, and the JSON-LD below deliberately omits the FAQPage
+       node too, because structured data asserting a Q&A that no visitor can
+       see is a claim about content that is not there. */}}
+
+  {{/* PRESS FOR THIS PAPER, not for the author. The media page answers "what
+       has he been quoted in"; this answers "who explained THIS result, and
+       where can I read it without the maths". Front matter takes a list of
+       {title, outlet, url, date?}. */}}
+  {{ with $p.media }}
+  <section class="paper-media">
+    <h3>Coverage &amp; explainers</h3>
+    <ul>
+      {{ range . }}
+      <li>
+        <a href="{{ .url }}">{{ .title }}</a>
+        <span class="media-outlet">{{ .outlet }}{{ with .date }} · {{ . }}{{ end }}</span>
+        {{ with .note }}<span class="media-note">{{ . }}</span>{{ end }}
+      </li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
 
   {{ with $p.keywords }}
   <p class="paper-keywords">{{ range . }}<span class="kw">{{ . }}</span>{{ end }}</p>
