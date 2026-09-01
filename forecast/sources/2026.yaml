@@ -812,17 +812,66 @@ sources:
       # handler counts those as absent rather than as failures.
       backfill:
         enabled: false
-        # Deliberately off. capture.py --backfill fetches revision LISTS, which
-        # record that a page changed and never what it said. For this source
-        # the wikitext of past revisions is what would be worth having, and
-        # that is wiki_history.py's job, not this one's.
+        # Deliberately off, and it STAYS off. capture.py --backfill fetches
+        # revision LISTS, which record that a page changed and never what it
+        # said. For this source the wikitext of past revisions is what would be
+        # worth having, and that is wiki_history.py's job, not this one's.
+        #
+        # THE TWO READERS OF THIS BLOCK DISAGREE ON PURPOSE. capture.py checks
+        # `enabled` before it does anything; wiki_history.py never looks at it
+        # and reads only the two keys below. So the window can be configured
+        # for the tool that should have it without switching on 152 revision-
+        # list fetches in the daily run. Turning `enabled` on would do exactly
+        # that, cost a few minutes every morning, and store nothing readable.
+        #
+        # THE WINDOW. `since` matches the panel start, so a recovery reaches as
+        # far back as the timeline does; where an article did not exist yet, or
+        # carried no aggregation table yet, the recovery simply ends there and
+        # that absence is the honest answer about how deep race-level polling
+        # goes.
+        #
+        # THE CAP IS SIZED OFF THE BUSIEST PAGE, NOT THE TYPICAL ONE. The first
+        # full Senate sweep listed 20,932 revisions across 33 live articles,
+        # but they are wildly uneven: Maine alone had 2,672 and Texas 2,323
+        # against a median nearer 400. At 3000 Maine was two months of campaign
+        # away from truncating, and truncation here removes the NEWEST
+        # revisions rather than the oldest, so the page would quietly stop
+        # having history at its most interesting point. 8000 clears the busiest
+        # article with room through November and costs nothing on the rest,
+        # since the cap bounds a list that stops when the page runs out.
+        since: 2025-01-20
+        max_revisions_per_page: 8000
   - id: votehub
     name: VoteHub
     category: professional
     method: http
     enabled: false
     cadence: daily
-    publication: private
+    # TIER RAISED 2026-09-01. `private` here used to mean this source could not
+    # reach a published average at all, which zeroed out its Wikipedia-sourced
+    # race rows. It is now `aggregate_only`: it may contribute to an average,
+    # and its own number is never displayed.
+    #
+    # THE LICENCE GATE IS UNCHANGED AND MUST STAY THAT WAY. `enabled: false`
+    # and the licence below still forbid fetching this source directly, and
+    # capture.py still refuses it. What changed is only what may be done with
+    # the number where Wikipedia has already republished it under CC BY-SA,
+    # with attribution, on a page we are permitted to read. `license` governs
+    # the FETCH; `publication` governs the SHOW; they are separate questions
+    # and this is a decision about the second one only.
+    #
+    # AND WE SHOW LESS THAN WIKIPEDIA DOES. Wikipedia prints the figure itself.
+    # We publish only an average of two or more aggregators and never the
+    # individual value, so the exact number is not reproduced anywhere on the
+    # public side. The methods page must say plainly that this source is read
+    # as republished by Wikipedia and not collected from the publisher.
+    #
+    # VOTEHUB SPECIFICALLY. Its terms prohibit scraping and reproduction of ITS
+    # data from ITS site, and we do neither -- we never fetch it and never
+    # reproduce its figure. This is the most aggressive reading in the registry
+    # and it is recorded as a judgment call, made by Kevin on 2026-09-01, not
+    # as an obvious one.
+    publication: aggregate_only
     declared_inputs: [cook, sabato, inside_elections, polymarket, kalshi]
     license: prohibited
     robots_checked: 2026-08-19
@@ -951,7 +1000,30 @@ sources:
     method: http
     enabled: false
     cadence: weekly
-    publication: private
+    # TIER RAISED 2026-09-01. `private` here used to mean this source could not
+    # reach a published average at all, which zeroed out its Wikipedia-sourced
+    # race rows. It is now `aggregate_only`: it may contribute to an average,
+    # and its own number is never displayed.
+    #
+    # THE LICENCE GATE IS UNCHANGED AND MUST STAY THAT WAY. `enabled: false`
+    # and the licence below still forbid fetching this source directly, and
+    # capture.py still refuses it. What changed is only what may be done with
+    # the number where Wikipedia has already republished it under CC BY-SA,
+    # with attribution, on a page we are permitted to read. `license` governs
+    # the FETCH; `publication` governs the SHOW; they are separate questions
+    # and this is a decision about the second one only.
+    #
+    # AND WE SHOW LESS THAN WIKIPEDIA DOES. Wikipedia prints the figure itself.
+    # We publish only an average of two or more aggregators and never the
+    # individual value, so the exact number is not reproduced anywhere on the
+    # public side. The methods page must say plainly that this source is read
+    # as republished by Wikipedia and not collected from the publisher.
+    #
+    # FIFTYPLUSONE SPECIFICALLY. `permission_pending` means nobody has refused;
+    # permission has not yet been sought. Raising the tier also recovers
+    # Montana, whose only other race-level source is Race to the WH and which
+    # MIN_AGGREGATORS therefore dropped entirely.
+    publication: aggregate_only
     declared_inputs: [cook, sabato, inside_elections]
     license: permission_pending
     robots_checked: 2026-08-19

@@ -90,8 +90,14 @@ def _artifact_name(title: str) -> str:
     return _slug(f"current-{title}")
 
 
-def _day_dir(cycle: int, date: str) -> Path:
-    return DATA / str(cycle) / "raw" / "wikipedia" / date
+def _day_dir(cycle: int, date: str, source_id: str = "wikipedia") -> Path:
+    """The directory the LIVE capture of this source writes that day into.
+
+    Keyed on the source id rather than hardcoded, because the race articles are
+    captured under `wiki_endorsements` and a revision recovered into the
+    `wikipedia` tree would be invisible to the parser that reads them.
+    """
+    return DATA / str(cycle) / "raw" / source_id / date
 
 
 def _revisions(fetcher, api: str, title: str, since: str,
@@ -123,6 +129,17 @@ def _revisions(fetcher, api: str, title: str, since: str,
             if ts and rid:
                 out.append((str(ts)[:10], int(rid)))
         rvcontinue = (payload.get("continue") or {}).get("rvcontinue")
+        # THE CAP TRUNCATES THE RECENT END, NOT THE OLD ONE, and that is the
+        # opposite of harmless. Listing walks `rvdir=newer` from `since`, so a
+        # page that exceeds the cap keeps its oldest revisions and silently
+        # loses its newest -- the page would stop having history exactly where
+        # the campaign gets interesting, and the summary would still say
+        # COMPLETE. Say so loudly instead; it is one line and it is the
+        # difference between a known limit and a hole nobody looks for.
+        if len(out) >= cap and rvcontinue:
+            print(f"    {title}: HIT THE {cap}-REVISION CAP. The list stops at "
+                  f"{out[-1][0]} and anything edited after that is NOT "
+                  f"recoverable until max_revisions_per_page is raised.")
         if not rvcontinue or not revs:
             break
     return out
@@ -156,8 +173,8 @@ def _pick(revs: list[tuple[str, int]], step_days: int) -> dict[str, int]:
 
 
 def _write(cycle: int, date: str, title: str, body: bytes, revid: int,
-           api: str, dry: bool) -> bool:
-    day = _day_dir(cycle, date)
+           api: str, dry: bool, source_id: str = "wikipedia") -> bool:
+    day = _day_dir(cycle, date, source_id)
     target = day / f"{_artifact_name(title)}.json"
     if target.exists():
         return False                       # rule 1: never overwrite a capture
@@ -186,7 +203,8 @@ def _write(cycle: int, date: str, title: str, body: bytes, revid: int,
 
 def backfill_page(cycle: int, fetcher, api: str, title: str, since: str,
                   step_days: int, cap: int, dry: bool,
-                  deadline: float | None = None) -> dict:
+                  deadline: float | None = None,
+                  source_id: str = "wikipedia") -> dict:
     stats = collections.Counter()
     revs = _revisions(fetcher, api, title, since, cap)
     stats["revisions_listed"] = len(revs)
@@ -203,7 +221,8 @@ def backfill_page(cycle: int, fetcher, api: str, title: str, since: str,
     # artifact is still what the page said. Reporting the gap against the
     # achievable set is what lets a run tell you whether to run it again.
     have = sum(1 for d in targets
-               if (_day_dir(cycle, d) / f"{_artifact_name(title)}.json").exists())
+               if (_day_dir(cycle, d, source_id)
+                   / f"{_artifact_name(title)}.json").exists())
     stats["already_present"] = have
     stats["missing_before"] = len(targets) - have
     print(f"    {title}: {len(revs)} revision(s), {len(targets)} edited day(s) "
@@ -220,7 +239,8 @@ def backfill_page(cycle: int, fetcher, api: str, title: str, since: str,
             stats["stopped_on_budget"] = 1
             break
         revid = targets[date]
-        if (_day_dir(cycle, date) / f"{_artifact_name(title)}.json").exists():
+        if (_day_dir(cycle, date, source_id)
+                / f"{_artifact_name(title)}.json").exists():
             stats["skipped_exists"] += 1
             continue
         params = {"action": "parse", "oldid": revid, "prop": "wikitext",
@@ -248,7 +268,7 @@ def backfill_page(cycle: int, fetcher, api: str, title: str, since: str,
         if not text:
             stats["no_wikitext"] += 1
             continue
-        if _write(cycle, date, title, body, revid, api, dry):
+        if _write(cycle, date, title, body, revid, api, dry, source_id):
             stats["written"] += 1
         else:
             stats["skipped_exists"] += 1
@@ -258,6 +278,14 @@ def backfill_page(cycle: int, fetcher, api: str, title: str, since: str,
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     ap.add_argument("--cycle", type=int, default=2026)
+    ap.add_argument("--source", default="wikipedia",
+                    help="which registry source's pages to recover. Default "
+                         "`wikipedia`, the four summary articles. Pass "
+                         "`wiki_endorsements` for the per-race articles, whose "
+                         "titles come from a generated plan rather than a "
+                         "literal list. Recovered revisions are written into "
+                         "that source's own raw tree, so the parser that reads "
+                         "the live capture reads these with no special case.")
     ap.add_argument("--since", default=None,
                     help="earliest revision date (default: the registry's "
                          "backfill.since, else 2025-01-20)")
@@ -277,23 +305,32 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
 
     reg = capture.load_registry(a.cycle)
-    src = next((s for s in reg.get("sources", []) if s["id"] == "wikipedia"), None)
+    src = next((s for s in reg.get("sources", []) if s["id"] == a.source), None)
     if src is None:
-        print("  no wikipedia source in the registry")
+        print(f"  no source `{a.source}` in the registry")
         return 1
     cfg = src.get("config") or {}
     api = cfg.get("api")
     bf = cfg.get("backfill") or {}
     since = a.since or str(bf.get("since") or "2025-01-20")
     cap = a.max_revisions or int(bf.get("max_revisions_per_page") or 5000)
-    pages = [p for p in (cfg.get("pages") or [])
+    # THE PLAN COUNTS AS PAGES. capture.resolve_pages expands a source's
+    # literal list AND its generated plan; reading `cfg["pages"]` directly is
+    # what made every per-race article invisible to this tool, since they reach
+    # the project through wiki_endorsements' plan and never through YAML.
+    pages = [p for p in capture.resolve_pages(cfg)
              if not a.only or a.only.lower() in p.lower()]
+    if not pages:
+        print(f"  source `{a.source}` resolves to no pages"
+              + (f" matching --only {a.only!r}" if a.only else ""))
+        return 1
 
     fetcher = capture.Fetcher(reg.get("contact") or {}, reg.get("defaults") or {},
                               dry_run=a.dry_run)
 
     print("=" * 70)
-    print(f"wikipedia history · cycle {a.cycle} · since {since} · "
+    print(f"{a.source} history · cycle {a.cycle} · {len(pages)} page(s) · "
+          f"since {since} · "
           f"step {a.step_days}d{' · DRY RUN' if a.dry_run else ''}")
     print("=" * 70)
 
@@ -303,7 +340,8 @@ def main(argv=None) -> int:
     for title in pages:
         try:
             got = backfill_page(a.cycle, fetcher, api, title, since,
-                                max(1, a.step_days), cap, a.dry_run, deadline)
+                                max(1, a.step_days), cap, a.dry_run, deadline,
+                                a.source)
             total.update(got)
         except Exception:                                   # noqa: BLE001
             # One page's failure must not discard another's work — the same
@@ -332,6 +370,15 @@ def main(argv=None) -> int:
     elif left > 0:
         print(f"\n  {left} edited day(s) still missing (fetch failures or "
               f"revisions with no wikitext). Re-running is safe.")
+    elif failed:
+        # NEVER "COMPLETE" OVER A FAILURE. `left` counts the gap on pages that
+        # were successfully listed, so a page whose revision list never arrived
+        # contributes nothing to it and the old branch reported a clean sweep
+        # directly underneath its own WARNING. That is the summary telling you
+        # to stop when the honest answer is to run it again.
+        print(f"\n  INCOMPLETE: {len(failed)} page(s) could not be listed and "
+              f"are not in the archive.\n  Nothing is lost — re-running is "
+              f"safe and retries only what is missing.")
     else:
         print("\n  COMPLETE: every edited day in this window is in the archive. "
               "Re-running would write nothing.")

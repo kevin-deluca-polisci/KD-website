@@ -564,6 +564,33 @@ def handle_polymarket(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tupl
     return n, b, notes
 
 
+def resolve_pages(cfg: dict) -> list[str]:
+    """Every page title a wiki source asks for: literals plus its plan.
+
+    A PAGE PLAN instead of 150 lines of YAML. Election article titles are
+    mechanical, so a source that wants every race in a cycle names the
+    generator rather than enumerating it -- which also means a plan cannot
+    drift out of step with the module that parses what it fetches.
+
+    SHARED WITH collect/wiki_history.py, which walks the same titles to recover
+    their revisions. It used to read `cfg["pages"]` directly and so could only
+    ever see the four literal summary pages; every race article reached this
+    project through a plan and was therefore invisible to the backfill. Two
+    readers of one config field is exactly how a plan drifts out of step with
+    what actually gets captured, so there is one reader and both call it.
+    """
+    pages = list(cfg.get("pages") or [])
+    plan = cfg.get("pages_plan") or {}
+    if plan:
+        import importlib
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        mod = importlib.import_module(plan["module"])
+        pages += list(getattr(mod, plan.get("function", "titles"))(
+            int(plan["cycle"])))
+    return pages
+
+
 def handle_wikipedia(src: dict, fetcher: Fetcher, store: RawStore,
                      backfill: bool = False, **_) -> tuple[int, int, list[str]]:
     """
@@ -578,19 +605,7 @@ def handle_wikipedia(src: dict, fetcher: Fetcher, store: RawStore,
     n = b = 0
     notes: list[str] = []
 
-    pages = list(cfg.get("pages") or [])
-    # A PAGE PLAN instead of 150 lines of YAML. Election article titles are
-    # mechanical, so a source that wants every race in a cycle names the
-    # generator rather than enumerating it -- which also means a plan cannot
-    # drift out of step with the module that parses what it fetches.
-    plan = cfg.get("pages_plan") or {}
-    if plan:
-        import importlib
-        import sys as _sys
-        _sys.path.insert(0, str(Path(__file__).resolve().parent))
-        mod = importlib.import_module(plan["module"])
-        pages += list(getattr(mod, plan.get("function", "titles"))(
-            int(plan["cycle"])))
+    pages = resolve_pages(cfg)
 
     dedup = bool(cfg.get("dedup"))
     changed_n = absent_n = 0

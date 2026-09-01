@@ -393,13 +393,22 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
 
 # Row label -> (source id, publication tier). Tiers mirror the registry; a
 # forecaster we may not republish stays un-republishable by this route too.
+#
+# THIS TABLE IS THE THIRD COPY OF THE SAME FACT and it is the one that drifted.
+# When fiftyplusone and votehub moved to `aggregate_only` on 2026-09-01 the
+# registry and the endorsements parser were both updated and this was missed,
+# so the national rows kept stamping `private` and the publication audit refused
+# to publish. aggregate.resolve_tiers now re-reads the tier from the registry at
+# aggregate time, which is the real fix and covers rows already written; keeping
+# this in step is what stops a fresh parse from re-introducing the drift.
+# Registry, collect/parsers/wiki_endorsements.py TIERS, and here.
 _AGG_SOURCES = [
     ("DECISION DESK", ("ddhq", "aggregate_only")),
-    ("FIFTYPLUSONE", ("fiftyplusone", "private")),
-    ("FIFTY PLUS ONE", ("fiftyplusone", "private")),
+    ("FIFTYPLUSONE", ("fiftyplusone", "aggregate_only")),
+    ("FIFTY PLUS ONE", ("fiftyplusone", "aggregate_only")),
     ("REALCLEARPOLI", ("rcp", "aggregate_only")),
     ("SILVER BULLETIN", ("silver_bulletin", "aggregate_only")),
-    ("VOTEHUB", ("votehub", "private")),
+    ("VOTEHUB", ("votehub", "aggregate_only")),
     ("RACE TO THE WH", ("race_to_the_wh", "aggregate_only")),
     ("SPLIT TICKET", ("split_ticket", "private")),
     ("ECONOMIST", ("economist", "aggregate_only")),

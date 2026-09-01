@@ -486,6 +486,33 @@ def carry_forward(rows: list[dict], registry: dict) -> list[str]:
              and (s.get("cadence") or "daily") not in EPISODIC_CADENCES}
     eligible |= daily
 
+    # CARRY ON THE SOURCE A ROW CAME THROUGH, NOT THE NAME IT WEARS.
+    #
+    # Both sets above test the ATTRIBUTED forecaster's own `enabled` flag, which
+    # is the right test when the row was fetched from that forecaster. It is the
+    # wrong one for a row a parser attributed to somebody else. The race-level
+    # Senate rows are read out of Wikipedia's aggregation tables and attributed
+    # to RCP, DDHQ, VoteHub, 270toWin, FiftyPlusOne and Silver Bulletin, five of
+    # which are `enabled: false` because we may not fetch them DIRECTLY. So none
+    # of them was eligible, and a race observed every one to five days -- which
+    # is what the revision grid yields -- dropped out of the average on every day
+    # in between. The page would show a race's polling appearing and vanishing
+    # while nothing about it had changed.
+    #
+    # THE ROW ALREADY SAYS WHERE IT CAME FROM. `raw_path` points into the tree of
+    # the source that actually fetched the bytes, so no new column is needed:
+    # a row whose path runs through an ENABLED source's raw directory was
+    # obtained by a collection this project actually performs, whatever name the
+    # parser filed it under. A direct FiftyPlusOne capture would still not be
+    # carried, because there is no such capture to carry -- which is precisely
+    # the protection the rule was written for.
+    enabled_ids = {s["id"] for s in registry.get("sources", []) if s.get("enabled")}
+    via_marks = tuple(f"/raw/{sid}/" for sid in sorted(enabled_ids))
+
+    def obtained_through_enabled_source(r: dict) -> bool:
+        path = r.get("raw_path") or ""
+        return any(m in path for m in via_marks)
+
     for r in rows:
         r.setdefault("as_of", r["snapshot_date"])
     if not eligible or not rows:
@@ -507,7 +534,9 @@ def carry_forward(rows: list[dict], registry: dict) -> list[str]:
 
     series: dict[tuple, dict[str, dict]] = defaultdict(dict)
     for r in rows:
-        if r["source_id"] in eligible and r["quantity"] not in skip:
+        if ((r["source_id"] in eligible
+             or obtained_through_enabled_source(r))
+                and r["quantity"] not in skip):
             key = (r["source_id"], r["category"], r["race_id"], r["chamber"],
                    r["state"], r["district"], r["quantity"], r["unit"])
             series[key][r["snapshot_date"]] = r
@@ -543,6 +572,37 @@ def carry_forward(rows: list[dict], registry: dict) -> list[str]:
     return [f"{sid}: carried {v['rows']} row(s) forward, oldest "
             f"{v['max_age']} day(s) (published {v['as_of']})"
             for sid, v in sorted(stats.items())]
+
+
+# EVERY FAMILY A MODEL BELONGS TO, FOR PAYLOADS WRITTEN BEFORE IT SAID SO.
+#
+# The categories are read off each stored projection, and a projection written
+# before the model registry declared a second family has no `categories` key at
+# all. The fallback was then `[cat]`, the primary alone, so academic_bew was
+# filed academic-only for the first nineteen months of the panel and
+# academic+polling from 2026-08-25, the day the registry line landed. It was
+# never backfilled. A model that is a polling model from August but not before
+# steps the published polling line on a date with no news behind it, which is
+# exactly the kind of movement the note on panel composition in publish.py
+# warns about.
+#
+# BOTH REGISTRIES ALREADY AGREE, unconditionally and on every date: MODELS in
+# model/academic.py declares ["academic", "polling"], and BY_SOURCE in
+# collect/facets.py maps academic_bew to ("polling", "academic"). BEW regresses
+# the November vote on the generic ballot, so the generic ballot IS its input
+# and it belongs with the aggregators; the midterm-penalty term is the discount
+# it applies to that input, not a second source of evidence. Only the stored
+# payloads disagreed.
+#
+# WRITTEN OUT A THIRD TIME ON PURPOSE. collect/ and model/ cannot import each
+# other — the same split is why CARRY_FORWARD_MAX_DAYS is duplicated in
+# seats.py and cross-referenced in both places. Keep this in step with those
+# two. Reading it here rather than re-projecting means the whole panel is
+# repaired by re-running aggregate alone; categories are a label on a finished
+# projection and change no arithmetic.
+REGISTRY_CATEGORIES: dict[str, list[str]] = {
+    "academic_bew": ["academic", "polling"],
+}
 
 
 def class_model_rows(cycle: int) -> list[dict]:
@@ -677,7 +737,9 @@ def class_model_rows(cycle: int) -> list[dict]:
           # sums across categories would count this model twice. Nothing on the
           # site does that: category averages are computed within a category,
           # and the across-family row in publish.py uses the primary only.
-          cats = model.get("categories") or [cat]
+          cats = (model.get("categories")
+                  or REGISTRY_CATEGORIES.get(source_id)
+                  or [cat])
           as_of["d"] = model.get("as_of") or date
           tier["p"] = model.get("publication") or "individual"
           prov["p"] = ("retrospective"
@@ -1252,6 +1314,45 @@ def write(cycle: int, averages, by_source, suppressed, ratings) -> list[Path]:
     return written
 
 
+def resolve_tiers(rows: list[dict], registry: dict) -> int:
+    """Re-read each row's publication tier from the registry, in place.
+
+    A PUBLICATION TIER IS A CURRENT LICENSING FACT, NOT A HISTORICAL ONE.
+    Everything else on a row is a claim about a moment -- what a forecaster
+    said, when, from which bytes -- and must never be rewritten. The tier is
+    the opposite: it says what THIS PROJECT may do with the number TODAY, and
+    when that position changes it has to change for the whole archive at once
+    or the same source is private in March and publishable in September for no
+    reason a reader could discover.
+
+    WHAT WENT WRONG WITHOUT IT. FiftyPlusOne and VoteHub moved from `private`
+    to `aggregate_only` on 2026-09-01. The registry was updated and so was the
+    endorsements parser, but the tier was ALSO stored on every row already
+    written, and in two more places: the hardcoded table in parsers/wikipedia.py
+    and, worse, inside every seat projection in the history file. Re-parsing
+    fixed the first, nothing could reach the second short of re-projecting 585
+    days, and the publication audit correctly refused to publish: 656 Texas
+    rows alone still carried `private` from months ago.
+
+    ONLY EVER LOOSENS WHAT THE REGISTRY LOOSENS, and only from `private`. A row
+    stamped private for a reason that is not about its source -- Cook's PVI
+    arriving through Wikipedia is the live example -- keeps that stamp here and
+    is held by NEVER_PUBLISH regardless, which is the belt to this braces.
+    Tightening is left to the audit, which re-derives the guarantee from the
+    output rather than trusting this function.
+    """
+    tiers = {s["id"]: s.get("publication") for s in registry.get("sources", [])}
+    changed = 0
+    for r in rows:
+        if r.get("publication") != "private":
+            continue
+        want = tiers.get(r.get("source_id"))
+        if want and want != "private":
+            r["publication"] = want
+            changed += 1
+    return changed
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Aggregate parsed rows for publication.")
     ap.add_argument("--cycle", type=int, default=CYCLE_DEFAULT)
@@ -1269,6 +1370,10 @@ def main(argv=None) -> int:
     try:
         from parse import load_registry
         _reg = load_registry(a.cycle)
+        _retiered = resolve_tiers(rows, _reg)
+        if _retiered:
+            print(f"  publication tier re-read from the registry on "
+                  f"{_retiered} row(s) that stored an older, stricter one")
         # BACKWARDS FIRST, then forwards. The backward fill needs to see only
         # genuine observations when it picks each series' earliest value; if
         # carry_forward ran first its filled rows would already be in `rows`

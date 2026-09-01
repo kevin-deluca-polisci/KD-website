@@ -1032,6 +1032,19 @@ def main(argv=None) -> int:
                     filled += 1
 
                 day["snapshot_date"] = d0
+                # RECORD THE SIGMA THIS RUN ACTUALLY USED.
+                #
+                # Every projection written above went through `sigma`, the one
+                # calibrate_sigma returned at the top of this run. The day
+                # record, though, was only ever written by the live path, so a
+                # re-projected day kept whatever sigma was stamped on it when it
+                # was first captured, and after a recalibration that label
+                # contradicts the numbers underneath it. 2026-08-20 through
+                # 08-27 read 6.55 for a week while their projections had been
+                # rebuilt at 5.37. `fair`, whose tide is frozen, returned the
+                # identical probability on both sides of the boundary, which is
+                # what proved the numbers were right and the label was not.
+                day["sigma"] = round(sigma, 2)
                 hist[d0] = day
                 if i % 20 == 0 or i == len(todo):
                     print(f"    {i}/{len(todo)} dates")

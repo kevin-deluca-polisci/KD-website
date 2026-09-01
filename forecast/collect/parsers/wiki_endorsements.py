@@ -102,13 +102,17 @@ AGGREGATORS = {
     "270 to win": "twoseventy",
     "decision desk hq": "ddhq",
     "ddhq": "ddhq",
-    # FiftyPlusOne is ABSENT ON PURPOSE; see TIERS below.
+    "fiftyplusone": "fiftyplusone",
+    "fifty plus one": "fiftyplusone",
+    "50+1": "fiftyplusone",
     "race to the wh": "race_to_the_wh",
     "race to the white house": "race_to_the_wh",
     "realclearpolitics": "rcp",
     "realclearpolling": "rcp",
     "rcp": "rcp",
     "silver bulletin": "silver_bulletin",
+    "votehub": "votehub",
+    "vote hub": "votehub",
 }
 
 # THE TIER EACH ATTRIBUTED ROW CARRIES, and it must match the registry.
@@ -133,13 +137,22 @@ TIERS = {
     "race_to_the_wh": "aggregate_only",
     "rcp": "aggregate_only",
     "silver_bulletin": "aggregate_only",
-    # fiftyplusone is `publication: private` in the registry, so its number
-    # cannot enter a published average and it is excluded here. That is a
-    # tier decision, not a licence one -- it appears in six of the ten covered
-    # races, and dropping it costs Montana entirely, whose only other source is
-    # Race to the WH. Raising it to aggregate_only would be consistent with
-    # ddhq, which is also enabled:false and permission_pending yet tiered
-    # aggregate_only. That call belongs in the registry, not in a parser.
+    # RAISED IN THE REGISTRY 2026-09-01, and these two follow it.
+    #
+    # Both were `publication: private`, which in this schema means the row may
+    # not enter a published average at all, so both were excluded here and
+    # produced no rows. The comment that used to sit in this spot said the call
+    # belonged in the registry rather than in a parser. It was made there, on
+    # the reasoning that we read these numbers only where Wikipedia has already
+    # republished them, and that publishing an average of two or more without
+    # ever showing an individual figure reproduces less than Wikipedia itself
+    # does. The licence gate is untouched: neither source is fetched directly.
+    #
+    # fiftyplusone appears in six of the ten covered races and recovers Montana,
+    # whose only other race-level source is Race to the WH and which
+    # MIN_AGGREGATORS therefore dropped entirely.
+    "fiftyplusone": "aggregate_only",
+    "votehub": "aggregate_only",
 }
 
 # Below this many recognised aggregators, the race gets no rows at all.
