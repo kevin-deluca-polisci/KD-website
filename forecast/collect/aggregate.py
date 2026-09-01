@@ -523,6 +523,33 @@ def carry_forward(rows: list[dict], registry: dict) -> list[str]:
     for r in rows:
         cat_dates[r["category"]].add((r["snapshot_date"], r["source_id"]))
 
+    # EVERY DATE IN THE PANEL, NOT ONLY THE ONES A PEER HAPPENED TO OCCUPY.
+    #
+    # The target list used to be `{d for d, s in cat_dates[cat] if s != sid}`:
+    # a source was carried onto a date only when SOME OTHER source in its own
+    # category was measured there. That reads like a safety rail and is really
+    # an arbitrary extra condition, and it fails hardest exactly where carrying
+    # matters most -- a category with ONE member can never be carried anywhere,
+    # because it has no peer to vouch for the date.
+    #
+    # WHAT IT DID TO THE PUBLISHED LINE. Race to the WH backdates its trend on a
+    # five-day grid while the archive is daily, and through early 2025 it is the
+    # only professional source in the panel:
+    #
+    #     professional sources on 2025-01-25: ['race_to_the_wh']
+    #     professional sources on 2025-01-26: []
+    #
+    # So the professional average gained a contributor every fifth day and lost
+    # it the next, 231 day-over-day moves of two points or more across 584 days,
+    # none of them news. Its rows were eligible, inside the seven-day cap, and
+    # correctly stamped; the target list was empty, so nothing was ever carried.
+    #
+    # THE AGE CAP IS THE REAL GUARD and it is untouched: seven days for a daily
+    # source, two hundred for an episodic one. That is the honest statement of
+    # how long a forecast stands, and it does not become more or less true
+    # because somebody else published that morning.
+    all_dates = sorted({r["snapshot_date"] for r in rows})
+
     # Only quantities that would survive aggregation anyway. Cook's PVI, MEDSL's
     # past results and FRED's income series are reference data the model is fed,
     # not forecasts anyone makes — they are filtered out downstream regardless,
@@ -546,8 +573,10 @@ def carry_forward(rows: list[dict], registry: dict) -> list[str]:
                                                   "as_of": ""})
     for key, observed in series.items():
         sid, cat = key[0], key[1]
-        # Days this category was measured by somebody other than this source.
-        targets = sorted({d for d, s in cat_dates[cat] if s != sid})
+        # Every panel date after this series begins. `d in observed` skips the
+        # days it already holds and `d < seen[0]` refuses to carry a forecast
+        # backwards to before its author made it; the cap below stops the tail.
+        targets = all_dates
         seen = sorted(observed)
         for d in targets:
             if d in observed or d < seen[0]:
