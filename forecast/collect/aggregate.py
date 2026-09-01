@@ -278,6 +278,91 @@ BACKFILL_TO_PANEL_START = {
 }
 
 
+# Sources whose carried days are RAMPED between their own observations rather
+# than held flat. See interpolate_between_observations().
+#
+# All of these publish continuously and reach us in steps, because we only see
+# them when somebody edits a Wikipedia table. Ray Fair is deliberately absent:
+# he publishes a handful of times a year and genuinely holds a number in
+# between, so a flat carry is what actually happened and a ramp would invent a
+# trajectory he never had. The academic and class models are absent because
+# they are recomputed for every date already and are never carried.
+INTERPOLATE_BETWEEN_OBSERVATIONS = {
+    "ddhq", "rcp", "votehub", "fiftyplusone", "silver_bulletin",
+    "race_to_the_wh", "twoseventy",
+}
+
+
+def interpolate_between_observations(rows: list[dict]) -> list[str]:
+    """Spread a source's change across the days it actually happened over.
+
+    WHAT IS WRONG WITH A FLAT CARRY HERE. DDHQ's national margin went 7.9 to
+    6.7 between 31 May and 6 June 2026. Both numbers are real and both dates
+    are theirs. But we only learn it when an editor updates Wikipedia's table,
+    so carry_forward held 7.9 across the intervening days and then applied the
+    whole 1.2-point move on the sixth. The published probability of a
+    Democratic Senate moved nine points that day. Nothing moved nine points
+    that day; a week of drift arrived at once.
+
+    Across 2026 each of these sources changes on about a quarter of days and
+    moves 0.57 points on average when it does, up to 1.9. With three
+    contributors and a seat curve that is steep near the majority line, that
+    produced 77 jumps of 0.03 or more on the professional Senate line.
+
+    THE CLAIM THIS MAKES, AND WHY IT IS A WEAK ONE. We know the value at both
+    endpoints and we know the change happened between them, because `as_of`
+    records when each was current. Distributing it linearly asserts nothing
+    about the shape of the path — only that it did not all happen on the day we
+    happened to look. That is strictly less invention than the backwards fill,
+    which asserts a value where the forecaster published nothing at all.
+
+    WHAT IT DOES NOT TOUCH. Real observations, ever: a row whose `as_of` is its
+    own snapshot_date is left exactly as captured, so every endpoint is the
+    published number. Trailing carries after the last observation stay flat,
+    because there is no second endpoint and extrapolating would be a forecast
+    of a forecast. And `as_of` is left alone, so `n_carried` still counts these
+    days as carried and the reader can still see how much of the line is
+    inference.
+    """
+    by: dict[tuple, list[dict]] = defaultdict(list)
+    for r in rows:
+        if (r["source_id"] in INTERPOLATE_BETWEEN_OBSERVATIONS
+                and r["race_id"].startswith("NATL")):
+            key = (r["source_id"], r["category"], r["race_id"], r["chamber"],
+                   r["state"], r["district"], r["quantity"], r["unit"])
+            by[key].append(r)
+
+    stats: dict[str, int] = defaultdict(int)
+    for key, seq in by.items():
+        seq.sort(key=lambda r: r["snapshot_date"])
+        # Anchors are the days a source actually spoke.
+        anchors = [i for i, r in enumerate(seq)
+                   if r.get("as_of", r["snapshot_date"]) == r["snapshot_date"]]
+        for a, b in zip(anchors, anchors[1:]):
+            if b - a < 2:
+                continue                      # consecutive; nothing between
+            try:
+                v0 = float(seq[a]["value"])
+                v1 = float(seq[b]["value"])
+            except (TypeError, ValueError):
+                continue
+            if v0 == v1:
+                continue
+            d0 = dt.date.fromisoformat(seq[a]["snapshot_date"])
+            d1 = dt.date.fromisoformat(seq[b]["snapshot_date"])
+            span = (d1 - d0).days
+            if span < 2:
+                continue
+            for i in range(a + 1, b):
+                d = dt.date.fromisoformat(seq[i]["snapshot_date"])
+                w = (d - d0).days / span
+                seq[i]["value"] = round(v0 + (v1 - v0) * w, 6)
+                seq[i]["interpolated"] = True
+                stats[key[0]] += 1
+    return [f"{sid}: ramped {n} carried day(s) between observations"
+            for sid, n in sorted(stats.items())]
+
+
 def carry_backward(rows: list[dict], registry: dict) -> list[str]:
     """Show a late entrant's earliest value on the dates before it.
 
@@ -1190,6 +1275,10 @@ def main(argv=None) -> int:
         # and the "earliest" could be a carried copy rather than the real one.
         filled = carry_backward(rows, _reg)
         carried = carry_forward(rows, _reg)
+        # AFTER both carries: the ramp needs the carried rows to exist before
+        # it can replace their values, and it needs the real observations to
+        # still be identifiable, which `as_of` preserves.
+        ramped = interpolate_between_observations(rows)
     except Exception as e:
         # Do not aggregate without knowing each source's cadence. Silently
         # skipping the carry-forward would republish the exact bug this was
@@ -1215,6 +1304,9 @@ def main(argv=None) -> int:
     if filled:
         for line in filled:
             print(f"    filled backward  {line}")
+    if ramped:
+        for line in ramped:
+            print(f"    interpolated     {line}")
     if carried:
         for line in carried:
             print(f"    carried forward  {line}")
