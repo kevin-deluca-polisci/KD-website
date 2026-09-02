@@ -1,7 +1,7 @@
 {
   "cycle": 2026,
-  "snapshot_date": "2026-09-01",
-  "days_to_election": 63,
+  "snapshot_date": "2026-09-02",
+  "days_to_election": 62,
   "category": "academic",
   "publication": "individual",
   "models": {
@@ -16,14 +16,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 3.93,
-      "margin_D_80_low": -0.66,
-      "margin_D_80_high": 8.52,
+      "margin_D": 3.89,
+      "margin_D_80_low": -0.7,
+      "margin_D_80_high": 8.48,
       "inputs": {
-        "generic_ballot_D": 6.633,
-        "generic_ballot_share_deviation": 3.317,
+        "generic_ballot_D": 6.551,
+        "generic_ballot_share_deviation": 3.276,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
-        "days_to_election": 63,
+        "days_to_election": 62,
         "president_party": "R",
         "pres_party_coded": -1
       },
@@ -42,8 +42,8 @@
           "constant": -0.45,
           "root_mse": 3.71
         },
-        "bew_direct_D_seat_share": 54.76,
-        "bew_direct_D_seats": 238.2
+        "bew_direct_D_seat_share": 54.72,
+        "bew_direct_D_seats": 238.0
       },
       "notes": [
         "tide is BEW's vote equation; their separate seats equation is reported as a diagnostic and is not used downstream"
@@ -60,14 +60,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": true,
-      "margin_D": 8.39,
-      "margin_D_80_low": 0.24,
-      "margin_D_80_high": 16.54,
+      "margin_D": 8.38,
+      "margin_D_80_low": 0.22,
+      "margin_D_80_high": 16.53,
       "inputs": {
-        "approval": 34.38,
-        "approval_source": "mean of 8 adults-sample approval poll(s) in the 14 days to 2026-09-01. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
+        "approval": 34.67,
+        "approval_source": "mean of 6 adults-sample approval poll(s) in the 14 days to 2026-09-02. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
         "income_growth": -0.039,
-        "income_source": "FRED income_growth_ytd as of 2026-09-01, 7 month(s) of the year in hand"
+        "income_source": "FRED income_growth_ytd as of 2026-09-02, 7 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
@@ -78,7 +78,7 @@
         "r2": 0.273,
         "loeo_rmse": 3.18,
         "fitted_on": "20 midterms, 1946-2022",
-        "pres_party_two_party_vote": 45.8,
+        "pres_party_two_party_vote": 45.81,
         "benchmark": {
           "claim": "Republicans lose about 28 House seats and the House",
           "authors": "Charles Tien and Michael S. Lewis-Beck",
@@ -112,7 +112,7 @@
         "year_direction": -1,
         "year_direction_label": "a bad year for the president's party \u2014 the midterm rule",
         "seats_before": 220,
-        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-09-01 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
+        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-09-02 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
         "spec_date_reached": true,
         "outside_fitted_range": true
       },
@@ -209,7 +209,7 @@
         "dem_governors": 24,
         "strong_gop_senate_states": 14,
         "dem_senate_retirements": 4,
-        "structural_source": "4 Democratic Senate retirement(s) known by 2026-09-01 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
+        "structural_source": "4 Democratic Senate retirement(s) known by 2026-09-02 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
         "spec_date_reached": true
       },
       "diagnostics": {
