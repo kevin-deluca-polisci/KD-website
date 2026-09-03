@@ -3,7 +3,7 @@
      The homepage and the old research page disagreed on a publication year
      because each carried its own copy of the metadata; reading the pages
      means there is only one copy to be wrong. */}}
-<h1>Papers</h1>
+<h1>Research</h1>
 
 {{ $all := where .Site.RegularPages "Section" "papers" }}
 
@@ -14,16 +14,26 @@
   {{ $set := where $all "Params.status" $group.key }}
   {{ with $set }}
   <h2 class="section-head">{{ $group.label }}</h2>
+  {{/* NUMBERED, COUNTING DOWN, MATCHING THE HOMEPAGE. A CV numbers the most
+       recent item highest and counts back, and the two lists disagreeing about
+       how they are ordered is the sort of thing a reader notices without being
+       able to say why. Numbering restarts per group because "Published 6" and
+       "Working paper 2" are separate sequences, exactly as on a CV.
+
+       The plain-language question used to print under each entry here. It was
+       the only prose on the page not written in Kevin's academic register and
+       it made the index read as a list of FAQs. */}}
+  {{ $sorted := sort . "Params.weight" "asc" }}
   <ul class="paper-list">
-    {{ range sort . "Params.weight" "asc" }}
+    {{ range $i, $pg := $sorted }}
     <li>
-      <a class="pl-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <span class="pl-num">{{ sub (len $sorted) $i }}.</span>
+      <a class="pl-title" href="{{ $pg.RelPermalink }}">{{ $pg.Title }}</a>
       <span class="pl-meta">
-        {{ with .Params.coauthors }}{{ . }} {{ end }}
-        {{ if eq .Params.status "published" }}<em>{{ .Params.journal }}</em>, {{ .Params.year }}
-        {{ else }}{{ .Params.status_label }}{{ end }}
+        {{ with $pg.Params.coauthors }}{{ . }} {{ end }}
+        {{ if eq $pg.Params.status "published" }}<em>{{ $pg.Params.journal }}</em>, {{ $pg.Params.year }}
+        {{ else }}{{ $pg.Params.status_label }}{{ end }}
       </span>
-      {{ with .Params.plain_question }}<span class="pl-q">{{ . }}</span>{{ end }}
     </li>
     {{ end }}
   </ul>
@@ -40,9 +50,11 @@
 {{ with $inprog }}
 <h2 class="section-head">In progress</h2>
 <ul class="paper-list muted">
-  {{ range . }}
-  <li><span class="pl-title">{{ .Title }}</span>
-      <span class="pl-meta">{{ with .Authors }}{{ . }}{{ end }}</span></li>
+  {{ $ip := . }}
+  {{ range $i, $row := $ip }}
+  <li><span class="pl-num">{{ sub (len $ip) $i }}.</span>
+      <span class="pl-title">{{ $row.Title }}</span>
+      <span class="pl-meta">{{ with $row.Authors }}{{ . }}{{ end }}</span></li>
   {{ end }}
 </ul>
 {{ end }}

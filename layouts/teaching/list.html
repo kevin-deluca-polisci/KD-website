@@ -118,7 +118,11 @@
         {{ range $current }}
             <div class="course">
                 <span class="course-title">{{ .Title }}</span>
-                <span class="course-meta"> ({{ .Term }})</span>
+                {{/* TERM NOT SHOWN. A course taught in Fall 2023 reads as
+                     dormant three years later, when the point of the page is
+                     the range of what Kevin teaches rather than a timetable.
+                     The field stays in teaching.csv, so restoring it is one
+                     line here rather than re-entering the data. */}}
                 <div class="course-description">{{ .Description }}</div>
             </div>
         {{ end }}
@@ -127,7 +131,11 @@
         {{ range $other }}
             <div class="course">
                 <span class="course-title">{{ .Title }}</span>
-                <span class="course-meta"> ({{ .Term }})</span>
+                {{/* TERM NOT SHOWN. A course taught in Fall 2023 reads as
+                     dormant three years later, when the point of the page is
+                     the range of what Kevin teaches rather than a timetable.
+                     The field stays in teaching.csv, so restoring it is one
+                     line here rather than re-entering the data. */}}
                 <div class="course-description">{{ .Description }}</div>
             </div>
         {{ end }}
