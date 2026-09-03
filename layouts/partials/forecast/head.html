@@ -305,6 +305,12 @@ document.documentElement.className+=" js";})();
     :root:not([data-theme="light"]) nav.sub a[aria-current="true"]{border-bottom-color:var(--link)}
   }
 </style>
-    {{ partial "analytics.html" . }}
+    {{/* `.page`, NOT `.` -- this partial is called with a DICT
+         (dict "page" . "d" $d), so `.` here has no .Site and analytics.html's
+         `$a := .Site.Params.analytics` resolved to nil. Its `{{ if $a }}`
+         guard then emitted nothing and the build still succeeded, so all five
+         forecast pages -- the busiest section of the site -- silently carried
+         no tracking tag at all while every other template had one. */}}
+    {{ partial "analytics.html" .page }}
 </head>
 <body>

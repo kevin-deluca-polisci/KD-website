@@ -17,6 +17,11 @@ figure_caption: ""
 # Coverage and explainers for THIS paper. Each entry: title, outlet, url, and
 # optionally date and note. Renders as its own section under the abstract.
 media:
+  - title: "8 Things to Know About Election Disinformation in the Age of AI"
+    outlet: "AARP"
+    url: "https://www.aarp.org/government-elections/ai-election-disinformation/"
+    date: "July 30, 2026"
+    note: "By Edward C. Baig"
   - title: "Could this mysterious California news site influence the 2026 election?"
     outlet: "CalMatters"
     url: "https://calmatters.org/economy/technology/2026/01/mysterious-website-2026-election/"
@@ -27,9 +32,4 @@ media:
     url: "https://isps.yale.edu/news/2025-09-16-study-people-often-trust-fake-local-news-sites-more-than-real-ones-yale-political"
     date: "September 16, 2025"
     note: "By Rick Harrison"
-  - title: "8 Things to Know About Election Disinformation in the Age of AI"
-    outlet: "AARP"
-    url: "https://www.aarp.org/government-elections/ai-election-disinformation/"
-    date: "April 3, 2024"
-    note: "By Edward C. Baig; updated July 30, 2026"
 ---
