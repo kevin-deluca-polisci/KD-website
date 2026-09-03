@@ -17,5 +17,25 @@ figure_alt: ""
 figure_caption: ""
 # Coverage and explainers for THIS paper. Each entry: title, outlet, url, and
 # optionally date and note. Renders as its own section under the abstract.
-media: []
+media:
+  - title: "Wisconsin candidates tout endorsements as primary season heats up"
+    outlet: "Wisconsin Public Radio"
+    url: "https://www.wpr.org/news/wisconsin-candidates-tout-endorsements-as-primary-season-heats-up"
+    date: "April 27, 2026"
+  - title: "San Francisco politics are about to get crazy. Here's what to look out for"
+    outlet: "The San Francisco Standard"
+    url: "https://sfstandard.com/2024/09/02/san-francisco-politics-november-election-three-takeaways/"
+    date: "September 2, 2024"
+  - title: "Could These Unconventional Voices Determine the 2024 Election?"
+    outlet: "Deseret News"
+    url: "https://www.deseret.com/opinion/2024/08/19/political-endorsements-elon-musk-joe-rogan-taylor-swift/"
+    date: "August 19, 2024"
+  - title: "Who Cares What Taylor Swift Thinks?"
+    outlet: "Harvard Gazette"
+    url: "https://news.harvard.edu/gazette/story/2024/02/who-cares-what-taylor-swift-thinks/"
+    date: "February 8, 2024"
+  - title: "Newspaper Endorsements and the Importance of Candidate Quality in Politics"
+    outlet: "IQSS Blog"
+    url: "https://www.iq.harvard.edu/news/newspaper-endorsements-and-importance-candidate-quality-politics"
+    date: "August 14, 2023"
 ---

@@ -125,6 +125,36 @@
             font-size: 0.85em;
         }
         .paper-back { margin-top: 34px; font-size: 0.95em; }
+
+        /* THE RESEARCH INDEX. A two-column grid rather than a margin, so the
+           titles align on one edge whether the number is 1 or 11 -- a ragged
+           left is the one thing a numbered list exists to prevent. tabular-nums
+           keeps the digits themselves the same width in the site's system
+           font stack, where they are proportional by default. */
+        .paper-list { list-style: none; padding: 0; }
+        .paper-list li {
+            display: grid; grid-template-columns: 2.1em 1fr;
+            margin-bottom: 15px; line-height: 1.55;
+        }
+        .pl-num { color: #999; font-variant-numeric: tabular-nums; }
+        .pl-title { font-weight: 600; }
+        /* grid-column: 2 is load-bearing. The <li> is a two-column grid and the
+           number, the title and the meta are all direct children of it, so
+           without this the meta flows into the NEXT grid cell -- the 2.1em
+           number column -- and "Journal of Politics, 2026" renders one word
+           per line. Pinning it to column two puts it under the title where it
+           belongs. */
+        .pl-meta {
+            grid-column: 2; display: block; color: #666; font-size: 0.93em;
+            margin-top: 2px;
+        }
+        .paper-list.muted .pl-title { font-weight: 500; color: #444; }
+        .section-head {
+            font-size: 1.05em !important; text-transform: uppercase;
+            letter-spacing: 0.06em; color: #555;
+            border-bottom: 1px solid #e4e4e4 !important;
+            padding-bottom: 4px; margin: 34px 0 16px;
+        }
         .todo { color: #b00; }
 
         footer {

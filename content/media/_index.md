@@ -2,4 +2,4 @@
 title: "Media"
 ---
 
-Below are my quoted commentary and other writing.
+Coverage of my research, along with my own commentary and writing.

@@ -18,5 +18,10 @@ figure_alt: ""
 figure_caption: ""
 # Coverage and explainers for THIS paper. Each entry: title, outlet, url, and
 # optionally date and note. Renders as its own section under the abstract.
-media: []
+media:
+  - title: "A drag on the ticket? Estimating top-of-the-ticket effects on down-ballot races"
+    outlet: "American Journal of Political Science"
+    url: "https://ajps.org/2025/12/01/a-drag-on-the-ticket-estimating-top%E2%80%90of%E2%80%90the%E2%80%90ticket-effects-on-down%E2%80%90ballot-races/"
+    date: "December 1, 2025"
+    note: "Author summary"
 ---
