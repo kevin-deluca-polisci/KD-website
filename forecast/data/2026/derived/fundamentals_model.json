@@ -11,19 +11,19 @@
   "loeo_rmse": 2.291,
   "inputs": {
     "approval": 34.67,
-    "approval_source": "mean of 6 adults-sample approval poll(s) in the 14 days to 2026-09-04. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
+    "approval_source": "mean of 6 adults-sample approval poll(s) in the 14 days to 2026-09-05. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
     "approval_n": 6,
     "income_growth": -0.039,
     "seats_before": 220,
     "income_is_placeholder": false,
-    "income_source": "FRED income_growth_ytd as of 2026-09-04, 7 month(s) of the year in hand",
+    "income_source": "FRED income_growth_ytd as of 2026-09-05, 7 month(s) of the year in hand",
     "approval_field": 40.59,
     "approval_field_n": 22,
     "approval_aggregate": 38.0,
     "approval_aggregate_n": 10,
     "approval_aggregate_low": 35.0,
     "approval_aggregate_high": 40.9,
-    "approval_aggregate_date": "2026-09-04"
+    "approval_aggregate_date": "2026-09-05"
   },
   "pres_party_two_party_vote": 44.33,
   "margin_D": 11.33,
