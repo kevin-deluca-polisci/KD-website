@@ -3384,7 +3384,7 @@ snapshot_date,series,panel,unit,value,low,high,band_kind,n_sources,label
 2026-09-05,academic,house_prob,prob,0.5899,0.3312,0.979,spread,5,Academic
 2026-09-05,class,house_prob,prob,0.8115,0.6702,0.9528,spread,2,This class
 2026-09-06,polling,house_prob,prob,0.6441,0.5344,0.6808,spread,7,Polling
-2026-09-06,market,house_prob,prob,0.843,0.8239,0.875,spread,3,Markets
+2026-09-06,market,house_prob,prob,0.8429,0.8238,0.875,spread,3,Markets
 2026-09-06,fundamentals,house_prob,prob,0.6736,0.3312,0.979,spread,5,Fundamentals
 2026-09-06,professional,house_prob,prob,0.6693,0.6168,0.7234,spread,5,Professional
 2026-09-06,academic,house_prob,prob,0.5899,0.3312,0.979,spread,5,Academic
@@ -9906,7 +9906,7 @@ snapshot_date,series,panel,unit,value,low,high,band_kind,n_sources,label
 2026-09-05,academic,margin,pct,6.898,1.78,16.32,spread,5,Academic
 2026-09-05,class,margin,pct,8.2735,5.217,11.33,spread,2,This class
 2026-09-06,polling,margin,pct,5.915,4.82,6.4,spread,8,Polling
-2026-09-06,market,margin,pct,7.513,7.4177,7.6084,spread,2,Markets
+2026-09-06,market,margin,pct,7.5073,7.4298,7.5848,spread,2,Markets
 2026-09-06,fundamentals,margin,pct,8.2,1.78,16.32,spread,5,Fundamentals
 2026-09-06,professional,margin,pct,6.198,5.7,6.4,spread,6,Professional
 2026-09-06,academic,margin,pct,6.898,1.78,16.32,spread,5,Academic
