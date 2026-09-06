@@ -1,7 +1,7 @@
 {
   "cycle": 2026,
-  "snapshot_date": "2026-09-05",
-  "days_to_election": 59,
+  "snapshot_date": "2026-09-06",
+  "days_to_election": 58,
   "category": "academic",
   "publication": "individual",
   "models": {
@@ -23,7 +23,7 @@
         "generic_ballot_D": 6.288,
         "generic_ballot_share_deviation": 3.144,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
-        "days_to_election": 59,
+        "days_to_election": 58,
         "president_party": "R",
         "pres_party_coded": -1
       },
@@ -65,9 +65,9 @@
       "margin_D_80_high": 16.53,
       "inputs": {
         "approval": 34.67,
-        "approval_source": "mean of 6 adults-sample approval poll(s) in the 14 days to 2026-09-05. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
+        "approval_source": "mean of 6 adults-sample approval poll(s) in the 14 days to 2026-09-06. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
         "income_growth": -0.039,
-        "income_source": "FRED income_growth_ytd as of 2026-09-05, 7 month(s) of the year in hand"
+        "income_source": "FRED income_growth_ytd as of 2026-09-06, 7 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
@@ -112,7 +112,7 @@
         "year_direction": -1,
         "year_direction_label": "a bad year for the president's party \u2014 the midterm rule",
         "seats_before": 220,
-        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-09-05 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
+        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-09-06 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
         "spec_date_reached": true,
         "outside_fitted_range": true
       },
@@ -129,7 +129,7 @@
         "pres_party_seat_change": -48.1,
         "implied_D_seats": 263.1,
         "inversion_extrapolated": true,
-        "curve_points_used": 8,
+        "curve_points_used": 9,
         "sensitivity_month": [
           {
             "month": "Mar 2026",
@@ -209,7 +209,7 @@
         "dem_governors": 24,
         "strong_gop_senate_states": 14,
         "dem_senate_retirements": 4,
-        "structural_source": "4 Democratic Senate retirement(s) known by 2026-09-05 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
+        "structural_source": "4 Democratic Senate retirement(s) known by 2026-09-06 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
         "spec_date_reached": true
       },
       "diagnostics": {
