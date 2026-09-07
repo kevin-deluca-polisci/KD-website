@@ -37,6 +37,7 @@ import datetime as dt
 import json
 import re
 import statistics
+import subprocess
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -1321,71 +1322,114 @@ def promote_second_readings(rows: list[dict]) -> list[str]:
 # ATTRIBUTION LEAK GUARD
 # ---------------------------------------------------------------------------
 
-def assert_attribution_withheld(written: list[Path], registry: dict) -> None:
-    """Refuse to finish if a derived file names a gated forecaster and is published.
+def _published_files(cycle: int) -> list[Path]:
+    """Every file under the cycle's data dir that git would actually publish.
+
+    Asks git, rather than reinterpreting the ignore rules here. A hand-rolled
+    reading of .gitignore is how the second leak survived: the boundary said
+    `*/parsed/`, the directory was named `parsed_incremental/`, and a human
+    reading the rule saw what it meant rather than what it matched.
+    """
+    root = DATA_DIR / str(cycle)
+    if not root.is_dir():
+        return []
+    files = [p for p in root.rglob("*") if p.is_file()]
+    if not files:
+        return []
+    try:
+        proc = subprocess.run(
+            ["git", "check-ignore", "--stdin"],
+            input="\n".join(str(p) for p in files),
+            capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=120,
+        )
+        ignored = {ln.strip() for ln in proc.stdout.splitlines() if ln.strip()}
+    except (OSError, subprocess.SubprocessError):
+        print("  attribution guard: `git check-ignore` unavailable — "
+              "falling back to a literal reading of the ignore rules.")
+        rules = (DATA_DIR / ".gitignore").read_text().splitlines() \
+            if (DATA_DIR / ".gitignore").exists() else []
+        pats = [ln.strip()[2:] for ln in rules if ln.strip().startswith("*/")]
+        ignored = {str(p) for p in files
+                   if any(pt.rstrip("/") in p.relative_to(root).as_posix()
+                          for pt in pats)}
+    return [p for p in files if str(p) not in ignored]
+
+
+def assert_attribution_withheld(cycle: int, registry: dict) -> None:
+    """Refuse to finish if any PUBLISHED file names a gated forecaster.
 
     THE HOLE THIS CLOSES. Every tier check in this file reads the `publication`
-    field on a row, which is keyed to the row's `source_id`. That is correct
-    for a row whose source_id IS the forecaster. It is silently wrong for a row
-    collected by one source and ATTRIBUTING a number to another.
+    field on a row, which is keyed to the row's `source_id`. That is right for
+    a row whose source_id IS the forecaster, and silently wrong for a row
+    collected by one source that ATTRIBUTES its number to another.
 
-    expert_ratings.csv is exactly that shape. Its source_id is `wikipedia`
-    (tier `individual`), because Wikipedia is where the ratings table was
-    read; the forecaster is a prefix inside the value, `cook:Safe R`. So every
-    tier check passed, and 140,109 rows naming `private`-tier forecasters --
-    Cook, Inside Elections, Split Ticket -- were published daily from
-    2025-01-22 onward, next to every `aggregate_only` forecaster individually
-    attributed. Nothing on the site ever displayed them; the file itself was
-    the exposure.
+    Two files had that shape and both were public. `derived/expert_ratings.csv`
+    carried 140,109 rows naming `private`-tier forecasters back to 2025-01-22.
+    `parsed_incremental/` carried another 131,499 across 572 files and 209 MB,
+    dated 2025-01-01 onward. In both the source_id column reads `wikipedia`
+    (tier `individual`, so every tier check passed) and the forecaster is a
+    prefix inside the value: `cook:Solid R`. Nothing on the site displayed
+    either; the files themselves were the exposure.
 
-    So this checks the BYTES rather than the schema. Anything that will land in
-    derived/ gets read back and searched for `<gated_source_id>:`, and a file
-    that carries one has to be named in the privacy boundary or the run stops.
-    A future file with the same shape is caught the day it is written rather
-    than whenever somebody next reads a 20 MB CSV by hand.
-
-    Withheld-ness is read from forecast/data/.gitignore, deliberately, because
-    that file IS the boundary the workflow commits against -- inferring it any
-    other way would let the two disagree, which is the failure mode here.
+    WHY IT WALKS THE TREE INSTEAD OF CHECKING WHAT write() PRODUCED. The first
+    version of this guard inspected only the files this function had just
+    written, and would not have caught parsed_incremental/, which nothing here
+    writes. The invariant is not about aggregate's outputs. It is: NOTHING GIT
+    PUBLISHES MAY NAME A GATED FORECASTER. So it asks git what is published and
+    reads those bytes.
     """
     gated = {s["id"] for s in registry.get("sources", [])
              if (s.get("publication") or "individual") != "individual"}
     if not gated:
         return
 
-    ignore = DATA_DIR / ".gitignore"
-    rules = ignore.read_text().splitlines() if ignore.exists() else []
-    withheld = {ln.strip().rsplit("/", 1)[-1] for ln in rules
-                if ln.strip().startswith("*/derived/")}
-
-    problems = []
-    for p in written:
-        if p.name in withheld:
+    needles = [f"{sid}:".encode() for sid in sorted(gated)]
+    problems: list[tuple[Path, list[str]]] = []
+    for p in _published_files(cycle):
+        # The boundary files themselves quote the offending strings in their
+        # own explanatory comments. Reading those back as evidence of a leak
+        # would make the guard fire on its own documentation.
+        if p.name in {".gitignore", "data_gitignore.txt"}:
             continue
+        hits: set[str] = set()
         try:
-            body = p.read_text(encoding="utf-8", errors="replace")
+            with p.open("rb") as fh:
+                tail = b""
+                while chunk := fh.read(1 << 20):
+                    buf = tail + chunk
+                    for sid, needle in zip(sorted(gated), needles):
+                        if needle in buf:
+                            hits.add(sid)
+                    tail = buf[-64:]
         except OSError:
             continue
-        hits = sorted({sid for sid in gated if f"{sid}:" in body})
         if hits:
-            problems.append((p.name, hits))
+            problems.append((p, sorted(hits)))
 
     if not problems:
         return
 
     print("\n" + "=" * 70)
     print("*** ATTRIBUTION LEAK — REFUSING TO WRITE ***")
-    for name, hits in problems:
-        print(f"\n  derived/{name} is published and names gated forecasters:")
-        for h in hits:
-            print(f"    {h}")
+    for p, hits in problems[:10]:
+        try:
+            shown = p.relative_to(REPO_ROOT)
+        except ValueError:
+            shown = p
+        print(f"\n  {shown}")
+        print(f"    names: {', '.join(hits)}")
+    if len(problems) > 10:
+        print(f"\n  ... and {len(problems) - 10} more file(s).")
     print("""
-A published file may not attribute a number to a source whose publication
-tier is not `individual`, whatever its source_id column says.
+A file git publishes may not attribute a number to a source whose
+publication tier is not `individual`, whatever its source_id column says.
 
-Either withhold the file -- add it under `*/derived/<name>` in
-forecast/data/.gitignore AND forecast/data_gitignore.txt, then
-`git rm --cached` it once -- or strip the attribution before writing it.""")
+Withhold it: add a rule under forecast/data/.gitignore AND
+forecast/data_gitignore.txt, then untrack it once with
+
+    git rm -r --cached <path>
+
+Or strip the attribution before the file is written.""")
     print("=" * 70)
     raise SystemExit(1)
 
@@ -1418,7 +1462,7 @@ def write(cycle: int, averages, by_source, suppressed, ratings,
 
     # LAST THING BEFORE THESE FILES COUNT AS WRITTEN. Reads back what was just
     # produced and stops the run if a published file names a gated forecaster.
-    assert_attribution_withheld(written, registry or {})
+    assert_attribution_withheld(cycle, registry or {})
     return written
 
 

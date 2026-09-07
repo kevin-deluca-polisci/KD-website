@@ -20,6 +20,13 @@
 
 */raw/
 */parsed/
+
+# The SAME per-forecaster ratings again, in a directory the rule above does not
+# match. `*/parsed/` matches a directory named exactly `parsed`; this one is
+# `parsed_incremental`, so 572 files and 209 MB -- 650,103 rows dated from
+# 2025-01-01, of which 131,499 name a `private`-tier forecaster -- were public
+# the whole time. The rule looked like it covered them and did not.
+*/parsed_incremental/
 */submissions/
 */derived/by_source_all.csv
 
