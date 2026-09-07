@@ -1316,7 +1316,82 @@ def promote_second_readings(rows: list[dict]) -> list[str]:
 # how you tell.
 
 
-def write(cycle: int, averages, by_source, suppressed, ratings) -> list[Path]:
+
+# ---------------------------------------------------------------------------
+# ATTRIBUTION LEAK GUARD
+# ---------------------------------------------------------------------------
+
+def assert_attribution_withheld(written: list[Path], registry: dict) -> None:
+    """Refuse to finish if a derived file names a gated forecaster and is published.
+
+    THE HOLE THIS CLOSES. Every tier check in this file reads the `publication`
+    field on a row, which is keyed to the row's `source_id`. That is correct
+    for a row whose source_id IS the forecaster. It is silently wrong for a row
+    collected by one source and ATTRIBUTING a number to another.
+
+    expert_ratings.csv is exactly that shape. Its source_id is `wikipedia`
+    (tier `individual`), because Wikipedia is where the ratings table was
+    read; the forecaster is a prefix inside the value, `cook:Safe R`. So every
+    tier check passed, and 140,109 rows naming `private`-tier forecasters --
+    Cook, Inside Elections, Split Ticket -- were published daily from
+    2025-01-22 onward, next to every `aggregate_only` forecaster individually
+    attributed. Nothing on the site ever displayed them; the file itself was
+    the exposure.
+
+    So this checks the BYTES rather than the schema. Anything that will land in
+    derived/ gets read back and searched for `<gated_source_id>:`, and a file
+    that carries one has to be named in the privacy boundary or the run stops.
+    A future file with the same shape is caught the day it is written rather
+    than whenever somebody next reads a 20 MB CSV by hand.
+
+    Withheld-ness is read from forecast/data/.gitignore, deliberately, because
+    that file IS the boundary the workflow commits against -- inferring it any
+    other way would let the two disagree, which is the failure mode here.
+    """
+    gated = {s["id"] for s in registry.get("sources", [])
+             if (s.get("publication") or "individual") != "individual"}
+    if not gated:
+        return
+
+    ignore = DATA_DIR / ".gitignore"
+    rules = ignore.read_text().splitlines() if ignore.exists() else []
+    withheld = {ln.strip().rsplit("/", 1)[-1] for ln in rules
+                if ln.strip().startswith("*/derived/")}
+
+    problems = []
+    for p in written:
+        if p.name in withheld:
+            continue
+        try:
+            body = p.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        hits = sorted({sid for sid in gated if f"{sid}:" in body})
+        if hits:
+            problems.append((p.name, hits))
+
+    if not problems:
+        return
+
+    print("\n" + "=" * 70)
+    print("*** ATTRIBUTION LEAK — REFUSING TO WRITE ***")
+    for name, hits in problems:
+        print(f"\n  derived/{name} is published and names gated forecasters:")
+        for h in hits:
+            print(f"    {h}")
+    print("""
+A published file may not attribute a number to a source whose publication
+tier is not `individual`, whatever its source_id column says.
+
+Either withhold the file -- add it under `*/derived/<name>` in
+forecast/data/.gitignore AND forecast/data_gitignore.txt, then
+`git rm --cached` it once -- or strip the attribution before writing it.""")
+    print("=" * 70)
+    raise SystemExit(1)
+
+
+def write(cycle: int, averages, by_source, suppressed, ratings,
+          registry: dict | None = None) -> list[Path]:
     d = DATA_DIR / str(cycle) / "derived"
     d.mkdir(parents=True, exist_ok=True)
     written = []
@@ -1340,6 +1415,10 @@ def write(cycle: int, averages, by_source, suppressed, ratings) -> list[Path]:
         dump("suppressed.csv", suppressed, list(suppressed[0].keys()))
     if ratings:
         dump("expert_ratings.csv", ratings, list(ratings[0].keys()))
+
+    # LAST THING BEFORE THESE FILES COUNT AS WRITTEN. Reads back what was just
+    # produced and stops the run if a published file names a gated forecaster.
+    assert_attribution_withheld(written, registry or {})
     return written
 
 
@@ -1586,7 +1665,12 @@ def main(argv=None) -> int:
         print(f"\n  --force: shortening {len(shrunk)} previously published "
               f"snapshot date(s) in derived/.")
 
-    for p in write(a.cycle, averages, by_source, suppressed, ratings):
+    # The registry, again, for the attribution guard in write(). Loaded here
+    # rather than threaded down from the tier block above because that block
+    # sits inside a try/except and may not have run.
+    from parse import load_registry as _load_reg
+    for p in write(a.cycle, averages, by_source, suppressed, ratings,
+                   registry=_load_reg(a.cycle)):
         print(f"  wrote {p.relative_to(REPO_ROOT)}")
     return 0
 

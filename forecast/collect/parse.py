@@ -28,6 +28,7 @@ import csv
 import datetime as dt
 import json
 import re
+import statistics
 import sys
 from pathlib import Path
 
@@ -269,6 +270,151 @@ def write_parsed(cycle: int, date: str, rows: list[P.Row],
     return path
 
 
+# ---------------------------------------------------------------------------
+# THE THIN-PARSE GUARD
+# ---------------------------------------------------------------------------
+
+THIN_WINDOW = 14       # trailing dates compared against
+THIN_MIN_PEERS = 5     # fewer than this and there is nothing to judge against
+THIN_FLOOR = 0.50      # fraction of the trailing median below which we refuse
+
+
+def _parsed_counts(cycle: int) -> dict[str, int]:
+    """Row count per parsed date, read off disk."""
+    out = DATA_DIR / str(cycle) / "parsed"
+    counts: dict[str, int] = {}
+    if not out.is_dir():
+        return counts
+    for p in sorted(out.glob("*.csv")):
+        try:
+            with p.open(newline="") as fh:
+                counts[p.stem] = max(sum(1 for _ in fh) - 1, 0)
+        except OSError:
+            continue
+    return counts
+
+
+def _per_source(cycle: int, date: str) -> dict[str, int]:
+    """Row count per source id for one parsed date."""
+    p = DATA_DIR / str(cycle) / "parsed" / f"{date}.csv"
+    out: dict[str, int] = {}
+    if not p.exists():
+        return out
+    try:
+        with p.open(newline="") as fh:
+            for rec in csv.DictReader(fh):
+                s = rec.get("source_id") or "?"
+                out[s] = out.get(s, 0) + 1
+    except OSError:
+        pass
+    return out
+
+
+def check_thin_parse(cycle: int, newest: str, allow_thin: bool = False) -> int:
+    """Refuse to hand a suspiciously short day to the models.
+
+    WHY THIS EXISTS. On 2026-09-01 a full parse produced 1,618 rows where the
+    days either side produced about 9,700. Every parser worked correctly when
+    run on its own, the run exited 0, and re-parsing that single date restored
+    it. The root cause was never found. Nothing in the pipeline noticed:
+    capture logged no failure because capture HAD succeeded, and sanity.py
+    passed because sanity asks whether the WORLD looks right -- 35 Senate
+    races, probabilities in [0,1], seats summing to 435 -- and a day missing
+    five sixths of its rows satisfies every one of those.
+
+    That is the gap this closes. It checks the SHAPE OF THE RUN rather than
+    the plausibility of the numbers, and the two catch different things.
+
+    WHY A TRAILING MEDIAN AND NOT A FIXED FLOOR. The row count is not
+    stationary: this cycle ran between 900 and 4,700 rows a day through
+    mid-August, then stepped to roughly 9,400-10,900 once the Wikipedia
+    revision recovery landed on 08-19. Any constant would have been wrong on
+    one side of that step. The median of a trailing window moves with the
+    regime and needs no maintenance.
+
+    WHY 0.50. Measured, not picked. Over the fourteen days before this was
+    written the counts ran 8,471 to 10,895 against a median of 9,722, so the
+    deepest ordinary dip is 0.87 of the median. The incident above was 0.17.
+    A half-median floor sits in the empty space between them: an ordinary
+    quiet day cannot reach it, and the failure mode cannot hide under it.
+
+    WHY IT EXITS NON-ZERO. In the workflow this runs inside the same `set -e`
+    block as the models, aggregate and publish, so a refusal stops the run
+    before anything is committed and yesterday's page stays up. That is the
+    stated preference everywhere else in this pipeline, and a thin day is
+    exactly the case for it: a site showing yesterday's numbers is
+    recoverable, a site showing a sixth of today's is not, because aggregate
+    carries the gap forward into the published averages.
+
+    Scoped to full parses of the newest date. A `--only` run or a windowed
+    backfill is short BY CONSTRUCTION and has nothing to compare against.
+    """
+    counts = _parsed_counts(cycle)
+    n_now = counts.get(newest)
+    if n_now is None:
+        return 0
+
+    peers = [c for d, c in sorted(counts.items()) if d < newest][-THIN_WINDOW:]
+    peers = [c for c in peers if c > 0]
+    if len(peers) < THIN_MIN_PEERS:
+        print(f"\n  thin-parse guard: only {len(peers)} comparable date(s) "
+              f"before {newest} -- not enough to judge, skipping.")
+        return 0
+
+    med = statistics.median(peers)
+    ratio = n_now / med if med else 1.0
+    print(f"\n  thin-parse guard: {newest} has {n_now:,} rows vs a "
+          f"trailing-{len(peers)} median of {med:,.0f} ({ratio:.0%}).")
+    if ratio >= THIN_FLOOR:
+        return 0
+
+    print("=" * 70)
+    print(f"REFUSING TO CONTINUE: {newest} looks truncated.")
+    print(f"  rows today            {n_now:,}")
+    print(f"  trailing median       {med:,.0f}  (last {len(peers)} dates)")
+    print(f"  ratio                 {ratio:.0%}   (floor {THIN_FLOOR:.0%})")
+
+    # WHICH SOURCES WENT MISSING. Naming them is most of the value: the
+    # incident this was written for was diagnosed by re-parsing one date
+    # blind, and a per-source diff would have pointed straight at it.
+    prev = [d for d in sorted(counts) if d < newest]
+    if prev:
+        before = _per_source(cycle, prev[-1])
+        now = _per_source(cycle, newest)
+        gone = sorted(set(before) - set(now))
+        thinned = sorted(
+            (s, before[s], now[s]) for s in set(before) & set(now)
+            if now[s] < before[s] * 0.5
+        )
+        if gone:
+            print(f"\n  sources present on {prev[-1]} and absent today:")
+            for s in gone:
+                print(f"    {s:<24} {before[s]:>6} -> 0")
+        if thinned:
+            print(f"\n  sources more than halved since {prev[-1]}:")
+            for s, b, n in thinned:
+                print(f"    {s:<24} {b:>6} -> {n}")
+        if not gone and not thinned:
+            print("\n  no single source explains it -- the loss is spread "
+                  "across sources, which is what 2026-09-01 looked like.")
+
+    print(
+        "\nWhat to do:\n"
+        "  1. Re-parse just this date and see whether it comes back:\n"
+        f"       python3 forecast/collect/parse.py --cycle {cycle} --date {newest}\n"
+        "     On 2026-09-01 that alone fixed it.\n"
+        "  2. If it comes back short, check the capture manifest for that\n"
+        "     date -- a source that failed to capture cannot be parsed.\n"
+        "  3. If the short count is CORRECT (a source was retired, the\n"
+        "     registry changed), re-run with --allow-thin and move on."
+    )
+    print("=" * 70)
+    if allow_thin:
+        print("  --allow-thin set: continuing anyway.")
+        return 0
+    return 1
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Parse stored captures (no network).")
     ap.add_argument("--cycle", type=int, default=2026)
@@ -288,6 +434,11 @@ def main(argv=None) -> int:
     ap.add_argument("--to", dest="date_to", default=None,
                     help="with --all, latest date to parse (inclusive)")
     ap.add_argument("--only", help="comma-separated source ids")
+    # The escape hatch for the thin-parse guard below, deliberately shaped
+    # like aggregate.py's --force: a refusal you can override once you have
+    # read what it refused, never a default.
+    ap.add_argument("--allow-thin", action="store_true",
+                    help="continue even if the newest date looks truncated")
     ap.add_argument("--inspect", metavar="SOURCE",
                     help="print the stored structure for a source and exit")
     a = ap.parse_args(argv)
@@ -396,6 +547,17 @@ def main(argv=None) -> int:
     print("-" * 70)
     print(f"  {total} rows written to forecast/data/{a.cycle}/parsed/")
     print("  (parsed/ is per-forecaster and gitignored — only derived/ is published)")
+
+    # SCOPE. Only a full parse that reached the newest stored date is
+    # comparable against its own history. `--only` parses one source, a
+    # windowed `--from/--to` backfill parses old dates whose neighbours may
+    # not be rebuilt yet, and `--date` on an old day is a targeted repair.
+    # All three are short on purpose.
+    if only is None and dates:
+        stored = stored_dates(a.cycle)
+        newest = stored[-1] if stored else None
+        if newest and newest == dates[-1]:
+            return check_thin_parse(a.cycle, newest, allow_thin=a.allow_thin)
     return 0
 
 

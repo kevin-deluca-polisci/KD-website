@@ -23,6 +23,25 @@
 */submissions/
 */derived/by_source_all.csv
 
+# Per-forecaster RATINGS. Same category as by_source_all.csv above, and it was
+# missed for the same reason it is easy to miss: the file lives under derived/,
+# which is published wholesale, and its `source_id` column says `wikipedia`
+# (tier `individual`, so every tier check passed it). The forecaster is not in
+# that column. It is a PREFIX INSIDE THE VALUE -- `cook:Safe R` -- and nothing
+# looked there.
+#
+# The result was 140,109 rows naming a `private`-tier forecaster (Cook 67,725,
+# Inside Elections 64,718, Split Ticket 7,666) sitting in the public repo,
+# alongside every `aggregate_only` forecaster individually attributed, back to
+# 2025-01-22. The site itself never showed any of it -- site.json and
+# assets/forecast_2026.json contain none of these names -- so the tier system
+# worked everywhere it was pointed. It simply was not pointed here.
+#
+# Nothing public reads this file, and CI rebuilds all of derived/ from raw on
+# every run, so withholding it costs nothing. aggregate.py now refuses to
+# finish if a derived file carries gated attribution and is not listed here.
+*/derived/expert_ratings.csv
+
 # Model output built from a gated input. The House polling model is derived
 # from Cook's district PVI, and given the published national tide the index is
 # exactly recoverable: PVI = (district margin - tide) / 2. So the district

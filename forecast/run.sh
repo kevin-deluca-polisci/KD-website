@@ -424,9 +424,33 @@ if run_stage publish && [[ $DRY -eq 0 ]]; then
     echo "  nothing changed"
   else
     N=$(git diff --staged --name-only | wc -l | tr -d ' ')
+
+    # PULL BEFORE COMMITTING, not after.
+    #
+    # This used to commit first and then `git pull --rebase --autostash`. The
+    # daily GitHub Action commits to the same branch, so by the time this ran
+    # there was almost always something upstream, and the rebase had to replay
+    # a fresh local commit over it. Twice that stopped on a conflict in
+    # forecast/data/, and because the rebase halts mid-flight the repo was
+    # left in "you are currently editing a commit while rebasing" with an
+    # autostash holding the work -- a state that then blocked the next run
+    # too. Once it sat that way for five days.
+    #
+    # Pulling FIRST makes the common case a fast-forward with nothing local to
+    # replay, and any conflict surfaces before a commit exists, where `git
+    # rebase --abort` is genuinely safe. --autostash carries the staged
+    # changes across the pull; they are still staged afterwards.
+    if [[ $PUSH -eq 1 ]]; then
+      if ! git pull --rebase --autostash; then
+        echo "  PULL FAILED -- nothing committed. Resolve, then re-run:" >&2
+        echo "    ./forecast/run.sh --from parse" >&2
+        exit 1
+      fi
+    fi
+
     git commit -m "forecast: weekly update $(date -u +%Y-%m-%d) (${N} files)"
     if [[ $PUSH -eq 1 ]]; then
-      git pull --rebase --autostash && git push && echo "  pushed"
+      git push && echo "  pushed"
     else
       echo "  committed locally (--no-push)"
     fi
