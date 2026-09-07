@@ -681,6 +681,125 @@ def _spread_plot(races: list[dict]) -> dict | None:
     }
 
 
+# ---------------------------------------------------------------------------
+# PER-RACE PAYLOAD (Senate)
+# ---------------------------------------------------------------------------
+
+# Long enough that a chart of it is a line rather than a scatter, short enough
+# that thirty-five of them do not double the file every visitor downloads.
+RACE_SERIES_DAYS = 120
+
+# Built from the importer's canonical map rather than retyped: that map is
+# already the one thing in this repo that knows DC is not Washington state.
+try:
+    from manual_import import _STATES as _MI_STATES
+    _STATE_NAMES = {v: k.title() for k, v in _MI_STATES.items()}
+except Exception:            # pragma: no cover - importer optional
+    _STATE_NAMES = {}
+
+
+def build_races(avgs: list[dict], latest: str, proj: dict | None,
+                chamber: str = "senate") -> list[dict]:
+    """One entry per contest: what each METHOD FAMILY says, and how it moved.
+
+    READS category_averages.csv AND NOTHING ELSE for the per-method numbers.
+    That file is aggregate.py's published output: the publication tier is
+    already applied, gated contributors are already folded into an average or
+    withheld, and every row carries `display` saying whether it may be shown as
+    a consensus. Building race pages from expert_ratings.csv instead would have
+    been easier and would have put Cook and Inside Elections on a public page
+    by name -- which is the whole reason that file is now withheld.
+
+    So each cell keeps `n` and `display` beside its mean. A cell marked
+    `single` has one contributor and is NOT a consensus; the template names it
+    as such rather than drawing it like the others. That distinction has to
+    survive into the payload or the page cannot make it.
+
+    The `type` facet is what a race page wants -- fundamentals, polling,
+    professional, market, academic, class are ways of ARRIVING at a number, and
+    a reader on a single race is asking which methods disagree. The `source`
+    facet answers "who said it", which is the comparisons page's question.
+    """
+    if not avgs:
+        return []
+
+    rows = [r for r in avgs if r.get("chamber") == chamber
+            and r.get("display") != "suppressed"]
+    if not rows:
+        return []
+
+    cutoff = (dt.date.fromisoformat(latest)
+              - dt.timedelta(days=RACE_SERIES_DAYS)).isoformat()
+
+    by_race: dict[str, list[dict]] = {}
+    for r in rows:
+        by_race.setdefault(r.get("race_id") or "", []).append(r)
+
+    proj_races = {}
+    if proj:
+        for scen, body in (proj.get("projections") or {}).items():
+            for st, v in (body.get("races") or {}).items():
+                proj_races.setdefault(st, {})[scen] = v
+
+    out = []
+    for race_id, rrows in sorted(by_race.items()):
+        state = rrows[0].get("state") or ""
+        if not state:
+            continue
+
+        current: dict[str, dict] = {}
+        for r in rrows:
+            if r["snapshot_date"] != latest or r.get("facet") != "type":
+                continue
+            try:
+                mean = float(r["mean"])
+            except (TypeError, ValueError):
+                continue
+            current.setdefault(r["category"], {})[r["quantity"]] = {
+                "mean": round(mean, 2),
+                "n": int(r.get("n_sources") or 0),
+                "display": r.get("display") or "ok",
+                "withheld": int(r.get("n_withheld") or 0),
+            }
+
+        series: dict[str, list] = {}
+        for r in rrows:
+            if r.get("facet") != "type" or r.get("quantity") != "margin_D":
+                continue
+            if r["snapshot_date"] < cutoff:
+                continue
+            try:
+                series.setdefault(r["category"], []).append(
+                    [r["snapshot_date"], round(float(r["mean"]), 2)])
+            except (TypeError, ValueError):
+                continue
+        series = {k: sorted(v) for k, v in series.items() if len(v) > 1}
+
+        scen = proj_races.get(state) or {}
+        pvi = None
+        for v in scen.values():
+            if v.get("pvi") is not None:
+                pvi = v["pvi"]
+                break
+
+        out.append({
+            "race_id": race_id,
+            "state": state,
+            # The NAME travels with the row. The alternative is a 50-entry map
+            # duplicated into the template, which is a second place for
+            # "Washington" vs "West Virginia" to be got wrong.
+            "name": _STATE_NAMES.get(state, state),
+            "chamber": chamber,
+            "pvi": pvi,
+            "current": current,
+            "series": series,
+            "scenarios": {k: {"margin": v.get("expected_margin_D"),
+                              "prob": v.get("win_prob_D")}
+                          for k, v in sorted(scen.items())},
+        })
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cycle", type=int, default=2026)
@@ -881,6 +1000,10 @@ def main(argv=None) -> int:
             "projections": {k: {kk: vv for kk, vv in v.items() if kk != "districts"}
                             for k, v in (proj.get("projections") or {}).items()},
         }),
+        # Per-race, Senate only. The House has 435 contests and no race
+        # pages yet; adding its array here would grow the file every visitor
+        # downloads to feed pages that do not exist.
+        "races": build_races(avgs, latest, proj, "senate"),
         "charts": chart_data,
         "spread": spread,
         "movement": movement,

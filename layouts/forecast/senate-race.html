@@ -1,0 +1,135 @@
+{{/* ONE SENATE RACE.
+
+     Every page here is this template with a different `state` in its front
+     matter; the numbers come from the payload at build time, so a race page is
+     never a copy of data that can drift from the tracker's own front page.
+
+     WHAT IT MAY SHOW, AND WHY IT READS category_averages AND NOT THE RATINGS.
+     Individual forecaster ratings are collected and archived, and most of them
+     may not be republished during the cycle -- some not at all. `races` in the
+     payload comes from aggregate.py's published output, where the publication
+     tier has already been applied and each cell carries `display` saying
+     whether it is a consensus or a lone source. This template renders that
+     distinction rather than flattening it: a `single` cell is labelled, never
+     drawn as agreement between methods that do not exist. */}}
+{{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
+{{- $st := .Params.state -}}
+{{- $race := false -}}
+{{- range $d.races }}{{ if eq .state $st }}{{ $race = . }}{{ end }}{{ end -}}
+{{ partial "forecast/head.html" (dict "page" . "d" $d) }}
+{{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
+
+<div class="wrap viz">
+
+{{ if not $race }}
+  {{/* A state with no row rather than a broken page. Happens if a race is
+       added to the stub list before the pipeline has a snapshot for it. */}}
+  <div class="card">
+    <h2>{{ .Title }}</h2>
+    <p class="sub">No published figures for this race yet. It is collected
+    daily; this page fills in with the next snapshot.</p>
+    <p><a href="/forecast/contests/">&larr; All contests</a></p>
+  </div>
+{{ else }}
+
+  {{- $labels := dict "fundamentals" "Fundamentals" "polling" "Polling"
+        "professional" "Professional forecasters" "market" "Prediction markets"
+        "academic" "Academic models" "class" "Class forecasts" -}}
+  {{- $order := slice "polling" "fundamentals" "professional" "market" "academic" "class" -}}
+
+  <div class="card">
+    <h2>{{ .Title }}</h2>
+    <p class="sub">
+      What each family of methods says about this seat, as of
+      <b>{{ $d.latest_snapshot }}</b>.
+      {{ with $race.pvi }}
+        The state's partisan baseline is
+        <b>{{ if lt . 0.0 }}R+{{ math.Abs . }}{{ else }}D+{{ . }}{{ end }}</b>.
+      {{ end }}
+      A positive margin is Democratic.
+    </p>
+
+    <div class="tscroll">
+    <table class="full">
+      <thead><tr>
+        <th class="wrap">Method</th>
+        <th class="num">Margin</th>
+        <th class="num">P(D wins)</th>
+        <th class="num">Sources</th>
+      </tr></thead>
+      <tbody>
+      {{ range $k := $order }}
+        {{ with index $race.current $k }}
+        {{ $m := index . "margin_D" }}{{ $p := index . "win_prob_D" }}
+        <tr>
+          <td class="wrap">
+            <span class="swatch {{ $k }}"></span>
+            {{ index $labels $k }}
+            {{/* The one distinction that must not be lost between the payload
+                 and the page: an average of one is not an average. */}}
+            {{ if or (and $m (eq $m.display "single")) (and $p (eq $p.display "single")) }}
+              <span class="muted">· single source, not a consensus</span>
+            {{ end }}
+          </td>
+          <td class="num">
+            {{ if $m }}{{ if gt $m.mean 0.0 }}<span class="D">D+{{ $m.mean }}</span>
+            {{ else }}<span class="R">R+{{ math.Abs $m.mean }}</span>{{ end }}
+            {{ else }}<span class="muted">&mdash;</span>{{ end }}
+          </td>
+          <td class="num">
+            {{ if $p }}{{ math.Round (mul $p.mean 100) }}%
+            {{ else }}<span class="muted">&mdash;</span>{{ end }}
+          </td>
+          <td class="num">
+            {{ $n := 0 }}{{ if $m }}{{ $n = $m.n }}{{ else if $p }}{{ $n = $p.n }}{{ end }}{{ $n }}
+            {{ $w := 0 }}{{ if $m }}{{ $w = $m.withheld }}{{ end }}
+            {{ if gt $w 0 }}<span class="muted" title="contributors whose terms do not permit per-forecaster republication">+{{ $w }} withheld</span>{{ end }}
+          </td>
+        </tr>
+        {{ end }}
+      {{ end }}
+      </tbody>
+    </table>
+    </div>
+
+    <p class="thin-note">
+      Methods with no row published nothing for this race on this date.
+      Counts are contributing sources; “withheld” are contributors folded into
+      the average but not nameable during the cycle.
+    </p>
+  </div>
+
+  {{ if $race.series }}
+  <div class="card">
+    <h3>Margin over time</h3>
+    <p class="sub">Each line is a method family's average for this race, over
+    the last four months.</p>
+    {{ partial "forecast/race-series.html" (dict "series" $race.series "labels" $labels "order" $order) }}
+  </div>
+  {{ end }}
+
+  <div class="card">
+    <h3>Under each national scenario</h3>
+    <p class="sub">The seat model pushes every method's national tide through
+    the same machinery. This is what each implies for this race.</p>
+    <div class="tscroll">
+    <table>
+      <thead><tr><th class="wrap">Scenario</th><th class="num">Margin</th><th class="num">P(D wins)</th></tr></thead>
+      <tbody>
+      {{ range $k, $v := $race.scenarios }}
+        <tr>
+          <td class="wrap">{{ $k }}</td>
+          <td class="num">{{ with $v.margin }}{{ if gt . 0.0 }}<span class="D">D+{{ . }}</span>{{ else }}<span class="R">R+{{ math.Abs . }}</span>{{ end }}{{ else }}<span class="muted">&mdash;</span>{{ end }}</td>
+          <td class="num">{{ with $v.prob }}{{ math.Round (mul . 100) }}%{{ else }}<span class="muted">&mdash;</span>{{ end }}</td>
+        </tr>
+      {{ end }}
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <p><a href="/forecast/contests/">&larr; All contests</a></p>
+{{ end }}
+
+</div>
+{{ partial "forecast/foot.html" (dict "page" . "d" $d) }}

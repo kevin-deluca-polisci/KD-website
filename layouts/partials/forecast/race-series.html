@@ -1,0 +1,85 @@
+{{/* One race's margin over time, one line per method family.
+
+     Drawn inline rather than through charts.py because it needs no layout
+     decision the payload does not already fix: the x axis is a date range and
+     the y axis is a margin. Colours come from the same --c-<category> custom
+     properties the rest of the site uses, so a polling line is the same green
+     here as on the front page.
+
+     The zero line is drawn and labelled because on a race page it is the only
+     value meaningful on its own: above it, the Democrat leads. */}}
+{{- $series := .series -}}
+{{- $labels := .labels -}}
+{{- $order := .order -}}
+
+{{/* Extent over every series, always including zero so the baseline is on the
+     chart even for a race nobody puts near even. */}}
+{{- $lo := 0.0 -}}{{- $hi := 0.0 -}}{{- $dates := slice -}}
+{{- range $k, $v := $series -}}
+  {{- range $v -}}
+    {{- $y := index . 1 -}}
+    {{- if lt $y $lo }}{{ $lo = $y }}{{ end -}}
+    {{- if gt $y $hi }}{{ $hi = $y }}{{ end -}}
+    {{- $dates = $dates | append (index . 0) -}}
+  {{- end -}}
+{{- end -}}
+{{- $pad := math.Max 1.0 (mul (sub $hi $lo) 0.08) -}}
+{{- $lo = sub $lo $pad -}}{{- $hi = add $hi $pad -}}
+{{- $span := sub $hi $lo -}}
+{{- $dates = sort (uniq $dates) -}}
+{{- $n := len $dates -}}
+
+{{- $W := 900 -}}{{- $H := 260 -}}{{- $L := 46 -}}{{- $R := 12 -}}{{- $T := 12 -}}{{- $B := 26 -}}
+{{- $iw := sub (sub $W $L) $R -}}
+{{- $ih := sub (sub $H $T) $B -}}
+{{- $y0 := add $T (mul (div (sub $hi 0.0) $span) $ih) -}}
+
+{{- if gt $n 1 -}}
+<div class="chartwrap">
+<svg viewBox="0 0 {{ $W }} {{ $H }}" role="img"
+     aria-label="Margin over time for this race, one line per method family">
+  <line class="baseline" x1="{{ $L }}" y1="{{ $y0 }}" x2="{{ sub $W $R }}" y2="{{ $y0 }}"/>
+  <text class="tick" x="{{ sub $L 6 }}" y="{{ add $y0 4 }}" text-anchor="end">0</text>
+  <text class="tick" x="{{ sub $L 6 }}" y="{{ add $T 10 }}" text-anchor="end">D+{{ math.Round $hi }}</text>
+  {{/* The bottom tick is dropped when it would sit on top of the zero line.
+       Zero is always inside the extent so the baseline is visible, which means
+       a race nobody puts near even -- Georgia sits around D+10 -- has a lower
+       bound of about -1, and "0" and "R+1" then print over each other. */}}
+  {{ if gt (sub (sub $H $B) $y0) 16.0 }}
+  <text class="tick" x="{{ sub $L 6 }}" y="{{ sub $H $B }}" text-anchor="end">{{ if lt $lo 0.0 }}R+{{ math.Round (math.Abs $lo) }}{{ else }}D+{{ math.Round $lo }}{{ end }}</text>
+  {{ end }}
+  <text class="tick" x="{{ $L }}" y="{{ sub $H 6 }}">{{ index $dates 0 }}</text>
+  <text class="tick" x="{{ sub $W $R }}" y="{{ sub $H 6 }}" text-anchor="end">{{ index $dates (sub $n 1) }}</text>
+
+  {{ range $k := $order }}
+    {{ with index $series $k }}
+      {{/* THE TRAILING SPACE IN THE printf IS LOAD-BEARING. Emitting
+           `{{ $x }},{{ $y }}` on its own line looks like it separates the
+           points and does not: the `{{- end }}` that follows trims the
+           newline, so every pair runs into the next one -- `46,120` and
+           `58,119` arrive as `46,12058,119` and the browser draws a
+           scribble in the corner rather than a line.
+
+           x is the date's INDEX in the union of dates, not a day offset: the
+           series are sampled on the same snapshot grid, and spacing them by
+           index keeps a gap in collection from stretching the line. */}}
+      <polyline fill="none" stroke="var(--c-{{ $k }})" stroke-width="2"
+                stroke-linejoin="round" stroke-linecap="round" points="
+        {{- range $p := . -}}
+          {{- $xi := 0 -}}
+          {{- range $j, $dd := $dates }}{{ if eq $dd (index $p 0) }}{{ $xi = $j }}{{ end }}{{ end -}}
+          {{- $x := add $L (mul (div (mul $xi 1.0) (sub $n 1)) $iw) -}}
+          {{- $y := add $T (mul (div (sub $hi (index $p 1)) $span) $ih) -}}
+          {{- printf "%.1f,%.1f " $x $y -}}
+        {{- end }}"/>
+    {{ end }}
+  {{ end }}
+</svg>
+</div>
+
+<div class="legend">
+  {{ range $k := $order }}{{ if index $series $k }}
+    <span><i class="swatch {{ $k }}"></i>{{ index $labels $k }}</span>
+  {{ end }}{{ end }}
+</div>
+{{- end -}}
