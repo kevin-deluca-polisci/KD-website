@@ -104,7 +104,31 @@ NOT_A_FORECASTER = {"grant_williams"}
 
 # Quantities that never leave the private tier regardless of which source
 # carried them. PVI is Cook's proprietary index; we hold it for class use only.
-NEVER_PUBLISH = {"pvi", "pvi_prior"}
+NEVER_PUBLISH = {
+    "pvi", "pvi_prior",
+    # THE AI PANEL'S CANDIDATE BATTERY. Collected in full, published never.
+    #
+    # NOT_A_FORECAST below is not enough for these and the difference is the
+    # one that already bit this project once. NOT_A_FORECAST keeps a quantity
+    # out of a published AVERAGE; it does nothing to stop the rows themselves
+    # reaching derived/, which is committed to a public repo. That is exactly
+    # how expert_ratings.csv came to publish Cook and Inside Elections by name
+    # for eighteen months. NEVER_PUBLISH is the set that holds Cook's PVI, and
+    # it is the right home for these.
+    #
+    # WHAT PUBLISHES FROM THE AI PANEL: `prob_D`, as a category average, and
+    # nothing else. Every other thing a model says about a candidate --
+    # where it places them ideologically, how strong it thinks they are,
+    # whether it believes they have held office, how confident it sounds, the
+    # free text, and the citation set -- stays in the private archive.
+    #
+    # These are measurements ABOUT MODELS AND ABOUT NAMED LIVING CANDIDATES.
+    # A published table of "what five AI models think of this person" is a
+    # different and considerably more sensitive object than a win probability,
+    # and it is not what the forecast page is for.
+    "ideology_7pt", "ideology_100", "quality_perceived", "held_office",
+    "confidence", "ai_pick", "ai_open_text", "ai_citations",
+}
 
 # Reference baselines, not forecasts. Averaging a 2024 RESULT into a 2026
 # forecast category would be a category error in the literal sense.
@@ -125,6 +149,31 @@ NOT_A_FORECAST = {
     "approval_pct", "disapproval_pct", "approval_pct_aggregate",
     "income_growth_last_full_year", "income_growth_ytd",
     "income_growth_yoy_latest_month", "income_ytd_months",
+    # THE AI PANEL'S NON-FORECAST QUANTITIES, ADDED BEFORE THE FIRST RUN.
+    #
+    # The panel asks two batteries (ai/PREREGISTRATION.md 2a, 2b). Exactly ONE
+    # of the things it returns is a forecast -- `prob_D`, which is the model's
+    # probability that the Democrat wins and belongs in the ai category
+    # average like any other forecaster's. Everything else it returns is a
+    # measurement ABOUT the model, and averaging those across providers would
+    # produce numbers that look like forecasts and are not.
+    #
+    # `ideology_7pt` and `ideology_100` place a CANDIDATE on a scale; a
+    # cross-provider mean of them is a fact about how models see a person, not
+    # about who wins. `quality_perceived` is a 0-100 judgment of candidate
+    # strength on no fixed scale. `held_office` is Jacobson's factual item and
+    # doubles as the hallucination measure -- averaging a right-or-wrong answer
+    # into a forecast panel would destroy the one item in the battery that can
+    # be scored against the roster. `confidence` is the model's own word for
+    # how sure it is.
+    #
+    # THIS LIST EXISTS BEFORE THE HARNESS RUNS ON PURPOSE. Adding a quantity to
+    # NOT_A_FORECAST after a wave has been aggregated means the first wave was
+    # published under different rules from the rest, and there is no way to
+    # unpublish it. The standing rule for this project is that the exclusions
+    # are written first; this is that.
+    "ideology_7pt", "ideology_100", "quality_perceived", "held_office",
+    "confidence", "ai_pick",
     # MARKET MICROSTRUCTURE. A bid, an ask, a volume and a depth are facts
     # about an exchange, not opinions about an election, and averaging the ask
     # price across three exchanges would produce a number that is neither a

@@ -34,7 +34,7 @@
 
   {{- $labels := dict "fundamentals" "Fundamentals" "polling" "Polling"
         "professional" "Professional forecasters" "market" "Prediction markets"
-        "academic" "Academic models" "class" "Class forecasts" -}}
+        "academic" "Academic models" "class" "This class" -}}
   {{- $order := slice "polling" "fundamentals" "professional" "market" "academic" "class" -}}
 
   <div class="card">
@@ -48,6 +48,28 @@
       {{ end }}
       A positive margin is Democratic.
     </p>
+
+    {{ with $race.candidates }}
+    {{/* WHO IS RUNNING -- with the caveat attached, not in a footnote nobody
+         reads. This list is derived from who is the SUBJECT of a
+         general-election endorsement on the race's Wikipedia article, because
+         no roster of nominees exists anywhere in this pipeline. It covers 18
+         of the 35 races; a safe seat where nobody has endorsed anybody shows
+         nothing, and a state whose primary is unresolved can show three names
+         from two parties. Both are honest outputs of what the source is. */}}
+    <div class="candidates">
+      {{ range . }}
+        <span class="cand {{ if eq .party "D" }}is-D{{ else if eq .party "R" }}is-R{{ end }}">
+          <b>{{ .name }}</b> ({{ .party }})
+          <span class="muted">{{ .endorsements }} endorsement{{ if ne .endorsements 1 }}s{{ end }}{{ if gt .cross_party 0 }}, {{ .cross_party }} cross-party{{ end }}</span>
+        </span>
+      {{ end }}
+    </div>
+    <p class="thin-note">Candidates and endorsement counts are read from the
+    race's Wikipedia article and cover the general election only. A candidate
+    nobody has endorsed does not appear. “Cross-party” marks an endorsement
+    from a figure or group whose usual side is the other one.</p>
+    {{ end }}
 
     <div class="tscroll">
     <table class="full">
@@ -105,6 +127,50 @@
     <p class="sub">Each line is a method family's average for this race, over
     the last four months.</p>
     {{ partial "forecast/race-series.html" (dict "series" $race.series "labels" $labels "order" $order) }}
+  </div>
+  {{ end }}
+
+  {{ if $race.history }}
+  <div class="card">
+    <h3>This seat, previously</h3>
+    <p class="sub">The same seat's last five regular elections. Senate classes
+    run on a six-year cycle, so these are 2020, 2014 and back &mdash; not the
+    state's other seat, which is a different job. Results from the MIT Election
+    Data and Science Lab.</p>
+    <div class="tscroll">
+    <table>
+      <thead><tr><th class="num">Year</th><th class="num">Margin</th><th class="wrap">Winner</th></tr></thead>
+      <tbody>
+      {{ range $race.history }}
+        <tr>
+          <td class="num">{{ .year }}</td>
+          <td class="num">
+            {{ if eq .margin_D nil }}<span class="muted" title="both candidates coded OTHER in the source, so no two-party margin can be computed">n/a</span>
+            {{ else if gt .margin_D 0.0 }}<span class="D">D+{{ .margin_D }}</span>
+            {{ else }}<span class="R">R+{{ math.Abs .margin_D }}</span>{{ end }}
+            {{/* Only when the margin computed. Both flags come from the same
+                 party coding: Wyoming 2020 has Lummis and Ben David BOTH coded
+                 OTHER, which is why no margin exists -- and it also makes the
+                 source call the race uncontested, which is false. If the
+                 coding was bad enough to lose the margin it is not good enough
+                 to assert an unopposed win. */}}
+            {{ if and .uncontested (ne .margin_D nil) }}<span class="muted">· uncontested</span>{{ end }}
+          </td>
+          <td class="wrap">{{ with .winner }}{{ . }}{{ else }}<span class="muted">&mdash;</span>{{ end }}</td>
+        </tr>
+      {{ end }}
+      </tbody>
+    </table>
+    </div>
+  </div>
+  {{ else }}
+  {{/* The two 2026 specials have no same-class history by construction: a
+       special fills an unexpired term, so the seat's regular cadence does not
+       reach back through it. An empty card would read as missing data. */}}
+  <div class="card">
+    <h3>This seat, previously</h3>
+    <p class="sub">No comparable prior election. This is a special election, so
+    the seat's regular six-year cadence does not line up behind it.</p>
   </div>
   {{ end }}
 

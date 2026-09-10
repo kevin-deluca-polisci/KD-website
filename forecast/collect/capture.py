@@ -847,12 +847,32 @@ def handle_infogram(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[
     return n, b, notes
 
 
+
+def handle_external(source: dict, *args, **kwargs) -> tuple[int, int, list[str]]:
+    """A source captured by its own runner rather than by this stage.
+
+    Returns nothing and fetches nothing. The point is that the registry entry
+    can exist -- carrying `license`, `publication` and the pilot's freeze date
+    -- while capture stays the wrong place to invoke it.
+    """
+    runner = (source.get("config") or {}).get("runner", "its own runner")
+    return 0, 0, [f"external runner: {runner} (not captured by capture.py)"]
+
+
 HANDLERS: dict[str, Callable[..., tuple[int, int, list[str]]]] = {
     "http": handle_http,
     "kalshi_discover": handle_kalshi,
     "polymarket_discover": handle_polymarket,
     "wikipedia": handle_wikipedia,
     "infogram_live": handle_infogram,
+    # THE AI PANEL RUNS ITSELF. `collect/ai_panel.py` is a standalone runner,
+    # not an HTTP fetch with a URL and a stored body, so it has no handler
+    # here. The registry entry exists anyway because the entry is what carries
+    # the licence state and the publication tier -- the two things that must be
+    # declared before a single call is made. handle_external refuses to fetch
+    # and says where the runner is, so a `capture.py --all` can never quietly
+    # start spending money on model calls.
+    "external_runner": handle_external,
 }
 
 
@@ -1053,9 +1073,16 @@ def self_test(registry: dict) -> int:
         # never pass through capture at all. If one ever does need fetching —
         # a replication archive, a posted coefficient table — it must not be
         # the self-test that stops it.
+        # "ai" is a capture-stage category like the rest, and is NOT the same
+        # vocabulary as facets.SOURCES even though both contain the word --
+        # this list says what a registry entry may declare, that one says how a
+        # row is faceted on the site. They are separate on purpose and merging
+        # them would be wrong; what is worth noticing is that this is the
+        # FOURTH place in the repo holding a copy of a controlled vocabulary,
+        # and the publication tier taught us what that costs when copies drift.
         check(s.get("category") in
               {"fundamentals", "academic", "polling", "professional", "market",
-               "expert_ordinal"},
+               "expert_ordinal", "ai"},
               f"{sid}: unexpected category {s.get('category')!r}")
         check(s.get("license") in {"permitted", "permission_pending", "prohibited"},
               f"{sid}: unexpected license {s.get('license')!r}")

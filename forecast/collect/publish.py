@@ -698,8 +698,107 @@ except Exception:            # pragma: no cover - importer optional
     _STATE_NAMES = {}
 
 
+# Class 2 is on the ballot in 2026, so the same SEAT was last contested in
+# 2020, 2014, 2008 and so on. Every sixth year, not every second: a state's
+# other senator is a different job with different incumbents, and stacking the
+# two into one "history of the seat" invents a continuity that is not there.
+SEAT_CLASS_PERIOD = 6
+
+# Rows in the endorsement file that are not people.
+_NON_CANDIDATES = {"declined to endorse", "no endorsement", "none", "other"}
+
+
+def race_candidates(endorsements: list[dict], state: str, chamber: str) -> list[dict]:
+    """Who is on the general-election ballot, and their endorsement counts.
+
+    PROVENANCE MATTERS HERE AND THE TEMPLATE SAYS SO. This is not a ballot
+    roster; there is no ballot roster in this pipeline. It is the set of names
+    that appear as the SUBJECT of a general-election endorsement on the race's
+    Wikipedia article. A nominee nobody has endorsed does not appear, and that
+    is a real limitation rather than a rare edge case in a safe seat.
+
+    It is used anyway because the alternative is a race page that never says
+    who is running, and because the counts are worth having in their own right:
+    `cross_party` marks an endorsement from a figure or group whose usual side
+    is the other one, which is the cheap version of the candidate-quality
+    measure -- a defection count, computable from one cycle, and more
+    informative than a raw total that mostly tracks how much attention the race
+    gets.
+    """
+    seen: dict[tuple, dict] = {}
+    for r in endorsements:
+        if r.get("state") != state or r.get("chamber") != chamber:
+            continue
+        if r.get("phase") != "general" or not r.get("still_present"):
+            continue
+        name = (r.get("candidate") or "").strip()
+        party = r.get("candidate_party")
+        if not name or not party:
+            continue
+        if name.lower() in _NON_CANDIDATES:
+            continue
+        k = (name, party)
+        c = seen.setdefault(k, {"name": name, "party": party,
+                                "endorsements": 0, "cross_party": 0})
+        c["endorsements"] += 1
+        if r.get("cross_party"):
+            c["cross_party"] += 1
+    # Democrats first, then by endorsement count: a stable order that does not
+    # depend on dictionary insertion, so the page does not reshuffle daily.
+    return sorted(seen.values(),
+                  key=lambda c: (c["party"] != "D", -c["endorsements"], c["name"]))
+
+
+def seat_history(returns: list[dict], state: str, cycle: int,
+                 chamber: str = "senate", n: int = 5) -> list[dict]:
+    """Past results for THIS seat: same state, same class, regular elections.
+
+    Reads MIT's returns, which are CC0 -- the one input on this page with no
+    licence question at all, which is why the winner is named here and nowhere
+    else on the site names anybody.
+
+    Specials are excluded rather than merged. A special is a different contest
+    on a different timetable, often with an appointed incumbent, and dropping
+    it into a six-year cadence makes two rows for one seat in one cycle.
+    """
+    want = {y for y in range(cycle - SEAT_CLASS_PERIOD * n, cycle,
+                             SEAT_CLASS_PERIOD)}
+    by_year: dict[int, dict] = {}
+    for r in returns:
+        if r.get("chamber") != chamber or r.get("state") != state:
+            continue
+        if str(r.get("special")).lower() == "true":
+            continue
+        try:
+            y = int(r["year"])
+        except (TypeError, ValueError, KeyError):
+            continue
+        if y not in want:
+            continue
+        # A MISSING MARGIN DROPS THE NUMBER, NEVER THE ELECTION. Wyoming 2020
+        # is the case: MEDSL codes both Lummis and Ben David as OTHER, so no
+        # two-party margin can be computed, and skipping the row entirely made
+        # the page show 2014 as the seat's last contest -- which reads as "this
+        # seat was not up in 2020" and is false. The year stays with the winner
+        # named and the margin left blank.
+        try:
+            margin = round(float(r["margin_D"]), 1)
+        except (TypeError, ValueError, KeyError):
+            margin = None
+        e = by_year.setdefault(y, {"year": y, "margin_D": margin,
+                                   "winner": None, "party": None,
+                                   "uncontested": str(r.get("uncontested")).lower() == "true"})
+        if e["margin_D"] is None and margin is not None:
+            e["margin_D"] = margin
+        if str(r.get("won")).lower() == "true" and not e["winner"]:
+            e["winner"] = (r.get("candidate") or "").title()
+            e["party"] = r.get("party")
+    return [by_year[y] for y in sorted(by_year, reverse=True)]
+
+
 def build_races(avgs: list[dict], latest: str, proj: dict | None,
-                chamber: str = "senate") -> list[dict]:
+                chamber: str = "senate", derived: Path | None = None,
+                cycle: int = 2026) -> list[dict]:
     """One entry per contest: what each METHOD FAMILY says, and how it moved.
 
     READS category_averages.csv AND NOTHING ELSE for the per-method numbers.
@@ -740,6 +839,21 @@ def build_races(avgs: list[dict], latest: str, proj: dict | None,
         for scen, body in (proj.get("projections") or {}).items():
             for st, v in (body.get("races") or {}).items():
                 proj_races.setdefault(st, {})[scen] = v
+
+    # Context sources, read once rather than per race. Both are already in
+    # derived/ and already published; neither adds a new disclosure surface.
+    endorsements: list[dict] = []
+    returns: list[dict] = []
+    if derived is not None:
+        f = derived / f"endorsements_{cycle}.json"
+        if f.exists():
+            try:
+                endorsements = json.loads(f.read_text())
+            except (OSError, ValueError):
+                endorsements = []
+        r = derived / "returns.csv"
+        if r.exists():
+            returns = rd(r)
 
     out = []
     for race_id, rrows in sorted(by_race.items()):
@@ -791,6 +905,8 @@ def build_races(avgs: list[dict], latest: str, proj: dict | None,
             "name": _STATE_NAMES.get(state, state),
             "chamber": chamber,
             "pvi": pvi,
+            "candidates": race_candidates(endorsements, state, chamber),
+            "history": seat_history(returns, state, cycle, chamber),
             "current": current,
             "series": series,
             "scenarios": {k: {"margin": v.get("expected_margin_D"),
@@ -1003,7 +1119,8 @@ def main(argv=None) -> int:
         # Per-race, Senate only. The House has 435 contests and no race
         # pages yet; adding its array here would grow the file every visitor
         # downloads to feed pages that do not exist.
-        "races": build_races(avgs, latest, proj, "senate"),
+        "races": build_races(avgs, latest, proj, "senate",
+                            derived=d, cycle=a.cycle),
         "charts": chart_data,
         "spread": spread,
         "movement": movement,

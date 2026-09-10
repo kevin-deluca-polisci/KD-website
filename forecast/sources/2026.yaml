@@ -47,6 +47,54 @@ sources:
 
   # ---------------------------------------------------------------- markets --
 
+
+  # ---------------------------------------------------------------------------
+  # THE AI PANEL. Design and justification: forecast/ai/PREREGISTRATION.md.
+  #
+  # ENABLED: false UNTIL THE PILOT HAS RUN. Section 10 of the pre-registration
+  # makes the pilot decide the prompt wording, the draw count and whether
+  # native or uniform search is primary. A production wave collected before
+  # those are settled would be a wave asked under a design chosen afterwards,
+  # which is the thing the pre-registration exists to prevent. Flip this to
+  # true on 2026-09-21, when the panel freezes, and not before.
+  #
+  # PUBLICATION: aggregate_only, on every provider, per section 11. The
+  # category average may be published; no model is named beside a number
+  # during the cycle. Five providers is what keeps that promise survivable --
+  # MIN_N is 3, so the panel can lose two and still publish rather than
+  # suppress the cell in the last week of October.
+  #
+  # LICENCE: each provider's terms want reading and the decision recording
+  # here before that provider is switched on. `permission_pending` is the
+  # honest state until then, and it is what the capture stage refuses to fetch
+  # on -- so this entry cannot quietly start collecting.
+  - id: ai_panel
+    name: AI panel
+    category: ai
+    method: external_runner
+    enabled: false
+    cadence: weekly
+    publication: aggregate_only
+    declared_inputs: []
+    license: permission_pending
+    robots_checked: 2026-09-07
+    config:
+      runner: forecast/collect/ai_panel.py
+      prereg: forecast/ai/PREREGISTRATION.md
+      pilot: forecast/ai/PILOT.md
+      freeze_date: 2026-09-21
+      first_wave: 2026-09-22
+      # Mid tier, not flagship: section 3. The target is what a person on a
+      # roughly $20/month consumer plan is served. Model ids are pinned per
+      # wave in the capture record, not here, because they move.
+      providers: [anthropic, openai, google, xai, open_weights]
+      draws_race: 5
+      draws_candidate: 1
+    notes: >-
+      Two arms (search / cold) and two batteries (race-level, candidate-level).
+      Only prob_D is a forecast; the candidate-battery quantities are listed in
+      aggregate.py NOT_A_FORECAST so they can never enter a published average.
+
   - id: kalshi
     name: Kalshi
     category: market

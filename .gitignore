@@ -23,3 +23,19 @@ _*.json
 
 # scratch: files the Cowork bridge cannot delete without a permission grant
 _to_delete/
+
+# BALLOTPEDIA PERSONAL EXPORT. 9.3 MB, filename says "for_kevin_deluca", and it
+# arrived as a one-off export to a named person rather than an open download.
+# Standing rule for that class of input: usable in class and in the analysis,
+# not republished. The repo is public, so the rule has to live here and not in
+# anyone's memory of it.
+#
+# It is also NOT load-bearing for anything committed: the feasibility check it
+# was fetched for is finished and its result (92% of organisations are pure
+# partisans, so the identification problem is not fixable with this data) is
+# recorded in endorse_quality/PREREGISTRATION.md.
+forecast/endorse_quality/ballotpedia/
+
+# Python bytecode from running the endorse_quality scripts in place.
+__pycache__/
+*.pyc

@@ -230,6 +230,15 @@ document.documentElement.className+=" js";})();
   .tltip .tlrow{display:flex;align-items:center;gap:7px;white-space:nowrap}
   .tltip .tlrow i{width:9px;height:9px;border-radius:2px;flex:0 0 auto}
   .tltip .tlrow b{margin-left:auto;font-variant-numeric:tabular-nums}
+  /* Race-page candidate chips. A left border in the party colour rather than
+     a filled background: the margin figures below already carry blue and red,
+     and two saturated blocks at the top of the page compete with them. */
+  .candidates{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 10px}
+  .cand{padding:7px 11px;border:1px solid var(--border);border-left-width:3px;
+        border-radius:5px;background:var(--surface);font-size:.93em;line-height:1.45}
+  .cand.is-D{border-left-color:var(--D)}
+  .cand.is-R{border-left-color:var(--R)}
+  .cand .muted{display:block;font-size:.87em}
   .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:.85em;color:var(--ink-2)}
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .swatch{width:11px;height:11px;border-radius:2px;display:inline-block}

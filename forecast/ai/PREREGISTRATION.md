@@ -151,6 +151,60 @@ responses — no search, small model, batch API — and a sample is also coded b
 hand. Classifier-to-human agreement is reported in the appendix. Coding is
 never done in the same call that produced the text.
 
+### 2b-i. Amendment, 2026-09-07 — coherence, and what publishes
+
+Two changes, both made before any wave has run.
+
+**PUBLICATION IS NARROWED TO `prob_D` ALONE.** Section 11 said
+`aggregate_only`, which governs whether a MODEL may be named. It did not say
+which QUANTITIES may appear at all, and the two are not the same question.
+Every candidate-battery item -- both ideology placements, perceived quality,
+`held_office`, confidence, the open text and the citation set -- is now in
+`aggregate.py NEVER_PUBLISH`, the set that holds Cook's PVI. They are
+collected in full and published never.
+
+The reason is not caution in the abstract. `NOT_A_FORECAST` keeps a quantity
+out of an average and does nothing to stop the rows reaching `derived/`, which
+is committed publicly -- which is precisely how this project published Cook
+and Inside Elections by name for eighteen months without noticing. And the
+battery is a set of measurements about NAMED LIVING CANDIDATES. A public table
+of what five models think of a person is a different and more sensitive object
+than a win probability, and the forecast page is not for it.
+
+**THE COHERENCE LITERATURE SHARPENS THE JOINT-VS-SEPARATE TEST.** Kuriwaki
+(suproteem.is/writing/coherence) documents that separately-elicited
+probabilities from language models violate coherence to the point of being
+Dutch-bookable, that joint elicitation is substantially more coherent, that
+incoherence varies by about two orders of magnitude ACROSS models, and that
+adding probabilistically irrelevant context -- "I had coffee this morning" --
+measurably increases it.
+
+That does not settle §2a, because the joint form imposes coherence by
+construction and the question was always whether that is a fix or a
+concealment. It changes three things:
+
+1. **The pilot's joint-vs-separate test gains a second outcome.** It measures
+   not only whether separate answers sum to one, but whether the joint form
+   MOVES THE MEDIAN `prob_D`. Agreement on the central estimate with better
+   coherence means joint is a fix; a shifted median means the constraint is
+   doing the work and we would be publishing an artifact of question format.
+2. **Per-model incoherence becomes a recorded diagnostic, not a one-off.** A
+   two-order-of-magnitude spread means the category average would otherwise
+   mix coherent and incoherent forecasters as peers. It is measured in the
+   pilot AND re-measured every wave, because providers update models
+   mid-cycle and coherence can drift without announcement.
+3. **The frozen prompt carries nothing that is not load-bearing.** No expert
+   persona, no framing, no context beyond what identifies the race. This is
+   now a documented failure mode rather than a stylistic preference, and it
+   raises the stakes on the paraphrase-invariance test already in §10.
+
+A fourth implication is recorded for §8 rather than §2a: incoherence rises
+with logical dependencies across events, and House seats sum to 435 while
+chamber control is a function of the races. Asking for aggregate quantities
+directly should be expected to be worse than deriving them from race
+probabilities, which is what §8 already does. No change; the reasoning is now
+external rather than assumed.
+
 ### 2c. Answer format
 
 JSON and nothing else. A response that does not parse is stored anyway,
