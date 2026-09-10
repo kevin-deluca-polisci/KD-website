@@ -823,18 +823,18 @@
         {
           "date": "2026-09-05",
           "approve": 40.16,
-          "n": 25
+          "n": 26
         },
         {
           "date": "2026-09-10",
           "approve": 40.46,
-          "n": 19
+          "n": 21
         }
       ],
       "latest": {
         "date": "2026-09-10",
         "approve": 40.46,
-        "n": 19
+        "n": 21
       }
     },
     "aggregate": {
@@ -1276,8 +1276,8 @@
     {
       "pop": "LV",
       "label": "likely voters",
-      "approve": 42.7,
-      "n": 9
+      "approve": 42.3,
+      "n": 11
     }
   ],
   "chart": {
