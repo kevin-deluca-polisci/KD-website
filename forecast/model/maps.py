@@ -36,6 +36,14 @@ No state redrew twice this cycle, which is what makes two versions enough. A
 state that had redrawn twice would need an intermediate the capture cannot
 supply, and this module would have to refuse rather than guess.
 
+Missouri is the near miss, and it is handled. It did not redraw twice: it
+enacted new lines on 2025-09-28 and had them BLOCKED on 2026-09-11, which
+returns it to the same `pvi_prior` it started from. Two versions still
+suffice, because the second transition is a return to the first. What it does
+need is an END date, so `redistricting_effective.csv` carries an optional
+`superseded_date` and a state is on prior lines when the date is before its
+flip OR on/after its supersede.
+
 -----------------------------------------------------------------------------
 THE RULE
 
@@ -52,9 +60,17 @@ data and not code, so changing one is changing one cell.
 -----------------------------------------------------------------------------
 WHAT THIS DOES NOT CHANGE
 
-Every flip is done by 2026-06-02, so any projection dated after that gets
-exactly today's baseline and today's published numbers do not move at all.
-Only the backfilled history changes.
+Every forward flip is done by 2026-06-02. That USED to mean today's published
+numbers could not move, and it stopped being true on 2026-09-11, when the US
+Supreme Court blocked Missouri's 7-1 map and sent the state back to its 2022
+lines for November. A reversion inside the live window moves the CURRENT
+number, not just the archive: MO-5 goes from a Republican-leaning seat to a
+safely Democratic one.
+
+So both things now change. Projections dated on or after 2026-09-11 use
+Missouri's old lines, and the eleven months in between still use the new ones,
+because the map was genuinely operative law for that window -- the Missouri
+Supreme Court upheld it on 2026-03-24.
 
 And it does not change PROVENANCE. A backfilled seat projection computed on
 the correct dated map is still `retrospective` under RULES.md §10 — we are
@@ -83,8 +99,10 @@ def effective_dates(path: Path | None = None) -> dict[str, dict]:
         for r in csv.DictReader(fh):
             st = (r.get("state") or "").strip().upper()
             d = (r.get("effective_date") or "").strip()
+            sup = (r.get("superseded_date") or "").strip()
             if len(st) == 2 and len(d) == 10:
                 out[st] = {"date": d, "basis": (r.get("basis") or "").strip(),
+                           "superseded": sup if len(sup) == 10 else "",
                            "notes": (r.get("notes") or "").strip()}
     return out
 
@@ -112,10 +130,28 @@ def baseline_asof(current: dict[str, float], prior: dict[str, float],
     on_old: set[str] = set()
     no_prior = 0
 
+    reverted: set[str] = set()
+
     for rid, v in current.items():
         st = _state_of(rid)
-        flip = (dates.get(st) or {}).get("date")
-        use_prior = bool(asof and flip and asof < flip)
+        ent = dates.get(st) or {}
+        flip = ent.get("date")
+        # A NEW map can stop being operative. Missouri enacted 7-1 lines on
+        # 2025-09-28 and the US Supreme Court blocked them on 2026-09-11, so
+        # the state votes its previous lines in November. That is a window,
+        # not a single flip: the new map really did govern for the eleven
+        # months in between, and a backfilled projection dated inside that
+        # window must use it.
+        #
+        # This is the case the module header said it would refuse to guess at.
+        # It is not a guess now, because the end date is recorded in the same
+        # table as the start date and is just as much an observed fact.
+        sup = ent.get("superseded")
+        before = bool(asof and flip and asof < flip)
+        after = bool(asof and sup and asof >= sup)
+        use_prior = before or after
+        if after and not before:
+            reverted.add(st)
         if use_prior:
             if rid in prior:
                 baseline[rid] = prior[rid]
@@ -135,6 +171,10 @@ def baseline_asof(current: dict[str, float], prior: dict[str, float],
         "n_districts": len(baseline),
         "states_on_previous_lines": sorted(on_old),
         "states_on_current_lines": sorted(redrawn - on_old),
+        # On old lines because the new map was struck down, NOT because the
+        # date precedes it. Same baseline, opposite reason, and a reader of
+        # the archive should not have to infer which.
+        "states_reverted": sorted(reverted & on_old),
         "n_districts_from_prior": sum(
             1 for rid in baseline if _state_of(rid) in on_old and rid in prior),
         "missing_prior": no_prior,
@@ -155,8 +195,14 @@ def vintage_label(detail: dict) -> str:
         return "current map (no date supplied)"
     if not old:
         return f"current map as of {detail['asof']}"
-    return (f"mixed as of {detail['asof']}: "
-            f"{','.join(old)} on previous lines")
+    rev = detail.get("states_reverted") or []
+    pre = [s for s in old if s not in rev]
+    parts = []
+    if pre:
+        parts.append(f"{','.join(pre)} on previous lines")
+    if rev:
+        parts.append(f"{','.join(rev)} reverted to previous lines")
+    return f"mixed as of {detail['asof']}: " + "; ".join(parts)
 
 
 def split_rows(rows: list[dict], source: str,
@@ -235,10 +281,54 @@ def _self_test() -> int:
     check(on_the_day["HOU_TX_09_2026"] == -9.0,
           "the effective date itself counts as the NEW map (>= not >)")
 
+    # --- a map that stopped being operative (Missouri) --------------------
+    mo = {"MO": {"date": "2025-09-28", "basis": "signed; blocked_by_scotus",
+                 "superseded": "2026-09-11"}}
+    mcur = {"HOU_MO_05_2026": -8.0}
+    mpri = {"HOU_MO_05_2026": 13.0}
+
+    b, d = baseline_asof(mcur, mpri, "2025-06-01", mo)
+    check(b["HOU_MO_05_2026"] == 13.0, "MO before the signature is on old lines")
+    check(d["states_reverted"] == [], "  and is NOT flagged as reverted")
+
+    b, d = baseline_asof(mcur, mpri, "2026-03-01", mo)
+    check(b["HOU_MO_05_2026"] == -8.0,
+          "MO inside the operative window uses the NEW lines")
+
+    b, d = baseline_asof(mcur, mpri, "2026-09-10", mo)
+    check(b["HOU_MO_05_2026"] == -8.0, "the day before the block, still new")
+
+    b, d = baseline_asof(mcur, mpri, "2026-09-11", mo)
+    check(b["HOU_MO_05_2026"] == 13.0,
+          "on the supersede date itself, back to old lines (>= not >)")
+    check(d["states_reverted"] == ["MO"], "  and IS flagged as reverted")
+    check("reverted to previous lines" in d["vintage"],
+          "  the vintage label says reverted, not merely 'previous'")
+
+    b, d = baseline_asof(mcur, mpri, "2026-11-03", mo)
+    check(b["HOU_MO_05_2026"] == 13.0, "election day uses the 6-2 lines")
+
+    # A state with no supersede date must behave exactly as before.
+    b, d = baseline_asof(cur, pri, "2026-08-01", dates)
+    check(b == cur and not d["states_reverted"],
+          "states with no supersede date are untouched by the new rule")
+
     live = effective_dates()
     check(len(live) == 10, f"the real table has 10 states (got {len(live)})")
+    check(live["MO"]["superseded"] == "2026-09-11",
+          "the real table carries Missouri's supersede date")
+    check(sum(1 for v in live.values() if v.get("superseded")) == 1,
+          "exactly one state is superseded")
     check(max(v["date"] for v in live.values()) == "2026-06-02",
-          "the last flip is 2026-06-02, so today is unaffected")
+          "the last FORWARD flip is 2026-06-02")
+    # This check used to read "...so today is unaffected". That stopped being
+    # true on 2026-09-11, when Missouri reverted. Today IS affected, and a
+    # self-test that prints a reassurance it can no longer justify is worse
+    # than one that prints nothing.
+    check(max([v["date"] for v in live.values()]
+              + [v["superseded"] for v in live.values() if v.get("superseded")])
+          == "2026-09-11",
+          "the most recent map change of ANY kind is Missouri's 2026-09-11 reversion")
     print("\n  self-test:", "PASSED" if not fails else f"{fails} FAILURE(S)")
     return 1 if fails else 0
 
@@ -255,16 +345,24 @@ def main(argv=None) -> int:
 
     dates = effective_dates()
     if a.show:
-        old = sorted(s for s, v in dates.items() if a.show < v["date"])
-        new = sorted(s for s, v in dates.items() if a.show >= v["date"])
+        # Derive this from baseline_asof rather than re-deriving the rule, so
+        # the display cannot drift from what the model actually does. It said
+        # Missouri was on current lines on 2026-09-15 for exactly that reason:
+        # a second copy of the comparison that nobody updated.
+        probe = {f"HOU_{s}_01_2026": 0.0 for s in dates}
+        _, d = baseline_asof(probe, {k: 1.0 for k in probe}, a.show, dates)
+        oldl = d["states_on_previous_lines"]
+        rev = set(d["states_reverted"])
+        pre = [s for s in oldl if s not in rev]
         print(f"as of {a.show}")
-        print(f"  previous lines: {', '.join(old) or 'none'}")
-        print(f"  current lines : {', '.join(new) or 'none'}")
+        print(f"  previous lines: {', '.join(pre) or 'none'}")
+        print(f"  reverted      : {', '.join(sorted(rev)) or 'none'}")
+        print(f"  current lines : {', '.join(d['states_on_current_lines']) or 'none'}")
         return 0
 
-    print(f"{'state':<7}{'effective':<13}basis")
+    print(f"{'state':<7}{'effective':<13}{'superseded':<13}basis")
     for st, v in sorted(dates.items(), key=lambda kv: kv[1]["date"]):
-        print(f"{st:<7}{v['date']:<13}{v['basis']}")
+        print(f"{st:<7}{v['date']:<13}{v.get('superseded') or '-':<13}{v['basis']}")
     return 0
 
 
