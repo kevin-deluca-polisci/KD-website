@@ -37,7 +37,7 @@ state that had redrawn twice would need an intermediate the capture cannot
 supply, and this module would have to refuse rather than guess.
 
 Missouri is the near miss, and it is handled. It did not redraw twice: it
-enacted new lines on 2025-09-28 and had them BLOCKED on 2026-09-11, which
+enacted new lines on 2025-09-28 and had them BLOCKED on 2026-09-10, which
 returns it to the same `pvi_prior` it started from. Two versions still
 suffice, because the second transition is a return to the first. What it does
 need is an END date, so `redistricting_effective.csv` carries an optional
@@ -61,13 +61,13 @@ data and not code, so changing one is changing one cell.
 WHAT THIS DOES NOT CHANGE
 
 Every forward flip is done by 2026-06-02. That USED to mean today's published
-numbers could not move, and it stopped being true on 2026-09-11, when the US
+numbers could not move, and it stopped being true on 2026-09-10, when the US
 Supreme Court blocked Missouri's 7-1 map and sent the state back to its 2022
 lines for November. A reversion inside the live window moves the CURRENT
 number, not just the archive: MO-5 goes from a Republican-leaning seat to a
 safely Democratic one.
 
-So both things now change. Projections dated on or after 2026-09-11 use
+So both things now change. Projections dated on or after 2026-09-10 use
 Missouri's old lines, and the eleven months in between still use the new ones,
 because the map was genuinely operative law for that window -- the Missouri
 Supreme Court upheld it on 2026-03-24.
@@ -137,7 +137,7 @@ def baseline_asof(current: dict[str, float], prior: dict[str, float],
         ent = dates.get(st) or {}
         flip = ent.get("date")
         # A NEW map can stop being operative. Missouri enacted 7-1 lines on
-        # 2025-09-28 and the US Supreme Court blocked them on 2026-09-11, so
+        # 2025-09-28 and the US Supreme Court blocked them on 2026-09-10, so
         # the state votes its previous lines in November. That is a window,
         # not a single flip: the new map really did govern for the eleven
         # months in between, and a backfilled projection dated inside that
@@ -283,7 +283,7 @@ def _self_test() -> int:
 
     # --- a map that stopped being operative (Missouri) --------------------
     mo = {"MO": {"date": "2025-09-28", "basis": "signed; blocked_by_scotus",
-                 "superseded": "2026-09-11"}}
+                 "superseded": "2026-09-10"}}
     mcur = {"HOU_MO_05_2026": -8.0}
     mpri = {"HOU_MO_05_2026": 13.0}
 
@@ -295,10 +295,10 @@ def _self_test() -> int:
     check(b["HOU_MO_05_2026"] == -8.0,
           "MO inside the operative window uses the NEW lines")
 
-    b, d = baseline_asof(mcur, mpri, "2026-09-10", mo)
+    b, d = baseline_asof(mcur, mpri, "2026-09-09", mo)
     check(b["HOU_MO_05_2026"] == -8.0, "the day before the block, still new")
 
-    b, d = baseline_asof(mcur, mpri, "2026-09-11", mo)
+    b, d = baseline_asof(mcur, mpri, "2026-09-10", mo)
     check(b["HOU_MO_05_2026"] == 13.0,
           "on the supersede date itself, back to old lines (>= not >)")
     check(d["states_reverted"] == ["MO"], "  and IS flagged as reverted")
@@ -315,20 +315,20 @@ def _self_test() -> int:
 
     live = effective_dates()
     check(len(live) == 10, f"the real table has 10 states (got {len(live)})")
-    check(live["MO"]["superseded"] == "2026-09-11",
+    check(live["MO"]["superseded"] == "2026-09-10",
           "the real table carries Missouri's supersede date")
     check(sum(1 for v in live.values() if v.get("superseded")) == 1,
           "exactly one state is superseded")
     check(max(v["date"] for v in live.values()) == "2026-06-02",
           "the last FORWARD flip is 2026-06-02")
     # This check used to read "...so today is unaffected". That stopped being
-    # true on 2026-09-11, when Missouri reverted. Today IS affected, and a
+    # true on 2026-09-10, when Missouri reverted. Today IS affected, and a
     # self-test that prints a reassurance it can no longer justify is worse
     # than one that prints nothing.
     check(max([v["date"] for v in live.values()]
               + [v["superseded"] for v in live.values() if v.get("superseded")])
-          == "2026-09-11",
-          "the most recent map change of ANY kind is Missouri's 2026-09-11 reversion")
+          == "2026-09-10",
+          "the most recent map change of ANY kind is Missouri's 2026-09-10 reversion")
     print("\n  self-test:", "PASSED" if not fails else f"{fails} FAILURE(S)")
     return 1 if fails else 0
 
