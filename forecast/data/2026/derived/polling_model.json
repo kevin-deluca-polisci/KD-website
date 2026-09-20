@@ -1,17 +1,17 @@
 {
-  "snapshot_date": "2026-09-19",
-  "days_to_election": 45,
+  "snapshot_date": "2026-09-20",
+  "days_to_election": 44,
   "generic_ballot": {
     "raw": 7.702,
-    "adjusted": 8.523,
+    "adjusted": 8.524,
     "used": "margin_D_adjusted",
-    "value": 8.523
+    "value": 8.524
   },
-  "shrink_lambda": 0.9221,
-  "nowcast_tide_D": 8.523,
-  "election_day_tide_D": 7.859,
-  "tide_D_80_low": 3.902,
-  "tide_D_80_high": 13.144,
+  "shrink_lambda": 0.9237,
+  "nowcast_tide_D": 8.524,
+  "election_day_tide_D": 7.874,
+  "tide_D_80_low": 3.903,
+  "tide_D_80_high": 13.145,
   "sigma_source": "calibrated, n=30",
   "calibration": {
     "ok": true,
@@ -65,7 +65,7 @@
       "AK": {
         "expected_margin_D": -7.79,
         "pvi": -6.45,
-        "win_prob_D": 0.0733
+        "win_prob_D": 0.0734
       },
       "AL": {
         "expected_margin_D": -15.85,
@@ -100,7 +100,7 @@
       "IA": {
         "expected_margin_D": -1.5,
         "pvi": -6.09,
-        "win_prob_D": 0.3899
+        "win_prob_D": 0.39
       },
       "ID": {
         "expected_margin_D": -26.87,
@@ -185,7 +185,7 @@
       "OH": {
         "expected_margin_D": -5.85,
         "pvi": -5.27,
-        "win_prob_D": 0.1379
+        "win_prob_D": 0.138
       },
       "OK": {
         "expected_margin_D": -20.02,
@@ -193,7 +193,7 @@
         "win_prob_D": 0.0001
       },
       "OR": {
-        "expected_margin_D": 26.81,
+        "expected_margin_D": 26.82,
         "pvi": 7.65,
         "win_prob_D": 1.0
       },
@@ -203,7 +203,7 @@
         "win_prob_D": 1.0
       },
       "SC": {
-        "expected_margin_D": -10.81,
+        "expected_margin_D": -10.8,
         "pvi": -8.28,
         "win_prob_D": 0.0221
       },
@@ -220,7 +220,7 @@
       "TX": {
         "expected_margin_D": -1.22,
         "pvi": -5.92,
-        "win_prob_D": 0.41
+        "win_prob_D": 0.4101
       },
       "VA": {
         "expected_margin_D": 19.97,
