@@ -15,10 +15,10 @@ Redistricting. The dated-baseline machinery (`model/maps.py`,
 what is missing is a public-domain district index to draw, because the one we
 hold is Cook's and Cook's cannot be published.
 
-**The AI panel.** Pre-registered (`ai/PREREGISTRATION.md`), harness written and
-dry-run. Blocked on API keys, a `sources/2026.yaml` entry, a per-provider
-publication tier, and one open question: whether "Likely" counts as competitive
-(121 races if not, 197 if so).
+**The AI panel. Dropped 2026-09-21.** Not pursued this cycle: a research group at MIT is
+already running this design, and the time is better spent elsewhere. The pre-registration,
+the augmented-arm design and the unused harness are archived outside the repo
+(`_archive/KD-website-2026-09-21/forecast/`), and git history keeps every version.
 
 Both are perishable in the same way, and that is why they are first. A model
 version is deprecated and gone; a redistricting page is worth most while the

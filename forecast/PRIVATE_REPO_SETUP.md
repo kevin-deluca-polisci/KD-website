@@ -70,7 +70,7 @@ The file is already in your repo, just not in the place GitHub looks:
 ```bash
 cd ~/Library/CloudStorage/Dropbox/Claude/website/KD-website
 mkdir -p .github/workflows
-cp forecast/workflows/forecast-capture.yml .github/workflows/
+# the workflow is already installed at .github/workflows/forecast-capture.yml
 ```
 
 Check the top of `.github/workflows/forecast-capture.yml` and confirm:

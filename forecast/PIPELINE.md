@@ -93,7 +93,7 @@ The four JSON parsers were written without access to a live response, so treat t
 1. Create a private repo, e.g. `kevin-deluca-polisci/plsc2219-raw`
 2. Fine-grained PAT, `Contents: write`, scoped to that repo only
 3. Add it to KD-website as the `RAW_ARCHIVE_TOKEN` secret
-4. Copy `forecast/workflows/forecast-capture.yml` to `.github/workflows/`
+4. The workflow is `.github/workflows/forecast-capture.yml` (already installed)
 5. Copy `forecast/data_gitignore.txt` to `forecast/data/.gitignore`
 
 The daily Action captures and pushes raw to the private repo, then commits only hashes and run provenance to the public one. It does not parse, aggregate, or publish — you do that weekly, where you can look at the numbers before they go live.

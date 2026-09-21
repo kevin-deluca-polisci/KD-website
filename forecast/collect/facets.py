@@ -30,8 +30,6 @@ WHY THIS FILE EXISTS
             professional  forecasters and outlets doing this commercially
             class         this project's own models
             market        the exchanges
-            ai            reserved; the AI panel is pre-registered and not yet
-                          running (see forecast/ai/PREREGISTRATION.md)
 
     reference is a sixth TYPE and a fifth SOURCE, for the things that are
     inputs rather than forecasts — Cook's PVI, FRED income, MEDSL results,
@@ -71,7 +69,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = REPO_ROOT / "forecast" / "data"
 
 TYPES = ("polling", "fundamentals", "composite", "market", "expert", "reference")
-SOURCES = ("academic", "professional", "class", "market", "ai", "reference")
+SOURCES = ("academic", "professional", "class", "market", "reference")
 
 TYPE_LABEL = {
     "polling": "Polling", "fundamentals": "Fundamentals",
@@ -80,12 +78,12 @@ TYPE_LABEL = {
 }
 SOURCE_LABEL = {
     "academic": "Academic", "professional": "Professional",
-    "class": "This class", "market": "Markets", "ai": "AI",
+    "class": "This class", "market": "Markets",
 }
 
 # Least modelled to most modelled, as elsewhere on the site.
 TYPE_ORDER = ["polling", "market", "fundamentals", "composite", "expert"]
-SOURCE_ORDER = ["market", "professional", "academic", "class", "ai"]
+SOURCE_ORDER = ["market", "professional", "academic", "class"]
 
 # --------------------------------------------------------------------------
 # The assignments.

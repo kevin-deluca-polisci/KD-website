@@ -62,8 +62,7 @@ forecast/
 ├── model/fundamentals.py   stage 3 — the class model
 ├── mirror/mirror_538.sh    mirrors the surviving FiveThirtyEight repos
 ├── mockup/index.html       design mockup, not published
-├── run.sh                  ← the weekly command
-└── workflows/              copy to .github/workflows/
+└── run.sh                  ← the weekly command
 
 forecast/data/2026/          ← NOT the repo-root data/ (see below)
 ├── raw/<source>/<date>/    exactly as received, never edited
@@ -198,7 +197,7 @@ Inside Elections publishes `rating_numeric` (0 = Solid D → 10 = Solid R) and i
 
 ## Automation
 
-Copy `forecast/workflows/forecast-capture.yml` to `.github/workflows/`. It runs daily at 11:00 UTC and has a manual trigger with `only`, `dry_run`, and `backfill` inputs, so you can fire a targeted run from a phone.
+The workflow is `.github/workflows/forecast-capture.yml`. It runs daily at 11:00 UTC and has a manual trigger with `only`, `dry_run`, and `backfill` inputs, so you can fire a targeted run from a phone.
 
 It validates the registry before capturing and **refuses to run if a prohibited source has been enabled**. Capture is allowed to fail partially so that successful sources still commit, with the failure surfaced as a warning and a non-zero exit rather than a false green.
 
