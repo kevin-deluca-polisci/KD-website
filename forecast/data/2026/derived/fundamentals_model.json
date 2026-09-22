@@ -10,45 +10,45 @@
   "r2": 0.657,
   "loeo_rmse": 2.291,
   "inputs": {
-    "approval": 37.0,
-    "approval_source": "mean of 3 adults-sample approval poll(s) in the 14 days to 2026-09-22. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
-    "approval_n": 3,
+    "approval": 34.1,
+    "approval_source": "mean of 5 adults-sample approval poll(s) in the 14 days to 2026-09-22. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
+    "approval_n": 5,
     "income_growth": -0.039,
     "seats_before": 220,
     "income_is_placeholder": false,
     "income_source": "FRED income_growth_ytd as of 2026-09-22, 7 month(s) of the year in hand",
-    "approval_field": 40.32,
-    "approval_field_n": 22,
-    "approval_aggregate": 37.62,
+    "approval_field": 39.6,
+    "approval_field_n": 27,
+    "approval_aggregate": 37.24,
     "approval_aggregate_n": 8,
     "approval_aggregate_low": 35.0,
-    "approval_aggregate_high": 40.1,
+    "approval_aggregate_high": 39.5,
     "approval_aggregate_date": "2026-09-22"
   },
-  "pres_party_two_party_vote": 44.64,
-  "margin_D": 10.71,
-  "margin_D_80_low": 4.84,
-  "margin_D_80_high": 16.58,
+  "pres_party_two_party_vote": 44.26,
+  "margin_D": 11.49,
+  "margin_D_80_low": 5.61,
+  "margin_D_80_high": 17.36,
   "sensitivity": [
     {
-      "approval": 33.0,
-      "margin_D": 11.78
+      "approval": 30.1,
+      "margin_D": 12.56
     },
     {
-      "approval": 35.0,
-      "margin_D": 11.25
+      "approval": 32.1,
+      "margin_D": 12.02
     },
     {
-      "approval": 37.0,
-      "margin_D": 10.71
+      "approval": 34.1,
+      "margin_D": 11.49
     },
     {
-      "approval": 39.0,
-      "margin_D": 10.18
+      "approval": 36.1,
+      "margin_D": 10.95
     },
     {
-      "approval": 41.0,
-      "margin_D": 9.64
+      "approval": 38.1,
+      "margin_D": 10.42
     }
   ]
 }
