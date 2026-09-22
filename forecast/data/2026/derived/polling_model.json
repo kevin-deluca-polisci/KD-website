@@ -1,17 +1,17 @@
 {
-  "snapshot_date": "2026-09-21",
-  "days_to_election": 43,
+  "snapshot_date": "2026-09-22",
+  "days_to_election": 42,
   "generic_ballot": {
-    "raw": 7.664,
-    "adjusted": 8.377,
+    "raw": 8.188,
+    "adjusted": 8.863,
     "used": "margin_D_adjusted",
-    "value": 8.377
+    "value": 8.863
   },
-  "shrink_lambda": 0.9253,
-  "nowcast_tide_D": 8.377,
-  "election_day_tide_D": 7.751,
-  "tide_D_80_low": 3.756,
-  "tide_D_80_high": 12.998,
+  "shrink_lambda": 0.9269,
+  "nowcast_tide_D": 8.863,
+  "election_day_tide_D": 8.215,
+  "tide_D_80_low": 4.242,
+  "tide_D_80_high": 13.484,
   "sigma_source": "calibrated, n=30",
   "calibration": {
     "ok": true,
@@ -52,7 +52,7 @@
     "sigma_total": 5.37,
     "sigma_national": 3.606,
     "sigma_state": 3.98,
-    "expected_D_seats_up": 15.97,
+    "expected_D_seats_up": 16.16,
     "D_seats_up_80pct": [
       14,
       18
@@ -63,188 +63,188 @@
     "n_incumbents": 23,
     "races": {
       "AK": {
-        "expected_margin_D": -7.94,
+        "expected_margin_D": -7.45,
         "pvi": -6.45,
-        "win_prob_D": 0.0696
+        "win_prob_D": 0.0826
       },
       "AL": {
-        "expected_margin_D": -16.0,
+        "expected_margin_D": -15.51,
         "pvi": -14.81,
-        "win_prob_D": 0.0014
+        "win_prob_D": 0.0019
       },
       "AR": {
-        "expected_margin_D": -22.52,
+        "expected_margin_D": -22.04,
         "pvi": -15.31,
         "win_prob_D": 0.0
       },
       "CO": {
-        "expected_margin_D": 23.9,
+        "expected_margin_D": 24.39,
         "pvi": 5.97,
         "win_prob_D": 1.0
       },
       "DE": {
-        "expected_margin_D": 27.26,
+        "expected_margin_D": 27.75,
         "pvi": 8.01,
         "win_prob_D": 1.0
       },
       "FL": {
-        "expected_margin_D": -6.19,
+        "expected_margin_D": -5.71,
         "pvi": -5.39,
-        "win_prob_D": 0.1243
+        "win_prob_D": 0.1439
       },
       "GA": {
-        "expected_margin_D": 12.76,
+        "expected_margin_D": 13.25,
         "pvi": -0.8,
-        "win_prob_D": 0.9913
+        "win_prob_D": 0.9932
       },
       "IA": {
-        "expected_margin_D": -1.65,
+        "expected_margin_D": -1.16,
         "pvi": -6.09,
-        "win_prob_D": 0.3795
+        "win_prob_D": 0.4144
       },
       "ID": {
-        "expected_margin_D": -27.02,
+        "expected_margin_D": -26.53,
         "pvi": -18.04,
         "win_prob_D": 0.0
       },
       "IL": {
-        "expected_margin_D": 18.81,
+        "expected_margin_D": 19.3,
         "pvi": 6.34,
         "win_prob_D": 0.9998
       },
       "KS": {
-        "expected_margin_D": -10.54,
+        "expected_margin_D": -10.05,
         "pvi": -8.03,
-        "win_prob_D": 0.0248
+        "win_prob_D": 0.0306
       },
       "KY": {
-        "expected_margin_D": -16.21,
+        "expected_margin_D": -15.73,
         "pvi": -14.94,
-        "win_prob_D": 0.0013
+        "win_prob_D": 0.0017
       },
       "LA": {
-        "expected_margin_D": -15.02,
+        "expected_margin_D": -14.53,
         "pvi": -10.75,
-        "win_prob_D": 0.0026
+        "win_prob_D": 0.0034
       },
       "MA": {
-        "expected_margin_D": 37.1,
+        "expected_margin_D": 37.59,
         "pvi": 13.99,
         "win_prob_D": 1.0
       },
       "ME": {
-        "expected_margin_D": 8.96,
+        "expected_margin_D": 9.45,
         "pvi": 3.82,
-        "win_prob_D": 0.9525
+        "win_prob_D": 0.9608
       },
       "MI": {
-        "expected_margin_D": 8.06,
+        "expected_margin_D": 8.55,
         "pvi": -0.19,
-        "win_prob_D": 0.9334
+        "win_prob_D": 0.9443
       },
       "MN": {
-        "expected_margin_D": 12.54,
+        "expected_margin_D": 13.03,
         "pvi": 2.53,
-        "win_prob_D": 0.9902
+        "win_prob_D": 0.9924
       },
       "MS": {
-        "expected_margin_D": -15.07,
+        "expected_margin_D": -14.58,
         "pvi": -10.78,
-        "win_prob_D": 0.0025
+        "win_prob_D": 0.0033
       },
       "MT": {
-        "expected_margin_D": -7.79,
+        "expected_margin_D": -7.3,
         "pvi": -9.82,
-        "win_prob_D": 0.0735
+        "win_prob_D": 0.087
       },
       "NC": {
-        "expected_margin_D": 6.07,
+        "expected_margin_D": 6.56,
         "pvi": -1.4,
-        "win_prob_D": 0.8709
+        "win_prob_D": 0.889
       },
       "NE": {
-        "expected_margin_D": -14.23,
+        "expected_margin_D": -13.74,
         "pvi": -10.27,
-        "win_prob_D": 0.004
+        "win_prob_D": 0.0052
       },
       "NH": {
-        "expected_margin_D": 11.65,
+        "expected_margin_D": 12.14,
         "pvi": 1.99,
-        "win_prob_D": 0.985
+        "win_prob_D": 0.9881
       },
       "NJ": {
-        "expected_margin_D": 21.11,
+        "expected_margin_D": 21.59,
         "pvi": 4.27,
         "win_prob_D": 1.0
       },
       "NM": {
-        "expected_margin_D": 20.13,
+        "expected_margin_D": 20.62,
         "pvi": 3.68,
         "win_prob_D": 0.9999
       },
       "OH": {
-        "expected_margin_D": -6.0,
+        "expected_margin_D": -5.51,
         "pvi": -5.27,
-        "win_prob_D": 0.132
+        "win_prob_D": 0.1524
       },
       "OK": {
-        "expected_margin_D": -20.16,
+        "expected_margin_D": -19.68,
         "pvi": -17.34,
         "win_prob_D": 0.0001
       },
       "OR": {
-        "expected_margin_D": 26.67,
+        "expected_margin_D": 27.15,
         "pvi": 7.65,
         "win_prob_D": 1.0
       },
       "RI": {
-        "expected_margin_D": 27.18,
+        "expected_margin_D": 27.67,
         "pvi": 7.96,
         "win_prob_D": 1.0
       },
       "SC": {
-        "expected_margin_D": -10.95,
+        "expected_margin_D": -10.47,
         "pvi": -8.28,
-        "win_prob_D": 0.0207
+        "win_prob_D": 0.0257
       },
       "SD": {
-        "expected_margin_D": -21.31,
+        "expected_margin_D": -20.82,
         "pvi": -14.57,
-        "win_prob_D": 0.0
+        "win_prob_D": 0.0001
       },
       "TN": {
-        "expected_margin_D": -20.79,
+        "expected_margin_D": -20.31,
         "pvi": -14.26,
         "win_prob_D": 0.0001
       },
       "TX": {
-        "expected_margin_D": -1.37,
+        "expected_margin_D": -0.88,
         "pvi": -5.92,
-        "win_prob_D": 0.3995
+        "win_prob_D": 0.4348
       },
       "VA": {
-        "expected_margin_D": 19.82,
+        "expected_margin_D": 20.31,
         "pvi": 3.49,
         "win_prob_D": 0.9999
       },
       "WV": {
-        "expected_margin_D": -31.82,
+        "expected_margin_D": -31.34,
         "pvi": -20.96,
         "win_prob_D": 0.0
       },
       "WY": {
-        "expected_margin_D": -29.86,
+        "expected_margin_D": -29.37,
         "pvi": -23.23,
         "win_prob_D": 0.0
       }
     },
     "holdover_D_assumed": 34,
-    "prob_D_50_plus": 0.5671,
-    "prob_D_51_plus": 0.326,
+    "prob_D_50_plus": 0.6085,
+    "prob_D_51_plus": 0.3666,
     "prob_D_50_plus_sensitivity": {
-      "33": 0.326,
-      "34": 0.5671,
-      "35": 0.8444
+      "33": 0.3666,
+      "34": 0.6085,
+      "35": 0.8705
     },
     "NOTE_holdover": "prob_D_50_plus depends on holdover_D, which is an ASSUMPTION passed in, not something derived from the archive. 50+ is stated rather than 'majority' because control at 50 turns on the vice-presidency."
   },
