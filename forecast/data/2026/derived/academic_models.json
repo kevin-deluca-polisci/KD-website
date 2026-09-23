@@ -1,7 +1,7 @@
 {
   "cycle": 2026,
-  "snapshot_date": "2026-09-22",
-  "days_to_election": 42,
+  "snapshot_date": "2026-09-23",
+  "days_to_election": 41,
   "category": "academic",
   "publication": "individual",
   "models": {
@@ -16,14 +16,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 6.09,
-      "margin_D_80_low": 2.06,
-      "margin_D_80_high": 10.11,
+      "margin_D": 6.1,
+      "margin_D_80_low": 2.08,
+      "margin_D_80_high": 10.12,
       "inputs": {
-        "generic_ballot_D": 8.933,
-        "generic_ballot_share_deviation": 4.466,
+        "generic_ballot_D": 8.957,
+        "generic_ballot_share_deviation": 4.479,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
-        "days_to_election": 42,
+        "days_to_election": 41,
         "president_party": "R",
         "pres_party_coded": -1
       },
@@ -42,8 +42,8 @@
           "constant": 1.03,
           "root_mse": 3.3
         },
-        "bew_direct_D_seat_share": 57.09,
-        "bew_direct_D_seats": 248.3
+        "bew_direct_D_seat_share": 57.1,
+        "bew_direct_D_seats": 248.4
       },
       "notes": [
         "tide is BEW's vote equation; their separate seats equation is reported as a diagnostic and is not used downstream"
@@ -60,14 +60,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": true,
-      "margin_D": 8.41,
-      "margin_D_80_low": 0.25,
-      "margin_D_80_high": 16.56,
+      "margin_D": 8.45,
+      "margin_D_80_low": 0.3,
+      "margin_D_80_high": 16.6,
       "inputs": {
-        "approval": 34.1,
-        "approval_source": "mean of 5 adults-sample approval poll(s) in the 14 days to 2026-09-22. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
+        "approval": 33.25,
+        "approval_source": "mean of 6 adults-sample approval poll(s) in the 14 days to 2026-09-23. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
         "income_growth": -0.039,
-        "income_source": "FRED income_growth_ytd as of 2026-09-22, 7 month(s) of the year in hand"
+        "income_source": "FRED income_growth_ytd as of 2026-09-23, 7 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
@@ -78,7 +78,7 @@
         "r2": 0.273,
         "loeo_rmse": 3.18,
         "fitted_on": "20 midterms, 1946-2022",
-        "pres_party_two_party_vote": 45.8,
+        "pres_party_two_party_vote": 45.78,
         "benchmark": {
           "claim": "Republicans lose about 28 House seats and the House",
           "authors": "Charles Tien and Michael S. Lewis-Beck",
@@ -102,9 +102,9 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 15.82,
-      "margin_D_80_low": 9.12,
-      "margin_D_80_high": 22.52,
+      "margin_D": 15.1,
+      "margin_D_80_low": 7.9,
+      "margin_D_80_high": 22.26,
       "inputs": {
         "pct_expect_worse": 37.0,
         "pct_expect_worse_source": "University of Michigan Surveys of Consumers, Table 8, WORSE OFF row, monthly, 2026-06 (carried forward from 2026-06)",
@@ -112,7 +112,7 @@
         "year_direction": -1,
         "year_direction_label": "a bad year for the president's party \u2014 the midterm rule",
         "seats_before": 220,
-        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-09-22 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
+        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-09-23 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
         "spec_date_reached": true,
         "outside_fitted_range": true
       },
@@ -198,7 +198,7 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 2.97,
+      "margin_D": 1.05,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
@@ -209,7 +209,7 @@
         "dem_governors": 24,
         "strong_gop_senate_states": 14,
         "dem_senate_retirements": 4,
-        "structural_source": "4 Democratic Senate retirement(s) known by 2026-09-22 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
+        "structural_source": "4 Democratic Senate retirement(s) known by 2026-09-23 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
         "spec_date_reached": true
       },
       "diagnostics": {
@@ -245,7 +245,7 @@
           "out_of_sample_mae": 2.7,
           "calls_control": "72%"
         },
-        "inversion_extrapolated": false,
+        "inversion_extrapolated": true,
         "benchmark": {
           "claim": "Democrats lose Senate control with a net loss of three seats; House a knife-edge race at 215 D seats",
           "authors": "Lewis-Beck & Quinlan",
@@ -255,7 +255,8 @@
       },
       "notes": [
         "forecasts SEAT COUNTS directly from institutional facts \u2014 no polls, no economy, no popularity. The margin shown is our seat curve run backwards from its House number, not theirs",
-        "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it"
+        "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it",
+        "the House number falls outside today's range of tides, so the inversion is extrapolated"
       ]
     }
   },
