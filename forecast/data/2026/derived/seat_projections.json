@@ -3292,195 +3292,195 @@
       "as_of": "2026-09-25"
     },
     "academic_economic_pessimism": {
-      "tide_D": 15.07,
+      "tide_D": 15.06,
       "senate": {
         "n_races": 35,
-        "expected_D_seats_up": 19.51,
+        "expected_D_seats_up": 19.5,
         "D_seats_up_80pct": [
           15,
           24
         ],
-        "expected_D_total": 53.51,
+        "expected_D_total": 53.5,
         "D_total_80pct": [
           49,
           58
         ],
-        "prob_D_50_plus": 0.8781,
-        "prob_D_51_plus": 0.7726
+        "prob_D_50_plus": 0.8783,
+        "prob_D_51_plus": 0.7725
       },
       "races": {
         "AK": {
-          "expected_margin_D": -1.25,
+          "expected_margin_D": -1.26,
           "pvi": -6.45,
-          "win_prob_D": 0.4082
+          "win_prob_D": 0.4075
         },
         "AL": {
-          "expected_margin_D": -9.31,
+          "expected_margin_D": -9.32,
           "pvi": -14.81,
-          "win_prob_D": 0.0415
+          "win_prob_D": 0.0414
         },
         "AR": {
-          "expected_margin_D": -15.83,
+          "expected_margin_D": -15.84,
           "pvi": -15.31,
           "win_prob_D": 0.0016
         },
         "CO": {
-          "expected_margin_D": 30.6,
+          "expected_margin_D": 30.59,
           "pvi": 5.97,
           "win_prob_D": 1.0
         },
         "DE": {
-          "expected_margin_D": 33.95,
+          "expected_margin_D": 33.94,
           "pvi": 8.01,
           "win_prob_D": 1.0
         },
         "FL": {
-          "expected_margin_D": 0.5,
+          "expected_margin_D": 0.49,
           "pvi": -5.39,
-          "win_prob_D": 0.5369
+          "win_prob_D": 0.5362
         },
         "GA": {
-          "expected_margin_D": 19.45,
+          "expected_margin_D": 19.44,
           "pvi": -0.8,
           "win_prob_D": 0.9999
         },
         "IA": {
-          "expected_margin_D": 5.05,
+          "expected_margin_D": 5.04,
           "pvi": -6.09,
-          "win_prob_D": 0.8263
+          "win_prob_D": 0.8258
         },
         "ID": {
-          "expected_margin_D": -20.32,
+          "expected_margin_D": -20.33,
           "pvi": -18.04,
           "win_prob_D": 0.0001
         },
         "IL": {
-          "expected_margin_D": 25.51,
+          "expected_margin_D": 25.5,
           "pvi": 6.34,
           "win_prob_D": 1.0
         },
         "KS": {
-          "expected_margin_D": -3.85,
+          "expected_margin_D": -3.86,
           "pvi": -8.03,
-          "win_prob_D": 0.2369
+          "win_prob_D": 0.2363
         },
         "KY": {
-          "expected_margin_D": -9.52,
+          "expected_margin_D": -9.53,
           "pvi": -14.94,
-          "win_prob_D": 0.0381
+          "win_prob_D": 0.038
         },
         "LA": {
-          "expected_margin_D": -8.32,
+          "expected_margin_D": -8.33,
           "pvi": -10.75,
-          "win_prob_D": 0.0605
+          "win_prob_D": 0.0603
         },
         "MA": {
-          "expected_margin_D": 43.8,
+          "expected_margin_D": 43.79,
           "pvi": 13.99,
           "win_prob_D": 1.0
         },
         "ME": {
-          "expected_margin_D": 15.66,
+          "expected_margin_D": 15.65,
           "pvi": 3.82,
           "win_prob_D": 0.9982
         },
         "MI": {
-          "expected_margin_D": 14.76,
+          "expected_margin_D": 14.75,
           "pvi": -0.19,
           "win_prob_D": 0.997
         },
         "MN": {
-          "expected_margin_D": 19.23,
+          "expected_margin_D": 19.22,
           "pvi": 2.53,
           "win_prob_D": 0.9998
         },
         "MS": {
-          "expected_margin_D": -8.37,
+          "expected_margin_D": -8.38,
           "pvi": -10.78,
-          "win_prob_D": 0.0595
+          "win_prob_D": 0.0592
         },
         "MT": {
-          "expected_margin_D": -1.09,
+          "expected_margin_D": -1.1,
           "pvi": -9.82,
-          "win_prob_D": 0.4193
+          "win_prob_D": 0.4186
         },
         "NC": {
-          "expected_margin_D": 12.77,
+          "expected_margin_D": 12.76,
           "pvi": -1.4,
-          "win_prob_D": 0.9913
+          "win_prob_D": 0.9912
         },
         "NE": {
-          "expected_margin_D": -7.53,
+          "expected_margin_D": -7.54,
           "pvi": -10.27,
-          "win_prob_D": 0.0803
+          "win_prob_D": 0.08
         },
         "NH": {
-          "expected_margin_D": 18.35,
+          "expected_margin_D": 18.34,
           "pvi": 1.99,
           "win_prob_D": 0.9997
         },
         "NJ": {
-          "expected_margin_D": 27.8,
+          "expected_margin_D": 27.79,
           "pvi": 4.27,
           "win_prob_D": 1.0
         },
         "NM": {
-          "expected_margin_D": 26.83,
+          "expected_margin_D": 26.82,
           "pvi": 3.68,
           "win_prob_D": 1.0
         },
         "OH": {
-          "expected_margin_D": 0.7,
+          "expected_margin_D": 0.69,
           "pvi": -5.27,
-          "win_prob_D": 0.5515
+          "win_prob_D": 0.5508
         },
         "OK": {
-          "expected_margin_D": -13.47,
+          "expected_margin_D": -13.48,
           "pvi": -17.34,
-          "win_prob_D": 0.0061
+          "win_prob_D": 0.006
         },
         "OR": {
-          "expected_margin_D": 33.36,
+          "expected_margin_D": 33.35,
           "pvi": 7.65,
           "win_prob_D": 1.0
         },
         "RI": {
-          "expected_margin_D": 33.87,
+          "expected_margin_D": 33.86,
           "pvi": 7.96,
           "win_prob_D": 1.0
         },
         "SC": {
-          "expected_margin_D": -4.26,
+          "expected_margin_D": -4.27,
           "pvi": -8.28,
-          "win_prob_D": 0.2139
+          "win_prob_D": 0.2133
         },
         "SD": {
-          "expected_margin_D": -14.61,
+          "expected_margin_D": -14.62,
           "pvi": -14.57,
-          "win_prob_D": 0.0033
+          "win_prob_D": 0.0032
         },
         "TN": {
-          "expected_margin_D": -14.1,
+          "expected_margin_D": -14.11,
           "pvi": -14.26,
           "win_prob_D": 0.0043
         },
         "TX": {
-          "expected_margin_D": 5.33,
+          "expected_margin_D": 5.32,
           "pvi": -5.92,
-          "win_prob_D": 0.8393
+          "win_prob_D": 0.8389
         },
         "VA": {
-          "expected_margin_D": 26.51,
+          "expected_margin_D": 26.5,
           "pvi": 3.49,
           "win_prob_D": 1.0
         },
         "WV": {
-          "expected_margin_D": -25.13,
+          "expected_margin_D": -25.14,
           "pvi": -20.96,
           "win_prob_D": 0.0
         },
         "WY": {
-          "expected_margin_D": -23.17,
+          "expected_margin_D": -23.18,
           "pvi": -23.23,
           "win_prob_D": 0.0
         }
@@ -3488,19 +3488,19 @@
       "house": {
         "map_vintage": "mixed as of 2026-09-25: MO reverted to previous lines",
         "n_districts": 435,
-        "expected_D_seats": 265.0,
+        "expected_D_seats": 264.95,
         "D_seats_80pct": [
           235,
           298
         ],
-        "prob_D_majority": 0.9863,
+        "prob_D_majority": 0.9864,
         "majority_at": 218,
         "pvi_source": "dra",
         "sigma_source": "house-calibrated on 768 district-cycles [2022, 2024], baseline dra, with_incumbency",
-        "sigma_national": 5.575062421972534,
+        "sigma_national": 5.563358302122347,
         "sigma_state": 3.39,
         "sigma_district": 13.39,
-        "sigma_total": 14.9,
+        "sigma_total": 14.89,
         "baseline_detail": {
           "ok": true,
           "n_current": 435,
@@ -3522,3046 +3522,3046 @@
           "race_id": "HOU_CA_12_2026",
           "state": "CA",
           "district": "12",
-          "expected_margin_D": 80.79,
+          "expected_margin_D": 80.78,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_MD_04_2026",
           "state": "MD",
           "district": "04",
-          "expected_margin_D": 80.19,
+          "expected_margin_D": 80.18,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NY_15_2026",
           "state": "NY",
           "district": "15",
-          "expected_margin_D": 77.1,
+          "expected_margin_D": 77.09,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_GA_05_2026",
           "state": "GA",
           "district": "05",
-          "expected_margin_D": 76.54,
+          "expected_margin_D": 76.53,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_WA_07_2026",
           "state": "WA",
           "district": "07",
-          "expected_margin_D": 75.9,
+          "expected_margin_D": 75.89,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_37_2026",
           "state": "CA",
           "district": "37",
-          "expected_margin_D": 73.03,
+          "expected_margin_D": 73.02,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NJ_10_2026",
           "state": "NJ",
           "district": "10",
-          "expected_margin_D": 71.53,
+          "expected_margin_D": 71.52,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_MA_07_2026",
           "state": "MA",
           "district": "07",
-          "expected_margin_D": 71.49,
+          "expected_margin_D": 71.48,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_TX_18_2026",
           "state": "TX",
           "district": "18",
-          "expected_margin_D": 71.17,
+          "expected_margin_D": 71.16,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_PA_03_2026",
           "state": "PA",
           "district": "03",
-          "expected_margin_D": 70.13,
+          "expected_margin_D": 70.12,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_MN_05_2026",
           "state": "MN",
           "district": "05",
-          "expected_margin_D": 69.43,
+          "expected_margin_D": 69.42,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_TX_37_2026",
           "state": "TX",
           "district": "37",
-          "expected_margin_D": 69.35,
+          "expected_margin_D": 69.34,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NY_13_2026",
           "state": "NY",
           "district": "13",
-          "expected_margin_D": 69.08,
+          "expected_margin_D": 69.07,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NY_05_2026",
           "state": "NY",
           "district": "05",
-          "expected_margin_D": 68.55,
+          "expected_margin_D": 68.54,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_34_2026",
           "state": "CA",
           "district": "34",
-          "expected_margin_D": 67.69,
+          "expected_margin_D": 67.68,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_MO_01_2026",
           "state": "MO",
           "district": "01",
-          "expected_margin_D": 66.29,
+          "expected_margin_D": 66.28,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_MD_07_2026",
           "state": "MD",
           "district": "07",
-          "expected_margin_D": 66.18,
+          "expected_margin_D": 66.17,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_GA_04_2026",
           "state": "GA",
           "district": "04",
-          "expected_margin_D": 65.34,
+          "expected_margin_D": 65.33,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NY_08_2026",
           "state": "NY",
           "district": "08",
-          "expected_margin_D": 65.17,
+          "expected_margin_D": 65.16,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_43_2026",
           "state": "CA",
           "district": "43",
-          "expected_margin_D": 64.96,
+          "expected_margin_D": 64.95,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NY_14_2026",
           "state": "NY",
           "district": "14",
-          "expected_margin_D": 64.81,
+          "expected_margin_D": 64.8,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NJ_08_2026",
           "state": "NJ",
           "district": "08",
-          "expected_margin_D": 64.06,
+          "expected_margin_D": 64.05,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_OH_11_2026",
           "state": "OH",
           "district": "11",
-          "expected_margin_D": 63.69,
+          "expected_margin_D": 63.68,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NY_09_2026",
           "state": "NY",
           "district": "09",
-          "expected_margin_D": 63.2,
+          "expected_margin_D": 63.19,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_IL_07_2026",
           "state": "IL",
           "district": "07",
-          "expected_margin_D": 63.04,
+          "expected_margin_D": 63.03,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_VA_08_2026",
           "state": "VA",
           "district": "08",
-          "expected_margin_D": 62.96,
+          "expected_margin_D": 62.95,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_MD_08_2026",
           "state": "MD",
           "district": "08",
-          "expected_margin_D": 62.85,
+          "expected_margin_D": 62.84,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_MI_13_2026",
           "state": "MI",
           "district": "13",
-          "expected_margin_D": 62.63,
+          "expected_margin_D": 62.62,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_11_2026",
           "state": "CA",
           "district": "11",
-          "expected_margin_D": 62.06,
+          "expected_margin_D": 62.05,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_AZ_03_2026",
           "state": "AZ",
           "district": "03",
-          "expected_margin_D": 61.96,
+          "expected_margin_D": 61.95,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NY_10_2026",
           "state": "NY",
           "district": "10",
-          "expected_margin_D": 61.94,
+          "expected_margin_D": 61.93,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_15_2026",
           "state": "CA",
           "district": "15",
-          "expected_margin_D": 61.89,
+          "expected_margin_D": 61.88,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NC_12_2026",
           "state": "NC",
           "district": "12",
-          "expected_margin_D": 61.83,
+          "expected_margin_D": 61.82,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_PA_02_2026",
           "state": "PA",
           "district": "02",
-          "expected_margin_D": 61.32,
+          "expected_margin_D": 61.31,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_MI_12_2026",
           "state": "MI",
           "district": "12",
-          "expected_margin_D": 61.16,
+          "expected_margin_D": 61.15,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_WI_04_2026",
           "state": "WI",
           "district": "04",
-          "expected_margin_D": 61.16,
+          "expected_margin_D": 61.15,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_LA_02_2026",
           "state": "LA",
           "district": "02",
-          "expected_margin_D": 60.76,
+          "expected_margin_D": 60.75,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NC_04_2026",
           "state": "NC",
           "district": "04",
-          "expected_margin_D": 60.27,
+          "expected_margin_D": 60.26,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NY_12_2026",
           "state": "NY",
           "district": "12",
-          "expected_margin_D": 59.91,
+          "expected_margin_D": 59.9,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_GA_06_2026",
           "state": "GA",
           "district": "06",
-          "expected_margin_D": 59.36,
+          "expected_margin_D": 59.35,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_OR_03_2026",
           "state": "OR",
           "district": "03",
-          "expected_margin_D": 59.19,
+          "expected_margin_D": 59.18,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_16_2026",
           "state": "CA",
           "district": "16",
-          "expected_margin_D": 59.14,
+          "expected_margin_D": 59.13,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_FL_24_2026",
           "state": "FL",
           "district": "24",
-          "expected_margin_D": 58.83,
+          "expected_margin_D": 58.82,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_IL_01_2026",
           "state": "IL",
           "district": "01",
-          "expected_margin_D": 58.49,
+          "expected_margin_D": 58.48,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_TX_29_2026",
           "state": "TX",
           "district": "29",
-          "expected_margin_D": 58.24,
+          "expected_margin_D": 58.23,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_30_2026",
           "state": "CA",
           "district": "30",
-          "expected_margin_D": 57.87,
+          "expected_margin_D": 57.86,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_NY_07_2026",
           "state": "NY",
           "district": "07",
-          "expected_margin_D": 57.15,
+          "expected_margin_D": 57.14,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_44_2026",
           "state": "CA",
           "district": "44",
-          "expected_margin_D": 56.42,
+          "expected_margin_D": 56.41,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_29_2026",
           "state": "CA",
           "district": "29",
-          "expected_margin_D": 55.86,
+          "expected_margin_D": 55.85,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_WA_09_2026",
           "state": "WA",
           "district": "09",
-          "expected_margin_D": 55.85,
+          "expected_margin_D": 55.84,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_IL_03_2026",
           "state": "IL",
           "district": "03",
-          "expected_margin_D": 55.73,
+          "expected_margin_D": 55.72,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_WI_02_2026",
           "state": "WI",
           "district": "02",
-          "expected_margin_D": 55.57,
+          "expected_margin_D": 55.56,
           "win_prob_D": 1.0
         },
         {
           "race_id": "HOU_CA_17_2026",
           "state": "CA",
           "district": "17",
-          "expected_margin_D": 55.48,
+          "expected_margin_D": 55.47,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_FL_20_2026",
           "state": "FL",
           "district": "20",
-          "expected_margin_D": 54.62,
+          "expected_margin_D": 54.61,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_TX_20_2026",
           "state": "TX",
           "district": "20",
-          "expected_margin_D": 54.59,
+          "expected_margin_D": 54.58,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_TX_16_2026",
           "state": "TX",
           "district": "16",
-          "expected_margin_D": 54.27,
+          "expected_margin_D": 54.26,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_IN_07_2026",
           "state": "IN",
           "district": "07",
-          "expected_margin_D": 54.06,
+          "expected_margin_D": 54.05,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_GA_13_2026",
           "state": "GA",
           "district": "13",
-          "expected_margin_D": 54.01,
+          "expected_margin_D": 54.0,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_NY_16_2026",
           "state": "NY",
           "district": "16",
-          "expected_margin_D": 53.94,
+          "expected_margin_D": 53.93,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_MA_05_2026",
           "state": "MA",
           "district": "05",
-          "expected_margin_D": 53.5,
+          "expected_margin_D": 53.49,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_CO_01_2026",
           "state": "CO",
           "district": "01",
-          "expected_margin_D": 53.34,
+          "expected_margin_D": 53.33,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_OH_03_2026",
           "state": "OH",
           "district": "03",
-          "expected_margin_D": 53.32,
+          "expected_margin_D": 53.31,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_NC_02_2026",
           "state": "NC",
           "district": "02",
-          "expected_margin_D": 53.12,
+          "expected_margin_D": 53.11,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_CA_14_2026",
           "state": "CA",
           "district": "14",
-          "expected_margin_D": 52.73,
+          "expected_margin_D": 52.72,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_CA_36_2026",
           "state": "CA",
           "district": "36",
-          "expected_margin_D": 52.38,
+          "expected_margin_D": 52.37,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_TX_30_2026",
           "state": "TX",
           "district": "30",
-          "expected_margin_D": 52.17,
+          "expected_margin_D": 52.16,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_OR_01_2026",
           "state": "OR",
           "district": "01",
-          "expected_margin_D": 52.14,
+          "expected_margin_D": 52.13,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_VA_11_2026",
           "state": "VA",
           "district": "11",
-          "expected_margin_D": 52.1,
+          "expected_margin_D": 52.09,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_MN_04_2026",
           "state": "MN",
           "district": "04",
-          "expected_margin_D": 52.04,
+          "expected_margin_D": 52.03,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_CA_08_2026",
           "state": "CA",
           "district": "08",
-          "expected_margin_D": 51.89,
+          "expected_margin_D": 51.88,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_HI_01_2026",
           "state": "HI",
           "district": "01",
-          "expected_margin_D": 51.89,
+          "expected_margin_D": 51.88,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_VA_03_2026",
           "state": "VA",
           "district": "03",
-          "expected_margin_D": 51.67,
+          "expected_margin_D": 51.66,
           "win_prob_D": 0.9999
         },
         {
           "race_id": "HOU_HI_02_2026",
           "state": "HI",
           "district": "02",
-          "expected_margin_D": 51.23,
+          "expected_margin_D": 51.22,
           "win_prob_D": 0.9998
         },
         {
           "race_id": "HOU_CO_02_2026",
           "state": "CO",
           "district": "02",
-          "expected_margin_D": 51.04,
+          "expected_margin_D": 51.03,
           "win_prob_D": 0.9998
         },
         {
           "race_id": "HOU_CA_19_2026",
           "state": "CA",
           "district": "19",
-          "expected_margin_D": 50.0,
+          "expected_margin_D": 49.99,
           "win_prob_D": 0.9998
         },
         {
           "race_id": "HOU_VT_01_2026",
           "state": "VT",
           "district": "01",
-          "expected_margin_D": 49.89,
+          "expected_margin_D": 49.88,
           "win_prob_D": 0.9998
         },
         {
           "race_id": "HOU_AZ_07_2026",
           "state": "AZ",
           "district": "07",
-          "expected_margin_D": 49.78,
+          "expected_margin_D": 49.77,
           "win_prob_D": 0.9998
         },
         {
           "race_id": "HOU_IL_05_2026",
           "state": "IL",
           "district": "05",
-          "expected_margin_D": 49.69,
+          "expected_margin_D": 49.68,
           "win_prob_D": 0.9997
         },
         {
           "race_id": "HOU_VA_04_2026",
           "state": "VA",
           "district": "04",
-          "expected_margin_D": 49.46,
+          "expected_margin_D": 49.45,
           "win_prob_D": 0.9997
         },
         {
           "race_id": "HOU_CA_18_2026",
           "state": "CA",
           "district": "18",
-          "expected_margin_D": 49.3,
+          "expected_margin_D": 49.29,
           "win_prob_D": 0.9997
         },
         {
           "race_id": "HOU_RI_01_2026",
           "state": "RI",
           "district": "01",
-          "expected_margin_D": 48.76,
+          "expected_margin_D": 48.75,
           "win_prob_D": 0.9997
         },
         {
           "race_id": "HOU_CA_10_2026",
           "state": "CA",
           "district": "10",
-          "expected_margin_D": 48.61,
+          "expected_margin_D": 48.6,
           "win_prob_D": 0.9997
         },
         {
           "race_id": "HOU_SC_06_2026",
           "state": "SC",
           "district": "06",
-          "expected_margin_D": 48.37,
+          "expected_margin_D": 48.36,
           "win_prob_D": 0.9996
         },
         {
           "race_id": "HOU_PA_05_2026",
           "state": "PA",
           "district": "05",
-          "expected_margin_D": 48.13,
+          "expected_margin_D": 48.12,
           "win_prob_D": 0.9996
         },
         {
           "race_id": "HOU_TX_07_2026",
           "state": "TX",
           "district": "07",
-          "expected_margin_D": 47.54,
+          "expected_margin_D": 47.53,
           "win_prob_D": 0.9996
         },
         {
           "race_id": "HOU_IL_04_2026",
           "state": "IL",
           "district": "04",
-          "expected_margin_D": 46.55,
+          "expected_margin_D": 46.54,
           "win_prob_D": 0.9994
         },
         {
           "race_id": "HOU_MS_02_2026",
           "state": "MS",
           "district": "02",
-          "expected_margin_D": 46.12,
+          "expected_margin_D": 46.11,
           "win_prob_D": 0.9994
         },
         {
           "race_id": "HOU_AL_07_2026",
           "state": "AL",
           "district": "07",
-          "expected_margin_D": 45.88,
+          "expected_margin_D": 45.87,
           "win_prob_D": 0.9993
         },
         {
           "race_id": "HOU_NY_06_2026",
           "state": "NY",
           "district": "06",
-          "expected_margin_D": 45.82,
+          "expected_margin_D": 45.81,
           "win_prob_D": 0.9993
         },
         {
           "race_id": "HOU_CA_32_2026",
           "state": "CA",
           "district": "32",
-          "expected_margin_D": 44.91,
+          "expected_margin_D": 44.9,
           "win_prob_D": 0.9992
         },
         {
           "race_id": "HOU_CA_28_2026",
           "state": "CA",
           "district": "28",
-          "expected_margin_D": 44.7,
+          "expected_margin_D": 44.69,
           "win_prob_D": 0.9991
         },
         {
           "race_id": "HOU_TX_33_2026",
           "state": "TX",
           "district": "33",
-          "expected_margin_D": 44.25,
+          "expected_margin_D": 44.24,
           "win_prob_D": 0.999
         },
         {
           "race_id": "HOU_MO_05_2026",
           "state": "MO",
           "district": "05",
-          "expected_margin_D": 44.23,
+          "expected_margin_D": 44.22,
           "win_prob_D": 0.999
         },
         {
           "race_id": "HOU_PA_12_2026",
           "state": "PA",
           "district": "12",
-          "expected_margin_D": 44.18,
+          "expected_margin_D": 44.17,
           "win_prob_D": 0.999
         },
         {
           "race_id": "HOU_MI_06_2026",
           "state": "MI",
           "district": "06",
-          "expected_margin_D": 44.03,
+          "expected_margin_D": 44.02,
           "win_prob_D": 0.999
         },
         {
           "race_id": "HOU_NJ_01_2026",
           "state": "NJ",
           "district": "01",
-          "expected_margin_D": 43.83,
+          "expected_margin_D": 43.82,
           "win_prob_D": 0.9989
         },
         {
           "race_id": "HOU_CT_01_2026",
           "state": "CT",
           "district": "01",
-          "expected_margin_D": 43.55,
+          "expected_margin_D": 43.54,
           "win_prob_D": 0.9989
         },
         {
           "race_id": "HOU_WA_01_2026",
           "state": "WA",
           "district": "01",
-          "expected_margin_D": 43.37,
+          "expected_margin_D": 43.36,
           "win_prob_D": 0.9988
         },
         {
           "race_id": "HOU_NJ_09_2026",
           "state": "NJ",
           "district": "09",
-          "expected_margin_D": 43.1,
+          "expected_margin_D": 43.09,
           "win_prob_D": 0.9987
         },
         {
           "race_id": "HOU_FL_10_2026",
           "state": "FL",
           "district": "10",
-          "expected_margin_D": 43.08,
+          "expected_margin_D": 43.07,
           "win_prob_D": 0.9987
         },
         {
           "race_id": "HOU_CA_02_2026",
           "state": "CA",
           "district": "02",
-          "expected_margin_D": 42.97,
+          "expected_margin_D": 42.96,
           "win_prob_D": 0.9987
         },
         {
           "race_id": "HOU_TX_28_2026",
           "state": "TX",
           "district": "28",
-          "expected_margin_D": 42.76,
+          "expected_margin_D": 42.75,
           "win_prob_D": 0.9986
         },
         {
           "race_id": "HOU_KY_03_2026",
           "state": "KY",
           "district": "03",
-          "expected_margin_D": 42.74,
+          "expected_margin_D": 42.73,
           "win_prob_D": 0.9986
         },
         {
           "race_id": "HOU_CT_04_2026",
           "state": "CT",
           "district": "04",
-          "expected_margin_D": 42.59,
+          "expected_margin_D": 42.58,
           "win_prob_D": 0.9986
         },
         {
           "race_id": "HOU_IL_02_2026",
           "state": "IL",
           "district": "02",
-          "expected_margin_D": 42.5,
+          "expected_margin_D": 42.49,
           "win_prob_D": 0.9985
         },
         {
           "race_id": "HOU_CA_52_2026",
           "state": "CA",
           "district": "52",
-          "expected_margin_D": 42.37,
+          "expected_margin_D": 42.36,
           "win_prob_D": 0.9985
         },
         {
           "race_id": "HOU_MA_08_2026",
           "state": "MA",
           "district": "08",
-          "expected_margin_D": 42.3,
+          "expected_margin_D": 42.29,
           "win_prob_D": 0.9985
         },
         {
           "race_id": "HOU_CA_24_2026",
           "state": "CA",
           "district": "24",
-          "expected_margin_D": 42.18,
+          "expected_margin_D": 42.17,
           "win_prob_D": 0.9984
         },
         {
           "race_id": "HOU_NY_26_2026",
           "state": "NY",
           "district": "26",
-          "expected_margin_D": 42.07,
+          "expected_margin_D": 42.06,
           "win_prob_D": 0.9984
         },
         {
           "race_id": "HOU_MA_02_2026",
           "state": "MA",
           "district": "02",
-          "expected_margin_D": 40.09,
+          "expected_margin_D": 40.08,
           "win_prob_D": 0.9975
         },
         {
           "race_id": "HOU_IL_09_2026",
           "state": "IL",
           "district": "09",
-          "expected_margin_D": 40.06,
+          "expected_margin_D": 40.05,
           "win_prob_D": 0.9975
         },
         {
           "race_id": "HOU_CA_46_2026",
           "state": "CA",
           "district": "46",
-          "expected_margin_D": 39.64,
+          "expected_margin_D": 39.63,
           "win_prob_D": 0.9972
         },
         {
           "race_id": "HOU_NJ_06_2026",
           "state": "NJ",
           "district": "06",
-          "expected_margin_D": 39.61,
+          "expected_margin_D": 39.6,
           "win_prob_D": 0.9972
         },
         {
           "race_id": "HOU_PA_04_2026",
           "state": "PA",
           "district": "04",
-          "expected_margin_D": 39.61,
+          "expected_margin_D": 39.6,
           "win_prob_D": 0.9972
         },
         {
           "race_id": "HOU_WA_02_2026",
           "state": "WA",
           "district": "02",
-          "expected_margin_D": 39.4,
+          "expected_margin_D": 39.39,
           "win_prob_D": 0.9971
         },
         {
           "race_id": "HOU_CT_03_2026",
           "state": "CT",
           "district": "03",
-          "expected_margin_D": 39.28,
+          "expected_margin_D": 39.27,
           "win_prob_D": 0.997
         },
         {
           "race_id": "HOU_CA_51_2026",
           "state": "CA",
           "district": "51",
-          "expected_margin_D": 38.91,
+          "expected_margin_D": 38.9,
           "win_prob_D": 0.9968
         },
         {
           "race_id": "HOU_MA_04_2026",
           "state": "MA",
           "district": "04",
-          "expected_margin_D": 38.73,
+          "expected_margin_D": 38.72,
           "win_prob_D": 0.9967
         },
         {
           "race_id": "HOU_CO_06_2026",
           "state": "CO",
           "district": "06",
-          "expected_margin_D": 38.28,
+          "expected_margin_D": 38.27,
           "win_prob_D": 0.9963
         },
         {
           "race_id": "HOU_IL_10_2026",
           "state": "IL",
           "district": "10",
-          "expected_margin_D": 38.23,
+          "expected_margin_D": 38.22,
           "win_prob_D": 0.9963
         },
         {
           "race_id": "HOU_MN_03_2026",
           "state": "MN",
           "district": "03",
-          "expected_margin_D": 38.23,
+          "expected_margin_D": 38.22,
           "win_prob_D": 0.9963
         },
         {
           "race_id": "HOU_MA_03_2026",
           "state": "MA",
           "district": "03",
-          "expected_margin_D": 37.95,
+          "expected_margin_D": 37.94,
           "win_prob_D": 0.9961
         },
         {
           "race_id": "HOU_DE_01_2026",
           "state": "DE",
           "district": "01",
-          "expected_margin_D": 37.87,
+          "expected_margin_D": 37.86,
           "win_prob_D": 0.996
         },
         {
           "race_id": "HOU_FL_23_2026",
           "state": "FL",
           "district": "23",
-          "expected_margin_D": 37.77,
+          "expected_margin_D": 37.76,
           "win_prob_D": 0.9959
         },
         {
           "race_id": "HOU_RI_02_2026",
           "state": "RI",
           "district": "02",
-          "expected_margin_D": 37.74,
+          "expected_margin_D": 37.73,
           "win_prob_D": 0.9959
         },
         {
           "race_id": "HOU_CA_09_2026",
           "state": "CA",
           "district": "09",
-          "expected_margin_D": 37.68,
+          "expected_margin_D": 37.67,
           "win_prob_D": 0.9958
         },
         {
           "race_id": "HOU_IN_01_2026",
           "state": "IN",
           "district": "01",
-          "expected_margin_D": 37.48,
+          "expected_margin_D": 37.47,
           "win_prob_D": 0.9957
         },
         {
           "race_id": "HOU_CA_41_2026",
           "state": "CA",
           "district": "41",
-          "expected_margin_D": 37.19,
+          "expected_margin_D": 37.18,
           "win_prob_D": 0.9954
         },
         {
           "race_id": "HOU_NY_25_2026",
           "state": "NY",
           "district": "25",
-          "expected_margin_D": 37.16,
+          "expected_margin_D": 37.15,
           "win_prob_D": 0.9954
         },
         {
           "race_id": "HOU_CA_50_2026",
           "state": "CA",
           "district": "50",
-          "expected_margin_D": 36.96,
+          "expected_margin_D": 36.95,
           "win_prob_D": 0.9952
         },
         {
           "race_id": "HOU_CA_04_2026",
           "state": "CA",
           "district": "04",
-          "expected_margin_D": 36.53,
+          "expected_margin_D": 36.52,
           "win_prob_D": 0.9947
         },
         {
           "race_id": "HOU_CA_31_2026",
           "state": "CA",
           "district": "31",
-          "expected_margin_D": 36.45,
-          "win_prob_D": 0.9947
+          "expected_margin_D": 36.44,
+          "win_prob_D": 0.9946
         },
         {
           "race_id": "HOU_CA_33_2026",
           "state": "CA",
           "district": "33",
-          "expected_margin_D": 36.43,
+          "expected_margin_D": 36.42,
           "win_prob_D": 0.9946
         },
         {
           "race_id": "HOU_NY_20_2026",
           "state": "NY",
           "district": "20",
-          "expected_margin_D": 36.4,
+          "expected_margin_D": 36.39,
           "win_prob_D": 0.9946
         },
         {
           "race_id": "HOU_WA_10_2026",
           "state": "WA",
           "district": "10",
-          "expected_margin_D": 36.26,
+          "expected_margin_D": 36.25,
           "win_prob_D": 0.9944
         },
         {
           "race_id": "HOU_NM_03_2026",
           "state": "NM",
           "district": "03",
-          "expected_margin_D": 36.07,
+          "expected_margin_D": 36.06,
           "win_prob_D": 0.9942
         },
         {
           "race_id": "HOU_CA_39_2026",
           "state": "CA",
           "district": "39",
-          "expected_margin_D": 36.05,
+          "expected_margin_D": 36.04,
           "win_prob_D": 0.9942
         },
         {
           "race_id": "HOU_MA_01_2026",
           "state": "MA",
           "district": "01",
-          "expected_margin_D": 36.03,
+          "expected_margin_D": 36.02,
           "win_prob_D": 0.9942
         },
         {
           "race_id": "HOU_ME_01_2026",
           "state": "ME",
           "district": "01",
-          "expected_margin_D": 35.93,
+          "expected_margin_D": 35.92,
           "win_prob_D": 0.9941
         },
         {
           "race_id": "HOU_WA_06_2026",
           "state": "WA",
           "district": "06",
-          "expected_margin_D": 35.93,
+          "expected_margin_D": 35.92,
           "win_prob_D": 0.9941
         },
         {
           "race_id": "HOU_NJ_11_2026",
           "state": "NJ",
           "district": "11",
-          "expected_margin_D": 35.74,
+          "expected_margin_D": 35.73,
           "win_prob_D": 0.9938
         },
         {
           "race_id": "HOU_NM_01_2026",
           "state": "NM",
           "district": "01",
-          "expected_margin_D": 35.72,
+          "expected_margin_D": 35.71,
           "win_prob_D": 0.9938
         },
         {
           "race_id": "HOU_PA_06_2026",
           "state": "PA",
           "district": "06",
-          "expected_margin_D": 35.23,
+          "expected_margin_D": 35.22,
           "win_prob_D": 0.9932
         },
         {
           "race_id": "HOU_OR_04_2026",
           "state": "OR",
           "district": "04",
-          "expected_margin_D": 35.15,
+          "expected_margin_D": 35.14,
           "win_prob_D": 0.9931
         },
         {
           "race_id": "HOU_VA_10_2026",
           "state": "VA",
           "district": "10",
-          "expected_margin_D": 35.12,
+          "expected_margin_D": 35.11,
           "win_prob_D": 0.993
         },
         {
           "race_id": "HOU_IL_13_2026",
           "state": "IL",
           "district": "13",
-          "expected_margin_D": 34.97,
+          "expected_margin_D": 34.96,
           "win_prob_D": 0.9928
         },
         {
           "race_id": "HOU_CA_07_2026",
           "state": "CA",
           "district": "07",
-          "expected_margin_D": 34.83,
+          "expected_margin_D": 34.82,
           "win_prob_D": 0.9926
         },
         {
           "race_id": "HOU_CA_42_2026",
           "state": "CA",
           "district": "42",
-          "expected_margin_D": 34.51,
+          "expected_margin_D": 34.5,
           "win_prob_D": 0.9922
         },
         {
           "race_id": "HOU_CA_35_2026",
           "state": "CA",
           "district": "35",
-          "expected_margin_D": 34.49,
+          "expected_margin_D": 34.48,
           "win_prob_D": 0.9921
         },
         {
           "race_id": "HOU_NJ_12_2026",
           "state": "NJ",
           "district": "12",
-          "expected_margin_D": 34.44,
-          "win_prob_D": 0.9921
+          "expected_margin_D": 34.43,
+          "win_prob_D": 0.992
         },
         {
           "race_id": "HOU_NV_04_2026",
           "state": "NV",
           "district": "04",
-          "expected_margin_D": 34.23,
+          "expected_margin_D": 34.22,
           "win_prob_D": 0.9917
         },
         {
           "race_id": "HOU_CA_27_2026",
           "state": "CA",
           "district": "27",
-          "expected_margin_D": 34.14,
+          "expected_margin_D": 34.13,
           "win_prob_D": 0.9916
         },
         {
           "race_id": "HOU_MD_03_2026",
           "state": "MD",
           "district": "03",
-          "expected_margin_D": 34.05,
+          "expected_margin_D": 34.04,
           "win_prob_D": 0.9914
         },
         {
           "race_id": "HOU_NV_01_2026",
           "state": "NV",
           "district": "01",
-          "expected_margin_D": 34.05,
+          "expected_margin_D": 34.04,
           "win_prob_D": 0.9914
         },
         {
           "race_id": "HOU_OR_06_2026",
           "state": "OR",
           "district": "06",
-          "expected_margin_D": 33.77,
+          "expected_margin_D": 33.76,
           "win_prob_D": 0.991
         },
         {
           "race_id": "HOU_NJ_03_2026",
           "state": "NJ",
           "district": "03",
-          "expected_margin_D": 33.67,
+          "expected_margin_D": 33.66,
           "win_prob_D": 0.9908
         },
         {
           "race_id": "HOU_IL_14_2026",
           "state": "IL",
           "district": "14",
-          "expected_margin_D": 33.65,
+          "expected_margin_D": 33.64,
           "win_prob_D": 0.9908
         },
         {
           "race_id": "HOU_PA_17_2026",
           "state": "PA",
           "district": "17",
-          "expected_margin_D": 33.58,
-          "win_prob_D": 0.9907
+          "expected_margin_D": 33.57,
+          "win_prob_D": 0.9906
         },
         {
           "race_id": "HOU_NJ_05_2026",
           "state": "NJ",
           "district": "05",
-          "expected_margin_D": 33.44,
+          "expected_margin_D": 33.43,
           "win_prob_D": 0.9904
         },
         {
           "race_id": "HOU_CA_21_2026",
           "state": "CA",
           "district": "21",
-          "expected_margin_D": 33.08,
+          "expected_margin_D": 33.07,
           "win_prob_D": 0.9897
         },
         {
           "race_id": "HOU_CA_25_2026",
           "state": "CA",
           "district": "25",
-          "expected_margin_D": 32.74,
-          "win_prob_D": 0.9891
+          "expected_margin_D": 32.73,
+          "win_prob_D": 0.989
         },
         {
           "race_id": "HOU_IL_11_2026",
           "state": "IL",
           "district": "11",
-          "expected_margin_D": 32.65,
+          "expected_margin_D": 32.64,
           "win_prob_D": 0.9889
         },
         {
           "race_id": "HOU_MD_02_2026",
           "state": "MD",
           "district": "02",
-          "expected_margin_D": 32.59,
-          "win_prob_D": 0.9888
+          "expected_margin_D": 32.58,
+          "win_prob_D": 0.9887
         },
         {
           "race_id": "HOU_CA_47_2026",
           "state": "CA",
           "district": "47",
-          "expected_margin_D": 32.49,
-          "win_prob_D": 0.9886
+          "expected_margin_D": 32.48,
+          "win_prob_D": 0.9885
         },
         {
           "race_id": "HOU_CA_49_2026",
           "state": "CA",
           "district": "49",
-          "expected_margin_D": 32.48,
+          "expected_margin_D": 32.47,
           "win_prob_D": 0.9885
         },
         {
           "race_id": "HOU_NV_03_2026",
           "state": "NV",
           "district": "03",
-          "expected_margin_D": 32.39,
+          "expected_margin_D": 32.38,
           "win_prob_D": 0.9883
         },
         {
           "race_id": "HOU_NM_02_2026",
           "state": "NM",
           "district": "02",
-          "expected_margin_D": 32.31,
-          "win_prob_D": 0.9882
+          "expected_margin_D": 32.3,
+          "win_prob_D": 0.9881
         },
         {
           "race_id": "HOU_CO_07_2026",
           "state": "CO",
           "district": "07",
-          "expected_margin_D": 32.29,
+          "expected_margin_D": 32.28,
           "win_prob_D": 0.9881
         },
         {
           "race_id": "HOU_IL_06_2026",
           "state": "IL",
           "district": "06",
-          "expected_margin_D": 32.2,
+          "expected_margin_D": 32.19,
           "win_prob_D": 0.9879
         },
         {
           "race_id": "HOU_CT_02_2026",
           "state": "CT",
           "district": "02",
-          "expected_margin_D": 32.17,
-          "win_prob_D": 0.9879
+          "expected_margin_D": 32.16,
+          "win_prob_D": 0.9878
         },
         {
           "race_id": "HOU_GA_02_2026",
           "state": "GA",
           "district": "02",
-          "expected_margin_D": 31.99,
-          "win_prob_D": 0.9875
+          "expected_margin_D": 31.98,
+          "win_prob_D": 0.9874
         },
         {
           "race_id": "HOU_CA_03_2026",
           "state": "CA",
           "district": "03",
-          "expected_margin_D": 31.92,
+          "expected_margin_D": 31.91,
           "win_prob_D": 0.9873
         },
         {
           "race_id": "HOU_NY_04_2026",
           "state": "NY",
           "district": "04",
-          "expected_margin_D": 31.88,
+          "expected_margin_D": 31.87,
           "win_prob_D": 0.9872
         },
         {
           "race_id": "HOU_IL_17_2026",
           "state": "IL",
           "district": "17",
-          "expected_margin_D": 31.71,
+          "expected_margin_D": 31.7,
           "win_prob_D": 0.9868
         },
         {
           "race_id": "HOU_NY_22_2026",
           "state": "NY",
           "district": "22",
-          "expected_margin_D": 31.68,
+          "expected_margin_D": 31.67,
           "win_prob_D": 0.9867
         },
         {
           "race_id": "HOU_CT_05_2026",
           "state": "CT",
           "district": "05",
-          "expected_margin_D": 31.21,
+          "expected_margin_D": 31.2,
           "win_prob_D": 0.9856
         },
         {
           "race_id": "HOU_OR_05_2026",
           "state": "OR",
           "district": "05",
-          "expected_margin_D": 30.94,
-          "win_prob_D": 0.9849
+          "expected_margin_D": 30.93,
+          "win_prob_D": 0.9848
         },
         {
           "race_id": "HOU_AZ_04_2026",
           "state": "AZ",
           "district": "04",
-          "expected_margin_D": 30.81,
+          "expected_margin_D": 30.8,
           "win_prob_D": 0.9845
         },
         {
           "race_id": "HOU_MA_09_2026",
           "state": "MA",
           "district": "09",
-          "expected_margin_D": 30.54,
-          "win_prob_D": 0.9838
+          "expected_margin_D": 30.53,
+          "win_prob_D": 0.9837
         },
         {
           "race_id": "HOU_MD_05_2026",
           "state": "MD",
           "district": "05",
-          "expected_margin_D": 30.5,
-          "win_prob_D": 0.9837
+          "expected_margin_D": 30.49,
+          "win_prob_D": 0.9836
         },
         {
           "race_id": "HOU_NY_18_2026",
           "state": "NY",
           "district": "18",
-          "expected_margin_D": 30.49,
+          "expected_margin_D": 30.48,
           "win_prob_D": 0.9836
         },
         {
           "race_id": "HOU_CA_13_2026",
           "state": "CA",
           "district": "13",
-          "expected_margin_D": 30.4,
-          "win_prob_D": 0.9834
+          "expected_margin_D": 30.39,
+          "win_prob_D": 0.9833
         },
         {
           "race_id": "HOU_TX_34_2026",
           "state": "TX",
           "district": "34",
-          "expected_margin_D": 30.39,
+          "expected_margin_D": 30.38,
           "win_prob_D": 0.9833
         },
         {
           "race_id": "HOU_MI_08_2026",
           "state": "MI",
           "district": "08",
-          "expected_margin_D": 30.0,
-          "win_prob_D": 0.9822
+          "expected_margin_D": 29.99,
+          "win_prob_D": 0.9821
         },
         {
           "race_id": "HOU_NY_03_2026",
           "state": "NY",
           "district": "03",
-          "expected_margin_D": 29.73,
+          "expected_margin_D": 29.72,
           "win_prob_D": 0.9813
         },
         {
           "race_id": "HOU_CA_45_2026",
           "state": "CA",
           "district": "45",
-          "expected_margin_D": 29.52,
+          "expected_margin_D": 29.51,
           "win_prob_D": 0.9806
         },
         {
           "race_id": "HOU_VA_07_2026",
           "state": "VA",
           "district": "07",
-          "expected_margin_D": 29.35,
-          "win_prob_D": 0.9801
+          "expected_margin_D": 29.34,
+          "win_prob_D": 0.98
         },
         {
           "race_id": "HOU_MI_03_2026",
           "state": "MI",
           "district": "03",
-          "expected_margin_D": 29.19,
+          "expected_margin_D": 29.18,
           "win_prob_D": 0.9795
         },
         {
           "race_id": "HOU_OH_13_2026",
           "state": "OH",
           "district": "13",
-          "expected_margin_D": 28.59,
-          "win_prob_D": 0.9774
+          "expected_margin_D": 28.58,
+          "win_prob_D": 0.9773
         },
         {
           "race_id": "HOU_WA_08_2026",
           "state": "WA",
           "district": "08",
-          "expected_margin_D": 27.72,
-          "win_prob_D": 0.9739
+          "expected_margin_D": 27.71,
+          "win_prob_D": 0.9738
         },
         {
           "race_id": "HOU_NY_19_2026",
           "state": "NY",
           "district": "19",
-          "expected_margin_D": 27.59,
+          "expected_margin_D": 27.58,
           "win_prob_D": 0.9733
         },
         {
           "race_id": "HOU_MD_06_2026",
           "state": "MD",
           "district": "06",
-          "expected_margin_D": 27.29,
+          "expected_margin_D": 27.28,
           "win_prob_D": 0.972
         },
         {
           "race_id": "HOU_KS_03_2026",
           "state": "KS",
           "district": "03",
-          "expected_margin_D": 26.68,
+          "expected_margin_D": 26.67,
           "win_prob_D": 0.9691
         },
         {
           "race_id": "HOU_MI_11_2026",
           "state": "MI",
           "district": "11",
-          "expected_margin_D": 26.19,
-          "win_prob_D": 0.9667
+          "expected_margin_D": 26.18,
+          "win_prob_D": 0.9666
         },
         {
           "race_id": "HOU_UT_01_2026",
           "state": "UT",
           "district": "01",
-          "expected_margin_D": 25.11,
-          "win_prob_D": 0.9607
+          "expected_margin_D": 25.1,
+          "win_prob_D": 0.9606
         },
         {
           "race_id": "HOU_CA_38_2026",
           "state": "CA",
           "district": "38",
-          "expected_margin_D": 23.85,
-          "win_prob_D": 0.9526
+          "expected_margin_D": 23.84,
+          "win_prob_D": 0.9525
         },
         {
           "race_id": "HOU_OH_01_2026",
           "state": "OH",
           "district": "01",
-          "expected_margin_D": 23.83,
-          "win_prob_D": 0.9524
+          "expected_margin_D": 23.82,
+          "win_prob_D": 0.9523
         },
         {
           "race_id": "HOU_NH_02_2026",
           "state": "NH",
           "district": "02",
-          "expected_margin_D": 23.45,
-          "win_prob_D": 0.9497
+          "expected_margin_D": 23.44,
+          "win_prob_D": 0.9496
         },
         {
           "race_id": "HOU_MA_06_2026",
           "state": "MA",
           "district": "06",
-          "expected_margin_D": 23.28,
-          "win_prob_D": 0.9485
+          "expected_margin_D": 23.27,
+          "win_prob_D": 0.9484
         },
         {
           "race_id": "HOU_AL_02_2026",
           "state": "AL",
           "district": "02",
-          "expected_margin_D": 23.14,
+          "expected_margin_D": 23.13,
           "win_prob_D": 0.9474
         },
         {
           "race_id": "HOU_CA_26_2026",
           "state": "CA",
           "district": "26",
-          "expected_margin_D": 23.12,
-          "win_prob_D": 0.9473
+          "expected_margin_D": 23.11,
+          "win_prob_D": 0.9472
         },
         {
           "race_id": "HOU_FL_25_2026",
           "state": "FL",
           "district": "25",
-          "expected_margin_D": 23.04,
-          "win_prob_D": 0.9467
+          "expected_margin_D": 23.03,
+          "win_prob_D": 0.9466
         },
         {
           "race_id": "HOU_WA_03_2026",
           "state": "WA",
           "district": "03",
-          "expected_margin_D": 22.8,
-          "win_prob_D": 0.9448
+          "expected_margin_D": 22.79,
+          "win_prob_D": 0.9447
         },
         {
           "race_id": "HOU_IL_08_2026",
           "state": "IL",
           "district": "08",
-          "expected_margin_D": 22.52,
-          "win_prob_D": 0.9426
+          "expected_margin_D": 22.51,
+          "win_prob_D": 0.9425
         },
         {
           "race_id": "HOU_NC_01_2026",
           "state": "NC",
           "district": "01",
-          "expected_margin_D": 22.16,
+          "expected_margin_D": 22.15,
           "win_prob_D": 0.9396
         },
         {
           "race_id": "HOU_OH_09_2026",
           "state": "OH",
           "district": "09",
-          "expected_margin_D": 18.92,
-          "win_prob_D": 0.9074
+          "expected_margin_D": 18.91,
+          "win_prob_D": 0.9073
         },
         {
           "race_id": "HOU_FL_14_2026",
           "state": "FL",
           "district": "14",
-          "expected_margin_D": 18.33,
-          "win_prob_D": 0.9004
+          "expected_margin_D": 18.32,
+          "win_prob_D": 0.9002
         },
         {
           "race_id": "HOU_MN_02_2026",
           "state": "MN",
           "district": "02",
-          "expected_margin_D": 17.61,
-          "win_prob_D": 0.8912
+          "expected_margin_D": 17.6,
+          "win_prob_D": 0.8911
         },
         {
           "race_id": "HOU_CA_48_2026",
           "state": "CA",
           "district": "48",
-          "expected_margin_D": 14.68,
-          "win_prob_D": 0.848
+          "expected_margin_D": 14.67,
+          "win_prob_D": 0.8479
         },
         {
           "race_id": "HOU_MI_10_2026",
           "state": "MI",
           "district": "10",
-          "expected_margin_D": 14.47,
-          "win_prob_D": 0.8445
+          "expected_margin_D": 14.46,
+          "win_prob_D": 0.8444
         },
         {
           "race_id": "HOU_FL_09_2026",
           "state": "FL",
           "district": "09",
-          "expected_margin_D": 13.79,
-          "win_prob_D": 0.8329
+          "expected_margin_D": 13.78,
+          "win_prob_D": 0.8327
         },
         {
           "race_id": "HOU_NE_02_2026",
           "state": "NE",
           "district": "02",
-          "expected_margin_D": 11.25,
-          "win_prob_D": 0.7846
+          "expected_margin_D": 11.24,
+          "win_prob_D": 0.7844
         },
         {
           "race_id": "HOU_AZ_01_2026",
           "state": "AZ",
           "district": "01",
-          "expected_margin_D": 10.97,
-          "win_prob_D": 0.7788
+          "expected_margin_D": 10.96,
+          "win_prob_D": 0.7786
         },
         {
           "race_id": "HOU_MT_01_2026",
           "state": "MT",
           "district": "01",
-          "expected_margin_D": 10.71,
-          "win_prob_D": 0.7734
+          "expected_margin_D": 10.7,
+          "win_prob_D": 0.7732
         },
         {
           "race_id": "HOU_TX_35_2026",
           "state": "TX",
           "district": "35",
-          "expected_margin_D": 10.39,
-          "win_prob_D": 0.7666
+          "expected_margin_D": 10.38,
+          "win_prob_D": 0.7664
         },
         {
           "race_id": "HOU_TX_09_2026",
           "state": "TX",
           "district": "09",
-          "expected_margin_D": 9.88,
-          "win_prob_D": 0.7555
+          "expected_margin_D": 9.87,
+          "win_prob_D": 0.7553
         },
         {
           "race_id": "HOU_KY_06_2026",
           "state": "KY",
           "district": "06",
-          "expected_margin_D": 9.35,
-          "win_prob_D": 0.7437
+          "expected_margin_D": 9.34,
+          "win_prob_D": 0.7435
         },
         {
           "race_id": "HOU_IA_02_2026",
           "state": "IA",
           "district": "02",
-          "expected_margin_D": 9.01,
-          "win_prob_D": 0.736
+          "expected_margin_D": 9.0,
+          "win_prob_D": 0.7357
         },
         {
           "race_id": "HOU_CA_01_2026",
           "state": "CA",
           "district": "01",
-          "expected_margin_D": 7.73,
-          "win_prob_D": 0.7059
+          "expected_margin_D": 7.72,
+          "win_prob_D": 0.7056
         },
         {
           "race_id": "HOU_NH_01_2026",
           "state": "NH",
           "district": "01",
-          "expected_margin_D": 6.99,
-          "win_prob_D": 0.6878
+          "expected_margin_D": 6.98,
+          "win_prob_D": 0.6875
         },
         {
           "race_id": "HOU_FL_22_2026",
           "state": "FL",
           "district": "22",
-          "expected_margin_D": 6.82,
-          "win_prob_D": 0.6835
+          "expected_margin_D": 6.81,
+          "win_prob_D": 0.6833
         },
         {
           "race_id": "HOU_NY_17_2026",
           "state": "NY",
           "district": "17",
-          "expected_margin_D": 4.78,
-          "win_prob_D": 0.6311
+          "expected_margin_D": 4.77,
+          "win_prob_D": 0.6308
         },
         {
           "race_id": "HOU_ME_02_2026",
           "state": "ME",
           "district": "02",
-          "expected_margin_D": 4.75,
-          "win_prob_D": 0.6303
+          "expected_margin_D": 4.74,
+          "win_prob_D": 0.63
         },
         {
           "race_id": "HOU_CA_06_2026",
           "state": "CA",
           "district": "06",
-          "expected_margin_D": 4.74,
-          "win_prob_D": 0.63
+          "expected_margin_D": 4.73,
+          "win_prob_D": 0.6298
         },
         {
           "race_id": "HOU_SC_01_2026",
           "state": "SC",
           "district": "01",
-          "expected_margin_D": 4.27,
-          "win_prob_D": 0.6175
+          "expected_margin_D": 4.26,
+          "win_prob_D": 0.6173
         },
         {
           "race_id": "HOU_PA_01_2026",
           "state": "PA",
           "district": "01",
-          "expected_margin_D": 3.93,
-          "win_prob_D": 0.6084
+          "expected_margin_D": 3.92,
+          "win_prob_D": 0.6082
         },
         {
           "race_id": "HOU_TX_32_2026",
           "state": "TX",
           "district": "32",
-          "expected_margin_D": 3.89,
-          "win_prob_D": 0.6073
+          "expected_margin_D": 3.88,
+          "win_prob_D": 0.6071
         },
         {
           "race_id": "HOU_NV_02_2026",
           "state": "NV",
           "district": "02",
-          "expected_margin_D": 3.74,
-          "win_prob_D": 0.6033
+          "expected_margin_D": 3.73,
+          "win_prob_D": 0.603
         },
         {
           "race_id": "HOU_FL_16_2026",
           "state": "FL",
           "district": "16",
-          "expected_margin_D": 3.69,
-          "win_prob_D": 0.602
+          "expected_margin_D": 3.68,
+          "win_prob_D": 0.6017
         },
         {
           "race_id": "HOU_CA_22_2026",
           "state": "CA",
           "district": "22",
-          "expected_margin_D": 3.41,
-          "win_prob_D": 0.5944
+          "expected_margin_D": 3.4,
+          "win_prob_D": 0.5941
         },
         {
           "race_id": "HOU_TX_15_2026",
           "state": "TX",
           "district": "15",
-          "expected_margin_D": 3.28,
-          "win_prob_D": 0.5908
+          "expected_margin_D": 3.27,
+          "win_prob_D": 0.5906
         },
         {
           "race_id": "HOU_GA_01_2026",
           "state": "GA",
           "district": "01",
-          "expected_margin_D": 2.15,
-          "win_prob_D": 0.5598
+          "expected_margin_D": 2.14,
+          "win_prob_D": 0.5596
         },
         {
           "race_id": "HOU_WI_07_2026",
           "state": "WI",
           "district": "07",
-          "expected_margin_D": 2.06,
-          "win_prob_D": 0.5574
+          "expected_margin_D": 2.05,
+          "win_prob_D": 0.5571
         },
         {
           "race_id": "HOU_PA_07_2026",
           "state": "PA",
           "district": "07",
-          "expected_margin_D": 1.96,
-          "win_prob_D": 0.5546
+          "expected_margin_D": 1.95,
+          "win_prob_D": 0.5543
         },
         {
           "race_id": "HOU_PA_08_2026",
           "state": "PA",
           "district": "08",
-          "expected_margin_D": 1.54,
-          "win_prob_D": 0.5429
+          "expected_margin_D": 1.53,
+          "win_prob_D": 0.5427
         },
         {
           "race_id": "HOU_MI_07_2026",
           "state": "MI",
           "district": "07",
-          "expected_margin_D": 1.07,
-          "win_prob_D": 0.5299
+          "expected_margin_D": 1.06,
+          "win_prob_D": 0.5296
         },
         {
           "race_id": "HOU_CO_08_2026",
           "state": "CO",
           "district": "08",
-          "expected_margin_D": 1.0,
-          "win_prob_D": 0.5279
+          "expected_margin_D": 0.99,
+          "win_prob_D": 0.5276
         },
         {
           "race_id": "HOU_TX_10_2026",
           "state": "TX",
           "district": "10",
-          "expected_margin_D": 0.93,
-          "win_prob_D": 0.526
+          "expected_margin_D": 0.92,
+          "win_prob_D": 0.5257
         },
         {
           "race_id": "HOU_NY_21_2026",
           "state": "NY",
           "district": "21",
-          "expected_margin_D": 0.65,
-          "win_prob_D": 0.5182
+          "expected_margin_D": 0.64,
+          "win_prob_D": 0.5179
         },
         {
           "race_id": "HOU_SC_05_2026",
           "state": "SC",
           "district": "05",
-          "expected_margin_D": 0.65,
-          "win_prob_D": 0.5182
+          "expected_margin_D": 0.64,
+          "win_prob_D": 0.5179
         },
         {
           "race_id": "HOU_FL_11_2026",
           "state": "FL",
           "district": "11",
-          "expected_margin_D": 0.37,
-          "win_prob_D": 0.5103
+          "expected_margin_D": 0.36,
+          "win_prob_D": 0.5101
         },
         {
           "race_id": "HOU_WI_03_2026",
           "state": "WI",
           "district": "03",
-          "expected_margin_D": 0.33,
-          "win_prob_D": 0.5092
+          "expected_margin_D": 0.32,
+          "win_prob_D": 0.5089
         },
         {
           "race_id": "HOU_TN_09_2026",
           "state": "TN",
           "district": "09",
-          "expected_margin_D": 0.3,
-          "win_prob_D": 0.5084
+          "expected_margin_D": 0.29,
+          "win_prob_D": 0.5081
         },
         {
           "race_id": "HOU_AZ_05_2026",
           "state": "AZ",
           "district": "05",
-          "expected_margin_D": 0.16,
-          "win_prob_D": 0.5045
+          "expected_margin_D": 0.15,
+          "win_prob_D": 0.5042
         },
         {
           "race_id": "HOU_WA_04_2026",
           "state": "WA",
           "district": "04",
-          "expected_margin_D": 0.09,
-          "win_prob_D": 0.5025
+          "expected_margin_D": 0.08,
+          "win_prob_D": 0.5022
         },
         {
           "race_id": "HOU_TX_08_2026",
           "state": "TX",
           "district": "08",
-          "expected_margin_D": -0.18,
-          "win_prob_D": 0.495
+          "expected_margin_D": -0.19,
+          "win_prob_D": 0.4947
         },
         {
           "race_id": "HOU_FL_02_2026",
           "state": "FL",
           "district": "02",
-          "expected_margin_D": -0.39,
-          "win_prob_D": 0.4891
+          "expected_margin_D": -0.4,
+          "win_prob_D": 0.4888
         },
         {
           "race_id": "HOU_WI_01_2026",
           "state": "WI",
           "district": "01",
-          "expected_margin_D": -0.7,
-          "win_prob_D": 0.4805
+          "expected_margin_D": -0.71,
+          "win_prob_D": 0.4802
         },
         {
           "race_id": "HOU_TX_21_2026",
           "state": "TX",
           "district": "21",
-          "expected_margin_D": -0.94,
-          "win_prob_D": 0.4738
+          "expected_margin_D": -0.95,
+          "win_prob_D": 0.4735
         },
         {
           "race_id": "HOU_VA_02_2026",
           "state": "VA",
           "district": "02",
-          "expected_margin_D": -1.17,
-          "win_prob_D": 0.4674
+          "expected_margin_D": -1.18,
+          "win_prob_D": 0.4671
         },
         {
           "race_id": "HOU_IA_03_2026",
           "state": "IA",
           "district": "03",
-          "expected_margin_D": -1.92,
-          "win_prob_D": 0.4465
+          "expected_margin_D": -1.93,
+          "win_prob_D": 0.4462
         },
         {
           "race_id": "HOU_TX_22_2026",
           "state": "TX",
           "district": "22",
-          "expected_margin_D": -1.97,
-          "win_prob_D": 0.4451
+          "expected_margin_D": -1.98,
+          "win_prob_D": 0.4449
         },
         {
           "race_id": "HOU_IA_01_2026",
           "state": "IA",
           "district": "01",
-          "expected_margin_D": -2.29,
-          "win_prob_D": 0.4363
+          "expected_margin_D": -2.3,
+          "win_prob_D": 0.436
         },
         {
           "race_id": "HOU_AZ_06_2026",
           "state": "AZ",
           "district": "06",
-          "expected_margin_D": -2.57,
-          "win_prob_D": 0.4286
+          "expected_margin_D": -2.58,
+          "win_prob_D": 0.4283
         },
         {
           "race_id": "HOU_PA_10_2026",
           "state": "PA",
           "district": "10",
-          "expected_margin_D": -2.71,
-          "win_prob_D": 0.4247
+          "expected_margin_D": -2.72,
+          "win_prob_D": 0.4245
         },
         {
           "race_id": "HOU_TX_38_2026",
           "state": "TX",
           "district": "38",
-          "expected_margin_D": -2.71,
-          "win_prob_D": 0.4247
+          "expected_margin_D": -2.72,
+          "win_prob_D": 0.4245
         },
         {
           "race_id": "HOU_NJ_07_2026",
           "state": "NJ",
           "district": "07",
-          "expected_margin_D": -2.87,
-          "win_prob_D": 0.4204
+          "expected_margin_D": -2.88,
+          "win_prob_D": 0.4201
         },
         {
           "race_id": "HOU_AL_01_2026",
           "state": "AL",
           "district": "01",
-          "expected_margin_D": -2.99,
-          "win_prob_D": 0.4171
+          "expected_margin_D": -3.0,
+          "win_prob_D": 0.4168
         },
         {
           "race_id": "HOU_OK_01_2026",
           "state": "OK",
           "district": "01",
-          "expected_margin_D": -3.0,
-          "win_prob_D": 0.4168
+          "expected_margin_D": -3.01,
+          "win_prob_D": 0.4165
         },
         {
           "race_id": "HOU_TN_06_2026",
           "state": "TN",
           "district": "06",
-          "expected_margin_D": -3.06,
-          "win_prob_D": 0.4152
+          "expected_margin_D": -3.07,
+          "win_prob_D": 0.4149
         },
         {
           "race_id": "HOU_MN_01_2026",
           "state": "MN",
           "district": "01",
-          "expected_margin_D": -3.27,
-          "win_prob_D": 0.4094
+          "expected_margin_D": -3.28,
+          "win_prob_D": 0.4092
         },
         {
           "race_id": "HOU_GA_10_2026",
           "state": "GA",
           "district": "10",
-          "expected_margin_D": -3.31,
-          "win_prob_D": 0.4083
+          "expected_margin_D": -3.32,
+          "win_prob_D": 0.4081
         },
         {
           "race_id": "HOU_MN_08_2026",
           "state": "MN",
           "district": "08",
-          "expected_margin_D": -3.54,
-          "win_prob_D": 0.4021
+          "expected_margin_D": -3.55,
+          "win_prob_D": 0.4018
         },
         {
           "race_id": "HOU_NJ_02_2026",
           "state": "NJ",
           "district": "02",
-          "expected_margin_D": -3.58,
-          "win_prob_D": 0.401
+          "expected_margin_D": -3.59,
+          "win_prob_D": 0.4008
         },
         {
           "race_id": "HOU_NC_11_2026",
           "state": "NC",
           "district": "11",
-          "expected_margin_D": -4.18,
-          "win_prob_D": 0.3849
+          "expected_margin_D": -4.19,
+          "win_prob_D": 0.3846
         },
         {
           "race_id": "HOU_MI_04_2026",
           "state": "MI",
           "district": "04",
-          "expected_margin_D": -4.64,
-          "win_prob_D": 0.3726
+          "expected_margin_D": -4.65,
+          "win_prob_D": 0.3724
         },
         {
           "race_id": "HOU_TX_02_2026",
           "state": "TX",
           "district": "02",
-          "expected_margin_D": -4.85,
-          "win_prob_D": 0.3671
+          "expected_margin_D": -4.86,
+          "win_prob_D": 0.3668
         },
         {
           "race_id": "HOU_NC_03_2026",
           "state": "NC",
           "district": "03",
-          "expected_margin_D": -5.23,
-          "win_prob_D": 0.3571
+          "expected_margin_D": -5.24,
+          "win_prob_D": 0.3568
         },
         {
           "race_id": "HOU_GA_11_2026",
           "state": "GA",
           "district": "11",
-          "expected_margin_D": -5.24,
-          "win_prob_D": 0.3568
+          "expected_margin_D": -5.25,
+          "win_prob_D": 0.3566
         },
         {
           "race_id": "HOU_NC_07_2026",
           "state": "NC",
           "district": "07",
-          "expected_margin_D": -5.26,
-          "win_prob_D": 0.3563
+          "expected_margin_D": -5.27,
+          "win_prob_D": 0.356
         },
         {
           "race_id": "HOU_NY_01_2026",
           "state": "NY",
           "district": "01",
-          "expected_margin_D": -5.33,
-          "win_prob_D": 0.3545
+          "expected_margin_D": -5.34,
+          "win_prob_D": 0.3542
         },
         {
           "race_id": "HOU_IA_04_2026",
           "state": "IA",
           "district": "04",
-          "expected_margin_D": -5.66,
-          "win_prob_D": 0.3459
+          "expected_margin_D": -5.67,
+          "win_prob_D": 0.3457
         },
         {
           "race_id": "HOU_TX_23_2026",
           "state": "TX",
           "district": "23",
-          "expected_margin_D": -5.7,
-          "win_prob_D": 0.3449
+          "expected_margin_D": -5.71,
+          "win_prob_D": 0.3446
         },
         {
           "race_id": "HOU_AZ_02_2026",
           "state": "AZ",
           "district": "02",
-          "expected_margin_D": -6.16,
-          "win_prob_D": 0.3331
+          "expected_margin_D": -6.17,
+          "win_prob_D": 0.3328
         },
         {
           "race_id": "HOU_NY_02_2026",
           "state": "NY",
           "district": "02",
-          "expected_margin_D": -6.46,
-          "win_prob_D": 0.3255
+          "expected_margin_D": -6.47,
+          "win_prob_D": 0.3252
         },
         {
           "race_id": "HOU_CO_03_2026",
           "state": "CO",
           "district": "03",
-          "expected_margin_D": -6.56,
-          "win_prob_D": 0.323
+          "expected_margin_D": -6.57,
+          "win_prob_D": 0.3227
         },
         {
           "race_id": "HOU_OH_10_2026",
           "state": "OH",
           "district": "10",
-          "expected_margin_D": -6.69,
-          "win_prob_D": 0.3197
+          "expected_margin_D": -6.7,
+          "win_prob_D": 0.3195
         },
         {
           "race_id": "HOU_VA_01_2026",
           "state": "VA",
           "district": "01",
-          "expected_margin_D": -6.87,
-          "win_prob_D": 0.3152
+          "expected_margin_D": -6.88,
+          "win_prob_D": 0.315
         },
         {
           "race_id": "HOU_MO_02_2026",
           "state": "MO",
           "district": "02",
-          "expected_margin_D": -7.01,
-          "win_prob_D": 0.3117
+          "expected_margin_D": -7.02,
+          "win_prob_D": 0.3115
         },
         {
           "race_id": "HOU_OH_15_2026",
           "state": "OH",
           "district": "15",
-          "expected_margin_D": -7.03,
-          "win_prob_D": 0.3113
+          "expected_margin_D": -7.04,
+          "win_prob_D": 0.311
         },
         {
           "race_id": "HOU_SD_01_2026",
           "state": "SD",
           "district": "01",
-          "expected_margin_D": -7.15,
-          "win_prob_D": 0.3083
+          "expected_margin_D": -7.16,
+          "win_prob_D": 0.308
         },
         {
           "race_id": "HOU_AK_01_2026",
           "state": "AK",
           "district": "01",
-          "expected_margin_D": -7.4,
-          "win_prob_D": 0.3022
+          "expected_margin_D": -7.41,
+          "win_prob_D": 0.3019
         },
         {
           "race_id": "HOU_VA_05_2026",
           "state": "VA",
           "district": "05",
-          "expected_margin_D": -7.42,
-          "win_prob_D": 0.3017
+          "expected_margin_D": -7.43,
+          "win_prob_D": 0.3014
         },
         {
           "race_id": "HOU_NC_09_2026",
           "state": "NC",
           "district": "09",
-          "expected_margin_D": -7.53,
-          "win_prob_D": 0.299
+          "expected_margin_D": -7.54,
+          "win_prob_D": 0.2987
         },
         {
           "race_id": "HOU_WA_05_2026",
           "state": "WA",
           "district": "05",
-          "expected_margin_D": -7.58,
-          "win_prob_D": 0.2978
+          "expected_margin_D": -7.59,
+          "win_prob_D": 0.2975
         },
         {
           "race_id": "HOU_NC_14_2026",
           "state": "NC",
           "district": "14",
-          "expected_margin_D": -7.63,
-          "win_prob_D": 0.2966
+          "expected_margin_D": -7.64,
+          "win_prob_D": 0.2963
         },
         {
           "race_id": "HOU_OH_07_2026",
           "state": "OH",
           "district": "07",
-          "expected_margin_D": -7.79,
-          "win_prob_D": 0.2927
+          "expected_margin_D": -7.8,
+          "win_prob_D": 0.2925
         },
         {
           "race_id": "HOU_FL_27_2026",
           "state": "FL",
           "district": "27",
-          "expected_margin_D": -8.05,
-          "win_prob_D": 0.2865
+          "expected_margin_D": -8.06,
+          "win_prob_D": 0.2862
         },
         {
           "race_id": "HOU_LA_05_2026",
           "state": "LA",
           "district": "05",
-          "expected_margin_D": -8.16,
-          "win_prob_D": 0.2839
+          "expected_margin_D": -8.17,
+          "win_prob_D": 0.2836
         },
         {
           "race_id": "HOU_NC_13_2026",
           "state": "NC",
           "district": "13",
-          "expected_margin_D": -8.23,
-          "win_prob_D": 0.2822
+          "expected_margin_D": -8.24,
+          "win_prob_D": 0.282
         },
         {
           "race_id": "HOU_NY_11_2026",
           "state": "NY",
           "district": "11",
-          "expected_margin_D": -8.32,
-          "win_prob_D": 0.2801
+          "expected_margin_D": -8.33,
+          "win_prob_D": 0.2798
         },
         {
           "race_id": "HOU_NC_05_2026",
           "state": "NC",
           "district": "05",
-          "expected_margin_D": -8.36,
-          "win_prob_D": 0.2791
+          "expected_margin_D": -8.37,
+          "win_prob_D": 0.2789
         },
         {
           "race_id": "HOU_NC_06_2026",
           "state": "NC",
           "district": "06",
-          "expected_margin_D": -8.43,
-          "win_prob_D": 0.2775
+          "expected_margin_D": -8.44,
+          "win_prob_D": 0.2772
         },
         {
           "race_id": "HOU_NC_10_2026",
           "state": "NC",
           "district": "10",
-          "expected_margin_D": -8.74,
-          "win_prob_D": 0.2703
+          "expected_margin_D": -8.75,
+          "win_prob_D": 0.27
         },
         {
           "race_id": "HOU_LA_06_2026",
           "state": "LA",
           "district": "06",
-          "expected_margin_D": -9.27,
-          "win_prob_D": 0.2581
+          "expected_margin_D": -9.28,
+          "win_prob_D": 0.2579
         },
         {
           "race_id": "HOU_FL_07_2026",
           "state": "FL",
           "district": "07",
-          "expected_margin_D": -9.61,
-          "win_prob_D": 0.2505
+          "expected_margin_D": -9.62,
+          "win_prob_D": 0.2503
         },
         {
           "race_id": "HOU_FL_13_2026",
           "state": "FL",
           "district": "13",
-          "expected_margin_D": -9.66,
-          "win_prob_D": 0.2494
+          "expected_margin_D": -9.67,
+          "win_prob_D": 0.2491
         },
         {
           "race_id": "HOU_GA_12_2026",
           "state": "GA",
           "district": "12",
-          "expected_margin_D": -9.72,
-          "win_prob_D": 0.248
+          "expected_margin_D": -9.73,
+          "win_prob_D": 0.2478
         },
         {
           "race_id": "HOU_SC_02_2026",
           "state": "SC",
           "district": "02",
-          "expected_margin_D": -9.75,
-          "win_prob_D": 0.2474
+          "expected_margin_D": -9.76,
+          "win_prob_D": 0.2472
         },
         {
           "race_id": "HOU_FL_19_2026",
           "state": "FL",
           "district": "19",
-          "expected_margin_D": -9.79,
-          "win_prob_D": 0.2465
+          "expected_margin_D": -9.8,
+          "win_prob_D": 0.2463
         },
         {
           "race_id": "HOU_FL_26_2026",
           "state": "FL",
           "district": "26",
-          "expected_margin_D": -9.81,
-          "win_prob_D": 0.246
+          "expected_margin_D": -9.82,
+          "win_prob_D": 0.2458
         },
         {
           "race_id": "HOU_CA_40_2026",
           "state": "CA",
           "district": "40",
-          "expected_margin_D": -10.02,
-          "win_prob_D": 0.2414
+          "expected_margin_D": -10.03,
+          "win_prob_D": 0.2412
         },
         {
           "race_id": "HOU_WI_08_2026",
           "state": "WI",
           "district": "08",
-          "expected_margin_D": -10.08,
-          "win_prob_D": 0.2401
+          "expected_margin_D": -10.09,
+          "win_prob_D": 0.2399
         },
         {
           "race_id": "HOU_FL_04_2026",
           "state": "FL",
           "district": "04",
-          "expected_margin_D": -10.21,
-          "win_prob_D": 0.2373
+          "expected_margin_D": -10.22,
+          "win_prob_D": 0.2371
         },
         {
           "race_id": "HOU_PA_16_2026",
           "state": "PA",
           "district": "16",
-          "expected_margin_D": -10.25,
-          "win_prob_D": 0.2364
+          "expected_margin_D": -10.26,
+          "win_prob_D": 0.2362
         },
         {
           "race_id": "HOU_NC_08_2026",
           "state": "NC",
           "district": "08",
-          "expected_margin_D": -10.31,
-          "win_prob_D": 0.2352
+          "expected_margin_D": -10.32,
+          "win_prob_D": 0.2349
         },
         {
           "race_id": "HOU_MO_06_2026",
           "state": "MO",
           "district": "06",
-          "expected_margin_D": -10.4,
-          "win_prob_D": 0.2332
+          "expected_margin_D": -10.41,
+          "win_prob_D": 0.233
         },
         {
           "race_id": "HOU_FL_12_2026",
           "state": "FL",
           "district": "12",
-          "expected_margin_D": -10.48,
-          "win_prob_D": 0.2315
+          "expected_margin_D": -10.49,
+          "win_prob_D": 0.2313
         },
         {
           "race_id": "HOU_KS_02_2026",
           "state": "KS",
           "district": "02",
-          "expected_margin_D": -10.56,
-          "win_prob_D": 0.2298
+          "expected_margin_D": -10.57,
+          "win_prob_D": 0.2296
         },
         {
           "race_id": "HOU_WI_06_2026",
           "state": "WI",
           "district": "06",
-          "expected_margin_D": -10.8,
-          "win_prob_D": 0.2247
+          "expected_margin_D": -10.81,
+          "win_prob_D": 0.2245
         },
         {
           "race_id": "HOU_AR_02_2026",
           "state": "AR",
           "district": "02",
-          "expected_margin_D": -11.14,
-          "win_prob_D": 0.2177
+          "expected_margin_D": -11.15,
+          "win_prob_D": 0.2175
         },
         {
           "race_id": "HOU_MN_06_2026",
           "state": "MN",
           "district": "06",
-          "expected_margin_D": -11.41,
-          "win_prob_D": 0.2121
+          "expected_margin_D": -11.42,
+          "win_prob_D": 0.2119
         },
         {
           "race_id": "HOU_AZ_08_2026",
           "state": "AZ",
           "district": "08",
-          "expected_margin_D": -11.42,
-          "win_prob_D": 0.2119
+          "expected_margin_D": -11.43,
+          "win_prob_D": 0.2117
         },
         {
           "race_id": "HOU_NE_01_2026",
           "state": "NE",
           "district": "01",
-          "expected_margin_D": -11.44,
-          "win_prob_D": 0.2115
+          "expected_margin_D": -11.45,
+          "win_prob_D": 0.2113
         },
         {
           "race_id": "HOU_TX_25_2026",
           "state": "TX",
           "district": "25",
-          "expected_margin_D": -11.95,
-          "win_prob_D": 0.2013
+          "expected_margin_D": -11.96,
+          "win_prob_D": 0.2011
         },
         {
           "race_id": "HOU_FL_21_2026",
           "state": "FL",
           "district": "21",
-          "expected_margin_D": -12.2,
-          "win_prob_D": 0.1965
+          "expected_margin_D": -12.21,
+          "win_prob_D": 0.1963
         },
         {
           "race_id": "HOU_IN_05_2026",
           "state": "IN",
           "district": "05",
-          "expected_margin_D": -12.2,
-          "win_prob_D": 0.1965
+          "expected_margin_D": -12.21,
+          "win_prob_D": 0.1963
         },
         {
           "race_id": "HOU_MI_01_2026",
           "state": "MI",
           "district": "01",
-          "expected_margin_D": -12.27,
-          "win_prob_D": 0.1951
+          "expected_margin_D": -12.28,
+          "win_prob_D": 0.1949
         },
         {
           "race_id": "HOU_CO_05_2026",
           "state": "CO",
           "district": "05",
-          "expected_margin_D": -12.31,
-          "win_prob_D": 0.1943
+          "expected_margin_D": -12.32,
+          "win_prob_D": 0.1941
         },
         {
           "race_id": "HOU_OH_08_2026",
           "state": "OH",
           "district": "08",
-          "expected_margin_D": -12.37,
-          "win_prob_D": 0.1932
+          "expected_margin_D": -12.38,
+          "win_prob_D": 0.193
         },
         {
           "race_id": "HOU_FL_08_2026",
           "state": "FL",
           "district": "08",
-          "expected_margin_D": -12.57,
-          "win_prob_D": 0.1894
+          "expected_margin_D": -12.58,
+          "win_prob_D": 0.1892
         },
         {
           "race_id": "HOU_SC_07_2026",
           "state": "SC",
           "district": "07",
-          "expected_margin_D": -12.6,
-          "win_prob_D": 0.1888
+          "expected_margin_D": -12.61,
+          "win_prob_D": 0.1886
         },
         {
           "race_id": "HOU_TX_17_2026",
           "state": "TX",
           "district": "17",
-          "expected_margin_D": -12.62,
-          "win_prob_D": 0.1884
+          "expected_margin_D": -12.63,
+          "win_prob_D": 0.1882
         },
         {
           "race_id": "HOU_IN_02_2026",
           "state": "IN",
           "district": "02",
-          "expected_margin_D": -12.88,
-          "win_prob_D": 0.1835
+          "expected_margin_D": -12.89,
+          "win_prob_D": 0.1834
         },
         {
           "race_id": "HOU_FL_18_2026",
           "state": "FL",
           "district": "18",
-          "expected_margin_D": -12.93,
-          "win_prob_D": 0.1826
+          "expected_margin_D": -12.94,
+          "win_prob_D": 0.1824
         },
         {
           "race_id": "HOU_TX_05_2026",
           "state": "TX",
           "district": "05",
-          "expected_margin_D": -13.15,
-          "win_prob_D": 0.1786
+          "expected_margin_D": -13.16,
+          "win_prob_D": 0.1784
         },
         {
           "race_id": "HOU_TX_24_2026",
           "state": "TX",
           "district": "24",
-          "expected_margin_D": -13.4,
-          "win_prob_D": 0.174
+          "expected_margin_D": -13.41,
+          "win_prob_D": 0.1738
         },
         {
           "race_id": "HOU_TX_36_2026",
           "state": "TX",
           "district": "36",
-          "expected_margin_D": -13.44,
-          "win_prob_D": 0.1733
+          "expected_margin_D": -13.45,
+          "win_prob_D": 0.1731
         },
         {
           "race_id": "HOU_CA_23_2026",
           "state": "CA",
           "district": "23",
-          "expected_margin_D": -13.46,
-          "win_prob_D": 0.1729
+          "expected_margin_D": -13.47,
+          "win_prob_D": 0.1728
         },
         {
           "race_id": "HOU_FL_15_2026",
           "state": "FL",
           "district": "15",
-          "expected_margin_D": -13.57,
-          "win_prob_D": 0.171
+          "expected_margin_D": -13.58,
+          "win_prob_D": 0.1708
         },
         {
           "race_id": "HOU_OH_14_2026",
           "state": "OH",
           "district": "14",
-          "expected_margin_D": -13.65,
-          "win_prob_D": 0.1696
+          "expected_margin_D": -13.66,
+          "win_prob_D": 0.1694
         },
         {
           "race_id": "HOU_TX_27_2026",
           "state": "TX",
           "district": "27",
-          "expected_margin_D": -13.73,
-          "win_prob_D": 0.1682
+          "expected_margin_D": -13.74,
+          "win_prob_D": 0.168
         },
         {
           "race_id": "HOU_TX_12_2026",
           "state": "TX",
           "district": "12",
-          "expected_margin_D": -13.92,
-          "win_prob_D": 0.1648
+          "expected_margin_D": -13.93,
+          "win_prob_D": 0.1647
         },
         {
           "race_id": "HOU_OK_05_2026",
           "state": "OK",
           "district": "05",
-          "expected_margin_D": -14.19,
-          "win_prob_D": 0.1602
+          "expected_margin_D": -14.2,
+          "win_prob_D": 0.16
         },
         {
           "race_id": "HOU_PA_11_2026",
           "state": "PA",
           "district": "11",
-          "expected_margin_D": -14.2,
-          "win_prob_D": 0.16
+          "expected_margin_D": -14.21,
+          "win_prob_D": 0.1598
         },
         {
           "race_id": "HOU_TN_05_2026",
           "state": "TN",
           "district": "05",
-          "expected_margin_D": -14.33,
-          "win_prob_D": 0.1578
+          "expected_margin_D": -14.34,
+          "win_prob_D": 0.1576
         },
         {
           "race_id": "HOU_TN_04_2026",
           "state": "TN",
           "district": "04",
-          "expected_margin_D": -14.55,
-          "win_prob_D": 0.1541
+          "expected_margin_D": -14.56,
+          "win_prob_D": 0.154
         },
         {
           "race_id": "HOU_FL_28_2026",
           "state": "FL",
           "district": "28",
-          "expected_margin_D": -14.72,
-          "win_prob_D": 0.1513
+          "expected_margin_D": -14.73,
+          "win_prob_D": 0.1512
         },
         {
           "race_id": "HOU_NY_23_2026",
           "state": "NY",
           "district": "23",
-          "expected_margin_D": -14.77,
-          "win_prob_D": 0.1505
+          "expected_margin_D": -14.78,
+          "win_prob_D": 0.1503
         },
         {
           "race_id": "HOU_TN_07_2026",
           "state": "TN",
           "district": "07",
-          "expected_margin_D": -14.89,
-          "win_prob_D": 0.1485
+          "expected_margin_D": -14.9,
+          "win_prob_D": 0.1484
         },
         {
           "race_id": "HOU_PA_14_2026",
           "state": "PA",
           "district": "14",
-          "expected_margin_D": -14.93,
-          "win_prob_D": 0.1479
+          "expected_margin_D": -14.94,
+          "win_prob_D": 0.1477
         },
         {
           "race_id": "HOU_CA_05_2026",
           "state": "CA",
           "district": "05",
-          "expected_margin_D": -15.04,
-          "win_prob_D": 0.1461
+          "expected_margin_D": -15.05,
+          "win_prob_D": 0.146
         },
         {
           "race_id": "HOU_MI_05_2026",
           "state": "MI",
           "district": "05",
-          "expected_margin_D": -15.09,
-          "win_prob_D": 0.1453
+          "expected_margin_D": -15.1,
+          "win_prob_D": 0.1452
         },
         {
           "race_id": "HOU_TN_08_2026",
           "state": "TN",
           "district": "08",
-          "expected_margin_D": -15.2,
-          "win_prob_D": 0.1436
+          "expected_margin_D": -15.21,
+          "win_prob_D": 0.1434
         },
         {
           "race_id": "HOU_SC_04_2026",
           "state": "SC",
           "district": "04",
-          "expected_margin_D": -15.25,
-          "win_prob_D": 0.1428
+          "expected_margin_D": -15.26,
+          "win_prob_D": 0.1426
         },
         {
           "race_id": "HOU_IN_08_2026",
           "state": "IN",
           "district": "08",
-          "expected_margin_D": -15.26,
-          "win_prob_D": 0.1426
+          "expected_margin_D": -15.27,
+          "win_prob_D": 0.1425
         },
         {
           "race_id": "HOU_MT_02_2026",
           "state": "MT",
           "district": "02",
-          "expected_margin_D": -15.32,
-          "win_prob_D": 0.1417
+          "expected_margin_D": -15.33,
+          "win_prob_D": 0.1415
         },
         {
           "race_id": "HOU_MS_03_2026",
           "state": "MS",
           "district": "03",
-          "expected_margin_D": -15.34,
-          "win_prob_D": 0.1414
+          "expected_margin_D": -15.35,
+          "win_prob_D": 0.1412
         },
         {
           "race_id": "HOU_KS_04_2026",
           "state": "KS",
           "district": "04",
-          "expected_margin_D": -15.38,
-          "win_prob_D": 0.1407
+          "expected_margin_D": -15.39,
+          "win_prob_D": 0.1406
         },
         {
           "race_id": "HOU_TX_31_2026",
           "state": "TX",
           "district": "31",
-          "expected_margin_D": -15.41,
-          "win_prob_D": 0.1403
+          "expected_margin_D": -15.42,
+          "win_prob_D": 0.1401
         },
         {
           "race_id": "HOU_FL_03_2026",
           "state": "FL",
           "district": "03",
-          "expected_margin_D": -15.53,
-          "win_prob_D": 0.1384
+          "expected_margin_D": -15.54,
+          "win_prob_D": 0.1382
         },
         {
           "race_id": "HOU_AL_05_2026",
           "state": "AL",
           "district": "05",
-          "expected_margin_D": -15.54,
-          "win_prob_D": 0.1382
+          "expected_margin_D": -15.55,
+          "win_prob_D": 0.1381
         },
         {
           "race_id": "HOU_TX_03_2026",
           "state": "TX",
           "district": "03",
-          "expected_margin_D": -15.75,
-          "win_prob_D": 0.135
+          "expected_margin_D": -15.76,
+          "win_prob_D": 0.1349
         },
         {
           "race_id": "HOU_IN_09_2026",
           "state": "IN",
           "district": "09",
-          "expected_margin_D": -15.87,
-          "win_prob_D": 0.1332
+          "expected_margin_D": -15.88,
+          "win_prob_D": 0.1331
         },
         {
           "race_id": "HOU_TX_04_2026",
           "state": "TX",
           "district": "04",
-          "expected_margin_D": -15.91,
-          "win_prob_D": 0.1326
+          "expected_margin_D": -15.92,
+          "win_prob_D": 0.1325
         },
         {
           "race_id": "HOU_FL_17_2026",
           "state": "FL",
           "district": "17",
-          "expected_margin_D": -15.93,
-          "win_prob_D": 0.1323
+          "expected_margin_D": -15.94,
+          "win_prob_D": 0.1322
         },
         {
           "race_id": "HOU_OH_05_2026",
           "state": "OH",
           "district": "05",
-          "expected_margin_D": -16.01,
-          "win_prob_D": 0.1311
+          "expected_margin_D": -16.02,
+          "win_prob_D": 0.131
         },
         {
           "race_id": "HOU_TX_14_2026",
           "state": "TX",
           "district": "14",
-          "expected_margin_D": -16.11,
-          "win_prob_D": 0.1296
+          "expected_margin_D": -16.12,
+          "win_prob_D": 0.1295
         },
         {
           "race_id": "HOU_WY_01_2026",
           "state": "WY",
           "district": "01",
-          "expected_margin_D": -16.13,
-          "win_prob_D": 0.1293
+          "expected_margin_D": -16.14,
+          "win_prob_D": 0.1292
         },
         {
           "race_id": "HOU_TX_06_2026",
           "state": "TX",
           "district": "06",
-          "expected_margin_D": -16.23,
-          "win_prob_D": 0.1279
+          "expected_margin_D": -16.24,
+          "win_prob_D": 0.1277
         },
         {
           "race_id": "HOU_MD_01_2026",
           "state": "MD",
           "district": "01",
-          "expected_margin_D": -16.26,
-          "win_prob_D": 0.1274
+          "expected_margin_D": -16.27,
+          "win_prob_D": 0.1273
         },
         {
           "race_id": "HOU_VA_06_2026",
           "state": "VA",
           "district": "06",
-          "expected_margin_D": -16.47,
-          "win_prob_D": 0.1244
+          "expected_margin_D": -16.48,
+          "win_prob_D": 0.1242
         },
         {
           "race_id": "HOU_TX_26_2026",
           "state": "TX",
           "district": "26",
-          "expected_margin_D": -16.59,
-          "win_prob_D": 0.1227
+          "expected_margin_D": -16.6,
+          "win_prob_D": 0.1225
         },
         {
           "race_id": "HOU_IL_16_2026",
           "state": "IL",
           "district": "16",
-          "expected_margin_D": -16.69,
-          "win_prob_D": 0.1212
+          "expected_margin_D": -16.7,
+          "win_prob_D": 0.1211
         },
         {
           "race_id": "HOU_ID_02_2026",
           "state": "ID",
           "district": "02",
-          "expected_margin_D": -16.75,
-          "win_prob_D": 0.1204
+          "expected_margin_D": -16.76,
+          "win_prob_D": 0.1203
         },
         {
           "race_id": "HOU_NY_24_2026",
           "state": "NY",
           "district": "24",
-          "expected_margin_D": -16.81,
-          "win_prob_D": 0.1196
+          "expected_margin_D": -16.82,
+          "win_prob_D": 0.1194
         },
         {
           "race_id": "HOU_NJ_04_2026",
           "state": "NJ",
           "district": "04",
-          "expected_margin_D": -16.84,
-          "win_prob_D": 0.1191
+          "expected_margin_D": -16.85,
+          "win_prob_D": 0.119
         },
         {
           "race_id": "HOU_OR_02_2026",
           "state": "OR",
           "district": "02",
-          "expected_margin_D": -16.96,
-          "win_prob_D": 0.1175
+          "expected_margin_D": -16.97,
+          "win_prob_D": 0.1173
         },
         {
           "race_id": "HOU_FL_05_2026",
           "state": "FL",
           "district": "05",
-          "expected_margin_D": -17.03,
-          "win_prob_D": 0.1165
+          "expected_margin_D": -17.04,
+          "win_prob_D": 0.1164
         },
         {
           "race_id": "HOU_MO_03_2026",
           "state": "MO",
           "district": "03",
-          "expected_margin_D": -17.14,
-          "win_prob_D": 0.115
+          "expected_margin_D": -17.15,
+          "win_prob_D": 0.1149
         },
         {
           "race_id": "HOU_CO_04_2026",
           "state": "CO",
           "district": "04",
-          "expected_margin_D": -17.2,
-          "win_prob_D": 0.1142
+          "expected_margin_D": -17.21,
+          "win_prob_D": 0.1141
         },
         {
           "race_id": "HOU_MI_02_2026",
           "state": "MI",
           "district": "02",
-          "expected_margin_D": -17.21,
-          "win_prob_D": 0.1141
+          "expected_margin_D": -17.22,
+          "win_prob_D": 0.1139
         },
         {
           "race_id": "HOU_GA_07_2026",
           "state": "GA",
           "district": "07",
-          "expected_margin_D": -17.49,
-          "win_prob_D": 0.1103
+          "expected_margin_D": -17.5,
+          "win_prob_D": 0.1102
         },
         {
           "race_id": "HOU_MN_07_2026",
           "state": "MN",
           "district": "07",
-          "expected_margin_D": -17.95,
-          "win_prob_D": 0.1044
+          "expected_margin_D": -17.96,
+          "win_prob_D": 0.1042
         },
         {
           "race_id": "HOU_MI_09_2026",
           "state": "MI",
           "district": "09",
-          "expected_margin_D": -18.22,
-          "win_prob_D": 0.101
+          "expected_margin_D": -18.23,
+          "win_prob_D": 0.1009
         },
         {
           "race_id": "HOU_AZ_09_2026",
           "state": "AZ",
           "district": "09",
-          "expected_margin_D": -18.78,
-          "win_prob_D": 0.0942
+          "expected_margin_D": -18.79,
+          "win_prob_D": 0.0941
         },
         {
           "race_id": "HOU_IN_03_2026",
           "state": "IN",
           "district": "03",
-          "expected_margin_D": -19.42,
-          "win_prob_D": 0.0869
+          "expected_margin_D": -19.43,
+          "win_prob_D": 0.0868
         },
         {
           "race_id": "HOU_TX_19_2026",
           "state": "TX",
           "district": "19",
-          "expected_margin_D": -19.45,
-          "win_prob_D": 0.0866
+          "expected_margin_D": -19.46,
+          "win_prob_D": 0.0865
         },
         {
           "race_id": "HOU_KY_04_2026",
           "state": "KY",
           "district": "04",
-          "expected_margin_D": -19.47,
-          "win_prob_D": 0.0864
+          "expected_margin_D": -19.48,
+          "win_prob_D": 0.0863
         },
         {
           "race_id": "HOU_AR_03_2026",
           "state": "AR",
           "district": "03",
-          "expected_margin_D": -19.51,
-          "win_prob_D": 0.0859
+          "expected_margin_D": -19.52,
+          "win_prob_D": 0.0858
         },
         {
           "race_id": "HOU_IN_04_2026",
           "state": "IN",
           "district": "04",
-          "expected_margin_D": -19.59,
-          "win_prob_D": 0.0851
+          "expected_margin_D": -19.6,
+          "win_prob_D": 0.0849
         },
         {
           "race_id": "HOU_WI_05_2026",
           "state": "WI",
           "district": "05",
-          "expected_margin_D": -19.74,
-          "win_prob_D": 0.0834
+          "expected_margin_D": -19.75,
+          "win_prob_D": 0.0833
         },
         {
           "race_id": "HOU_AL_06_2026",
           "state": "AL",
           "district": "06",
-          "expected_margin_D": -19.83,
-          "win_prob_D": 0.0825
+          "expected_margin_D": -19.84,
+          "win_prob_D": 0.0824
         },
         {
           "race_id": "HOU_KY_02_2026",
           "state": "KY",
           "district": "02",
-          "expected_margin_D": -19.86,
-          "win_prob_D": 0.0821
+          "expected_margin_D": -19.87,
+          "win_prob_D": 0.082
         },
         {
           "race_id": "HOU_MS_01_2026",
           "state": "MS",
           "district": "01",
-          "expected_margin_D": -19.86,
-          "win_prob_D": 0.0821
+          "expected_margin_D": -19.87,
+          "win_prob_D": 0.082
         },
         {
           "race_id": "HOU_KS_01_2026",
           "state": "KS",
           "district": "01",
-          "expected_margin_D": -20.63,
-          "win_prob_D": 0.0743
+          "expected_margin_D": -20.64,
+          "win_prob_D": 0.0742
         },
         {
           "race_id": "HOU_IN_06_2026",
           "state": "IN",
           "district": "06",
-          "expected_margin_D": -21.01,
-          "win_prob_D": 0.0706
+          "expected_margin_D": -21.02,
+          "win_prob_D": 0.0705
         },
         {
           "race_id": "HOU_OK_04_2026",
           "state": "OK",
           "district": "04",
-          "expected_margin_D": -21.06,
-          "win_prob_D": 0.0701
+          "expected_margin_D": -21.07,
+          "win_prob_D": 0.07
         },
         {
           "race_id": "HOU_OH_12_2026",
           "state": "OH",
           "district": "12",
-          "expected_margin_D": -21.16,
-          "win_prob_D": 0.0692
+          "expected_margin_D": -21.17,
+          "win_prob_D": 0.0691
         },
         {
           "race_id": "HOU_PA_15_2026",
           "state": "PA",
           "district": "15",
-          "expected_margin_D": -21.16,
-          "win_prob_D": 0.0692
+          "expected_margin_D": -21.17,
+          "win_prob_D": 0.0691
         },
         {
           "race_id": "HOU_FL_06_2026",
           "state": "FL",
           "district": "06",
-          "expected_margin_D": -21.42,
-          "win_prob_D": 0.0668
+          "expected_margin_D": -21.43,
+          "win_prob_D": 0.0667
         },
         {
           "race_id": "HOU_ND_01_2026",
           "state": "ND",
           "district": "01",
-          "expected_margin_D": -21.45,
-          "win_prob_D": 0.0665
+          "expected_margin_D": -21.46,
+          "win_prob_D": 0.0664
         },
         {
           "race_id": "HOU_GA_08_2026",
           "state": "GA",
           "district": "08",
-          "expected_margin_D": -21.62,
-          "win_prob_D": 0.065
+          "expected_margin_D": -21.63,
+          "win_prob_D": 0.0649
         },
         {
           "race_id": "HOU_PA_09_2026",
           "state": "PA",
           "district": "09",
-          "expected_margin_D": -21.73,
+          "expected_margin_D": -21.74,
           "win_prob_D": 0.064
         },
         {
           "race_id": "HOU_LA_04_2026",
           "state": "LA",
           "district": "04",
-          "expected_margin_D": -21.88,
-          "win_prob_D": 0.0627
+          "expected_margin_D": -21.89,
+          "win_prob_D": 0.0626
         },
         {
           "race_id": "HOU_TX_11_2026",
           "state": "TX",
           "district": "11",
-          "expected_margin_D": -22.02,
-          "win_prob_D": 0.0615
+          "expected_margin_D": -22.03,
+          "win_prob_D": 0.0614
         },
         {
           "race_id": "HOU_WV_01_2026",
           "state": "WV",
           "district": "01",
-          "expected_margin_D": -22.28,
-          "win_prob_D": 0.0594
+          "expected_margin_D": -22.29,
+          "win_prob_D": 0.0593
         },
         {
           "race_id": "HOU_OH_06_2026",
           "state": "OH",
           "district": "06",
-          "expected_margin_D": -22.46,
-          "win_prob_D": 0.0579
+          "expected_margin_D": -22.47,
+          "win_prob_D": 0.0578
         },
         {
           "race_id": "HOU_TN_02_2026",
           "state": "TN",
           "district": "02",
-          "expected_margin_D": -22.7,
-          "win_prob_D": 0.056
+          "expected_margin_D": -22.71,
+          "win_prob_D": 0.0559
         },
         {
           "race_id": "HOU_WV_02_2026",
           "state": "WV",
           "district": "02",
-          "expected_margin_D": -22.7,
-          "win_prob_D": 0.056
+          "expected_margin_D": -22.71,
+          "win_prob_D": 0.0559
         },
         {
           "race_id": "HOU_GA_03_2026",
           "state": "GA",
           "district": "03",
-          "expected_margin_D": -22.78,
+          "expected_margin_D": -22.79,
           "win_prob_D": 0.0553
         },
         {
           "race_id": "HOU_KY_01_2026",
           "state": "KY",
           "district": "01",
-          "expected_margin_D": -23.43,
+          "expected_margin_D": -23.44,
           "win_prob_D": 0.0504
         },
         {
           "race_id": "HOU_CA_20_2026",
           "state": "CA",
           "district": "20",
-          "expected_margin_D": -23.45,
-          "win_prob_D": 0.0503
+          "expected_margin_D": -23.46,
+          "win_prob_D": 0.0502
         },
         {
           "race_id": "HOU_AR_04_2026",
           "state": "AR",
           "district": "04",
-          "expected_margin_D": -23.76,
-          "win_prob_D": 0.0481
+          "expected_margin_D": -23.77,
+          "win_prob_D": 0.048
         },
         {
           "race_id": "HOU_IL_12_2026",
           "state": "IL",
           "district": "12",
-          "expected_margin_D": -24.08,
-          "win_prob_D": 0.0459
+          "expected_margin_D": -24.09,
+          "win_prob_D": 0.0458
         },
         {
           "race_id": "HOU_AL_03_2026",
           "state": "AL",
           "district": "03",
-          "expected_margin_D": -24.26,
-          "win_prob_D": 0.0447
+          "expected_margin_D": -24.27,
+          "win_prob_D": 0.0446
         },
         {
           "race_id": "HOU_MS_04_2026",
           "state": "MS",
           "district": "04",
-          "expected_margin_D": -24.35,
-          "win_prob_D": 0.0441
+          "expected_margin_D": -24.36,
+          "win_prob_D": 0.044
         },
         {
           "race_id": "HOU_TN_03_2026",
           "state": "TN",
           "district": "03",
-          "expected_margin_D": -24.58,
-          "win_prob_D": 0.0426
+          "expected_margin_D": -24.59,
+          "win_prob_D": 0.0425
         },
         {
           "race_id": "HOU_IL_15_2026",
           "state": "IL",
           "district": "15",
-          "expected_margin_D": -24.59,
+          "expected_margin_D": -24.6,
           "win_prob_D": 0.0425
         },
         {
           "race_id": "HOU_LA_03_2026",
           "state": "LA",
           "district": "03",
-          "expected_margin_D": -25.29,
-          "win_prob_D": 0.0383
+          "expected_margin_D": -25.3,
+          "win_prob_D": 0.0382
         },
         {
           "race_id": "HOU_GA_09_2026",
           "state": "GA",
           "district": "09",
-          "expected_margin_D": -25.6,
+          "expected_margin_D": -25.61,
           "win_prob_D": 0.0365
         },
         {
           "race_id": "HOU_MO_04_2026",
           "state": "MO",
           "district": "04",
-          "expected_margin_D": -25.95,
-          "win_prob_D": 0.0346
+          "expected_margin_D": -25.96,
+          "win_prob_D": 0.0345
         },
         {
           "race_id": "HOU_SC_03_2026",
           "state": "SC",
           "district": "03",
-          "expected_margin_D": -26.06,
+          "expected_margin_D": -26.07,
           "win_prob_D": 0.034
         },
         {
           "race_id": "HOU_UT_02_2026",
           "state": "UT",
           "district": "02",
-          "expected_margin_D": -26.28,
-          "win_prob_D": 0.0329
+          "expected_margin_D": -26.29,
+          "win_prob_D": 0.0328
         },
         {
           "race_id": "HOU_ID_01_2026",
           "state": "ID",
           "district": "01",
-          "expected_margin_D": -26.93,
-          "win_prob_D": 0.0297
+          "expected_margin_D": -26.94,
+          "win_prob_D": 0.0296
         },
         {
           "race_id": "HOU_AR_01_2026",
           "state": "AR",
           "district": "01",
-          "expected_margin_D": -27.35,
+          "expected_margin_D": -27.36,
           "win_prob_D": 0.0277
         },
         {
           "race_id": "HOU_PA_13_2026",
           "state": "PA",
           "district": "13",
-          "expected_margin_D": -27.64,
-          "win_prob_D": 0.0265
+          "expected_margin_D": -27.65,
+          "win_prob_D": 0.0264
         },
         {
           "race_id": "HOU_OH_02_2026",
           "state": "OH",
           "district": "02",
-          "expected_margin_D": -27.68,
-          "win_prob_D": 0.0263
+          "expected_margin_D": -27.69,
+          "win_prob_D": 0.0262
         },
         {
           "race_id": "HOU_VA_09_2026",
           "state": "VA",
           "district": "09",
-          "expected_margin_D": -27.97,
-          "win_prob_D": 0.0251
+          "expected_margin_D": -27.98,
+          "win_prob_D": 0.025
         },
         {
           "race_id": "HOU_GA_14_2026",
           "state": "GA",
           "district": "14",
-          "expected_margin_D": -27.98,
+          "expected_margin_D": -27.99,
           "win_prob_D": 0.025
         },
         {
           "race_id": "HOU_FL_01_2026",
           "state": "FL",
           "district": "01",
-          "expected_margin_D": -28.1,
+          "expected_margin_D": -28.11,
           "win_prob_D": 0.0245
         },
         {
           "race_id": "HOU_UT_04_2026",
           "state": "UT",
           "district": "04",
-          "expected_margin_D": -28.48,
-          "win_prob_D": 0.0231
+          "expected_margin_D": -28.49,
+          "win_prob_D": 0.023
         },
         {
           "race_id": "HOU_OK_03_2026",
           "state": "OK",
           "district": "03",
-          "expected_margin_D": -28.79,
+          "expected_margin_D": -28.8,
           "win_prob_D": 0.0219
         },
         {
           "race_id": "HOU_MO_07_2026",
           "state": "MO",
           "district": "07",
-          "expected_margin_D": -28.88,
-          "win_prob_D": 0.0216
+          "expected_margin_D": -28.89,
+          "win_prob_D": 0.0215
         },
         {
           "race_id": "HOU_LA_01_2026",
           "state": "LA",
           "district": "01",
-          "expected_margin_D": -28.96,
-          "win_prob_D": 0.0213
+          "expected_margin_D": -28.97,
+          "win_prob_D": 0.0212
         },
         {
           "race_id": "HOU_OH_04_2026",
           "state": "OH",
           "district": "04",
-          "expected_margin_D": -29.35,
+          "expected_margin_D": -29.36,
           "win_prob_D": 0.0199
         },
         {
           "race_id": "HOU_KY_05_2026",
           "state": "KY",
           "district": "05",
-          "expected_margin_D": -30.87,
+          "expected_margin_D": -30.88,
           "win_prob_D": 0.0153
         },
         {
           "race_id": "HOU_OK_02_2026",
           "state": "OK",
           "district": "02",
-          "expected_margin_D": -30.95,
+          "expected_margin_D": -30.96,
           "win_prob_D": 0.0151
         },
         {
           "race_id": "HOU_TX_01_2026",
           "state": "TX",
           "district": "01",
-          "expected_margin_D": -31.33,
+          "expected_margin_D": -31.34,
           "win_prob_D": 0.0141
         },
         {
           "race_id": "HOU_TX_13_2026",
           "state": "TX",
           "district": "13",
-          "expected_margin_D": -31.96,
+          "expected_margin_D": -31.97,
           "win_prob_D": 0.0126
         },
         {
           "race_id": "HOU_MO_08_2026",
           "state": "MO",
           "district": "08",
-          "expected_margin_D": -32.15,
+          "expected_margin_D": -32.16,
           "win_prob_D": 0.0122
         },
         {
           "race_id": "HOU_UT_03_2026",
           "state": "UT",
           "district": "03",
-          "expected_margin_D": -32.61,
+          "expected_margin_D": -32.62,
           "win_prob_D": 0.0112
         },
         {
           "race_id": "HOU_NE_03_2026",
           "state": "NE",
           "district": "03",
-          "expected_margin_D": -36.38,
+          "expected_margin_D": -36.39,
           "win_prob_D": 0.0054
         },
         {
           "race_id": "HOU_AL_04_2026",
           "state": "AL",
           "district": "04",
-          "expected_margin_D": -37.98,
+          "expected_margin_D": -37.99,
           "win_prob_D": 0.0039
         },
         {
           "race_id": "HOU_TN_01_2026",
           "state": "TN",
           "district": "01",
-          "expected_margin_D": -39.16,
-          "win_prob_D": 0.0031
+          "expected_margin_D": -39.17,
+          "win_prob_D": 0.003
         }
       ],
       "category": "academic",
