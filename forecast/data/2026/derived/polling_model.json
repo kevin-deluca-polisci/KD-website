@@ -1,17 +1,17 @@
 {
-  "snapshot_date": "2026-09-25",
-  "days_to_election": 39,
+  "snapshot_date": "2026-09-26",
+  "days_to_election": 38,
   "generic_ballot": {
     "raw": 8.388,
-    "adjusted": 9.018,
+    "adjusted": 9.019,
     "used": "margin_D_adjusted",
-    "value": 9.018
+    "value": 9.019
   },
-  "shrink_lambda": 0.9317,
-  "nowcast_tide_D": 9.018,
-  "election_day_tide_D": 8.402,
-  "tide_D_80_low": 4.397,
-  "tide_D_80_high": 13.639,
+  "shrink_lambda": 0.9334,
+  "nowcast_tide_D": 9.019,
+  "election_day_tide_D": 8.418,
+  "tide_D_80_low": 4.398,
+  "tide_D_80_high": 13.64,
   "sigma_source": "calibrated, n=30",
   "calibration": {
     "ok": true,
@@ -65,7 +65,7 @@
       "AK": {
         "expected_margin_D": -7.3,
         "pvi": -6.45,
-        "win_prob_D": 0.087
+        "win_prob_D": 0.0871
       },
       "AL": {
         "expected_margin_D": -15.36,
@@ -78,7 +78,7 @@
         "win_prob_D": 0.0
       },
       "CO": {
-        "expected_margin_D": 24.54,
+        "expected_margin_D": 24.55,
         "pvi": 5.97,
         "win_prob_D": 1.0
       },
@@ -90,7 +90,7 @@
       "FL": {
         "expected_margin_D": -5.55,
         "pvi": -5.39,
-        "win_prob_D": 0.1505
+        "win_prob_D": 0.1506
       },
       "GA": {
         "expected_margin_D": 13.4,
@@ -100,10 +100,10 @@
       "IA": {
         "expected_margin_D": -1.01,
         "pvi": -6.09,
-        "win_prob_D": 0.4257
+        "win_prob_D": 0.4258
       },
       "ID": {
-        "expected_margin_D": -26.38,
+        "expected_margin_D": -26.37,
         "pvi": -18.04,
         "win_prob_D": 0.0
       },
@@ -148,14 +148,14 @@
         "win_prob_D": 0.993
       },
       "MS": {
-        "expected_margin_D": -14.43,
+        "expected_margin_D": -14.42,
         "pvi": -10.78,
         "win_prob_D": 0.0036
       },
       "MT": {
-        "expected_margin_D": -7.15,
+        "expected_margin_D": -7.14,
         "pvi": -9.82,
-        "win_prob_D": 0.0916
+        "win_prob_D": 0.0917
       },
       "NC": {
         "expected_margin_D": 6.71,
@@ -220,7 +220,7 @@
       "TX": {
         "expected_margin_D": -0.73,
         "pvi": -5.92,
-        "win_prob_D": 0.4462
+        "win_prob_D": 0.4463
       },
       "VA": {
         "expected_margin_D": 20.46,
@@ -240,9 +240,9 @@
     },
     "holdover_D_assumed": 34,
     "prob_D_50_plus": 0.6228,
-    "prob_D_51_plus": 0.3809,
+    "prob_D_51_plus": 0.381,
     "prob_D_50_plus_sensitivity": {
-      "33": 0.3809,
+      "33": 0.381,
       "34": 0.6228,
       "35": 0.8764
     },
