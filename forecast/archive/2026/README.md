@@ -139,6 +139,14 @@ The collection and processing code is in this repository under
   that date, one value per source, using each source's most recent forecast
   as of that date (`n_carried`). The average also moves when a source is
   added or stops updating.
+- **Sources that enter partway through.** For DDHQ, RealClearPolitics,
+  VoteHub, FiftyPlusOne, Silver Bulletin, 270toWin, Ray Fair and the
+  economic pessimism model, the first national margin in the archive is also
+  used on the dates before it, so a line does not jump when the source is
+  added. These rows have `provenance` = `retrospective`, an `as_of` later than
+  the date, and are counted in `n_retrospective`. Seat counts and chances of
+  control on those dates are calculated from that margin with the district
+  maps in force on each date.
 - **Seat counts from a national margin.** Some sources publish only a
   national House vote margin (the polling averages and most academic models).
   For those, this archive computes seat counts and chances of control: each

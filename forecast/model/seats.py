@@ -192,6 +192,34 @@ HOUSE_MAJORITY = 218
 # episodic, it is abandoned.
 TIDE_MAX_AGE_DAYS = 200
 
+# --------------------------------------------------------------------------
+# SEATS FOR THE DATES BEFORE A SOURCE ENTERED
+#
+# aggregate.py's carry_backward shows a late entrant's FIRST margin on the
+# dates before it (BACKFILL_TO_PANEL_START there; keep this set in step with
+# it). It used to copy the SEAT COUNT backwards too, and a seat count is not a
+# forecaster's number: it is our translation of the margin onto the district
+# map, and the map is a function of the date. DDHQ's 2025-10-05 seat count
+# was computed with Texas on its new lines and California on its old ones,
+# and copying it back to March 2025 put Texas's 2025 map into a month when
+# the 2021 map governed. Four of the five polling seat counts before October
+# 2025 were such copies, which is why the Texas and California redraws barely
+# moved the polling line (found 2026-09-29).
+#
+# So the margin is still carried back (a display decision, stamped
+# `retrospective`), but the seats and chances are RE-PROJECTED here from that
+# first margin onto each earlier date's own map and horizon. aggregate.py no
+# longer copies seat quantities for sources that have projections.
+REPROJECT_BACKWARD = {
+    "ddhq", "rcp", "votehub", "fiftyplusone", "twoseventy",
+    "fair", "academic_economic_pessimism",
+}
+# Fewer simulations for these fills: about 1,600 projections at 20,000 draws
+# would take over an hour. The draws use the same seed on every date, so the
+# day-to-day movement is the map and the horizon, not simulation noise; the
+# level is within a few tenths of a seat of a full run.
+BACKWARD_N_SIMS = 5000
+
 
 def external_tides(cycle: int, today: str) -> dict[str, dict]:
     """source_id -> {category, margin, as_of, publication} for outside tides.
@@ -1048,6 +1076,57 @@ def main(argv=None) -> int:
                 hist[d0] = day
                 if i % 20 == 0 or i == len(todo):
                     print(f"    {i}/{len(todo)} dates")
+            # SEATS BEFORE EACH LATE ENTRANT'S FIRST FORECAST. See
+            # REPROJECT_BACKWARD. Only dates this run is rebuilding, and only
+            # dates on which the source has no projection of its own.
+            todo_set = set(todo)
+            back = 0
+            full_sims = polling.N_SIMS
+            polling.N_SIMS = BACKWARD_N_SIMS
+            try:
+                for sid in sorted(REPROJECT_BACKWARD):
+                    have = sorted(d0 for d0, day in hist.items()
+                                  if sid in (day.get("projections") or {})
+                                  and not (day["projections"][sid] or {})
+                                  .get("carried_back"))
+                    if not have:
+                        continue
+                    first = have[0]
+                    src = hist[first]["projections"][sid]
+                    if src.get("tide_D") is None:
+                        continue
+                    m_src = ((ah.get(first) or {}).get("models") or {}).get(sid)
+                    floor = (published_sigma(sid, m_src)
+                             if m_src is not None
+                             else PUBLISHED_SIGMA_MARGIN.get(sid))
+                    for d0 in sorted(d for d in hist if d < first and d in todo_set):
+                        day = hist[d0]
+                        day.setdefault("projections", {})
+                        cur = day["projections"].get(sid)
+                        if cur and not cur.get("carried_back"):
+                            continue
+                        p0 = project(float(src["tide_D"]), pvi, states, rows,
+                                     sigma, a.holdover_d, asof=d0,
+                                     sigma_floor=floor)
+                        p0["category"] = src.get("category")
+                        p0["categories"] = src.get("categories") or [src.get("category")]
+                        p0["publication"] = src.get("publication") or "private"
+                        # The margin reaches the line through carry_backward in
+                        # aggregate.py; this entry contributes seats only.
+                        p0["margin_published_elsewhere"] = True
+                        p0["seats_published_elsewhere"] = False
+                        p0["as_of"] = src.get("as_of") or first
+                        p0["provenance"] = "backfilled"
+                        # National quantities only: no per-state rows for a
+                        # date the source had not yet published anything.
+                        p0["carried_back"] = True
+                        p0["n_sims"] = BACKWARD_N_SIMS
+                        day["projections"][sid] = p0
+                        back += 1
+            finally:
+                polling.N_SIMS = full_sims
+            print(f"  re-projected {back} seat count(s) for dates before a "
+                  f"source's first forecast, each on its own date's map")
             print(f"  backfilled {filled} academic projection(s) across "
                   f"{len(todo)} date(s)")
             baseline_audit(hist)

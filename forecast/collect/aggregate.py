@@ -413,6 +413,15 @@ def interpolate_between_observations(rows: list[dict]) -> list[str]:
             for sid, n in sorted(stats.items())]
 
 
+# SEAT COUNTS ARE NOT COPIED BACKWARDS ONCE seats.py HAS RE-PROJECTED THEM.
+# For a source whose seats are our projection of its margin, seats.py
+# --backfill-history projects the first margin onto each earlier date's own
+# district map (REPROJECT_BACKWARD there). Those rows are observations in the
+# `series` below, so the earliest seat row is already on the first date of
+# the panel and nothing is copied. Before that backfill has run, the old copy
+# still fills the gap, which keeps the daily run from losing rows.
+
+
 def carry_backward(rows: list[dict], registry: dict) -> list[str]:
     """Show a late entrant's earliest value on the dates before it.
 
@@ -870,6 +879,10 @@ def class_model_rows(cycle: int) -> list[dict]:
               # disagreement.
               emit(source_id, cat, NATL_SENATE, "national", "", "", "win_prob_D",
                    senate.get("prob_D_51_plus"), "prob")
+              if model.get("carried_back"):
+                  # Re-projected for a date before this source's first
+                  # forecast (seats.py REPROJECT_BACKWARD): national only.
+                  continue
               for st, r in (model.get("races") or {}).items():
                   rid = f"SEN_{st}_2026"
                   emit(source_id, cat, rid, "senate", st, "", "margin_D",
