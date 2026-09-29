@@ -1,6 +1,6 @@
 {
   "cycle": 2026,
-  "generated": "2026-09-28",
+  "generated": "2026-09-29",
   "note": "Three constructions of the same week's polls. The models are fed `model_input` because the coefficients were fitted on a Gallup series and Gallup interviewed all adults; the other two are published for comparison and are not inputs.",
   "series": {
     "model_input": {
@@ -424,13 +424,13 @@
           "n": 5
         },
         {
-          "date": "2026-09-28",
+          "date": "2026-09-29",
           "approve": 31.38,
           "n": 4
         }
       ],
       "latest": {
-        "date": "2026-09-28",
+        "date": "2026-09-29",
         "approve": 31.38,
         "n": 4
       }
@@ -856,15 +856,15 @@
           "n": 32
         },
         {
-          "date": "2026-09-28",
-          "approve": 38.96,
-          "n": 25
+          "date": "2026-09-29",
+          "approve": 38.72,
+          "n": 20
         }
       ],
       "latest": {
-        "date": "2026-09-28",
-        "approve": 38.96,
-        "n": 25
+        "date": "2026-09-29",
+        "approve": 38.72,
+        "n": 20
       }
     },
     "aggregate": {
@@ -872,6 +872,625 @@
       "publication": "individual",
       "source": "Wikipedia's approval aggregator table (CC BY-SA), excluding the row Wikipedia computes itself. Starts at the first capture: an aggregator's average is overwritten in place, so a past value is only recoverable if we were there to read it.",
       "points": [
+        {
+          "date": "2026-01-01",
+          "approve": 41.9,
+          "n": 9,
+          "low": 39.0,
+          "high": 44.6,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 44.6,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 43.4,
+            "Silver Bulletin": 42.3,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2026-01-07",
+          "approve": 41.88,
+          "n": 8,
+          "low": 39.0,
+          "high": 44.0,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.4,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 42.0,
+            "Real Clear Politics": 44.0,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.5
+          }
+        },
+        {
+          "date": "2026-01-15",
+          "approve": 41.6,
+          "n": 8,
+          "low": 40.0,
+          "high": 43.0,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 42.0,
+            "FiftyPlusOne": 40.2,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 42.6,
+            "The Economist": 40.0,
+            "The New York Times": 42.0,
+            "VoteHub": 41.6
+          }
+        },
+        {
+          "date": "2026-01-22",
+          "approve": 40.74,
+          "n": 8,
+          "low": 37.0,
+          "high": 42.5,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.5,
+            "FiftyPlusOne": 39.7,
+            "Race to the WH": 40.4,
+            "Real Clear Politics": 42.5,
+            "The Economist": 37.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.8
+          }
+        },
+        {
+          "date": "2026-01-29",
+          "approve": 40.83,
+          "n": 9,
+          "low": 38.0,
+          "high": 42.6,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 42.0,
+            "FiftyPlusOne": 39.2,
+            "Race to the WH": 40.3,
+            "Real Clear Politics": 42.6,
+            "Silver Bulletin": 41.0,
+            "The Economist": 38.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.4
+          }
+        },
+        {
+          "date": "2026-02-05",
+          "approve": 41.18,
+          "n": 10,
+          "low": 39.0,
+          "high": 42.5,
+          "members": {
+            "Ballotpedia": 42.0,
+            "CNN": 39.0,
+            "Decision Desk HQ": 42.2,
+            "FiftyPlusOne": 39.9,
+            "Race to the WH": 40.7,
+            "Real Clear Politics": 42.5,
+            "Silver Bulletin": 41.4,
+            "The Economist": 41.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.1
+          }
+        },
+        {
+          "date": "2026-02-12",
+          "approve": 40.72,
+          "n": 10,
+          "low": 38.7,
+          "high": 42.0,
+          "members": {
+            "Ballotpedia": 42.0,
+            "CNN": 39.0,
+            "Decision Desk HQ": 41.5,
+            "FiftyPlusOne": 38.7,
+            "Race to the WH": 40.3,
+            "Real Clear Politics": 42.0,
+            "Silver Bulletin": 40.9,
+            "The Economist": 41.0,
+            "The New York Times": 40.0,
+            "VoteHub": 41.8
+          }
+        },
+        {
+          "date": "2026-02-18",
+          "approve": 40.18,
+          "n": 10,
+          "low": 38.0,
+          "high": 42.0,
+          "members": {
+            "Ballotpedia": 42.0,
+            "CNN": 39.0,
+            "Decision Desk HQ": 40.7,
+            "FiftyPlusOne": 38.7,
+            "Race to the WH": 39.8,
+            "Real Clear Politics": 42.0,
+            "Silver Bulletin": 40.8,
+            "The Economist": 38.0,
+            "The New York Times": 40.0,
+            "VoteHub": 40.8
+          }
+        },
+        {
+          "date": "2026-02-26",
+          "approve": 40.49,
+          "n": 10,
+          "low": 38.0,
+          "high": 42.2,
+          "members": {
+            "Ballotpedia": 42.0,
+            "CNN": 38.0,
+            "Decision Desk HQ": 41.5,
+            "FiftyPlusOne": 38.8,
+            "Race to the WH": 39.7,
+            "Real Clear Politics": 42.2,
+            "Silver Bulletin": 41.2,
+            "The Economist": 39.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.5
+          }
+        },
+        {
+          "date": "2026-03-03",
+          "approve": 40.77,
+          "n": 10,
+          "low": 38.0,
+          "high": 43.1,
+          "members": {
+            "Ballotpedia": 42.0,
+            "CNN": 38.0,
+            "Decision Desk HQ": 42.0,
+            "FiftyPlusOne": 38.8,
+            "Race to the WH": 40.2,
+            "Real Clear Politics": 43.1,
+            "Silver Bulletin": 42.0,
+            "The Economist": 39.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.6
+          }
+        },
+        {
+          "date": "2026-03-12",
+          "approve": 40.9,
+          "n": 10,
+          "low": 38.0,
+          "high": 43.1,
+          "members": {
+            "Ballotpedia": 43.0,
+            "CNN": 38.0,
+            "Decision Desk HQ": 41.9,
+            "FiftyPlusOne": 38.7,
+            "Race to the WH": 40.3,
+            "Real Clear Politics": 43.1,
+            "Silver Bulletin": 41.0,
+            "The Economist": 40.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.0
+          }
+        },
+        {
+          "date": "2026-03-18",
+          "approve": 40.39,
+          "n": 10,
+          "low": 38.0,
+          "high": 43.0,
+          "members": {
+            "Ballotpedia": 43.0,
+            "CNN": 38.0,
+            "Decision Desk HQ": 41.2,
+            "FiftyPlusOne": 38.4,
+            "Race to the WH": 39.6,
+            "Real Clear Politics": 42.5,
+            "Silver Bulletin": 40.7,
+            "The Economist": 39.0,
+            "The New York Times": 40.0,
+            "VoteHub": 41.5
+          }
+        },
+        {
+          "date": "2026-03-26",
+          "approve": 39.85,
+          "n": 10,
+          "low": 38.0,
+          "high": 42.0,
+          "members": {
+            "Ballotpedia": 42.0,
+            "CNN": 38.0,
+            "Decision Desk HQ": 41.1,
+            "FiftyPlusOne": 38.0,
+            "Race to the WH": 39.5,
+            "Real Clear Politics": 41.2,
+            "Silver Bulletin": 40.1,
+            "The Economist": 38.0,
+            "The New York Times": 40.0,
+            "VoteHub": 40.6
+          }
+        },
+        {
+          "date": "2026-04-02",
+          "approve": 39.22,
+          "n": 10,
+          "low": 37.0,
+          "high": 42.0,
+          "members": {
+            "Ballotpedia": 42.0,
+            "CNN": 37.0,
+            "Decision Desk HQ": 39.5,
+            "FiftyPlusOne": 37.1,
+            "Race to the WH": 38.8,
+            "Real Clear Politics": 41.1,
+            "Silver Bulletin": 39.5,
+            "The Economist": 38.0,
+            "The New York Times": 39.0,
+            "VoteHub": 40.2
+          }
+        },
+        {
+          "date": "2026-04-06",
+          "approve": 39.05,
+          "n": 10,
+          "low": 36.0,
+          "high": 41.0,
+          "members": {
+            "Ballotpedia": 41.0,
+            "CNN": 37.0,
+            "Decision Desk HQ": 40.4,
+            "FiftyPlusOne": 37.2,
+            "Race to the WH": 38.8,
+            "Real Clear Politics": 40.9,
+            "Silver Bulletin": 39.7,
+            "The Economist": 36.0,
+            "The New York Times": 39.0,
+            "VoteHub": 40.5
+          }
+        },
+        {
+          "date": "2026-04-23",
+          "approve": 38.49,
+          "n": 10,
+          "low": 36.8,
+          "high": 40.5,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 37.0,
+            "Decision Desk HQ": 40.3,
+            "FiftyPlusOne": 37.0,
+            "Race to the WH": 36.8,
+            "Real Clear Politics": 40.5,
+            "Silver Bulletin": 38.8,
+            "The Economist": 38.0,
+            "The New York Times": 38.0,
+            "VoteHub": 38.5
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "approve": 38.9,
+          "n": 10,
+          "low": 36.0,
+          "high": 41.0,
+          "members": {
+            "Ballotpedia": 41.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 40.8,
+            "FiftyPlusOne": 37.0,
+            "Race to the WH": 38.3,
+            "Real Clear Politics": 40.9,
+            "Silver Bulletin": 39.4,
+            "The Economist": 37.0,
+            "The New York Times": 39.0,
+            "VoteHub": 39.6
+          }
+        },
+        {
+          "date": "2026-05-06",
+          "approve": 38.4,
+          "n": 10,
+          "low": 35.0,
+          "high": 41.0,
+          "members": {
+            "Ballotpedia": 41.0,
+            "CNN": 35.0,
+            "Decision Desk HQ": 40.5,
+            "FiftyPlusOne": 36.7,
+            "Race to the WH": 37.8,
+            "Real Clear Politics": 40.3,
+            "Silver Bulletin": 39.0,
+            "The Economist": 36.0,
+            "The New York Times": 38.0,
+            "VoteHub": 39.7
+          }
+        },
+        {
+          "date": "2026-05-14",
+          "approve": 38.2,
+          "n": 10,
+          "low": 35.0,
+          "high": 40.2,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 35.0,
+            "Decision Desk HQ": 39.9,
+            "FiftyPlusOne": 36.8,
+            "Race to the WH": 37.7,
+            "Real Clear Politics": 40.2,
+            "Silver Bulletin": 38.5,
+            "The Economist": 36.0,
+            "The New York Times": 38.0,
+            "VoteHub": 39.9
+          }
+        },
+        {
+          "date": "2026-05-21",
+          "approve": 38.19,
+          "n": 10,
+          "low": 36.0,
+          "high": 40.0,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 39.7,
+            "FiftyPlusOne": 36.7,
+            "Race to the WH": 37.6,
+            "Real Clear Politics": 39.6,
+            "Silver Bulletin": 38.5,
+            "The Economist": 37.0,
+            "The New York Times": 38.0,
+            "VoteHub": 38.8
+          }
+        },
+        {
+          "date": "2026-05-27",
+          "approve": 38.25,
+          "n": 10,
+          "low": 36.0,
+          "high": 40.0,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 38.9,
+            "FiftyPlusOne": 36.6,
+            "Race to the WH": 38.0,
+            "Real Clear Politics": 39.8,
+            "Silver Bulletin": 38.9,
+            "The Economist": 37.0,
+            "The New York Times": 38.0,
+            "VoteHub": 39.3
+          }
+        },
+        {
+          "date": "2026-06-03",
+          "approve": 38.05,
+          "n": 10,
+          "low": 35.0,
+          "high": 40.3,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 38.9,
+            "FiftyPlusOne": 36.5,
+            "Race to the WH": 37.7,
+            "Real Clear Politics": 40.3,
+            "Silver Bulletin": 38.6,
+            "The Economist": 35.0,
+            "The New York Times": 38.0,
+            "VoteHub": 39.5
+          }
+        },
+        {
+          "date": "2026-06-09",
+          "approve": 38.27,
+          "n": 10,
+          "low": 35.0,
+          "high": 40.3,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 39.5,
+            "FiftyPlusOne": 36.9,
+            "Race to the WH": 38.2,
+            "Real Clear Politics": 40.3,
+            "Silver Bulletin": 38.9,
+            "The Economist": 35.0,
+            "The New York Times": 38.0,
+            "VoteHub": 39.9
+          }
+        },
+        {
+          "date": "2026-06-12",
+          "approve": 38.27,
+          "n": 10,
+          "low": 35.0,
+          "high": 40.3,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 39.5,
+            "FiftyPlusOne": 36.9,
+            "Race to the WH": 38.2,
+            "Real Clear Politics": 40.3,
+            "Silver Bulletin": 38.9,
+            "The Economist": 35.0,
+            "The New York Times": 38.0,
+            "VoteHub": 39.9
+          }
+        },
+        {
+          "date": "2026-06-20",
+          "approve": 39.17,
+          "n": 10,
+          "low": 37.0,
+          "high": 41.0,
+          "members": {
+            "Ballotpedia": 41.0,
+            "CNN": 37.0,
+            "Decision Desk HQ": 40.9,
+            "FiftyPlusOne": 37.3,
+            "Race to the WH": 38.9,
+            "Real Clear Politics": 40.6,
+            "Silver Bulletin": 39.1,
+            "The Economist": 38.0,
+            "The New York Times": 39.0,
+            "VoteHub": 39.9
+          }
+        },
+        {
+          "date": "2026-06-27",
+          "approve": 39.17,
+          "n": 10,
+          "low": 37.0,
+          "high": 41.0,
+          "members": {
+            "Ballotpedia": 41.0,
+            "CNN": 37.0,
+            "Decision Desk HQ": 40.9,
+            "FiftyPlusOne": 37.3,
+            "Race to the WH": 38.9,
+            "Real Clear Politics": 40.6,
+            "Silver Bulletin": 39.1,
+            "The Economist": 38.0,
+            "The New York Times": 39.0,
+            "VoteHub": 39.9
+          }
+        },
+        {
+          "date": "2026-07-09",
+          "approve": 39.2,
+          "n": 10,
+          "low": 37.0,
+          "high": 41.3,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 37.0,
+            "Decision Desk HQ": 41.3,
+            "FiftyPlusOne": 37.5,
+            "Race to the WH": 39.5,
+            "Real Clear Politics": 40.4,
+            "Silver Bulletin": 39.7,
+            "The Economist": 37.0,
+            "The New York Times": 39.0,
+            "VoteHub": 40.6
+          }
+        },
+        {
+          "date": "2026-07-11",
+          "approve": 39.11,
+          "n": 10,
+          "low": 36.0,
+          "high": 42.0,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 37.0,
+            "Decision Desk HQ": 42.0,
+            "FiftyPlusOne": 37.0,
+            "Race to the WH": 38.7,
+            "Real Clear Politics": 40.9,
+            "Silver Bulletin": 39.7,
+            "The Economist": 36.0,
+            "The New York Times": 39.0,
+            "VoteHub": 40.8
+          }
+        },
+        {
+          "date": "2026-07-23",
+          "approve": 39.04,
+          "n": 10,
+          "low": 36.0,
+          "high": 42.2,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 42.2,
+            "FiftyPlusOne": 37.1,
+            "Race to the WH": 38.9,
+            "Real Clear Politics": 41.1,
+            "Silver Bulletin": 39.6,
+            "The Economist": 36.0,
+            "The New York Times": 39.0,
+            "VoteHub": 40.5
+          }
+        },
+        {
+          "date": "2026-07-30",
+          "approve": 38.75,
+          "n": 10,
+          "low": 36.0,
+          "high": 42.3,
+          "members": {
+            "Ballotpedia": 40.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 42.3,
+            "FiftyPlusOne": 36.8,
+            "Race to the WH": 38.1,
+            "Real Clear Politics": 41.1,
+            "Silver Bulletin": 39.0,
+            "The Economist": 36.0,
+            "The New York Times": 39.0,
+            "VoteHub": 39.2
+          }
+        },
+        {
+          "date": "2026-08-05",
+          "approve": 37.66,
+          "n": 10,
+          "low": 35.0,
+          "high": 41.1,
+          "members": {
+            "Ballotpedia": 39.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 41.1,
+            "FiftyPlusOne": 36.1,
+            "Race to the WH": 36.6,
+            "Real Clear Politics": 39.5,
+            "Silver Bulletin": 38.2,
+            "The Economist": 35.0,
+            "The New York Times": 37.0,
+            "VoteHub": 38.1
+          }
+        },
+        {
+          "date": "2026-08-07",
+          "approve": 37.8,
+          "n": 10,
+          "low": 35.0,
+          "high": 39.9,
+          "members": {
+            "Ballotpedia": 39.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 39.9,
+            "FiftyPlusOne": 36.6,
+            "Race to the WH": 37.4,
+            "Real Clear Politics": 39.3,
+            "Silver Bulletin": 38.2,
+            "The Economist": 35.0,
+            "The New York Times": 38.0,
+            "VoteHub": 38.6
+          }
+        },
+        {
+          "date": "2026-08-18",
+          "approve": 37.48,
+          "n": 10,
+          "low": 34.0,
+          "high": 39.5,
+          "members": {
+            "Ballotpedia": 39.0,
+            "CNN": 36.0,
+            "Decision Desk HQ": 39.5,
+            "FiftyPlusOne": 36.2,
+            "Race to the WH": 36.8,
+            "Real Clear Politics": 39.2,
+            "Silver Bulletin": 38.3,
+            "The Economist": 34.0,
+            "The New York Times": 37.0,
+            "VoteHub": 38.8
+          }
+        },
         {
           "date": "2026-08-25",
           "approve": 37.48,
@@ -1521,10 +2140,28 @@
             "The Economist": 35.0,
             "The New York Times": 37.0
           }
+        },
+        {
+          "date": "2026-09-29",
+          "approve": 37.29,
+          "n": 9,
+          "low": 35.0,
+          "high": 39.4,
+          "members": {
+            "Ballotpedia": 39.0,
+            "CNN": 35.0,
+            "Decision Desk HQ": 39.4,
+            "FiftyPlusOne": 35.1,
+            "NBC News": 39.0,
+            "Real Clear Politics": 38.7,
+            "Silver Bulletin": 37.4,
+            "The Economist": 35.0,
+            "The New York Times": 37.0
+          }
         }
       ],
       "latest": {
-        "date": "2026-09-28",
+        "date": "2026-09-29",
         "approve": 37.29,
         "n": 9,
         "low": 35.0,
@@ -1626,14 +2263,14 @@
     {
       "pop": "RV",
       "label": "registered voters",
-      "approve": 39.2,
-      "n": 8
+      "approve": 39.0,
+      "n": 4
     },
     {
       "pop": "LV",
       "label": "likely voters",
       "approve": 41.1,
-      "n": 13
+      "n": 12
     }
   ],
   "chart": {
@@ -1641,7 +2278,7 @@
     "h": 190.0,
     "lines": {
       "model_input": {
-        "polyline": "66.4,31.3 73.3,29.9 80.2,37.9 87.0,47.0 93.9,46.4 100.8,45.3 107.6,52.4 114.5,60.3 121.4,70.4 128.3,71.2 135.1,70.3 142.0,60.4 148.9,61.1 155.8,68.2 162.6,66.9 169.5,65.3 176.4,69.9 183.3,74.3 190.1,68.9 197.0,65.2 203.9,73.3 210.7,81.7 217.6,92.4 224.5,80.1 231.4,70.9 238.2,89.0 245.1,80.0 252.0,74.3 258.9,72.6 265.7,74.0 272.6,79.8 279.5,84.3 286.4,85.1 293.2,83.7 300.1,82.7 307.0,85.0 313.9,87.4 320.7,97.3 327.6,99.8 334.5,97.4 341.3,91.8 348.2,87.7 355.1,88.6 362.0,92.3 368.8,101.2 375.7,86.8 382.6,85.8 389.5,97.8 396.3,104.2 403.2,98.4 410.1,109.1 417.0,108.0 423.8,98.4 430.7,102.2 437.6,108.6 444.4,109.2 451.3,113.6 458.2,113.4 465.1,108.8 471.9,109.1 478.8,122.6 485.7,125.2 492.6,116.2 499.4,113.5 506.3,127.0 513.2,127.0 520.1,113.9 526.9,111.4 533.8,115.0 540.7,117.8 547.6,119.2 554.4,121.3 561.3,118.5 568.2,121.8 575.0,126.1 581.9,124.3 588.8,129.9 595.7,129.7 602.5,130.8 609.4,135.8 616.3,127.5 623.2,123.3 630.0,155.7 632.0,161.7",
+        "polyline": "66.4,31.3 73.2,29.9 80.1,37.9 86.9,47.0 93.8,46.4 100.7,45.3 107.5,52.4 114.4,60.3 121.2,70.4 128.1,71.2 135.0,70.3 141.8,60.4 148.7,61.1 155.6,68.2 162.4,66.9 169.3,65.3 176.1,69.9 183.0,74.3 189.9,68.9 196.7,65.2 203.6,73.3 210.5,81.7 217.3,92.4 224.2,80.1 231.0,70.9 237.9,89.0 244.8,80.0 251.6,74.3 258.5,72.6 265.4,74.0 272.2,79.8 279.1,84.3 285.9,85.1 292.8,83.7 299.7,82.7 306.5,85.0 313.4,87.4 320.3,97.3 327.1,99.8 334.0,97.4 340.8,91.8 347.7,87.7 354.6,88.6 361.4,92.3 368.3,101.2 375.2,86.8 382.0,85.8 388.9,97.8 395.7,104.2 402.6,98.4 409.5,109.1 416.3,108.0 423.2,98.4 430.1,102.2 436.9,108.6 443.8,109.2 450.6,113.6 457.5,113.4 464.4,108.8 471.2,109.1 478.1,122.6 485.0,125.2 491.8,116.2 498.7,113.5 505.5,127.0 512.4,127.0 519.3,113.9 526.1,111.4 533.0,115.0 539.8,117.8 546.7,119.2 553.6,121.3 560.4,118.5 567.3,121.8 574.2,126.1 581.0,124.3 587.9,129.9 594.7,129.7 601.6,130.8 608.5,135.8 615.3,127.5 622.2,123.3 629.1,155.7 632.0,161.7",
         "label": "Adults-sample polls (what the models use)",
         "end": {
           "x": 632.0,
@@ -1650,16 +2287,16 @@
         }
       },
       "field": {
-        "polyline": "66.4,18.3 73.3,19.0 80.2,20.1 87.0,21.7 93.9,24.7 100.8,25.9 107.6,37.6 114.5,41.5 121.4,44.6 128.3,50.8 135.1,42.3 142.0,30.7 148.9,30.5 155.8,27.3 162.6,22.3 169.5,33.8 176.4,35.3 183.3,34.0 190.1,37.0 197.0,33.3 203.9,44.0 210.7,50.5 217.6,50.9 224.5,46.8 231.4,41.5 238.2,43.7 245.1,44.6 252.0,47.3 258.9,46.5 265.7,47.5 272.6,48.7 279.5,49.3 286.4,45.5 293.2,42.3 300.1,47.9 307.0,63.1 313.9,66.4 320.7,66.4 327.6,69.7 334.5,67.9 341.3,64.4 348.2,58.9 355.1,62.3 362.0,62.4 368.8,58.7 375.7,61.9 382.6,67.0 389.5,69.8 396.3,69.9 403.2,70.4 410.1,72.1 417.0,71.8 423.8,63.3 430.7,63.2 437.6,69.3 444.4,79.7 451.3,83.6 458.2,81.1 465.1,73.5 471.9,75.8 478.8,86.7 485.7,88.1 492.6,88.0 499.4,87.9 506.3,93.8 513.2,92.6 520.1,86.7 526.9,89.9 533.8,90.3 540.7,85.8 547.6,83.6 554.4,78.6 561.3,77.8 568.2,84.5 575.0,90.7 581.9,89.3 588.8,87.6 595.7,92.4 602.5,89.3 609.4,88.0 616.3,88.8 623.2,92.3 630.0,98.9 632.0,98.8",
+        "polyline": "66.4,18.3 73.2,19.0 80.1,20.1 86.9,21.7 93.8,24.7 100.7,25.9 107.5,37.6 114.4,41.5 121.2,44.6 128.1,50.8 135.0,42.3 141.8,30.7 148.7,30.5 155.6,27.3 162.4,22.3 169.3,33.8 176.1,35.3 183.0,34.0 189.9,37.0 196.7,33.3 203.6,44.0 210.5,50.5 217.3,50.9 224.2,46.8 231.0,41.5 237.9,43.7 244.8,44.6 251.6,47.3 258.5,46.5 265.4,47.5 272.2,48.7 279.1,49.3 285.9,45.5 292.8,42.3 299.7,47.9 306.5,63.1 313.4,66.4 320.3,66.4 327.1,69.7 334.0,67.9 340.8,64.4 347.7,58.9 354.6,62.3 361.4,62.4 368.3,58.7 375.2,61.9 382.0,67.0 388.9,69.8 395.7,69.9 402.6,70.4 409.5,72.1 416.3,71.8 423.2,63.3 430.1,63.2 436.9,69.3 443.8,79.7 450.6,83.6 457.5,81.1 464.4,73.5 471.2,75.8 478.1,86.7 485.0,88.1 491.8,88.0 498.7,87.9 505.5,93.8 512.4,92.6 519.3,86.7 526.1,89.9 533.0,90.3 539.8,85.8 546.7,83.6 553.6,78.6 560.4,77.8 567.3,84.5 574.2,90.7 581.0,89.3 587.9,87.6 594.7,92.4 601.6,89.3 608.5,88.0 615.3,88.8 622.2,92.3 629.1,98.9 632.0,100.8",
         "label": "All polls, every population",
         "end": {
           "x": 632.0,
-          "y": 98.8,
-          "v": 38.96
+          "y": 100.8,
+          "v": 38.72
         }
       },
       "aggregate": {
-        "polyline": "598.6,111.0 599.6,111.0 600.6,109.4 601.6,109.4 602.5,109.4 603.5,109.4 604.5,106.7 605.5,106.7 606.5,106.7 607.5,106.7 608.4,106.7 609.4,106.7 610.4,106.7 611.4,108.1 612.4,109.7 613.3,110.6 614.3,111.5 615.3,112.7 616.3,111.7 617.3,111.7 618.3,111.9 619.2,111.9 620.2,111.9 621.2,111.9 622.2,111.7 623.2,107.1 624.1,107.1 625.1,109.0 626.1,113.0 627.1,116.2 628.1,116.6 629.1,116.6 630.0,116.6 631.0,116.7 632.0,112.6",
+        "polyline": "366.3,74.3 372.2,74.5 380.1,76.8 386.9,84.0 393.8,83.2 400.6,80.3 407.5,84.1 413.4,88.6 421.2,86.1 426.1,83.7 435.0,82.7 440.8,86.9 448.7,91.4 455.5,96.6 459.5,98.0 476.1,102.7 482.0,99.3 488.9,103.4 496.7,105.1 503.6,105.2 509.5,104.7 516.3,106.3 522.2,104.5 525.1,104.5 533.0,97.0 539.8,97.0 551.6,96.8 553.6,97.5 565.3,98.1 572.2,100.5 578.1,109.6 580.0,108.4 590.8,111.0 597.7,111.0 598.7,111.0 599.6,109.4 600.6,109.4 601.6,109.4 602.6,109.4 603.6,106.7 604.6,106.7 605.5,106.7 606.5,106.7 607.5,106.7 608.5,106.7 609.5,106.7 610.4,108.1 611.4,109.7 612.4,110.6 613.4,111.5 614.4,112.7 615.3,111.7 616.3,111.7 617.3,111.9 618.3,111.9 619.3,111.9 620.2,111.9 621.2,111.7 622.2,107.1 623.2,107.1 624.2,109.0 625.1,113.0 626.1,116.2 627.1,116.6 628.1,116.6 629.1,116.6 630.0,116.7 631.0,112.6 632.0,112.6",
         "label": "Average of the published aggregators",
         "end": {
           "x": 632.0,
@@ -1685,47 +2322,47 @@
             "v": 43.0
           },
           {
-            "x": 109.6,
+            "x": 109.5,
             "y": 56.9,
             "v": 44.0
           },
           {
-            "x": 143.0,
+            "x": 142.8,
             "y": 65.2,
             "v": 43.0
           },
           {
-            "x": 174.4,
+            "x": 174.2,
             "y": 90.1,
             "v": 40.0
           },
           {
-            "x": 205.8,
+            "x": 205.6,
             "y": 115.0,
             "v": 37.0
           },
           {
-            "x": 235.3,
+            "x": 235.0,
             "y": 90.1,
             "v": 40.0
           },
           {
-            "x": 261.8,
+            "x": 261.4,
             "y": 90.1,
             "v": 40.0
           },
           {
-            "x": 291.3,
+            "x": 290.8,
             "y": 81.8,
             "v": 41.0
           },
           {
-            "x": 330.5,
+            "x": 330.1,
             "y": 123.3,
             "v": 36.0
           },
           {
-            "x": 350.2,
+            "x": 349.7,
             "y": 123.3,
             "v": 36.0
           }
@@ -1750,27 +2387,27 @@
     "xticks": [
       {
         "label": "Apr 25",
-        "x": 96.8
+        "x": 96.7
       },
       {
         "label": "Jul 25",
-        "x": 186.2
+        "x": 186.0
       },
       {
         "label": "Oct 25",
-        "x": 276.5
+        "x": 276.1
       },
       {
         "label": "Jan 26",
-        "x": 366.9
+        "x": 366.3
       },
       {
         "label": "Apr 26",
-        "x": 455.3
+        "x": 454.6
       },
       {
         "label": "Jul 26",
-        "x": 544.6
+        "x": 543.8
       }
     ],
     "y_lo": 30.4,
