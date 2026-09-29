@@ -879,12 +879,18 @@ def class_model_rows(cycle: int) -> list[dict]:
     return rows
 
 
+# Averages held back by MIN_N, WITH their values. Filled by aggregate() for
+# the collaborator tier only (write_pending); never written under derived/.
+WITHHELD_FULL: list[dict] = []
+
+
 def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
     """
     Returns (public_averages, public_by_source, suppressed).
 
     public_by_source contains ONLY rows whose source is publication=individual.
     """
+    WITHHELD_FULL.clear()
     # EVERY ROW IS AVERAGED TWICE, ONCE PER FACET.
     #
     # `category` used to hold five values answering two different questions —
@@ -1016,6 +1022,7 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             "_contributors": sorted(per_source),
         }
         if gated and n_gated < MIN_N:
+            WITHHELD_FULL.append(dict(rec))
             suppressed.append({**rec, "mean": "", "min": "", "max": "", "sd": "",
                                "reason": f"only {n_gated} gated source(s) of "
                                          f"{n} contributing; MIN_N={MIN_N} counts "
@@ -1767,51 +1774,88 @@ def main(argv=None) -> int:
     for p in write(a.cycle, averages, by_source, suppressed, ratings,
                    registry=_load_reg(a.cycle)):
         print(f"  wrote {p.relative_to(REPO_ROOT)}")
-    for p in write_pending(a.cycle, rows, ratings):
+    for p in write_pending(a.cycle, rows, ratings, averages,
+                           registry=_load_reg(a.cycle)):
         print(f"  wrote {p.relative_to(REPO_ROOT)}  (PRIVATE, not yet public)")
     return 0
 
 
-PENDING_FIELDS = ["snapshot_date", "source_id", "publication", "line", "race_id",
-                  "chamber", "state", "district", "quantity", "value", "unit",
-                  "as_of", "provenance"]
+PENDING_FIELDS = ["snapshot_date", "source_id", "line", "race_id", "chamber",
+                  "state", "district", "quantity", "value", "unit", "as_of",
+                  "provenance", "permission"]
+FULL_AVG_FIELDS = ["snapshot_date", "line", "race_id", "chamber", "state",
+                   "district", "quantity", "unit", "n_sources", "n_gated",
+                   "n_retrospective", "partial", "n_withheld", "mean", "min",
+                   "max", "sd", "tier", "display", "sole_source",
+                   "oldest_as_of", "n_carried", "published"]
 
 
-def write_pending(cycle: int, rows: list[dict], ratings: list[dict]) -> list[Path]:
-    """The not-yet-public tier of the archive.
+def _excluded_by_license(registry: dict | None) -> set[str]:
+    """Sources whose terms prohibit collection or sharing: left out even of
+    the collaborator tier until the source says yes."""
+    return {s["id"] for s in (registry or {}).get("sources", [])
+            if str(s.get("license", "")).lower() == "prohibited"}
 
-    Individual forecasts from sources whose terms do not yet allow
-    republication by name, in the same shape as the public
-    forecasts_by_source.csv, plus the race ratings. Written under
-    model_private/, which the daily job pushes to the private archive
-    repository and never to the public one. When a forecaster gives
-    permission, their rows move to the public release unchanged.
+
+def write_pending(cycle: int, rows: list[dict], ratings: list[dict],
+                  averages: list[dict] | None = None,
+                  registry: dict | None = None) -> list[Path]:
+    """The collaborator tier of the archive (private; shared by hand).
+
+    Written under model_private/pending/, which the daily job pushes to the
+    private archive repository and never to the public one:
+
+      forecasts_by_source_all.csv   every forecaster's own series, public and
+                                    permission-pending, with a `permission`
+                                    column (public / pending)
+      category_averages_full.csv    every line average, including the ones the
+                                    public file holds back (`published` = 0)
+      ratings.csv                   race ratings
+
+    Sources whose terms prohibit sharing are left out of all three.
     """
     out_dir = DATA_DIR / str(cycle) / "model_private" / "pending"
+    banned = _excluded_by_license(registry)
     keep, seen = [], set()
     for r in rows:
-        if r.get("publication") == "individual":
-            continue                          # already public by name
         sid = r["source_id"]
-        if not facets.in_archive(sid):
+        if sid in banned or not facets.in_archive(sid):
             continue
-        got = facets.on_line(sid, r["category"], r.get("race_id", ""), r.get("provenance", ""))
-        if got is None or got[0] == "reference" or got[1] == "class":
+        got = facets.on_line(sid, r["category"], r.get("race_id", ""),
+                             r.get("provenance", ""))
+        if got is None or got[1] == "class":
             continue
-        if r["quantity"] in NEVER_PUBLISH or r["quantity"] in NOT_A_FORECAST:
+        if r["quantity"] in NEVER_PUBLISH or r["quantity"] in NO_AVERAGE:
             continue
-        rec = {**r, "line": got[1], "as_of": r.get("as_of") or r["snapshot_date"],
-               "provenance": r.get("provenance") or "captured"}
+        line = "input" if got[0] == "reference" else got[1]
+        if line == "input" and r.get("publication") != "individual":
+            continue                          # licensed inputs stay private
+        rec = {**r, "line": line, "as_of": r.get("as_of") or r["snapshot_date"],
+               "provenance": r.get("provenance") or "captured",
+               "permission": "public" if r.get("publication") == "individual"
+                             else "pending"}
         key = tuple(rec.get(k, "") for k in PENDING_FIELDS)
         if key in seen:
             continue
         seen.add(key)
         keep.append(rec)
+
+    full = [{**a_, "line": a_["category"], "published": 1}
+            for a_ in (averages or []) if a_.get("facet", "source") == "source"]
+    full += [{**a_, "line": a_["category"], "published": 0}
+             for a_ in WITHHELD_FULL if a_.get("facet", "source") == "source"]
+    full.sort(key=lambda a_: (a_["snapshot_date"], a_["line"], a_["race_id"],
+                              a_["quantity"]))
+
+    def _rater(v: str) -> str:
+        return str(v).split(":", 1)[0].strip().lower()
+    rat = [r for r in ratings if _rater(r.get("value", "")) not in banned]
+
     written = []
     for name, data, fields in (
-            ("forecasts_by_source_pending.csv", keep, PENDING_FIELDS),
-            ("ratings_pending.csv", ratings,
-             list(ratings[0].keys()) if ratings else [])):
+            ("forecasts_by_source_all.csv", keep, PENDING_FIELDS),
+            ("category_averages_full.csv", full, FULL_AVG_FIELDS),
+            ("ratings.csv", rat, list(rat[0].keys()) if rat else [])):
         if not data:
             continue
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -1822,6 +1866,9 @@ def write_pending(cycle: int, rows: list[dict], ratings: list[dict]) -> list[Pat
             w.writeheader()
             w.writerows(data)
         written.append(path)
+    # Files from the first version of this tier, replaced by the above.
+    for old in ("forecasts_by_source_pending.csv", "ratings_pending.csv"):
+        (out_dir / old).unlink(missing_ok=True)
     return written
 
 
