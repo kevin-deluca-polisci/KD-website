@@ -42,6 +42,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DERIVED = REPO_ROOT / "forecast" / "data" / "2026" / "derived"
+# Endorsement data live outside the forecast archive.
+ENDORSE = REPO_ROOT / "forecast" / "data" / "endorsements"
 
 CONGRESS_CATEGORIES = {
     "U.S. representatives", "U.S. senators",
@@ -255,7 +257,7 @@ def run(cycles=(2022, 2024, 2026), write: bool = False) -> int:
     lookup: dict = {}
 
     for cy in cycles:
-        f = DERIVED / f"endorsements_{cy}.json"
+        f = ENDORSE / f"endorsements_{cy}.json"
         if not f.exists():
             continue
         rows = json.loads(f.read_text())

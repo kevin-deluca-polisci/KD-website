@@ -1,20 +1,9 @@
-{{/* CONTESTS — the two chambers the course forecasts, one at a time.
-
-     The two ladders share a component because they are the same picture: seats
-     ordered most-Democratic to most-Republican, with the seat that decides
-     control marked. Only the bookkeeping differs — the Senate's compressed
-     ends are the seats not on the ballot, the House's are the safe seats.
-
-     Governors are collected daily and archived in full, but they are not here.
-     We run no gubernatorial model — a national tide carried through partisan
-     lean describes those races badly — and a card of their own on the page
-     that carries our forecasts implied one. What we do have for them is other
-     people's ordinal ratings, so they appear as a third chamber in "Where the
-     raters disagree" on the comparisons page, beside the Senate and House. */}}
+{{/* Contests: Senate and House seats ordered by the class model's expected
+     margin, with each Senate race's own polling average beside it. */}}
 {{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
-{{- $p := $d.polling_model -}}
+{{- $p := $d.senate_table -}}
+{{- $cs := $d.class_summary -}}
 {{- $lad := $d.charts.ladders -}}
-{{- $proj := $d.seat_projections -}}
 {{ partial "forecast/head.html" (dict "page" . "d" $d) }}
 {{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
 
@@ -44,12 +33,12 @@
          Senate's "OH" each get the room they actually need. */}}
     {{- $axis := .axis_dy }}{{ $foot := .foot_dy }}{{ $svgh := .svg_h }}
     <div class="card">
-      <h2>The seat that decides control</h2>
-      <p class="sub">{{ if eq $ck "house" }}The {{ .n_drawn }} districts around the
-         majority line, ordered by expected margin. The {{ .n_races }} districts are
-         ranked most Democratic to most Republican; safe seats at each end are
-         collapsed.{{ else }}Every Senate seat, ordered most Democratic to most
-         Republican, with each one's expected margin as a bar.{{ end }}</p>
+      <h2>Seats in order</h2>
+      <p class="sub">{{ if eq $ck "house" }}The {{ .n_drawn }} districts closest to
+         the majority line, ordered from most Democratic to most Republican.
+         Safe seats at each end are not drawn.{{ else }}Every Senate seat, ordered
+         from most Democratic to most Republican.{{ end }} Bars are the class
+         model's expected margin. Dashed lines are each source's seat count.</p>
 
       <svg viewBox="0 0 720 {{ add $B $svgh }}" role="img"
            aria-label="{{ $ck }} seats ordered by expected margin, with the majority line marked">
@@ -186,28 +175,23 @@
             <td class="num">{{ if gt .margin 0.0 }}D+{{ printf "%.1f" .margin }}{{ else }}R+{{ printf "%.1f" (mul .margin -1) }}{{ end }}</td>
             <td class="num">{{ printf "%.0f%%" (mul .win_prob_D 100) }}</td></tr>
         {{- end }}
-        {{- with $proj }}{{ with (index .projections "polling") }}
+        {{- with $cs }}
         {{- if eq $ck "house" }}
-        <tr><td>Simulated D seats</td><td colspan="2" class="muted">80% {{ index .house.D_seats_80pct 0 }}–{{ index .house.D_seats_80pct 1 }}</td>
-            <td class="num">{{ printf "%.0f" .house.expected_D_seats }}</td></tr>
-        <tr><td>Simulated P(D majority)</td><td colspan="2"></td>
-            <td class="num">{{ printf "%.0f%%" (mul .house.prob_D_majority 100) }}</td></tr>
+        <tr><td>Class model: Democratic seats</td><td colspan="2" class="muted">80% {{ .house_lo80 }}–{{ .house_hi80 }}</td>
+            <td class="num">{{ .house_seats_median }}</td></tr>
+        <tr><td>Class model: chance of a majority</td><td colspan="2"></td>
+            <td class="num">{{ printf "%.0f%%" (mul (float .p_house) 100) }}</td></tr>
         {{- else }}
-        <tr><td>Simulated D seats</td><td colspan="2" class="muted">80% {{ index .senate.D_total_80pct 0 }}–{{ index .senate.D_total_80pct 1 }}</td>
-            <td class="num">{{ printf "%.0f" .senate.expected_D_total }}</td></tr>
-        <tr><td>Simulated P(D reach 50+)</td><td colspan="2"></td>
-            <td class="num">{{ printf "%.0f%%" (mul .senate.prob_D_50_plus 100) }}</td></tr>
-        <tr><td>Simulated P(D majority)</td><td colspan="2"></td>
-            <td class="num">{{ printf "%.0f%%" (mul .senate.prob_D_51_plus 100) }}</td></tr>
+        <tr><td>Class model: Democratic seats</td><td colspan="2" class="muted">80% {{ .senate_lo80 }}–{{ .senate_hi80 }}</td>
+            <td class="num">{{ .senate_seats_median }}</td></tr>
+        <tr><td>Class model: chance of a majority</td><td colspan="2"></td>
+            <td class="num">{{ printf "%.0f%%" (mul (float .p_senate) 100) }}</td></tr>
         {{- end }}
-        {{- end }}{{ end }}
+        {{- end }}
       </table>
-      <p class="thin-note">Margins beyond ±{{ printf "%.0f" .clip }} points are clipped
-         and notched. {{ if eq $ck "house" }}District margins are our forecast; the
-         partisan index behind them is not published —
-         <a href="/forecast/methods/#disclosure">why</a>.{{ else }}Probabilities
-         assume {{ with $p }}{{ $p.holdover_D }}{{ end }} Democratic holdover seats;
-         one seat moves them about twenty points.{{ end }}</p>
+      <p class="thin-note">Margins beyond ±{{ printf "%.0f" .clip }} points are cut
+         off at the edge of the chart.{{ if ne $ck "house" }} Senate totals include
+         {{ with $p }}{{ $p.holdover_D }}{{ end }} Democratic seats not up this year.{{ end }}</p>
     </div>
     {{- end }}
 
@@ -220,27 +204,28 @@
     <div class="cards">
       {{- range $side := (slice
             (dict "key" "lean_D" "rows" .lean_D "title" "Democratic-leaning"
-                  "cls" "D" "note" "Seats the model has the Democrats winning, closest first.")
+                  "cls" "D" "note" "Closest first.")
             (dict "key" "lean_R" "rows" .lean_R "title" "Republican-leaning"
-                  "cls" "R" "note" "Seats the model has the Republicans winning, closest first.")) }}
+                  "cls" "R" "note" "Closest first.")) }}
       {{- if $side.rows }}
       <div class="card">
-        <span class="badge">Polling model</span>
+        <span class="badge">Class model</span>
         <h2 class="{{ $side.cls }}">{{ $side.title }}</h2>
         <p class="sub">{{ len $side.rows }} of the {{ $p.n_competitive }} unsettled
            races. {{ $side.note }}</p>
         <table class="full">
           <tr><th>State</th><th class="num">Margin</th><th class="num">P(D)</th>
-              <th class="num">Lean</th></tr>
+              <th class="num">Polling</th></tr>
           {{- range $side.rows }}
           <tr>
-            <td><strong>{{ .state }}</strong>{{ if eq .state "NE" }} <span class="muted">*</span>{{ end }}</td>
+            <td><strong>{{ .state }}</strong></td>
             <td class="num {{ if gt .expected_margin_D 0.0 }}D{{ else }}R{{ end }}">
               {{ if gt .expected_margin_D 0.0 }}D+{{ printf "%.1f" .expected_margin_D }}{{ else }}R+{{ printf "%.1f" (mul .expected_margin_D -1) }}{{ end }}</td>
             {{- $pd := mul .win_prob_D 100 }}
             <td class="num">{{ if ge $pd 99.5 }}&gt;99%{{ else if lt $pd 0.5 }}&lt;1%{{ else }}{{ printf "%.0f%%" $pd }}{{ end }}</td>
             <td class="num muted">
-              {{ if gt .pvi 0.0 }}D+{{ printf "%.1f" .pvi }}{{ else }}R+{{ printf "%.1f" (mul .pvi -1) }}{{ end }}</td>
+              {{- with .polling_margin }}{{ if gt . 0.0 }}D+{{ printf "%.1f" . }}{{ else }}R+{{ printf "%.1f" (mul . -1) }}{{ end }}
+              {{- else }}{{ if .polling_withheld }}withheld{{ else }}–{{ end }}{{ end }}</td>
           </tr>
           {{- end }}
         </table>
@@ -248,22 +233,11 @@
       {{- end }}
       {{- end }}
     </div>
-    <p class="thin-note">These are the <a href="/forecast/methods/#polling">polling
-       model's</a> numbers, not a consensus of forecasters — the election-day
-       national tide it derives from the generic ballot, carried to each state
-       by twice that state's partisan lean. Nothing in it knows who the
-       candidates are. What the other three methods say about the same races is
-       on the <a href="/forecast/comparisons/">comparisons page</a>.
-       {{ .competitive_note }}</p>
-    {{- $ne := where .races "state" "NE" }}
-    {{- if and $ne (index $ne 0).competitive }}
-    <div class="note">
-      <strong>* Nebraska has no Democrat on the ballot.</strong>
-      Dan Osborn is running as an independent, which a two-party model cannot
-      represent: the number above is what a generic Democrat would do in
-      Nebraska, not the race being held. Left in rather than dropped.
-    </div>
-    {{- end }}
+    <p class="thin-note">Margin and P(D) are from the class model. Polling is
+       the average of the polling averages listed in each race's Wikipedia
+       article (for example RealClearPolitics, 270toWin and Race to the WH),
+       shown when at least three are available. In Nebraska the Democratic side
+       is the independent Dan Osborn.</p>
     {{- end }}
     {{- end }}
 
@@ -284,7 +258,7 @@
             (dict "rows" (after $half $rows) "title" "Below the line")) }}
       {{- if $col.rows }}
       <div class="card">
-        <span class="badge">Polling model</span>
+        <span class="badge">Class model</span>
         <h2>{{ $col.title }}</h2>
         <p class="sub">Seats {{ (index $col.rows 0).seat_no }}–{{ (index $col.rows (sub (len $col.rows) 1)).seat_no }},
            ordered by expected margin.</p>
@@ -305,21 +279,10 @@
       {{- end }}
       {{- end }}
     </div>
-    <div class="note">
-      <strong>Why so many districts share a margin.</strong>
-      Every district margin is the same national tide plus twice that
-      district&rsquo;s lean, and the lean is carried at low resolution, so the
-      margins land on a coarse grid: 435 districts take only
-      {{ len $L0.seats }} drawn values, and a dozen or more can share one. It is
-      arithmetic rather than a bug, but it has a consequence worth knowing:
-      inside a tied group the seat ORDER is arbitrary, so the district named at
-      the majority line is one of several that could equally have been named.
-      Read it as “the majority is decided around here”, not as a call on that
-      district. <a href="/forecast/methods/#polling">How the mapping works</a>.
-    </div>
+    <p class="thin-note">Many districts share the same margin, so the order
+       within a tied group is arbitrary.</p>
     <p class="thin-note">◀ marks the seat that reaches the majority. Showing
-       {{ $L0.n_drawn }} of {{ $L0.n_races }} districts; the rest are safe at
-       either end. The full set is in the published data files.</p>
+       {{ $L0.n_drawn }} of {{ $L0.n_races }} districts.</p>
     {{- end }}
   </div>
   {{- end }}

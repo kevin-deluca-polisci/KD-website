@@ -38,6 +38,8 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parents[1]
 DERIVED = REPO_ROOT / "forecast" / "data" / "2026" / "derived"
+# Endorsement data live outside the forecast archive.
+ENDORSE = REPO_ROOT / "forecast" / "data" / "endorsements"
 DRA_DIR = REPO_ROOT / "forecast" / "data" / "DRA"
 
 _spec = importlib.util.spec_from_file_location("eq", HERE / "endorse_quality.py")
@@ -170,7 +172,7 @@ def primary_consensus() -> dict:
     """race key -> (differential, contested, share_D, share_R)."""
     per = collections.defaultdict(lambda: collections.defaultdict(collections.Counter))
     for cy in (2018, 2020, 2022, 2024):
-        f = DERIVED / f"endorsements_{cy}.json"
+        f = ENDORSE / f"endorsements_{cy}.json"
         if not f.exists():
             continue
         for r in json.loads(f.read_text()):
@@ -270,7 +272,7 @@ def descriptive_cross(rows, look):
     fit = {(r["cycle"], r["chamber"], r["state"], r["district"]) for r in rows}
     agg = collections.Counter()
     for cy in (2018, 2020, 2022, 2024):
-        f = DERIVED / f"endorsements_{cy}.json"
+        f = ENDORSE / f"endorsements_{cy}.json"
         for e in json.loads(f.read_text()):
             if e.get("phase") != "general" or e.get("duplicate_key") or cat(e) in NOPARTY:
                 continue

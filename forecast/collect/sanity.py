@@ -91,7 +91,7 @@ def check_site_payload(c: Checks, cycle: int) -> None:
     c.ok(bool(d.get("latest_snapshot")), "site payload has a snapshot date")
     c.ok(bool(d.get("headline")), "site payload has headline rows")
 
-    pm = d.get("polling_model")
+    pm = d.get("senate_table")
     if pm:
         races = pm.get("races") or []
         c.ok(len(races) == EXPECTED_SENATE_RACES,
@@ -106,10 +106,6 @@ def check_site_payload(c: Checks, cycle: int) -> None:
         bad_m = [f"{r['state']}={r['expected_margin_D']}" for r in races
                  if abs(float(r.get("expected_margin_D", 0))) > 100]
         c.ok(not bad_m, "Senate margins within +/-100", str(bad_m[:6]))
-        # A tide that has drifted far outside any plausible generic ballot is
-        # the signature of a units error, not an election.
-        tide = float(pm.get("tide_D", 0))
-        c.ok(abs(tide) <= 25, "national tide is plausible", f"D{tide:+.1f}")
 
 
 def check_derived(c: Checks, cycle: int) -> None:

@@ -1,5 +1,5 @@
 ---
-title: "Model Comparisons"
+title: "Comparisons"
 layout: "comparisons"
-description: "Model against model, race by race — what one forecast knows that another does not."
+description: "National and Senate forecasts by source, side by side."
 ---

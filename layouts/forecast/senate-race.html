@@ -1,17 +1,7 @@
-{{/* ONE SENATE RACE.
-
-     Every page here is this template with a different `state` in its front
-     matter; the numbers come from the payload at build time, so a race page is
-     never a copy of data that can drift from the tracker's own front page.
-
-     WHAT IT MAY SHOW, AND WHY IT READS category_averages AND NOT THE RATINGS.
-     Individual forecaster ratings are collected and archived, and most of them
-     may not be republished during the cycle -- some not at all. `races` in the
-     payload comes from aggregate.py's published output, where the publication
-     tier has already been applied and each cell carries `display` saying
-     whether it is a consensus or a lone source. This template renders that
-     distinction rather than flattening it: a `single` cell is labelled, never
-     drawn as agreement between methods that do not exist. */}}
+{{/* One Senate race. Every page is this template with a different `state`
+     in its front matter. Numbers come from `races` in the payload, which is
+     built from the published averages (category_averages.csv) plus the class
+     model. A `single` cell has one contributor and is labelled as such. */}}
 {{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
 {{- $st := .Params.state -}}
 {{- $race := false -}}
@@ -22,59 +12,42 @@
 <div class="wrap viz">
 
 {{ if not $race }}
-  {{/* A state with no row rather than a broken page. Happens if a race is
-       added to the stub list before the pipeline has a snapshot for it. */}}
   <div class="card">
     <h2>{{ .Title }}</h2>
-    <p class="sub">No published figures for this race yet. It is collected
-    daily; this page fills in with the next snapshot.</p>
+    <p class="sub">No figures for this race yet.</p>
     <p><a href="/forecast/contests/">&larr; All contests</a></p>
   </div>
 {{ else }}
 
-  {{- $labels := dict "fundamentals" "Fundamentals" "polling" "Polling"
-        "professional" "Professional forecasters" "market" "Prediction markets"
-        "academic" "Academic models" "class" "This class" -}}
-  {{- $order := slice "polling" "fundamentals" "professional" "market" "academic" "class" -}}
+  {{- $labels := dict "polling" "Polling" "market" "Markets"
+        "professional" "Professional" "academic" "Academic" "class" "Class model" -}}
+  {{- $order := slice "polling" "market" "professional" "academic" "class" -}}
 
   <div class="card">
     <h2>{{ .Title }}</h2>
     <p class="sub">
-      What each family of methods says about this seat, as of
-      <b>{{ $d.latest_snapshot }}</b>.
+      Forecasts for this seat as of <b>{{ $d.latest_snapshot }}</b>.
       {{ with $race.pvi }}
-        The state's partisan baseline is
+        Partisan lean:
         <b>{{ if lt . 0.0 }}R+{{ math.Abs . }}{{ else }}D+{{ . }}{{ end }}</b>.
       {{ end }}
-      A positive margin is Democratic.
+      Margins are Democratic minus Republican.
     </p>
 
     {{ with $race.candidates }}
-    {{/* WHO IS RUNNING -- with the caveat attached, not in a footnote nobody
-         reads. This list is derived from who is the SUBJECT of a
-         general-election endorsement on the race's Wikipedia article, because
-         no roster of nominees exists anywhere in this pipeline. It covers 18
-         of the 35 races; a safe seat where nobody has endorsed anybody shows
-         nothing, and a state whose primary is unresolved can show three names
-         from two parties. Both are honest outputs of what the source is. */}}
     <div class="candidates">
       {{ range . }}
         <span class="cand {{ if eq .party "D" }}is-D{{ else if eq .party "R" }}is-R{{ end }}">
-          <b>{{ .name }}</b> ({{ .party }})
-          <span class="muted">{{ .endorsements }} endorsement{{ if ne .endorsements 1 }}s{{ end }}{{ if gt .cross_party 0 }}, {{ .cross_party }} cross-party{{ end }}</span>
+          <b>{{ .name }}</b>{{ with .party }} ({{ . }}){{ end }}
         </span>
       {{ end }}
     </div>
-    <p class="thin-note">Candidates and endorsement counts are read from the
-    race's Wikipedia article and cover the general election only. A candidate
-    nobody has endorsed does not appear. “Cross-party” marks an endorsement
-    from a figure or group whose usual side is the other one.</p>
     {{ end }}
 
     <div class="tscroll">
     <table class="full">
       <thead><tr>
-        <th class="wrap">Method</th>
+        <th class="wrap">Source</th>
         <th class="num">Margin</th>
         <th class="num">P(D wins)</th>
         <th class="num">Sources</th>
@@ -87,10 +60,8 @@
           <td class="wrap">
             <span class="swatch {{ $k }}"></span>
             {{ index $labels $k }}
-            {{/* The one distinction that must not be lost between the payload
-                 and the page: an average of one is not an average. */}}
-            {{ if or (and $m (eq $m.display "single")) (and $p (eq $p.display "single")) }}
-              <span class="muted">· single source, not a consensus</span>
+            {{ if and (ne $k "class") (or (and $m (eq $m.display "single")) (and $p (eq $p.display "single"))) }}
+              <span class="muted">· one forecast</span>
             {{ end }}
           </td>
           <td class="num">
@@ -105,7 +76,7 @@
           <td class="num">
             {{ $n := 0 }}{{ if $m }}{{ $n = $m.n }}{{ else if $p }}{{ $n = $p.n }}{{ end }}{{ $n }}
             {{ $w := 0 }}{{ if $m }}{{ $w = $m.withheld }}{{ end }}
-            {{ if gt $w 0 }}<span class="muted" title="contributors whose terms do not permit per-forecaster republication">+{{ $w }} withheld</span>{{ end }}
+            {{ if gt $w 0 }}<span class="muted">+{{ $w }} not shown</span>{{ end }}
           </td>
         </tr>
         {{ end }}
@@ -115,17 +86,16 @@
     </div>
 
     <p class="thin-note">
-      Methods with no row published nothing for this race on this date.
-      Counts are contributing sources; “withheld” are contributors folded into
-      the average but not nameable during the cycle.
+      A source with no row had no forecast for this race on this date.
+      “Sources” counts the forecasts in each average. “Not shown” forecasts
+      are included in the average but not listed individually.
     </p>
   </div>
 
   {{ if $race.series }}
   <div class="card">
     <h3>Margin over time</h3>
-    <p class="sub">Each line is a method family's average for this race, over
-    the last four months.</p>
+    <p class="sub">The last four months.</p>
     {{ partial "forecast/race-series.html" (dict "series" $race.series "labels" $labels "order" $order) }}
   </div>
   {{ end }}
@@ -133,10 +103,8 @@
   {{ if $race.history }}
   <div class="card">
     <h3>This seat, previously</h3>
-    <p class="sub">The same seat's last five regular elections. Senate classes
-    run on a six-year cycle, so these are 2020, 2014 and back &mdash; not the
-    state's other seat, which is a different job. Results from the MIT Election
-    Data and Science Lab.</p>
+    <p class="sub">The last five regular elections for this seat (2020, 2014
+    and earlier). Results from the MIT Election Data and Science Lab.</p>
     <div class="tscroll">
     <table>
       <thead><tr><th class="num">Year</th><th class="num">Margin</th><th class="wrap">Winner</th></tr></thead>
@@ -148,12 +116,6 @@
             {{ if eq .margin_D nil }}<span class="muted" title="both candidates coded OTHER in the source, so no two-party margin can be computed">n/a</span>
             {{ else if gt .margin_D 0.0 }}<span class="D">D+{{ .margin_D }}</span>
             {{ else }}<span class="R">R+{{ math.Abs .margin_D }}</span>{{ end }}
-            {{/* Only when the margin computed. Both flags come from the same
-                 party coding: Wyoming 2020 has Lummis and Ben David BOTH coded
-                 OTHER, which is why no margin exists -- and it also makes the
-                 source call the race uncontested, which is false. If the
-                 coding was bad enough to lose the margin it is not good enough
-                 to assert an unopposed win. */}}
             {{ if and .uncontested (ne .margin_D nil) }}<span class="muted">· uncontested</span>{{ end }}
           </td>
           <td class="wrap">{{ with .winner }}{{ . }}{{ else }}<span class="muted">&mdash;</span>{{ end }}</td>
@@ -164,35 +126,12 @@
     </div>
   </div>
   {{ else }}
-  {{/* The two 2026 specials have no same-class history by construction: a
-       special fills an unexpired term, so the seat's regular cadence does not
-       reach back through it. An empty card would read as missing data. */}}
   <div class="card">
     <h3>This seat, previously</h3>
-    <p class="sub">No comparable prior election. This is a special election, so
-    the seat's regular six-year cadence does not line up behind it.</p>
+    <p class="sub">This is a special election, so there is no earlier regular
+    election for this seat to show.</p>
   </div>
   {{ end }}
-
-  <div class="card">
-    <h3>Under each national scenario</h3>
-    <p class="sub">The seat model pushes every method's national tide through
-    the same machinery. This is what each implies for this race.</p>
-    <div class="tscroll">
-    <table>
-      <thead><tr><th class="wrap">Scenario</th><th class="num">Margin</th><th class="num">P(D wins)</th></tr></thead>
-      <tbody>
-      {{ range $k, $v := $race.scenarios }}
-        <tr>
-          <td class="wrap">{{ $k }}</td>
-          <td class="num">{{ with $v.margin }}{{ if gt . 0.0 }}<span class="D">D+{{ . }}</span>{{ else }}<span class="R">R+{{ math.Abs . }}</span>{{ end }}{{ else }}<span class="muted">&mdash;</span>{{ end }}</td>
-          <td class="num">{{ with $v.prob }}{{ math.Round (mul . 100) }}%{{ else }}<span class="muted">&mdash;</span>{{ end }}</td>
-        </tr>
-      {{ end }}
-      </tbody>
-    </table>
-    </div>
-  </div>
 
   <p><a href="/forecast/contests/">&larr; All contests</a></p>
 {{ end }}

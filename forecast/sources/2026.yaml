@@ -188,7 +188,7 @@ sources:
     name: Grant Williams 2026 Midterms Forecast
     category: professional
     method: http
-    enabled: true                  # STILL COLLECTED DAILY. See publication.
+    enabled: false                 # Dropped 2026-09-29: not a professional forecaster. Not collected, not published.
     cadence: daily
     publication: private
     # WAS `individual` (MIT licensed, so we may republish him race by race).

@@ -24,6 +24,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DERIVED = REPO_ROOT / "forecast" / "data" / "2026" / "derived"
+# Endorsement data live outside the forecast archive.
+ENDORSE = REPO_ROOT / "forecast" / "data" / "endorsements"
 
 # Settled cycles only. 2026 has no outcome, so it is scored, never fit.
 FIT_CYCLES = (2018, 2020, 2022, 2024)
@@ -113,7 +115,7 @@ def endorsement_rows(cycles=FIT_CYCLES, include_primary: bool = False) -> list[d
     keep = {"general"} if not include_primary else {"general", "primary", "runoff"}
     out = []
     for cy in cycles:
-        f = DERIVED / f"endorsements_{cy}.json"
+        f = ENDORSE / f"endorsements_{cy}.json"
         if not f.exists():
             continue
         for r in json.loads(f.read_text()):

@@ -90,93 +90,26 @@ VIEWS = {
                      "reference": 0.5, "reference_label": "even"},
 }
 
-# entity -> (light, dark). Fixed. Never reassign by position.
+# source -> (light, dark). Fixed per source; never reassign by position.
 #
-# ACADEMIC'S TEAL WAS CHOSEN BY THE VALIDATOR, NOT BY EYE, and the result is
-# worth writing down because it constrains what may be added later.
+# All five lines draw on one chart, so the set was validated together with the
+# dataviz palette checker, all pairs, on the real surfaces (#ffffff, #1c1c1b):
 #
-# In LIGHT mode #0077a8 clears every check against the existing four on an
-# all-pairs test: worst normal-vision separation 18.4, worst CVD 9.1 protan,
-# inside the lightness band, above the chroma floor. That one is clean.
+#   light  PASS  worst normal-vision 16.2, worst CVD 10.3 (protan)
+#   dark   PASS  worst normal-vision 16.4, worst CVD 7.4 (deutan, market/polling)
 #
-# In DARK mode it is NOT clean, and no fifth hue is. The dark ramp's lightness
-# band is roughly L 0.48-0.67, four hues already occupy it, and a sweep of the
-# full hue circle at three lightnesses and three chromas found nothing that
-# clears the 15-point normal-vision floor against all four. #2f9fbd is the best
-# available and sits 11.8 from polling's green. That is below the floor, so
-# COLOUR ALONE DOES NOT SEPARATE THESE SERIES IN DARK MODE and the charts must
-# not ask it to: every series is directly labelled at its last point, every
-# comparison mark carries a distinct SHAPE from glyph.html, and a table view
-# ships alongside. Those are the secondary encodings that make the pair legal.
-#
-# FIXED 2026-08-31. The defect this paragraph used to describe was real: in
-# dark mode #d55181 (market) and #199e70 (polling) were ΔE 1.6 apart under
-# deuteranopia — indistinguishable, not merely close, on the site's primary
-# chart. It was market that needed re-stepping, and the reason it was hard is
-# that market is the ONLY series drawn in both facets, so its hue has to clear
-# green (polling) in the type view and blue (academic) in the source view,
-# inside a dark lightness band of L 0.48-0.67.
-#
-# The sets that actually render are three and four series, not five: `views`
-# in the payload shows type as polling+fundamentals+market and source as
-# professional+academic+class+market. Validating the imagined five was what
-# made this look unfixable. Against the real sets, all-pairs, both modes:
-#
-#     type   light  PASS      type   dark  PASS  (worst CVD 7.4 deutan)
-#     source light  PASS      source dark  PASS  (worst CVD 7.1 deutan)
-#
-# market dark #d55181 -> #dc63a8 and academic dark #2f9fbd -> #3a97c9. Moving
-# market alone left market/academic at 5.9, just under the floor; the pair of
-# changes clears everything. Light steps are untouched, so the site's default
-# appearance does not move.
-#
-# The remaining warns are all in the 6-8 CVD band, which is legal here for the
-# reason it has always been: every series is direct-labelled at its last point,
-# comparison marks carry distinct shapes, and a table view ships alongside.
-#
-# STILL TRUE: five simultaneous hues is beyond this ramp. A sixth category must
-# come with a re-stepped dark palette or it must not come as a hue at all.
+# The dark 7.4 is in the 6-8 band, which is allowed because every line is
+# labelled at its last point and the chart has a table view. In light mode the
+# market and professional steps are under 3:1 against white, covered the same
+# way. Dark academic and class were re-stepped on 2026-09-29 (a joint sweep;
+# no single class colour cleared dark mode against the old academic). Change
+# these together with the --c-* tokens in layouts/partials/forecast/head.html.
 COLORS = {
-    "fundamentals": ("#4a3aa7", "#9085e9"),
     "polling":      ("#008300", "#199e70"),
-    "professional": ("#eda100", "#c98500"),
     "market":       ("#e87ba4", "#dc63a8"),
-    "academic":     ("#0077a8", "#3a97c9"),
-    # ADDED WITH THE FACET SPLIT. `class` is the only new line that draws
-    # today; composite and expert are defined so a group cannot fall through
-    # to grey the day it clears the disclosure floor.
-    #
-    # class is aqua because it is the only hue left that nothing else uses.
-    # Violet and green both validate better against the source view's other
-    # three, and both are taken — violet by fundamentals, green by polling —
-    # and a hue that means two things depending on which toggle you are on is
-    # worse than a warn-band pair that carries a direct label. Validated
-    # light: worst normal-vision pair 19.6, worst CVD 6.1 (deutan), which is
-    # the 6-8 band and legal here because every series is direct-labelled.
-    #
-    # THE DARK STEP WAS #199e70 UNTIL 2026-08-31, WHICH IS POLLING'S DARK STEP
-    # EXACTLY. Only the light value above was ever validated; the dark one was
-    # taken from polling and the duplication went unnoticed because the two
-    # live in different facets and no chart has ever drawn them together. It
-    # measured ΔE 0.0 — not close, identical — and it also sat 11.8 from
-    # academic, below the 15-point normal-vision floor, so the SOURCE view's
-    # three lines could not be told apart in dark mode by a reader with full
-    # colour vision.
-    #
-    # #3fae5e was chosen by sweeping candidate greens against the source
-    # view's other two dark steps. It is the only one tried that clears the
-    # floor: 15.6 from academic #2f9fbd, 7.1 CVD from professional #c98500,
-    # inside the lightness band, above the chroma floor, over 3:1 on the dark
-    # surface. The 7.1 is in the 6-8 band and legal on the same grounds as the
-    # light pair — every series is direct-labelled and a table view ships.
-    #
-    # It does NOT separate class from polling: those two are still 6.3 apart
-    # in dark. That is tolerable only because the facet toggle means they never
-    # render together, and anything that puts a type series and a source series
-    # on one chart breaks it. Race pages honour that: they draw one facet.
-    "class":        ("#1baf7a", "#3fae5e"),
-    "composite":    ("#2a78d6", "#3987e5"),
-    "expert":       ("#e34948", "#e66767"),
+    "professional": ("#eda100", "#c98500"),
+    "academic":     ("#0077a8", "#2696e4"),
+    "class":        ("#4a3aa7", "#825ea9"),
 }
 # Labels name the METHOD, not who built it. A chart comparing four ways of
 # forecasting the same number should put them on equal footing; tagging two of
@@ -185,17 +118,13 @@ COLORS = {
 # Both facets. See facets.py for what type and source mean and why the field
 # had to be split; `market` appears in both by design and carries the same
 # average either way.
-LABELS = {**facets.TYPE_LABEL, **facets.SOURCE_LABEL}
-FACET_OF = {**{g: "type" for g in facets.TYPE_ORDER},
-            **{g: "source" for g in facets.SOURCE_ORDER
-               if g not in facets.TYPE_ORDER},
-            "market": "both"}
+LABELS = dict(facets.SOURCE_LABEL)
+FACET_OF = {g: "source" for g in facets.SOURCE_ORDER}
 # Least modelled to most modelled, matching CATEGORY_ORDER in publish.py. The
 # two lists are written out separately because charts.py and publish.py do not
 # import each other; if you reorder one, reorder the other, or the legend and
 # the table disagree about what order the reader is being asked to think in.
-ORDER = facets.TYPE_ORDER + [g for g in facets.SOURCE_ORDER
-                             if g not in facets.TYPE_ORDER]
+ORDER = list(facets.SOURCE_ORDER)
 
 # Time windows the tracker offers, and the one it opens on.
 #
@@ -292,7 +221,14 @@ def collect_today(derived: Path, snapshot: str) -> list[dict]:
         # SERIES_START.
         if r.get("snapshot_date", "") < SERIES_START:
             continue
+        # Source lines only. Older files also carry `facet=type` rows, some
+        # with the same category name ("polling", "market"); reading them
+        # would put a different quantity on a line with the same label.
+        if r.get("facet", "source") != "source":
+            continue
         cat, q = r["category"], r["quantity"]
+        if cat == "class":      # from forecast/class/output only; see class_rows
+            continue
         # THE TIMELINE PLOTS THE SIMPLE MEAN. It used to plot the chained
         # level, and the reason for the change is worth keeping.
         #
@@ -463,8 +399,22 @@ def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list
     from data we may no longer hold.
     """
     path = derived / "timeline.csv"
-    rows = {(r["snapshot_date"], r["series"], r["panel"]): r for r in _rd(path)
-            if r["panel"] in PANELS and r["snapshot_date"] >= SERIES_START}
+    existing = _rd(path)
+    # ONE-TIME REBUILD FOR THE 2026-09-29 CHANGE. The lines became sources
+    # only, poll averages moved from Professional to Polling, and the old class
+    # model was dropped. Rows written before that carry the old definitions,
+    # and this file never revises a past row on its own. A file that still has
+    # a series that no longer exists is from before the change, so it is
+    # rebuilt once from the averages; after that the legacy series are gone and
+    # this does not fire again.
+    legacy = {r["series"] for r in existing} - set(ORDER)
+    if legacy and not rebuild:
+        print(f"  timeline: legacy series {sorted(legacy)} found; rebuilding once "
+              f"under the source-only lines")
+        rebuild = True
+    rows = {(r["snapshot_date"], r["series"], r["panel"]): r for r in existing
+            if r["panel"] in PANELS and r["snapshot_date"] >= SERIES_START
+            and r["series"] in ORDER}
     if rebuild:
         # FORCE: every date, existing rows overwritten from the averages.
         dates = _all_snapshot_dates(derived)
@@ -519,8 +469,11 @@ def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list
     # unless someone passes --force. So a series can only disappear from the
     # averages deliberately, and this follows that decision rather than making
     # one of its own.
-    truth = {(r["snapshot_date"], r["series"], r["panel"])
-             for r in collect_today(derived, snapshot)}
+    # collect_today returns every date's rows, so read it once. (It used to
+    # be called again for each date in the loop below, which re-read the whole
+    # averages file per date: a full rebuild took over ten minutes.)
+    all_rows = collect_today(derived, snapshot)
+    truth = {(r["snapshot_date"], r["series"], r["panel"]) for r in all_rows}
     covered = set(_all_snapshot_dates(derived))
     stale = [k for k in rows if k[0] in covered and k not in truth]
     if stale:
@@ -532,8 +485,9 @@ def update_timeline(derived: Path, snapshot: str, rebuild: bool = False) -> list
             + " no longer present in the averages")
         for k in stale:
             rows.pop(k, None)
-    for d0 in dates:
-        for r in collect_today(derived, d0):
+    want = set(dates)
+    for r in all_rows:
+        if r["snapshot_date"] in want:
             rows[(r["snapshot_date"], r["series"], r["panel"])] = r
     ordered = sorted(rows.values(), key=lambda r: (r["panel"], r["snapshot_date"],
                                                    ORDER.index(r["series"])
@@ -1425,8 +1379,116 @@ def build_ratings_spread(derived: Path, snapshot: str, chamber: str,
     }
 
 
+CLASS_DIR = Path(__file__).resolve().parents[1] / "class" / "output"
+
+
+def class_rows(class_dir: Path = CLASS_DIR, through: str | None = None) -> list[dict]:
+    """The PLSC 2219 class model as timeline rows, for drawing only.
+
+    These rows are added to the chart and never written to timeline.csv or
+    anywhere under forecast/data/: the class model is shown on the site but is
+    not part of the data archive. One model, so no spread bar, the same rule
+    as every other single-contributor line.
+    """
+    ts = _rd(class_dir / "class_timeseries.csv")
+    out = []
+    for r in ts:
+        d = r.get("as_of", "")
+        if d < SERIES_START or (through and d > through):
+            continue
+        vals = {
+            "margin": (_f(r.get("nat_dem_share")), "pct"),
+            "house_seats": (_f(r.get("house_seats_median")), "seats"),
+            "house_prob": (_f(r.get("p_house")), "prob"),
+            "senate_seats": (_f(r.get("senate_seats_median")), "seats"),
+            "senate_prob": (_f(r.get("p_senate")), "prob"),
+        }
+        for panel, (v, unit) in vals.items():
+            if v is None:
+                continue
+            if panel == "margin":        # two-party D share -> D margin
+                v = 2 * v - 100
+            out.append(dict(snapshot_date=d, series="class", panel=panel,
+                            unit=unit, value=round(v, 4), low="", high="",
+                            band_kind="", n_sources=1, label=LABELS["class"]))
+    return out
+
+
+def class_senate(class_dir: Path = CLASS_DIR) -> dict[str, list[dict]]:
+    """race_id -> the class model's Senate rows, oldest first."""
+    out: dict[str, list[dict]] = {}
+    for r in _rd(class_dir / "class_senate_history.csv"):
+        out.setdefault(r.get("race_id", ""), []).append(r)
+    for v in out.values():
+        v.sort(key=lambda r: r.get("as_of", ""))
+    return out
+
+
+def class_latest(class_dir: Path = CLASS_DIR) -> dict | None:
+    """The newest row of class_timeseries.csv, or None."""
+    ts = _rd(class_dir / "class_timeseries.csv")
+    return max(ts, key=lambda r: r.get("as_of", "")) if ts else None
+
+
+def class_candidates(class_dir: Path = CLASS_DIR) -> dict[str, list[dict]]:
+    """race_id -> [{name, party}], Democratic side first.
+
+    From the course's race file (forecast/class/inputs/races_2026.csv), which
+    is the candidate list the class model uses.
+    """
+    out: dict[str, list[dict]] = {}
+    for r in _rd(class_dir.parent / "inputs" / "races_2026.csv"):
+        cands = []
+        for name_k, party_k in (("dem_candidate", "d_side_party"),
+                                ("rep_candidate", "r_side_party")):
+            name = (r.get(name_k) or "").strip()
+            if name:
+                cands.append({"name": name, "party": (r.get(party_k) or "").strip()})
+        out[r.get("race_id", "")] = cands
+    return out
+
+
+def class_races(class_dir: Path = CLASS_DIR) -> list[dict]:
+    """The class model's latest race forecasts (House and Senate)."""
+    pvi = {r.get("race_id", ""): _f(r.get("pvi"))
+           for r in _rd(class_dir.parent / "inputs" / "races_2026.csv")}
+    out = []
+    for r in _rd(class_dir / "forecast_class_latest.csv"):
+        share, p = _f(r.get("pred_dem_share")), _f(r.get("p_dem_win"))
+        if share is None or p is None:
+            continue
+        out.append({"race_id": r["race_id"], "office": r.get("office", ""),
+                    "state": r.get("state", ""), "district": r.get("district", ""),
+                    "dem_candidate": r.get("dem_candidate", ""),
+                    "rep_candidate": r.get("rep_candidate", ""),
+                    "expected_margin_D": round(200 * share - 100, 2),
+                    "win_prob_D": round(p, 4),
+                    "pvi": pvi.get(r["race_id"])})
+    return out
+
+
+def class_holdover(class_dir: Path = CLASS_DIR) -> int | None:
+    """Democratic Senate seats not on the 2026 ballot, from the course file."""
+    for r in _rd(class_dir.parent / "inputs" / "senate_seats_not_up_2026.csv"):
+        if r.get("party", "").startswith("D"):
+            try:
+                return int(r["seats_not_up"])
+            except (KeyError, ValueError):
+                return None
+    return None
+
+
+def class_recomputed_through(class_dir: Path = CLASS_DIR) -> str | None:
+    """Last class-model date that was computed after the fact, if any."""
+    last = None
+    for r in _rd(class_dir / "class_inputs.csv"):
+        if r.get("computed_on", "") > r.get("date", ""):
+            last = max(last or "", r["date"])
+    return last
+
+
 def build(derived: Path, snapshot: str, rebuild: bool = False) -> dict:
-    rows = update_timeline(derived, snapshot, rebuild)
+    rows = update_timeline(derived, snapshot, rebuild) + class_rows(through=snapshot)
     out = {p: build_panel(rows, p, RANGE_DEFAULT_DAYS) for p in PANELS}
     out["views"] = VIEWS
     # Every panel at every window. Three windows times five panels is fifteen
@@ -1438,12 +1500,5 @@ def build(derived: Path, snapshot: str, rebuild: bool = False) -> dict:
     out["range_keys"] = [k for k, _ in RANGES]
     out["range_labels"] = RANGE_LABELS
     out["range_default"] = RANGE_DEFAULT
-    # Governors ride along here and nowhere else. They are not modelled — a
-    # national tide carried through partisan lean describes them badly — so
-    # there is no forecast of ours to put beside them. What there IS is a
-    # dozen raters' ordinal calls, which is exactly what this chart draws, and
-    # a third tab costs nothing while a card of its own on the contests page
-    # implied a gubernatorial forecast the course does not make.
-    out["ratings"] = {c: build_ratings_spread(derived, snapshot, c)
-                      for c in ("senate", "house", "governor")}
+    out["class_recomputed_through"] = class_recomputed_through()
     return out

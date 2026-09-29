@@ -7,19 +7,9 @@
 <div class="wrap masthead">
   <button class="themebtn" id="themebtn" type="button" aria-live="polite">Dark</button>
   <h1>Election Forecast Tracker</h1>
-  {{/* COUNTED, NOT ASSERTED. This line has been wrong twice: it said "Four
-       ways" through the whole first week the academic family was on the site,
-       and it would have said "Five" from the day the professional family
-       stopped publishing. The tracker's own <h2> was fixed the same way; the
-       masthead was missed because it lives in a partial. The number of families
-       DRAWN is the number of series on the margin chart, so ask that. */}}
-  {{- $n := 0 -}}
-  {{- with $d.charts -}}{{- with .margin -}}{{- $n = len .series -}}{{- end -}}{{- end -}}
-  {{- $words := slice "No" "One" "Two" "Three" "Four" "Five" "Six" "Seven" "Eight" -}}
-  {{- $w := printf "%d" $n -}}{{- if lt $n (len $words) }}{{ $w = index $words $n }}{{ end -}}
-  <p class="tagline">{{ $w }} ways of forecasting the 2026 midterms, collected
-     every day and shown side by side. The display is the disagreement between
-     methods, not another trend line.</p>
+  <p class="tagline">Forecasts of the 2026 midterm elections from polls,
+     prediction markets, professional forecasters, academic models and the
+     PLSC 2219 class model, updated daily.</p>
 
   <div class="strip">
     <span>Election day <b>3 Nov 2026</b></span>
@@ -32,17 +22,14 @@
   <nav class="pages">
     <a href="/forecast/"         class="{{ if eq $cur "/forecast/" }}on{{ end }}">Tracker</a>
     <a href="/forecast/contests/" class="{{ if eq $cur "/forecast/contests/" }}on{{ end }}">Contests</a>
-    {{/* `hasPrefix`, not `eq`: the tab stays lit on an individual race page
-         (/forecast/senate/ga/) and not only on the index. */}}
     <a href="/forecast/senate/" class="{{ if hasPrefix $cur "/forecast/senate/" }}on{{ end }}">Senate races</a>
     <a href="/forecast/methods/" class="{{ if eq $cur "/forecast/methods/" }}on{{ end }}">Methods</a>
-    <a href="/forecast/comparisons/" class="{{ if eq $cur "/forecast/comparisons/" }}on{{ end }}">Model Comparisons</a>
+    <a href="/forecast/comparisons/" class="{{ if eq $cur "/forecast/comparisons/" }}on{{ end }}">Comparisons</a>
     <a href="/forecast/about/"   class="{{ if eq $cur "/forecast/about/" }}on{{ end }}">About</a>
   </nav>
 
   <div class="stale" id="stale-banner">
     <strong>This page has not updated in <span id="stale-days"></span> days.</strong>
-    The daily collection may have stopped. Everything below is still the snapshot
-    named above, not today's.
+    The numbers below are from the snapshot date above.
   </div>
 </div>

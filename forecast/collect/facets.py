@@ -1,59 +1,38 @@
 #!/usr/bin/env python3
-"""The taxonomy: what a forecast is made of, and who made it.
+"""Which line on the site each forecast belongs to.
 
-WHY THIS FILE EXISTS
+Every forecast row is assigned to one SOURCE line:
 
-    Until 2026-08-27 the archive had one `category` field holding five values —
-    polling, fundamentals, market, professional, academic — and those five are
-    answers to TWO different questions:
+    polling       poll averages, from any publisher (Silver Bulletin, RCP,
+                  DDHQ, FiftyPlusOne, Race to the WH's poll average, ...),
+                  and our translation of those averages into seats
+    market        prediction markets
+    professional  forecasters' own models (Race to the WH's seat model, ...)
+    academic      published academic models, computed from their equations
+    class         the PLSC 2219 class model. Shown on the site only; it never
+                  passes through this file, because it is not part of the
+                  data archive (see forecast/class/).
 
-        polling · fundamentals · market      what evidence is it built from
-        professional · academic              who built it
+    reference     inputs rather than forecasts (Cook PVI, FRED, MEDSL, DRA,
+                  approval). Excluded from every average.
 
-    Mixing them forced every academic model to be cross-listed into a second
-    category so it would appear on both readings, which is why three of the
-    four academic models were also three of the five fundamentals members, and
-    why those two lines tracked each other almost exactly. It was not agreement
-    between two methods. It was one set of models drawn twice.
+Until 2026-09-29 rows were also grouped by TYPE (polling, fundamentals,
+composite, market, expert) and the site had a toggle between the two views.
+The type view was removed; the first element of each assignment is kept only
+so that `reference` rows and ordinal ratings (`expert`) can still be told
+apart from forecasts.
 
-    So: two facets, and a source belongs to exactly one group in each.
-
-    TYPE    polling       a poll aggregate and nothing more
-            fundamentals  structural — approval, economy, exposure, no polls
-            composite     a full forecast model: polls AND structure AND
-                          race-level judgment, blended
-            market        a traded price
-            expert        an ordinal race rating, which is a judgment rather
-                          than a number and lives on its own panel
-
-    SOURCE  academic      published academic models and their authors
-            professional  forecasters and outlets doing this commercially
-            class         this project's own models
-            market        the exchanges
-
-    reference is a sixth TYPE and a fifth SOURCE, for the things that are
-    inputs rather than forecasts — Cook's PVI, FRED income, MEDSL results,
-    DRA composites. They are already excluded from every average by
-    NOT_A_FORECAST and NEVER_PUBLISH; naming them here keeps the audit honest
-    instead of letting them fall through a default.
-
-WHY THE KEY IS (source_id, category) AND NOT source_id ALONE
-
-    One forecaster can publish two different KINDS of thing. Race to the WH
-    publishes a generic-ballot average — a poll aggregate — and a seat
-    forecast built on top of it. The archive already separates those: the
-    aggregate arrives under category `polling`, the forecast under
-    `professional`. That existing split is exactly the type/source distinction
-    showing through, so it is what this maps from rather than something to be
-    reconstructed.
+DROPPED sources are not published anywhere:
+    class_fundamentals  the site's earlier class model, replaced by the PLSC
+                        2219 model. Its code and history are kept privately.
+    grant_williams      an individual's model, not a professional forecaster.
+    wiki_endorsements   endorsements are no longer part of the site or archive.
 
 AUDIT
 
     python3 forecast/collect/facets.py --cycle 2026
 
-    Reads the parsed rows and the seat projections, and reports any
-    (source_id, category) pair with no assignment. A missing pair is a source
-    that would silently vanish from one of the two views, so it fails loudly.
+Reports any (source_id, category) pair with no assignment.
 """
 from __future__ import annotations
 
@@ -69,7 +48,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = REPO_ROOT / "forecast" / "data"
 
 TYPES = ("polling", "fundamentals", "composite", "market", "expert", "reference")
-SOURCES = ("academic", "professional", "class", "market", "reference")
+SOURCES = ("polling", "market", "professional", "academic", "class", "reference")
 
 TYPE_LABEL = {
     "polling": "Polling", "fundamentals": "Fundamentals",
@@ -77,13 +56,13 @@ TYPE_LABEL = {
     "expert": "Expert ratings",
 }
 SOURCE_LABEL = {
-    "academic": "Academic", "professional": "Professional",
-    "class": "This class", "market": "Markets",
+    "polling": "Polling", "market": "Markets", "professional": "Professional",
+    "academic": "Academic", "class": "Class model",
 }
 
 # Least modelled to most modelled, as elsewhere on the site.
 TYPE_ORDER = ["polling", "market", "fundamentals", "composite", "expert"]
-SOURCE_ORDER = ["market", "professional", "academic", "class"]
+SOURCE_ORDER = ["polling", "market", "professional", "academic", "class"]
 
 # --------------------------------------------------------------------------
 # The assignments.
@@ -94,54 +73,43 @@ SOURCE_ORDER = ["market", "professional", "academic", "class"]
 # failing the run.
 # --------------------------------------------------------------------------
 BY_PAIR: dict[tuple[str, str], tuple[str, str]] = {
-    # Race to the WH is both things, and this is the pair that proves the key
-    # has to be a pair: its generic ballot is a poll average, its seat model
-    # is not.
-    ("race_to_the_wh", "polling"): ("polling", "professional"),
+    # Race to the WH publishes two different things: a generic-ballot poll
+    # average (category `polling`) and a seat forecast (category
+    # `professional`). They go on different lines.
+    ("race_to_the_wh", "polling"): ("polling", "polling"),
     ("race_to_the_wh", "professional"): ("composite", "professional"),
 }
 
 BY_SOURCE: dict[str, tuple[str, str]] = {
-    # -- poll aggregators, published commercially ---------------------------
-    "silver_bulletin": ("polling", "professional"),
-    "ddhq": ("polling", "professional"),
-    "rcp": ("polling", "professional"),
-    "votehub": ("polling", "professional"),
-    "fiftyplusone": ("polling", "professional"),
-    "twoseventy": ("polling", "professional"),
+    # -- poll averages: the Polling line, whoever publishes them -------------
+    "silver_bulletin": ("polling", "polling"),
+    "ddhq": ("polling", "polling"),
+    "rcp": ("polling", "polling"),
+    "votehub": ("polling", "polling"),
+    "fiftyplusone": ("polling", "polling"),
+    "twoseventy": ("polling", "polling"),
+    # our translation of those poll averages into seats and probabilities
+    "class_polling": ("polling", "polling"),
+    "polling_reconstructed": ("polling", "polling"),
+
+    # -- forecasters' own models: the Professional line ---------------------
     "economist": ("composite", "professional"),
     "split_ticket": ("composite", "professional"),
-    "grant_williams": ("composite", "professional"),
 
-    # -- academic -----------------------------------------------------------
-    # BEW is the judgment call worth recording. It regresses the November vote
-    # on the generic ballot, so the generic ballot IS its input and it belongs
-    # with the aggregators; the midterm-penalty term is the discount it applies
-    # to that input rather than a second source of evidence. It sits about 1.8
-    # points below the professional aggregators, which is the model saying
-    # what it exists to say.
+    # -- academic models ----------------------------------------------------
     "academic_bew": ("polling", "academic"),
     "academic_economic_pessimism": ("fundamentals", "academic"),
     "academic_political_history": ("fundamentals", "academic"),
     "academic_referendum": ("fundamentals", "academic"),
     "academic_state_approval_economy": ("fundamentals", "academic"),
-    # Ray Fair publishes a named equation under his own name. Source describes
-    # who made the forecast, and he is an economist publishing academic work,
-    # so he belongs in that line even though we take his number as published
-    # rather than re-estimating it.
     "fair": ("fundamentals", "academic"),
 
-    # -- ours ---------------------------------------------------------------
-    "class_fundamentals": ("fundamentals", "class"),
-    "class_polling": ("polling", "class"),
-    "polling_reconstructed": ("polling", "class"),
-
-    # -- exchanges ----------------------------------------------------------
+    # -- prediction markets -------------------------------------------------
     "kalshi": ("market", "market"),
     "polymarket": ("market", "market"),
     "predictit": ("market", "market"),
 
-    # -- ordinal race ratings, on their own panel ---------------------------
+    # -- ordinal race ratings: collected, not shown on the site -------------
     "wikipedia": ("expert", "professional"),
     "cook": ("expert", "professional"),
     "sabato": ("expert", "professional"),
@@ -149,51 +117,73 @@ BY_SOURCE: dict[str, tuple[str, str]] = {
     "fox_power_rankings": ("expert", "professional"),
     "twoseventy_ratings": ("expert", "professional"),
 
-    # -- inputs, not forecasts ---------------------------------------------
+    # -- inputs, not forecasts ----------------------------------------------
     "cook_pvi": ("reference", "reference"),
     "cook_state_pvi": ("reference", "reference"),
     "dra": ("reference", "reference"),
     "fred": ("reference", "reference"),
     "medsl": ("reference", "reference"),
     "wiki_approval": ("reference", "reference"),
-    "wiki_endorsements": ("reference", "reference"),
 }
 
-# Last resort, by the category the row already carries. Deliberately NOT a
-# silent default for the two who-made-it categories: a row arriving as
-# `professional` or `academic` with an unknown source_id has no type we can
-# infer, and guessing one would put a number on a line it may not belong to.
+# Last resort, by the row's own category. There is deliberately no default
+# for `professional` or `academic`: a row with an unknown source_id in those
+# categories is reported by the audit rather than guessed.
 BY_CATEGORY: dict[str, tuple[str, str]] = {
-    "polling": ("polling", "professional"),
+    "polling": ("polling", "polling"),
     "market": ("market", "market"),
     "expert_ordinal": ("expert", "professional"),
 }
 
+# The retired site class models. class_polling still supplies the polling
+# line's national seat counts, but neither model's own rows go in the
+# published by-source file (they are not part of the data archive).
+NOT_IN_ARCHIVE = {"class_polling"}
 
-# Versioned class models. Each homework changes the specification, and a
-# change of specification is a change of identity — see MODEL_ID in
-# model/fundamentals.py for why. That produces ids like
-# `class_fundamentals_v2`, and they must not fall through to a default that
-# would file the class's own model under `professional`.
-#
-# The prefix rule means a new version lands correctly without anyone
-# remembering to edit this file. The audit below still prints where it landed,
-# so a wrong guess is visible on the first run rather than in November.
-BY_PREFIX: tuple[tuple[str, tuple[str, str]], ...] = (
-    ("class_fundamentals", ("fundamentals", "class")),
-    ("class_polling", ("polling", "class")),
-    ("class_", ("fundamentals", "class")),
-)
+
+def in_archive(source_id: str) -> bool:
+    return not is_dropped(source_id) and source_id not in NOT_IN_ARCHIVE
+
+
+# Not published anywhere. facets() returns None for these, which excludes
+# them from every average. The prefix rule catches versioned ids such as
+# `class_fundamentals_v2`; the PLSC 2219 class model is not affected because
+# it never enters the parsed rows.
+DROPPED_SOURCES = {"class_fundamentals", "grant_williams", "wiki_endorsements"}
+
+# Sources on the polling line whose race-level numbers are the NATIONAL
+# polling average carried to each race by partisan lean. They count on the
+# polling line only for national quantities (House margin, seat totals,
+# chances of control). A race's polling number comes only from polling
+# averages of that race (the aggregators listed in its Wikipedia article).
+POLLING_NATIONAL_ONLY = {"class_polling", "polling_reconstructed"}
+NATIONAL_RACES = ("NATL_",)
+
+
+def on_line(source_id: str, category: str, race_id: str) -> tuple[str, str] | None:
+    """facets(), plus the race-level rule for the polling line."""
+    got = facets(source_id, category)
+    if got and got[1] == "polling" and source_id in POLLING_NATIONAL_ONLY \
+            and not (race_id or "").startswith(NATIONAL_RACES):
+        return None
+    return got
+
+
+DROPPED_PREFIXES = ("class_fundamentals",)
+
+
+def is_dropped(source_id: str) -> bool:
+    return (source_id in DROPPED_SOURCES
+            or any(source_id.startswith(p) for p in DROPPED_PREFIXES))
 
 
 def facets(source_id: str, category: str) -> tuple[str, str] | None:
-    """(type, source) for a row, or None if we cannot say."""
+    """(type, source) for a row, or None if it is dropped or unknown."""
+    if is_dropped(source_id):
+        return None
     got = BY_PAIR.get((source_id, category)) or BY_SOURCE.get(source_id)
     if got:
         return got
-    for pre, val in BY_PREFIX:
-        if source_id.startswith(pre):
-            return val
     return BY_CATEGORY.get(category)
 
 
@@ -224,55 +214,46 @@ def audit(cycle: int) -> int:
     print("=" * 74)
     print(f"facets · cycle {cycle} · {len(seen)} (source, category) pair(s)")
     print("=" * 74)
-    missing, by_type, by_source = [], collections.defaultdict(set), collections.defaultdict(set)
-    print(f"  {'source_id':30s} {'category':16s} {'type':13s} source")
+    missing, dropped = [], []
+    by_source = collections.defaultdict(set)
+    print(f"  {'source_id':30s} {'category':16s} line")
     for (sid, cat), n in sorted(seen.items()):
+        if is_dropped(sid):
+            dropped.append(sid)
+            print(f"  {sid:30s} {cat:16s} (dropped, not published)")
+            continue
         got = facets(sid, cat)
         if got is None:
             missing.append((sid, cat))
-            print(f"  {sid:30s} {cat:16s} {'—':13s} —   UNASSIGNED")
+            print(f"  {sid:30s} {cat:16s} UNASSIGNED")
             continue
         t, s = got
-        print(f"  {sid:30s} {cat:16s} {t:13s} {s}")
-        if t != "reference":
-            by_type[t].add(sid)
+        print(f"  {sid:30s} {cat:16s} {s}{'  (rating, not shown)' if t == 'expert' else ''}")
+        if t not in ("reference", "expert"):
             by_source[s].add(sid)
 
-    print("\n  grouped by TYPE")
-    for t in TYPE_ORDER:
-        if by_type.get(t):
-            print(f"    {TYPE_LABEL[t]:18s} {', '.join(sorted(by_type[t]))}")
-    print("\n  grouped by SOURCE")
+    print("\n  lines on the site")
     for s in SOURCE_ORDER:
         if by_source.get(s):
-            print(f"    {SOURCE_LABEL[s]:18s} {', '.join(sorted(by_source[s]))}")
+            print(f"    {SOURCE_LABEL[s]:14s} {', '.join(sorted(by_source[s]))}")
 
-    # THE POINT OF THE WHOLE CHANGE, ASSERTED. Within one facet no source may
-    # appear twice, or the old overlap has been rebuilt under new names.
-    bad = []
-    for name, groups in (("type", by_type), ("source", by_source)):
-        counts: collections.Counter = collections.Counter()
-        for g in groups.values():
-            counts.update(g)
-        dupes = [s for s, k in counts.items() if k > 1]
-        # race_to_the_wh is the one legitimate exception: its poll average and
-        # its seat model are different objects and belong on different lines.
-        dupes = [s for s in dupes if s != "race_to_the_wh"]
-        if dupes:
-            bad.append(f"{name}: {sorted(dupes)}")
+    # Within the source lines no source may appear twice, except Race to the
+    # WH, whose poll average and seat model are different objects.
+    counts: collections.Counter = collections.Counter()
+    for g in by_source.values():
+        counts.update(g)
+    dupes = sorted(s for s, k in counts.items() if k > 1 and s != "race_to_the_wh")
     print()
     if missing:
-        print(f"  FAIL: {len(missing)} unassigned pair(s) — add them to "
+        print(f"  FAIL: {len(missing)} unassigned pair(s); add them to "
               f"BY_SOURCE or BY_PAIR:")
         for sid, cat in missing:
             print(f"    ({sid!r}, {cat!r})")
-    if bad:
-        print(f"  FAIL: a source appears in two groups of one facet — "
-              f"{'; '.join(bad)}")
-    if not missing and not bad:
-        print("  PASS: every pair assigned, and no source is in two groups "
-              "of the same facet.")
-    return 1 if (missing or bad) else 0
+    if dupes:
+        print(f"  FAIL: source(s) on two lines: {dupes}")
+    if not missing and not dupes:
+        print("  PASS: every pair assigned, and no source is on two lines.")
+    return 1 if (missing or dupes) else 0
 
 
 def main(argv=None) -> int:

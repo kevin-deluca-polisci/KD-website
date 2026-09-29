@@ -52,6 +52,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parents[1]
 DERIVED = REPO_ROOT / "forecast" / "data" / "2026" / "derived"
+# Endorsement data live outside the forecast archive.
+ENDORSE = REPO_ROOT / "forecast" / "data" / "endorsements"
 SIDECAR = HERE / "endorser_party.csv"
 CACHE = HERE / "_wiki_categories_cache.json"
 
@@ -136,7 +138,7 @@ def needed() -> dict:
     have = load_sidecar()
     want = {}
     for cy in CYCLES:
-        f = DERIVED / f"endorsements_{cy}.json"
+        f = ENDORSE / f"endorsements_{cy}.json"
         if not f.exists():
             continue
         for r in json.loads(f.read_text()):
@@ -243,7 +245,7 @@ def main(argv=None) -> int:
     if a.plan:
         by = collections.Counter()
         for cy in CYCLES:
-            f = DERIVED / f"endorsements_{cy}.json"
+            f = ENDORSE / f"endorsements_{cy}.json"
             if not f.exists():
                 continue
             for r in json.loads(f.read_text()):

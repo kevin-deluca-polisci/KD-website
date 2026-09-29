@@ -40,6 +40,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parents[1]
 DERIVED = REPO_ROOT / "forecast" / "data" / "2026" / "derived"
+# Endorsement data live outside the forecast archive.
+ENDORSE = REPO_ROOT / "forecast" / "data" / "endorsements"
 CONDITIONS = REPO_ROOT / "forecast" / "conditions"
 
 _s = importlib.util.spec_from_file_location("fm", HERE / "fit_model.py")
@@ -54,7 +56,7 @@ NOPARTY = {"Organizations", "Labor unions", "Newspapers", "Political parties"}
 def endorsement_share() -> dict:
     """state -> (share_D, n_D, n_R) for 2026 Senate, general phase only."""
     per = collections.defaultdict(collections.Counter)
-    for r in json.loads((DERIVED / "endorsements_2026.json").read_text()):
+    for r in json.loads((ENDORSE / "endorsements_2026.json").read_text()):
         if r.get("phase") != "general" or r.get("duplicate_key"):
             continue
         if r.get("chamber") != "senate":

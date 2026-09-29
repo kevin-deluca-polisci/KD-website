@@ -1,38 +1,20 @@
-{{/* TRACKER — the front page.
+{{/* Front page: the forecast timeline.
 
      Data comes in via resources.Get rather than .Site.Data on purpose: touching
      .Site.Data forces Hugo to assemble the whole data map, and this site's
-     data/*.csv load as [][]string, which Hugo 0.123 cannot merge. One reference
-     was enough to break the entire build.
+     data/*.csv load as [][]string, which Hugo 0.123 cannot merge.
 
-     The lead chart is ONE timeline with two toggles rather than three stacked
-     charts. Markets quote a probability and not a margin, so on a margin axis
-     they had to live in a separate panel below — which put the one series most
-     readers came for furthest from the top, and made the comparison the whole
-     site exists for into something you had to scroll between. Seat counts and
-     chamber probabilities are quantities every method can answer, so on those
-     axes all four sit together. */}}
+     One chart, one line per forecast source (see forecast/collect/facets.py).
+     Toggles pick chamber, measure and date range. */}}
 {{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
 {{- $ch := $d.charts -}}
-{{- $p := $d.polling_model -}}
-{{- $f := $d.fundamentals_model -}}
 {{ partial "forecast/head.html" (dict "page" . "d" $d) }}
 {{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
 
 <div class="wrap viz">
 
   <div class="card">
-    {{/* Counted, not asserted. This said "Four ways" as a literal and went
-         on saying it after academic became the fifth — the chart below draws
-         whatever series exist, so the heading has to as well.
-         Now there are two counts, because there are two facets and the chart
-         shows one at a time. Counting all the series would name a number no
-         view actually displays, which is the same fault in a new place. */}}
-    {{- $ser := $d.charts.margin.series }}
-    {{- $nt := len (where $ser "facet" "in" (slice "type" "both")) }}
-    {{- $ns := len (where $ser "facet" "in" (slice "source" "both")) }}
-    <h2><span data-fk="type">{{ $nt }} ways of forecasting</span><span
-        data-fk="source">{{ $ns }} kinds of forecaster</span>, one chart</h2>
+    <h2>Forecasts over time</h2>
 
     <div class="segs" data-toggle-group="tracker">
       <span class="seglabel">Chamber</span>
@@ -42,29 +24,9 @@
       </div>
       <span class="seglabel">Showing</span>
       <div class="seg" data-dim="metric">
-        {{/* CHANCE OF A MAJORITY OPENS SELECTED. A seat count is the more
-             informative number and the harder one — it is what the models
-             actually project and what the ladder below is built on — but it is
-             not the question anyone arrives with. "Will the Democrats take the
-             House" is, and a page that answers it in one glance earns the right
-             to make someone click for the seat count. */}}
         <button type="button" data-value="seats" aria-selected="false">Democratic seats</button>
         <button type="button" data-value="prob" aria-selected="true">Chance of a majority</button>
       </div>
-      {{/* GROUPING. Two facets, one at a time — see facets.py. Type asks what
-           a forecast is built from, source asks who built it, and the old
-           single `category` field answered both at once, which is why the
-           academic and fundamentals lines used to be three of the same four
-           models drawn twice. Showing both facets together would put one
-           forecaster on the chart twice under two names. */}}
-      <span class="seglabel">Grouped by</span>
-      <div class="seg" data-dim="facet">
-        <button type="button" data-value="type" aria-selected="true">Forecast type</button>
-        <button type="button" data-value="source" aria-selected="false">Forecast source</button>
-      </div>
-      {{/* Third dimension. The toggle script reads every .seg[data-dim] and
-           matches it against data-<dim> on the panels, so this needed no
-           JavaScript — only panels carrying a data-range attribute. */}}
       <span class="seglabel">Range</span>
       <div class="seg" data-dim="range">
         {{- range $rk := $ch.range_keys }}
@@ -90,7 +52,7 @@
       <div class="chartwrap">
       <svg viewBox="0 0 720 234" role="img" data-tl
            data-l="{{ $L }}" data-t="{{ $T }}" data-w="{{ $W }}" data-h="{{ $H }}"
-           aria-label="{{ $pan.label }} over time, by method">
+           aria-label="{{ $pan.label }} over time, by source">
         {{- range $pan.y_ticks }}
         {{- $y := add $T (mul (div .y 100.0) $H) }}
         <line class="gridline" x1="{{ $L }}" y1="{{ $y }}" x2="{{ add $L $W }}" y2="{{ $y }}"/>
@@ -99,10 +61,7 @@
         {{- with $pan.ref_y }}
         <line class="baseline" x1="{{ $L }}" y1="{{ add $T (mul (div . 100.0) $H) }}"
               x2="{{ add $L $W }}" y2="{{ add $T (mul (div . 100.0) $H) }}"/>
-        {{/* Centred. Neither end is safe: series are labelled at their last
-             point, which is the right edge for a live series and the left edge
-             for one that stopped, and this label collided with each in turn.
-             The middle of the plot is the one place no direct label goes. */}}
+        {{/* Centred: series labels sit at the line ends. */}}
         <text class="tick" x="{{ add $L (div $W 2) }}" text-anchor="middle"
               y="{{ sub (add $T (mul (div . 100.0) $H)) 6 }}"
               style="fill:var(--ink-3)">{{ $pan.ref_label }}</text>
@@ -110,7 +69,7 @@
 
         {{- range $s := $pan.series }}
         {{- $col := printf "var(--c-%s)" $s.key }}
-        <g data-fk="{{ $s.facet }}">
+        <g>
         {{- with $s.band }}
         {{- $x := add $L (mul (div $s.last.x 100.0) $W) }}
         <line x1="{{ $x }}" y1="{{ add $T (mul (div .y_high 100.0) $H) }}"
@@ -168,50 +127,28 @@
 
       <div class="legend">
         {{- range $pan.series }}
-        <span data-fk="{{ .facet }}"><i class="swatch" style="background:var(--c-{{ .key }})"></i>{{ .label }}{{ if .stale }} <span class="muted">· last {{ .last_date }}</span>{{ end }}</span>
+        <span><i class="swatch" style="background:var(--c-{{ .key }})"></i>{{ .label }}{{ if .stale }} <span class="muted">· last {{ .last_date }}</span>{{ end }}</span>
         {{- end }}
       </div>
 
       {{- $stale := where $pan.series "stale" true }}
       {{- with $stale }}
       <p class="thin-note">{{ range $i, $s := . }}{{ if $i }}, {{ end }}{{ $s.label }}{{ end }}
-         stopped on {{ (index . 0).last_date }} and is drawn faded. That category gained a second
-         contributor whose terms do not permit republication, which puts the
-         average below the disclosure floor —
-         <a href="/forecast/methods/#disclosure">why</a>.</p>
+         last updated on {{ (index . 0).last_date }} and is drawn faded.</p>
       {{- end }}
-      {{/* The axis is fitted to the data now, so the majority line is not
-           always on it. Saying which side it is on beats leaving a reader to
-           wonder why the most important line on a seats chart is missing. */}}
       {{- if $pan.ref_offscreen }}
-      <p class="thin-note">{{ $pan.ref_label }} is off this scale — every
-         series sits {{ if $pan.ref_below }}above{{ else }}below{{ end }} it.
-         The axis is fitted to the forecasts so the distances between them stay
-         readable.</p>
+      <p class="thin-note">The line for {{ $pan.ref_label }} is off this scale.
+         Every forecast is {{ if $pan.ref_below }}above{{ else }}below{{ end }} it.</p>
       {{- end }}
       {{- if lt $pan.n_dates 3 }}
-      <p class="thin-note">Collection began {{ index $pan.dates 0 }}. With
-         {{ $pan.n_dates }} snapshot{{ if ne $pan.n_dates 1 }}s{{ end }} there is no
-         trend to read yet.</p>
+      <p class="thin-note">Collection began {{ index $pan.dates 0 }}.</p>
       {{- end }}
 
-      {{/* THE TABLE VIEW STAYS, BUT NOT AS A DUMP.
-           It used to print every point of every series — one row per date per
-           method. That was fine at three snapshots and became unreadable the
-           moment the academic backfill added six hundred days: a reader who
-           opened it got hundreds of rows and no answer.
-           It cannot simply be deleted. Two of the five series fall below 3:1
-           contrast against the light surface, and a text alternative is what
-           makes that legal rather than merely regrettable — the same reason
-           every series is directly labelled at its last point.
-           So it is now a SUMMARY: where each method started, where it is, and
-           how far it moved. That is what the chart says, in words, in five
-           rows. The full series is a CSV for anyone who wants to plot it
-           themselves. */}}
+      {{/* Table view: the text alternative for the chart. Keep it. */}}
       <details>
         <summary>See the numbers</summary>
         <table>
-          <tr><th>Method</th><th>First</th><th>Latest</th>
+          <tr><th>Source</th><th>First</th><th>Latest</th>
               <th class="num">Change</th><th class="num">Points</th></tr>
           {{- range $s := $pan.series }}
           {{- $n := len $s.points }}
@@ -232,25 +169,22 @@
           {{- end }}
           {{- end }}
         </table>
-        <p class="thin-note">Every point of every series is in
-           <a href="/data/">the data page</a> as CSV, along with what each
-           source said on each date.</p>
+        <p class="thin-note">The full series is on <a href="https://github.com/kevin-deluca-polisci/KD-website/tree/main/forecast/data">GitHub</a>.</p>
       </details>
     </div>
     {{- end }}
     {{- end }}
     {{- end }}
-      <p data-empty class="muted" hidden>No series for that combination yet.</p>
+      <p data-empty class="muted" hidden>No data for that combination yet.</p>
     </div>
+    <p class="thin-note">The class model is the forecast built in PLSC 2219. It
+       is re-run each day with that day's presidential approval, gas prices and
+       real income.{{ with $ch.class_recomputed_through }} Values through {{ . }}
+       were computed afterward from the data available on each date.{{ end }}</p>
   </div>
 
-  <!-- ===================== WHERE THEY STAND TODAY =====================
-       Seats rather than margin, because seats are the quantity every method
-       can answer and the one that carries an interval. The margin strip stays
-       for the House, where it is the generic ballot and worth seeing, but it
-       is the second row rather than the whole card. -->
   <div class="card">
-    <h2>Where the methods stand today</h2>
+    <h2>Where the forecasts stand today</h2>
     <div class="segs" data-toggle-group="today">
       <span class="seglabel">Chamber</span>
       <div class="seg" data-dim="chamber">
@@ -264,16 +198,11 @@
     <div data-panel data-chamber="{{ $ck }}">
       {{- $pan := index $ch (printf "%s_seats" $ck) }}
       {{- with $pan }}
-      <p class="sub">{{ .label }}, of {{ .total }}. A bar is the <em>spread
-         between the sources in that method</em> — how far apart they are
-         today, not how uncertain any one of them is. A bare dot means the
-         method has one contributor, which cannot disagree with itself. For
-         what a single model says about its own uncertainty, see the
-         <a href="/forecast/methods/">methods page</a>: each states an 80%
-         interval, and those are wider than anything drawn here.</p>
+      <p class="sub">{{ .label }}, of {{ .total }}. The dot is the average for
+         each source type. The bar shows the range across the forecasts in it.</p>
       {{- $SL := 132.0 }}{{ $SW := 470.0 }}{{ $SH := add 34 (mul 44 (len .series)) }}
       <svg viewBox="0 0 720 {{ add $SH 18 }}" role="img"
-           aria-label="Current {{ $ck }} seat forecasts by method, with intervals">
+           aria-label="Current {{ $ck }} seat forecasts by source, with ranges">
         {{- range .x_ticks }}
         <line class="gridline" x1="{{ add $SL (mul (div .x 100.0) $SW) }}" y1="20"
               x2="{{ add $SL (mul (div .x 100.0) $SW) }}" y2="{{ $SH }}"/>
@@ -308,7 +237,7 @@
       <h3>National House margin</h3>
       {{- $SL := 132.0 }}{{ $SW := 470.0 }}{{ $SH := add 34 (mul 44 (len .series)) }}
       <svg viewBox="0 0 720 {{ add $SH 18 }}" role="img"
-           aria-label="Current national House margin by method, with intervals">
+           aria-label="Current national House margin by source, with ranges">
         {{- range .x_ticks }}
         <line class="gridline" x1="{{ add $SL (mul (div .x 100.0) $SW) }}" y1="20"
               x2="{{ add $SL (mul (div .x 100.0) $SW) }}" y2="{{ $SH }}"/>
@@ -336,24 +265,13 @@
         <text class="rowval" x="700" y="{{ add $y 4 }}" text-anchor="end">D+{{ printf "%.1f" $s.last.v }}</text>
         {{- end }}
       </svg>
-      {{/* This note was written when it was permanently true and left
-           unconditional, so it went on asserting that markets quote no vote
-           share for a fortnight after they started doing exactly that — the
-           Markets row was already drawn in the chart directly above it. Now it
-           asks the data. */}}
       {{- $has_market := false }}
       {{- range .series }}{{ if eq .key "market" }}{{ $has_market = true }}{{ end }}{{ end }}
       {{- if $has_market }}
-      <p class="thin-note">The markets figure comes from the national
-         popular-vote margin ladders on Kalshi and Polymarket — a row of
-         contracts priced on 2-point buckets, read as a distribution rather
-         than as a price. It is the only market-implied vote share there is:
-         a chamber-control price implies a winner, not a margin.
-         <a href="/forecast/methods/#markets">How a ladder is read →</a></p>
+      <p class="thin-note">The markets figure comes from Kalshi and Polymarket
+         contracts on the national popular-vote margin.</p>
       {{- else }}
-      <p class="thin-note">Markets are absent from this row today: nothing on
-         either exchange is quoting a national vote share. They price chamber
-         control and seat counts, and neither implies a margin.</p>
+      <p class="thin-note">No market is quoting the national vote margin today.</p>
       {{- end }}
       {{- end }}
       {{- end }}
@@ -362,22 +280,13 @@
     </div>
   </div>
 
-  {{/* WHAT CHANGED, in words. The chart above answers this visually, but only
-       if you can see the whole line and remember where it started. This is the
-       same question for someone reading on a phone, or lifting one sentence
-       into a lecture. Every figure is computed in publish.py — build_movement()
-       carries the three rules it follows about not inventing a comparison, and
-       the asterisk below is the third of them. */}}
   {{- with $d.movement }}
   {{- $mv := . }}
   <div class="card">
     <h2>What has moved</h2>
-    <p class="sub">Change in the national House margin, in points. Measured
-       against the newest published value at or before each date, never an
-       interpolation. A family with nothing that far back gets no figure rather
-       than a zero.</p>
+    <p class="sub">Change in the national House margin, in points.</p>
     <table>
-      <tr><th>Method</th><th class="num">Today</th>
+      <tr><th>Source</th><th class="num">Today</th>
         {{- range $mv.horizons }}<th class="num">{{ index $mv.horizon_labels . }}</th>{{ end }}</tr>
       {{- $mixed := false }}
       {{- range $mv.rows }}
@@ -402,68 +311,20 @@
       {{- end }}
       {{- end }}
     </table>
-    <p class="thin-note">Each cell says which way the margin moved, not which
-       party is ahead — “+1.2 D” means the Democratic margin grew by 1.2 points
-       from whatever it was. Hover any figure for the date it was measured
-       from.</p>
+    <p class="thin-note">“+1.2 D” means the margin moved 1.2 points toward
+       Democrats. It does not say who is ahead. Hover a figure to see the date
+       it is measured from.</p>
     {{- if $mixed }}
-    <p class="thin-note"><sup>*</sup> This comparison reaches back past
-       {{ $mv.capture_start }}, when we started capturing the generic ballot
-       daily. Academic figures before that date are reconstructed from the
-       poll-level record using raw poll margins, while everything after uses the
-       house-effect-adjusted average — about half a point apart. Part of a
-       change that spans the join is a change of recipe rather than of polls.
-       <a href="/forecast/methods/#academic">How the reconstruction works →</a></p>
+    <p class="thin-note"><sup>*</sup> This comparison reaches back before
+       {{ $mv.capture_start }}, when daily collection began. Earlier values
+       were rebuilt from the list of individual polls, so part of the change
+       may come from that switch.</p>
     {{- end }}
   </div>
   {{- end }}
-  <div class="card">
-    <h2>The models on this site</h2>
-    <p class="sub">Built in PLSC 2219 from public-domain inputs and published in
-       full. <a href="/forecast/methods/">Every choice inside them is here</a>.</p>
-    <div class="cards">
-      {{- with $f }}
-      <div class="card" style="margin:0">
-        <span class="badge">Fundamentals</span>
-        <div class="muted">National House margin</div>
-        <div class="big {{ if gt .margin_D 0.0 }}D{{ else }}R{{ end }}">
-          {{ if gt .margin_D 0.0 }}D+{{ printf "%.1f" .margin_D }}{{ else }}R+{{ printf "%.1f" (mul .margin_D -1) }}{{ end }}
-        </div>
-        <div class="muted">80% interval {{ printf "%.1f" .margin_D_80_low }} to {{ printf "%.1f" .margin_D_80_high }}</div>
-        <p class="muted" style="margin-top:12px">Approval, real income growth and
-           seats defended, fit on 20 midterms 1946–2022.</p>
-      </div>
-      {{- end }}
-      {{- with $p }}
-      <div class="card" style="margin:0">
-        <span class="badge">Polling</span>
-        <div class="muted">Senate seats</div>
-        <div class="big">{{ if .expected_D_total }}{{ printf "%.0f" .expected_D_total }}{{ else }}{{ printf "%.1f" .expected_D_seats_up }}{{ end }} <span style="font-size:.38em;font-weight:400;color:var(--ink-3)">of 100</span></div>
-        {{- if .D_total_80pct }}
-        <div class="muted">80% interval {{ index .D_total_80pct 0 }}–{{ index .D_total_80pct 1 }} · 51 for a majority</div>
-        {{- end }}
-        <p class="muted" style="margin-top:12px">A nowcast: the generic ballot as
-           it stands, <strong>D+{{ printf "%.1f" .tide_D }}</strong>, carried to
-           each state by partisan lean. Not a projection of November — that is
-           the point, because it leaves room to watch whether polling drifts
-           toward the fundamentals line over the autumn{{ with .election_day_tide_D }};
-           {{/* $p, not $. Inside `with .election_day_tide_D` the dot is a
-                float, and `$` in a section template is the PAGE, not the data
-                dict — so `$.shrink_lambda` asked a *hugolib.pageState for a
-                field it has never had and failed the whole build. The polling
-                model is bound to $p above; a variable reaches it from any
-                nesting depth, which is exactly why it was bound. */}}
-           shrinking it by λ={{ printf "%.2f" $p.shrink_lambda }} would give
-           D+{{ printf "%.1f" . }}{{ end }}.</p>
-        <p class="muted"><a href="/forecast/contests/">Race by race →</a></p>
-      </div>
-      {{- end }}
-    </div>
-  </div>
-
 </div>
 {{ partial "forecast/foot.html" (dict "page" . "d" $d) }}
-\n
+
 {{/* ------------------------------------------------------------------ */}}
 {{/* Hover crosshair. Progressive enhancement: with no JS the chart is the
      same chart it was, direct labels and all, and the sparse panels keep
@@ -512,11 +373,7 @@
       var col = getComputedStyle(poly).stroke;
       var byDate = {};
       sr.i.forEach(function (di, k) { byDate[di] = { p: pts[k], v: sr.v[k] }; });
-      // The facet toggle hides series with CSS, so the polyline is still in
-      // the DOM and querySelector still finds it. Without this the tooltip
-      // would keep listing lines that are not on the chart.
-      var grp = poly.closest ? poly.closest("g[data-fk]") : null;
-      series.push({ k: sr.k, label: sr.l, byDate: byDate, col: col, grp: grp });
+      series.push({ k: sr.k, label: sr.l, byDate: byDate, col: col });
     });
     if (!series.length) return;
 
@@ -572,8 +429,7 @@
       var rows = [], anyY = null;
       series.forEach(function (sr, n) {
         var hit = sr.byDate[di];
-        var off = sr.grp && getComputedStyle(sr.grp).display === "none";
-        if (!hit || off) { dots[n].setAttribute("r", "0"); return; }
+        if (!hit) { dots[n].setAttribute("r", "0"); return; }
         dots[n].setAttribute("r", "4.5");
         dots[n].setAttribute("cx", hit.p.x);
         dots[n].setAttribute("cy", hit.p.y);

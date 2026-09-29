@@ -1,10 +1,9 @@
 {{- $d := .d -}}
 <footer><div class="wrap">
   <p>PLSC 2219 · Yale University · <a href="/">Kevin DeLuca</a></p>
-  <p style="margin-top:6px">Generated {{ $d.generated_at }} from snapshot {{ $d.latest_snapshot }}.
-     Race ratings © their respective forecasters, transcribed from Wikipedia under
-     CC BY-SA 4.0. Official returns via MIT Election Data and Science Lab (CC0).
-     Economic data via FRED.</p>
+  <p style="margin-top:6px">Snapshot {{ $d.latest_snapshot }}. Built {{ $d.generated_at }}.
+     Past election returns from the MIT Election Data and Science Lab (CC0).
+     Economic data from FRED. Site code and data collection written with Claude.</p>
 </div></footer>
 
 <script>
@@ -66,29 +65,10 @@
         paint();
       });
     });
-    /* A dimension no panel carries is a VIEW dimension, not a selector.
-       The facet toggle is one: it chooses which series are drawn inside a
-       panel rather than which panel is drawn, and duplicating all sixteen
-       panels per facet to express that through the existing mechanism would
-       double the SVG on the page to say something CSS can say in two rules.
-       So it is stamped on the box as data-view-<dim> and skipped below. */
-    var viewDim = {};
-    Object.keys(dims).forEach(function (k) {
-      viewDim[k] = !box.querySelector("[data-panel][data-" + k + "]");
-    });
-    /* Stamped on the CARD, not the panel box, so copy outside the chart —
-       the heading, which counts the series it is describing — can be filtered
-       by the same rule as the series themselves. */
-    var scope = (box.closest && box.closest(".card")) || box;
-
     function paint() {
       var shown = null;
-      Object.keys(dims).forEach(function (k) {
-        if (viewDim[k]) scope.setAttribute("data-view-" + k, dims[k]);
-      });
       box.querySelectorAll("[data-panel]").forEach(function (p) {
         var ok = Object.keys(dims).every(function (k) {
-          if (viewDim[k]) return true;
           return p.getAttribute("data-" + k) === dims[k];
         });
         p.hidden = !ok;

@@ -80,23 +80,10 @@ def rd(p):
 # which is not.
 # ---------------------------------------------------------------------------
 
-# TWO FACETS, ONE FLAT LIST. `facets.py` is the taxonomy; these are its groups
-# in reading order, type first then source, because that is the order the
-# tracker offers them in.
-#
-# `market` is deliberately the one name that belongs to both facets — a traded
-# price is both a method and a kind of forecaster — and its two averages are
-# identical because they are taken over the same three exchanges. Keying by
-# group name alone is therefore unambiguous, and that is not luck: no other
-# group name is shared, and facets.py's audit fails if one ever is. Do not
-# "fix" the duplicate by renaming one of them.
-CATEGORY_ORDER = facets.TYPE_ORDER + [g for g in facets.SOURCE_ORDER
-                                      if g not in facets.TYPE_ORDER]
-CATEGORY_LABEL = {**facets.TYPE_LABEL, **facets.SOURCE_LABEL}
-CATEGORY_FACET = {**{g: "type" for g in facets.TYPE_ORDER},
-                  **{g: "source" for g in facets.SOURCE_ORDER
-                     if g not in facets.TYPE_ORDER},
-                  "market": "both"}
+# The lines on the site, in display order. Sources only since 2026-09-29.
+CATEGORY_ORDER = list(facets.SOURCE_ORDER)
+CATEGORY_LABEL = dict(facets.SOURCE_LABEL)
+CATEGORY_FACET = {g: "source" for g in facets.SOURCE_ORDER}
 
 
 def build_model_index(d: Path, latest: str) -> dict:
@@ -240,14 +227,69 @@ def _seat_markers(chamber: str, proj: dict | None, avgs: list[dict],
     return out
 
 
-def build_ladders(senate: dict | None, proj: dict | None,
-                  avgs: list[dict] | None = None, latest: str = "") -> dict:
-    """One ladder per chamber, both off the polling projection.
+AT_LARGE = {"AK", "DE", "ND", "SD", "VT", "WY"}
 
-    The Senate ladder counts from the seats not on the ballot; the House has no
-    such block, so its caps are the safe seats either side of the drawn window.
-    Same function, different bookkeeping — which is the reason build_ladder
-    stopped taking a polling-model dict and started taking a plain list.
+
+def build_class_tables(avgs: list[dict], supp: list[dict], latest: str):
+    """Senate and House race tables from the class model's latest run."""
+    races = charts.class_races()
+    if not races:
+        return None, []
+    cells = _cat_cells(avgs, latest)
+    withheld = _withheld_cells(supp, latest)
+    cl = charts.class_latest() or {}
+
+    def _num(k):
+        try:
+            return float(cl[k])
+        except (KeyError, TypeError, ValueError):
+            return None
+
+    sen = []
+    for r in races:
+        if r["office"] != "senate":
+            continue
+        rid = r["race_id"]
+        got = cells.get((rid, "margin_D", "polling"))
+        sen.append({**r, "district": "",
+                    "competitive": COMPETITIVE_LO < r["win_prob_D"] < COMPETITIVE_HI,
+                    "polling_margin": round(got["value"], 1) if got else None,
+                    "polling_n": got["n"] if got else None,
+                    "polling_withheld": (rid, "margin_D", "polling") in withheld})
+    sen.sort(key=lambda r: -r["expected_margin_D"])
+    hold = charts.class_holdover()
+    senate = {
+        "races": sen, "holdover_D": hold,
+        "expected_D_total": _num("senate_seats_median"),
+        "D_total_80pct": [_num("senate_lo80"), _num("senate_hi80")],
+        "prob_D_51_plus": _num("p_senate"),
+        "n_competitive": sum(1 for r in sen if r["competitive"]),
+    }
+    comp = [r for r in sen if r["competitive"]]
+    senate["lean_D"] = sorted((r for r in comp if r["expected_margin_D"] > 0),
+                              key=lambda r: (abs(r["expected_margin_D"]), r["state"]))
+    senate["lean_R"] = sorted((r for r in comp if r["expected_margin_D"] <= 0),
+                              key=lambda r: (abs(r["expected_margin_D"]), r["state"]))
+
+    house = []
+    for r in races:
+        if r["office"] != "house":
+            continue
+        dist = "AL" if r["state"] in AT_LARGE else (str(r["district"]).lstrip("0") or "AL")
+        # No partisan index on district rows: the payload never carries one.
+        house.append({**{k: v for k, v in r.items() if k != "pvi"}, "district": dist,
+                      "label": f"{r['state']}-{dist}",
+                      "competitive": COMPETITIVE_LO < r["win_prob_D"] < COMPETITIVE_HI})
+    return senate, house
+
+
+def build_ladders(senate: dict | None, house_rows: list[dict],
+                  avgs: list[dict] | None = None, latest: str = "") -> dict:
+    """One ladder per chamber, from the class model's race forecasts.
+
+    The Senate ladder counts from the seats not on the ballot; the House caps
+    are the safe seats either side of the drawn window. Dashed markers are
+    each source line's seat count.
     """
     out: dict[str, dict | None] = {}
     if senate and senate.get("races") and senate.get("holdover_D") is not None:
@@ -257,31 +299,19 @@ def build_ladders(senate: dict | None, proj: dict | None,
             senate["races"], chamber="senate",
             fixed_left=hold_D, fixed_right=100 - hold_D - n_up, total=100,
             thresholds=((50, "a tie, broken by the vice-president"),
-                        (51, "an outright majority")),
+                        (51, "a majority")),
             expected=senate.get("expected_D_total"),
-            markers=_seat_markers("senate", proj, avgs or [], latest),
+            markers=_seat_markers("senate", None, avgs or [], latest),
             max_drawn=n_up,
             left_label=f"{hold_D} D seats not on the ballot",
             right_label=f"{100 - hold_D - n_up} R seats not on the ballot")
-
-    # The district ladder is drawn from the polling model's own district
-    # margins. Projections are keyed by SOURCE now, not by category, so this
-    # asks for the model by name; the fallback keeps an older payload working.
-    _pr = (proj or {}).get("projections") or {}
-    p = _pr.get("class_polling") or _pr.get("polling") or {}
-    districts = p.get("districts") or []
-    house = p.get("house") or {}
-    if districts and house:
-        rows = [{**d,
-                 "label": f"{d['state']}-{d['district']}" if d.get("district") else d["state"],
-                 "competitive": COMPETITIVE_LO < d["win_prob_D"] < COMPETITIVE_HI}
-                for d in districts]
+    if house_rows:
         out["house"] = charts.build_ladder(
-            rows, chamber="house", fixed_left=0, fixed_right=0,
-            total=len(rows),
-            thresholds=((house.get("majority_at", 218), "a majority"),),
-            expected=house.get("expected_D_seats"),
-            markers=_seat_markers("house", proj, avgs or [], latest),
+            house_rows, chamber="house", fixed_left=0, fixed_right=0,
+            total=len(house_rows),
+            thresholds=((218, "a majority"),),
+            expected=None,
+            markers=_seat_markers("house", None, avgs or [], latest),
             max_drawn=45,
             left_label="safe Democratic seats",
             right_label="safe Republican seats")
@@ -529,10 +559,34 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
     # So the average runs over the VISIBLE cells only, and says how many it
     # used. A number computed from four families is honestly a number computed
     # from four families; it is not a consensus of five with one kept quiet.
+    # The class model is not in category_averages (it is not archived), so its
+    # row comes from forecast/class/output directly.
+    cl = charts.class_latest()
+    if cl:
+        def _cf(k):
+            try:
+                return float(cl[k])
+            except (KeyError, TypeError, ValueError):
+                return None
+        share = _cf("nat_dem_share")
+        crow = {"category": "class", "label": CATEGORY_LABEL["class"],
+                "house_seats_80": None, "senate_seats_80": None,
+                "n_sources": 1, "sole_source": "",
+                "house_margin": None if share is None else round(2 * share - 100, 2),
+                "house_seats": _cf("house_seats_median"),
+                "house_prob": _cf("p_house"),
+                "senate_seats": _cf("senate_seats_median"),
+                "senate_prob": _cf("p_senate")}
+        for k in ("house_margin", "house_seats", "house_prob",
+                  "senate_seats", "senate_prob"):
+            crow[k + "_withheld"] = False
+            crow[k + "_spread"] = None
+        national = [r for r in national if r["category"] != "class"] + [crow]
+
     def _across(key: str) -> dict:
         vals, used = [], []
         for row in national:
-            if row.get(key + "_withheld"):
+            if row.get(key + "_withheld") or row["category"] == "class":
                 continue
             v = row.get(key)
             if v is None:
@@ -557,7 +611,7 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
     across = {k: _across(k) for k in
               ("house_margin", "house_seats", "house_prob",
                "senate_seats", "senate_prob")}
-    across["label"] = "All families"
+    across["label"] = "Average of the sources"
     across["basis"] = ("unweighted mean of the family averages that are "
                        "published today; a family withheld below the "
                        "disclosure floor is left out rather than averaged in, "
@@ -571,6 +625,7 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
     across["families_withheld"] = withheld_families
 
     # ---- per race: the Senate, one row per seat ----
+    cls_hist = charts.class_senate()
     races = []
     for r in (senate or {}).get("races", []):
         st, rid = r["state"], f"SEN_{r['state']}_2026"
@@ -591,6 +646,15 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
                                      or (w or {}).get("withheld")),
                     "n": (m or w or {}).get("n"),
                 }
+        ch = cls_hist.get(rid) or []
+        if ch:
+            try:
+                entry["cats"]["class"] = {
+                    "margin": round(200 * float(ch[-1]["pred_dem_share"]) - 100, 2),
+                    "prob": float(ch[-1]["p_dem_win"]),
+                    "withheld": False, "n": 1}
+            except (KeyError, TypeError, ValueError):
+                pass
         have = [c for c, v in entry["cats"].items() if v.get("prob") is not None]
         entry["n_cats"] = len(have)
         if len(have) >= 2:
@@ -704,51 +768,6 @@ except Exception:            # pragma: no cover - importer optional
 # two into one "history of the seat" invents a continuity that is not there.
 SEAT_CLASS_PERIOD = 6
 
-# Rows in the endorsement file that are not people.
-_NON_CANDIDATES = {"declined to endorse", "no endorsement", "none", "other"}
-
-
-def race_candidates(endorsements: list[dict], state: str, chamber: str) -> list[dict]:
-    """Who is on the general-election ballot, and their endorsement counts.
-
-    PROVENANCE MATTERS HERE AND THE TEMPLATE SAYS SO. This is not a ballot
-    roster; there is no ballot roster in this pipeline. It is the set of names
-    that appear as the SUBJECT of a general-election endorsement on the race's
-    Wikipedia article. A nominee nobody has endorsed does not appear, and that
-    is a real limitation rather than a rare edge case in a safe seat.
-
-    It is used anyway because the alternative is a race page that never says
-    who is running, and because the counts are worth having in their own right:
-    `cross_party` marks an endorsement from a figure or group whose usual side
-    is the other one, which is the cheap version of the candidate-quality
-    measure -- a defection count, computable from one cycle, and more
-    informative than a raw total that mostly tracks how much attention the race
-    gets.
-    """
-    seen: dict[tuple, dict] = {}
-    for r in endorsements:
-        if r.get("state") != state or r.get("chamber") != chamber:
-            continue
-        if r.get("phase") != "general" or not r.get("still_present"):
-            continue
-        name = (r.get("candidate") or "").strip()
-        party = r.get("candidate_party")
-        if not name or not party:
-            continue
-        if name.lower() in _NON_CANDIDATES:
-            continue
-        k = (name, party)
-        c = seen.setdefault(k, {"name": name, "party": party,
-                                "endorsements": 0, "cross_party": 0})
-        c["endorsements"] += 1
-        if r.get("cross_party"):
-            c["cross_party"] += 1
-    # Democrats first, then by endorsement count: a stable order that does not
-    # depend on dictionary insertion, so the page does not reshuffle daily.
-    return sorted(seen.values(),
-                  key=lambda c: (c["party"] != "D", -c["endorsements"], c["name"]))
-
-
 def seat_history(returns: list[dict], state: str, cycle: int,
                  chamber: str = "senate", n: int = 5) -> list[dict]:
     """Past results for THIS seat: same state, same class, regular elections.
@@ -814,10 +833,9 @@ def build_races(avgs: list[dict], latest: str, proj: dict | None,
     as such rather than drawing it like the others. That distinction has to
     survive into the payload or the page cannot make it.
 
-    The `type` facet is what a race page wants -- fundamentals, polling,
-    professional, market, academic, class are ways of ARRIVING at a number, and
-    a reader on a single race is asking which methods disagree. The `source`
-    facet answers "who said it", which is the comparisons page's question.
+    Uses the source lines (polling, market, professional, academic), the
+    same lines as the tracker. The class model is added separately from
+    forecast/class/, because it is not part of the published data.
     """
     if not avgs:
         return []
@@ -842,18 +860,14 @@ def build_races(avgs: list[dict], latest: str, proj: dict | None,
 
     # Context sources, read once rather than per race. Both are already in
     # derived/ and already published; neither adds a new disclosure surface.
-    endorsements: list[dict] = []
     returns: list[dict] = []
     if derived is not None:
-        f = derived / f"endorsements_{cycle}.json"
-        if f.exists():
-            try:
-                endorsements = json.loads(f.read_text())
-            except (OSError, ValueError):
-                endorsements = []
         r = derived / "returns.csv"
         if r.exists():
             returns = rd(r)
+
+    cls_hist = charts.class_senate() if chamber == "senate" else {}
+    cls_cands = charts.class_candidates() if chamber == "senate" else {}
 
     out = []
     for race_id, rrows in sorted(by_race.items()):
@@ -863,7 +877,7 @@ def build_races(avgs: list[dict], latest: str, proj: dict | None,
 
         current: dict[str, dict] = {}
         for r in rrows:
-            if r["snapshot_date"] != latest or r.get("facet") != "type":
+            if r["snapshot_date"] != latest or r.get("facet") != "source":
                 continue
             try:
                 mean = float(r["mean"])
@@ -878,7 +892,7 @@ def build_races(avgs: list[dict], latest: str, proj: dict | None,
 
         series: dict[str, list] = {}
         for r in rrows:
-            if r.get("facet") != "type" or r.get("quantity") != "margin_D":
+            if r.get("facet") != "source" or r.get("quantity") != "margin_D":
                 continue
             if r["snapshot_date"] < cutoff:
                 continue
@@ -887,6 +901,30 @@ def build_races(avgs: list[dict], latest: str, proj: dict | None,
                     [r["snapshot_date"], round(float(r["mean"]), 2)])
             except (TypeError, ValueError):
                 continue
+        # The class model, from forecast/class/output. Shown here, not archived.
+        ch = cls_hist.get(race_id) or []
+        if ch:
+            last = ch[-1]
+            try:
+                share = float(last["pred_dem_share"])
+                current["class"] = {
+                    "margin_D": {"mean": round(200 * share - 100, 2), "n": 1,
+                                 "display": "ok", "withheld": 0},
+                    "win_prob_D": {"mean": round(float(last["p_dem_win"]), 4),
+                                   "n": 1, "display": "ok", "withheld": 0},
+                }
+            except (KeyError, TypeError, ValueError):
+                pass
+            pts = []
+            for r in ch:
+                if r.get("as_of", "") < cutoff:
+                    continue
+                try:
+                    pts.append([r["as_of"], round(200 * float(r["pred_dem_share"]) - 100, 2)])
+                except (KeyError, TypeError, ValueError):
+                    continue
+            if pts:
+                series["class"] = pts
         series = {k: sorted(v) for k, v in series.items() if len(v) > 1}
 
         scen = proj_races.get(state) or {}
@@ -905,13 +943,10 @@ def build_races(avgs: list[dict], latest: str, proj: dict | None,
             "name": _STATE_NAMES.get(state, state),
             "chamber": chamber,
             "pvi": pvi,
-            "candidates": race_candidates(endorsements, state, chamber),
+            "candidates": cls_cands.get(race_id, []),
             "history": seat_history(returns, state, cycle, chamber),
             "current": current,
             "series": series,
-            "scenarios": {k: {"margin": v.get("expected_margin_D"),
-                              "prob": v.get("win_prob_D")}
-                          for k, v in sorted(scen.items())},
         })
     return out
 
@@ -928,10 +963,14 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     d = DATA / str(a.cycle) / "derived"
 
-    avgs = rd(d / "category_averages.csv")
-    supp = rd(d / "suppressed.csv")
-    model = json.loads((d / "fundamentals_model.json").read_text()) \
-            if (d / "fundamentals_model.json").exists() else None
+    # Source lines only. Files written before the type view was removed also
+    # carry facet=type rows, some under the same names.
+    # The class line comes from forecast/class/output, never from the
+    # averages; older files carry the retired site class models as "class".
+    avgs = [r for r in rd(d / "category_averages.csv")
+            if r.get("facet", "source") == "source" and r.get("category") != "class"]
+    supp = [r for r in rd(d / "suppressed.csv")
+            if r.get("facet", "source") == "source" and r.get("category") != "class"]
 
     # THE APPROVAL PANEL. Three constructions of the same polls, published
     # together because the model's input sits several points below every
@@ -950,8 +989,6 @@ def main(argv=None) -> int:
             pts = v.get("points") or []
             for pt in pts[:-1]:
                 pt.pop("members", None)
-    polling = json.loads((d / "polling_model.json").read_text()) \
-              if (d / "polling_model.json").exists() else None
     proj = json.loads((d / "seat_projections.json").read_text()) \
            if (d / "seat_projections.json").exists() else None
     # Carried whole, including `not_implemented`. The methods page states each
@@ -1018,68 +1055,10 @@ def main(argv=None) -> int:
         if r["race_id"] == NATL_HOUSE and r["quantity"] == "margin_D":
             series[r["category"]].append([r["snapshot_date"], float(r["mean"])])
 
-    # The polling model's Senate table, trimmed to what the page renders.
-    # Deliberately NOT the whole file: site.json is public, and shipping every
-    # intermediate invites someone to read a diagnostic as a forecast.
-    senate = None
-    if polling and polling.get("senate", {}).get("races"):
-        s_ = polling["senate"]
-        senate = {
-            # The nowcast. Older polling_model.json files predate the key,
-            # so fall back rather than crashing on a replayed snapshot.
-            "tide_D": polling.get("nowcast_tide_D",
-                                  polling.get("election_day_tide_D")),
-            "election_day_tide_D": polling.get("election_day_tide_D"),
-            "generic_ballot": polling["generic_ballot"]["value"],
-            "shrink_lambda": polling["shrink_lambda"],
-            "sigma": s_["sigma_total"],
-            "expected_D_seats_up": s_["expected_D_seats_up"],
-            "D_seats_up_80pct": s_["D_seats_up_80pct"],
-            "holdover_D": s_.get("holdover_D_assumed"),
-            # Total chamber seats, not just the ones on the ballot. "15 of 35"
-            # is the modelling quantity; "49 of 100" is the thing a reader
-            # actually wants, because 50 is the number that decides control.
-            # Computed here rather than in the template so the arithmetic is
-            # testable and the page only ever displays.
-            "expected_D_total": (round(s_["expected_D_seats_up"] + s_["holdover_D_assumed"], 2)
-                                 if s_.get("holdover_D_assumed") is not None else None),
-            "D_total_80pct": ([s_["D_seats_up_80pct"][0] + s_["holdover_D_assumed"],
-                               s_["D_seats_up_80pct"][1] + s_["holdover_D_assumed"]]
-                              if s_.get("holdover_D_assumed") is not None else None),
-            "prob_D_50_plus": s_.get("prob_D_50_plus"),
-            # 50+ is a tie the vice-president breaks; 51+ is a majority. Both
-            # ship, because every outside forecast and market this page is
-            # compared against prices the 51+ event.
-            "prob_D_51_plus": s_.get("prob_D_51_plus"),
-            # Carried so the page can show it. A one-seat change in the
-            # baseline moves this by ~20 points, which is more than any
-            # modelling choice in the model — publishing the headline without
-            # it would be publishing false precision.
-            "sensitivity": s_.get("prob_D_50_plus_sensitivity"),
-            "races": [{"state": k, **v, "competitive": COMPETITIVE_LO < v["win_prob_D"] < COMPETITIVE_HI}
-                      for k, v in sorted(s_["races"].items(),
-                                         key=lambda kv: -kv[1]["expected_margin_D"])],
-        }
-        senate["n_competitive"] = sum(1 for r in senate["races"] if r["competitive"])
-        senate["competitive_note"] = COMPETITIVE_NOTE
-
-        # The same competitive races, split by which way they lean and ordered
-        # closest-first within each side.
-        #
-        # One list ordered by margin runs from safe D through the interesting
-        # middle to safe R, which buries the races worth looking at in the
-        # centre of a long table and puts the two closest seats — one leaning
-        # each way — as far apart as the ordering can put them. Two columns
-        # ordered by distance from even bring both to the top of the page,
-        # beside each other, and the shape of each column is then a readable
-        # thing in itself: how many seats each party is actually defending.
-        comp = [r for r in senate["races"] if r["competitive"]]
-        senate["lean_D"] = sorted(
-            (r for r in comp if r["expected_margin_D"] > 0),
-            key=lambda r: (abs(r["expected_margin_D"]), r["state"]))
-        senate["lean_R"] = sorted(
-            (r for r in comp if r["expected_margin_D"] <= 0),
-            key=lambda r: (abs(r["expected_margin_D"]), r["state"]))
+    # Race tables for the contests page, from the class model, with each
+    # Senate race's polling average (from the race's own polling, never the
+    # national average) beside it where one is published.
+    senate, house_rows = build_class_tables(avgs, supp, latest)
 
     # Accumulate the timeline and lay out every panel. This is the only part of
     # publish.py that WRITES to derived/ rather than only reading it, because
@@ -1091,7 +1070,7 @@ def main(argv=None) -> int:
     # count has since grown to 4,206 rows across twelve raters, which is well
     # past what any table was going to carry.
     chart_data = charts.build(d, latest, a.rebuild_timeline)
-    chart_data["ladders"] = build_ladders(senate, proj, avgs, latest)
+    chart_data["ladders"] = build_ladders(senate, house_rows, avgs, latest)
     spread = build_spread(d, latest, proj, avgs, supp, senate)
     movement = build_movement(avgs, latest)
     model_index = build_model_index(d, latest)
@@ -1103,9 +1082,9 @@ def main(argv=None) -> int:
         "snapshot_count": len(dates),
         "headline": sorted(headline, key=lambda x: x["category"]),
         "series": {k: sorted(v) for k, v in series.items()},
-        "fundamentals_model": model,
         "approval": approval,
-        "polling_model": senate,
+        "senate_table": senate,
+        "class_summary": charts.class_latest(),
         "academic_models": academic,
         # Without the district arrays. All 435 of them tripled the size of a
         # file every visitor downloads, to feed a chart that draws 45 — and the
@@ -1125,7 +1104,7 @@ def main(argv=None) -> int:
         "spread": spread,
         "movement": movement,
         "model_index": model_index,
-        "suppressed_cells": len(supp),
+        "suppressed_cells": sum(1 for r in supp if r["snapshot_date"] == latest),
         "display_note": (
             "A row with display='single' has ONE contributing source and is not "
             "a category average. Render it named, never as a consensus."),

@@ -107,6 +107,17 @@ on:
         description: "Day grid for backfill_wikipedia: 7 = weekly (fast), 1 = daily (slow)"
         required: false
         default: "7"
+
+      wiki_source:
+        description: "Registry source for backfill_wikipedia: wikipedia (ratings pages), wiki_approval (approval polls), wiki_endorsements (race articles)"
+        required: false
+        default: "wikipedia"
+
+      backfill_class:
+        description: "Recompute the class model for every date since 2026-01-05 (run after the approval backfill)"
+        type: boolean
+        required: false
+        default: false
         
 concurrency: {group: forecast-capture, cancel-in-progress: false}
 # issues: write is needed by the gate's issue-opening step. Without it that
@@ -130,6 +141,14 @@ jobs:
         with: {python-version: "3.11"}
  
       - run: pip install -r forecast/collect/requirements.txt
+
+      # R for the PLSC 2219 class model (forecast/class/). Binary packages
+      # from Ubuntu, so this takes about a minute rather than a source build.
+      - name: Install R
+        if: inputs.dry_run != true
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends r-base-core r-cran-tidyverse
  
       - name: Validate registry
         # Fails fast on a malformed registry, and refuses to run at all if a
@@ -206,7 +225,7 @@ jobs:
         if: inputs.dry_run != true
         run: |
           if [ "${{ inputs.backfill_wikipedia }}" = "true" ]; then
-            WIKI_ARGS="--step-days ${{ inputs.wiki_step_days || '7' }}"
+            WIKI_ARGS="--step-days ${{ inputs.wiki_step_days || '7' }} --source ${{ inputs.wiki_source || 'wikipedia' }}"
             if [ -n "${{ inputs.wiki_since }}" ]; then
               WIKI_ARGS="$WIKI_ARGS --since ${{ inputs.wiki_since }}"
             fi
@@ -279,6 +298,14 @@ jobs:
           AGG_ARGS=""
           [ "${{ inputs.force_aggregate }}" = "true" ] && AGG_ARGS="--force"
           python3 forecast/collect/aggregate.py --cycle "$CYCLE" $AGG_ARGS
+          # The class model is shown on the site only (forecast/class/, not in
+          # forecast/data/). It reads approval.json, so it runs after
+          # approval.py; publish.py reads its output. A failure here must not
+          # stop the rest of the site from updating.
+          CLASS_ARGS=""
+          [ "${{ inputs.backfill_class }}" = "true" ] && CLASS_ARGS="--backfill --redo"
+          python3 forecast/class/run_class.py $CLASS_ARGS \
+            || echo "::warning::class model did not run; the class line keeps its last value"
           python3 forecast/collect/publish.py   --cycle "$CYCLE"
  
       # Runs AFTER the models, because it carries a file they write, and
@@ -340,7 +367,8 @@ jobs:
                   "forecast/data/${CYCLE}/manifest.csv" \
                   "forecast/data/${CYCLE}/derived" \
                   "forecast/data/${CYCLE}/site.json" \
-                  "assets/forecast_${CYCLE}.json" 2>/dev/null || true
+                  "assets/forecast_${CYCLE}.json" \
+                  "forecast/class/output" 2>/dev/null || true
           git diff --staged --quiet && { echo "nothing to commit"; exit 0; }
           git commit -m "forecast: daily update $(date -u +%Y-%m-%d)"
           for i in 1 2 3; do

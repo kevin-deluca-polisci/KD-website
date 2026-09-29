@@ -1,14 +1,4 @@
-{{/* ABOUT — what this is, who made it, and what is deliberately not here.
-
-     The pages either side of this one show numbers. This one exists so that a
-     reader who wants to know where the numbers came from, what is withheld and
-     why, and how the thing was built does not have to reconstruct it from
-     footnotes scattered across four other pages.
-
-     The withheld-cell count is read from the payload rather than typed here.
-     Anything on this page that could go stale should come from the data, and
-     anything that cannot be derived honestly should be a link instead of a
-     number. */}}
+{{/* About page. Plain text; the withheld count comes from the payload. */}}
 {{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
 {{ partial "forecast/head.html" (dict "page" . "d" $d) }}
 {{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
@@ -16,223 +6,67 @@
 <div class="wrap">
 
   <div class="card prose">
-    <h2>What this is</h2>
-    <p class="sub">A daily archive of other people's 2026 midterm forecasts, plus
-       two models built in the open as course material.</p>
-    <p>PLSC 2219 is a Yale undergraduate course on midterm elections and
-       forecasting. Students build models across the term. This site is the
-       shared evidence base they build against: every day it captures what each
-       published forecast said, stores the raw bytes unchanged, and re-derives
-       the tables and charts from that store.</p>
-    <p>The display is the <em>disagreement between methods</em>, not another
-       trend line. There are already many good single-number forecasts, and one more would add little. What is harder to find, and what a
-       class can actually learn from, is a like-for-like view of how far apart
-       five different ways of forecasting the same election are on the same day —
-       and how that distance moves as the election gets closer.</p>
-    <p class="thin-note">Nothing here is advice about how to bet, and the class
-       models are teaching artefacts rather than a serious attempt to beat the
-       professionals.</p>
-  </div>
-
-  <div class="card prose">
-    <h2>What is in each category</h2>
-    <p class="sub">Five categories, each a family of forecasts that share a way of
-       knowing. A forecast is filed by <em>how</em> it reaches its answer, not by
-       who published it.</p>
+    <h2>The data</h2>
+    <p>Forecasts of the 2026 U.S. House and Senate elections, collected every
+       day. Each line on the chart is one type of source.</p>
     <table>
-      <tr><th>Category</th><th class="wrap">What its members have in common</th>
-          <th class="wrap">What it cannot see</th></tr>
       <tr><td><strong>Polling</strong></td>
-          <td class="wrap muted">Starts from what people tell pollsters, then
-              averages, weights, or corrects for how early it is.</td>
-          <td class="wrap muted">Whether the polls are wrong in the same
-              direction as last time. Poll averages inherit poll errors.</td></tr>
+          <td class="wrap muted">Polling averages of the national House vote
+            (the generic ballot) and of individual races.</td></tr>
       <tr><td><strong>Markets</strong></td>
-          <td class="wrap muted">Prices from people betting money — an aggregate
-              of everyone else's models plus whatever traders think they
-              know.</td>
-          <td class="wrap muted">The difference between a price and a
-              probability: thin volume, fees, and a last trade that may be
-              hours old.</td></tr>
-      <tr><td><strong>Fundamentals</strong></td>
-          <td class="wrap muted">Predicts from conditions rather than opinion: the
-              economy, presidential approval, how many seats each party is
-              defending. Fit on past midterms.</td>
-          <td class="wrap muted">Candidates, scandals, and everything that has
-              happened since the last election it was fit on.</td></tr>
+          <td class="wrap muted">Prices on Kalshi, Polymarket and PredictIt,
+            read as probabilities.</td></tr>
       <tr><td><strong>Professional</strong></td>
-          <td class="wrap muted">Published statistical forecasts combining most of
-              the above plus candidate quality, fundraising and local
-              knowledge. Collected daily. Individual forecasts appear only where the publisher's
-              terms allow it, so this family shows an average when enough of
-              them do.
-              <a href="/forecast/methods/#professional">More</a>.</td>
-          <td class="wrap muted">How much of its own method a reader can check.
-              These are documented in outline rather than published as
-              equations.</td></tr>
+          <td class="wrap muted">Published forecast models from professional
+            forecasters. Shown once at least three are collected.</td></tr>
       <tr><td><strong>Academic</strong></td>
-          <td class="wrap muted">Published political-science specifications, run
-              by us on inputs we collected ourselves. The equation is somebody
-              else's and is cited; the numbers going into it are ours.</td>
-          <td class="wrap muted">Whatever the paper left out. Each was fit on the
-              midterms available when it was written, and none has been
-              re-estimated for this one.</td></tr>
+          <td class="wrap muted">Forecasting models from published
+            political science research, run on current data.</td></tr>
+      <tr><td><strong>Class model</strong></td>
+          <td class="wrap muted">The model built in PLSC 2219, re-run each day
+            with that day's presidential approval, gas prices and real income.</td></tr>
     </table>
-    <p class="thin-note">Expert ratings — “Lean R”, “Toss-up” — are collected but
-       kept out of all five averages. They are ordinal, and choosing which number
-       to turn “Lean R” into is a modelling decision we would rather argue about
-       in class than bury in a script. They get their own
-       <a href="/forecast/comparisons/">graphic</a> instead.</p>
+    <p class="thin-note">Each line is the average of the forecasts in it on that
+       date. When a forecast is added or stops updating, the line can move even
+       if no forecast changed.</p>
+    <p class="thin-note">Seat counts for polling and some academic models come
+       from carrying the national vote to each seat using its partisan lean.</p>
   </div>
 
   <div class="card prose">
-    <h2>What is not published, and why</h2>
-    <p class="sub">Some of what this archive collects cannot be shown during the
-       cycle. The restriction is in the code, not in a policy document.</p>
-    {{- if gt $d.suppressed_cells 0 }}
-    <p><strong>{{ $d.suppressed_cells }}</strong> cells are withheld in today's
-       snapshot.</p>
-    {{- end }}
-    <p>Every source carries a publication tier taken from its licence. Sources
-       that permit it are published by name. Sources that do not are used only
-       inside a category average, and that average is published only when it has
-       at least three such contributors — otherwise a reader who knows two of the
-       numbers could recover the third by subtraction. A handful of inputs are
-       held privately for the whole cycle and never published in any form.</p>
-    <p>The point is not secrecy. It is that a forecaster who publishes for their
-       own audience has not agreed to have their live numbers mirrored somewhere
-       else during the election. The full per-forecaster archive is released,
-       documented and citable, after the votes are counted.</p>
-    <p class="thin-note">The rule is enforced in code that audits its own output and refuses to
-       write anything if the audit fails. A rule you have to
-       remember is a rule you will forget at 11pm in late October.</p>
+    <h2>Getting the data</h2>
+    <p>The collected forecasts will be published as a dataset after the
+       election, with a full description of how each source was collected and
+       processed. The daily series behind the chart is available now on
+       <a href="https://github.com/kevin-deluca-polisci/KD-website/tree/main/forecast/data">GitHub</a>.</p>
+    <p>Data are released under CC BY 4.0 and code under the MIT License. If
+       you use them, please cite the site.</p>
   </div>
 
   <div class="card prose">
-    <h2>How it is built</h2>
-    <p class="sub">Two phases that never touch each other's job.</p>
+    <h2>How it was built</h2>
+    <p>The website and the code that collects and processes the data were
+       written with Claude, an AI model made by Anthropic, working under my
+       direction. That includes the scrapers, the data processing, the charts
+       and the page templates.</p>
+    <p>No forecast here was produced by an AI model. Every number is either
+       taken from a named source or calculated by code in the
+       <a href="https://github.com/kevin-deluca-polisci/KD-website">repository</a>.</p>
+  </div>
+
+  <div class="card prose">
+    <h2>Credits</h2>
     <table>
-      <tr><th>Phase</th><th class="wrap">What it does</th></tr>
-      <tr><td><strong>Capture</strong></td>
-          <td class="wrap muted">Fetches each source once a day and stores the
-              bytes exactly as received. It never parses. A parser bug is then
-              always recoverable, because the original is still on disk.</td></tr>
-      <tr><td><strong>Parse</strong></td>
-          <td class="wrap muted">Reads the store and never fetches. Re-running it
-              on a two-year-old snapshot gives the same rows it gave then.</td></tr>
-      <tr><td><strong>Model</strong></td>
-          <td class="wrap muted">The site's two models, run from public inputs
-              only.</td></tr>
-      <tr><td><strong>Aggregate</strong></td>
-          <td class="wrap muted">The privacy boundary. Everything upstream is
-              private; everything it writes is public.</td></tr>
-      <tr><td><strong>Publish</strong></td>
-          <td class="wrap muted">Lays out the charts and writes the single JSON
-              file this site is built from.</td></tr>
-    </table>
-    {{/* No source COUNT here. model_index holds only the sources that publish
-         a national number AND permit being named, which is a much smaller set
-         than the registry — printing len as "sources registered this cycle"
-         said 3 when the answer was 23. The methods page lists them properly. */}}
-    <p class="thin-note">Every source, with its link, its licence and what we are
-       allowed to do with it, is listed on the
-       <a href="/forecast/methods/">methods page</a>. The code is in the
-       repository.</p>
-  </div>
-
-  <div class="card prose">
-    <h2>Why a line can step without anyone changing their mind</h2>
-    <p class="sub">A category average is the mean of whoever is in the category
-       that day, and the membership changes.</p>
-
-    <p>Each line on the tracker is the average of the forecasts in that family
-       on that date. When a family gains or loses a member, the average moves,
-       and nobody&rsquo;s forecast has changed. That has happened here more than
-       once: a family that held one model on Monday and five on Tuesday steps on
-       Tuesday, and every point of the step is bookkeeping.</p>
-
-    <p>The number plotted is the plain mean of that day&rsquo;s members, and the
-       member count is shown beside it. That is the honest answer to &ldquo;what
-       does this family predict today&rdquo;, which is the question a tracker is
-       read for. It is not the honest answer to &ldquo;how much has this family
-       moved&rdquo;, and the two come apart whenever membership is unstable.</p>
-
-    <h3>What we tried instead, and why we stopped</h3>
-
-    <p>The archive used to carry a second version of every category average, a
-       <em>chained</em> level computed the way a price index handles a change of
-       basket: rather than comparing today&rsquo;s members with yesterday&rsquo;s
-       different ones, compare those present on <em>both</em> days and carry the
-       level forward by that change. It was the headline until 25 August 2026,
-       and it was removed from the published data on 27 August 2026.</p>
-
-    <p>Three faults, all measured on this archive. A chained index is
-       path&#8209;dependent, so where it ends up depends on the order models
-       happened to arrive; on 26 August the fundamentals margin read D+8.0 as a
-       mean of its five members and D+2.9 as a chain. A model that joins
-       contributes only its subsequent <em>changes</em> and never its level, so
-       the index drifts away from the members it claims to describe and does not
-       come back. And each quantity chains on its own, while a seat count is not
-       a linear function of a national margin, so a chained margin and a chained
-       seat count stop corresponding by construction &mdash; which is how a
-       chained D+2.9 came to sit beside a projection of 235 seats, a number no
-       D+2 environment produces.</p>
-
-    <p>The published level is the plain mean, which is the only line for which
-       &ldquo;this is what the field said on that date&rdquo; is simply true.
-       The membership problem is handled instead by estimating each model&rsquo;s
-       persistent lean once, fixing it, and subtracting it before averaging. That
-       correction cannot depend on arrival order, never changes a date that has
-       already been published, and does nothing at all on days when every member
-       reported.</p>
-
-    <p class="thin-note">The practical consequence for a reader: a step in one of
-       these lines is not always news. Check the member count beside it. Where
-       the count changes on the same day as the level, the step is the family
-       being redefined, not a forecast being revised.</p>
-  </div>
-
-  <div class="card prose">
-    <h2>Use of AI</h2>
-    <p class="sub">Stated plainly, because a site about where numbers come from
-       should say where its own code came from.</p>
-    <p>The data collection pipeline and this website were built with substantial
-       help from <strong>Claude Opus 5</strong>, Anthropic's language model, used
-       as a programming assistant under my direction. That covers the capture and
-       parsing code, the aggregation and disclosure logic, the charts, and the
-       page templates. Design decisions, the choice of sources, the modelling
-       choices, and the editorial framing are mine.</p>
-    <p>No forecast on this site is produced by a language model. Every number is
-       either transcribed from a named source by a deterministic parser, or
-       computed by the site's two models, whose code is in the repository and
-       whose assumptions are listed on the
-       <a href="/forecast/methods/">methods page</a>. The model does not decide
-       what a race is worth, and it never sees a number that is not already in
-       the archive.</p>
-    <p class="thin-note">Errors are mine regardless of what wrote the line. If
-       something here looks wrong, it probably is — please tell me.</p>
-  </div>
-
-  <div class="card prose">
-    <h2>Credits and reuse</h2>
-    <table>
-      <tr><td><strong>Course</strong></td>
-          <td class="wrap muted">PLSC 2219, Midterm Elections and Forecasting,
-              Yale University</td></tr>
-      <tr><td><strong>Instructor</strong></td>
+      <tr><td><strong>Author</strong></td>
           <td class="wrap muted"><a href="/">Kevin DeLuca</a>, Department of
-              Political Science</td></tr>
-      <tr><td><strong>Race ratings</strong></td>
-          <td class="wrap muted">© their respective forecasters, transcribed from
-              Wikipedia under CC BY-SA 4.0</td></tr>
-      <tr><td><strong>Official returns</strong></td>
+            Political Science, Yale University</td></tr>
+      <tr><td><strong>Course</strong></td>
+          <td class="wrap muted">PLSC 2219, Midterm Elections and Forecasting, Yale University</td></tr>
+      <tr><td><strong>Election returns</strong></td>
           <td class="wrap muted">MIT Election Data and Science Lab (CC0)</td></tr>
       <tr><td><strong>Economic data</strong></td>
           <td class="wrap muted">Federal Reserve Bank of St. Louis (FRED)</td></tr>
     </table>
-    <p class="thin-note">Student forecasts are not published during the cycle,
-       and there is no leaderboard. At the end, with the winner&rsquo;s consent,
-       the prize-winning predictions are shared.</p>
   </div>
 
 </div>

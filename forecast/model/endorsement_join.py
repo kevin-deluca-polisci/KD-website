@@ -8,7 +8,7 @@ Join endorsements to election returns. One row per general-election candidate.
 
     python3 forecast/model/endorsement_join.py \
         --endorsements ... --returns ... \
-        --out forecast/data/2026/derived/endorsement_panel.csv
+        --out forecast/data/endorsements/endorsement_panel.csv
 
 -----------------------------------------------------------------------------
 WHY THE MATCH RATE IS THE RESULT, NOT A DIAGNOSTIC

@@ -1,8 +1,4 @@
-{{/* THE INDEX OF SENATE RACES — every contest, sorted by how close it is.
-
-     Sorted by margin rather than alphabetically because the question a reader
-     arrives with is which seats are in play, and an alphabetical list buries
-     the four that decide control between Alabama and Wyoming. */}}
+{{/* Index of Senate races, closest first. */}}
 {{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
 {{ partial "forecast/head.html" (dict "page" . "d" $d) }}
 {{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
@@ -11,18 +7,15 @@
 <div class="card">
   <h2>Senate races</h2>
   <p class="sub">All {{ len $d.races }} contests on the 2026 ballot, closest
-  first, as of <b>{{ $d.latest_snapshot }}</b>. The margin shown is the polling
-  average where there is one, and the fundamentals model otherwise. A positive
-  margin is Democratic.</p>
+  first, as of <b>{{ $d.latest_snapshot }}</b>. The margin is the polling
+  average where there is one, and the class model otherwise. Margins are
+  Democratic minus Republican.</p>
 
-  {{/* Pair each race with a sortable key, then sort the pairs. Hugo cannot
-       sort on a value nested two levels inside a map, so the key is lifted
-       out here rather than computed inside the sort. */}}
   {{- $rows := slice -}}
   {{- range $d.races -}}
     {{- $m := 999.0 -}}{{- $src := "" -}}
     {{- with index .current "polling" }}{{ with index . "margin_D" }}{{ $m = .mean }}{{ $src = "polling" }}{{ end }}{{ end -}}
-    {{- if eq $src "" }}{{ with index .current "fundamentals" }}{{ with index . "margin_D" }}{{ $m = .mean }}{{ $src = "fundamentals" }}{{ end }}{{ end }}{{ end -}}
+    {{- if eq $src "" }}{{ with index .current "class" }}{{ with index . "margin_D" }}{{ $m = .mean }}{{ $src = "class model" }}{{ end }}{{ end }}{{ end -}}
     {{- $rows = $rows | append (dict "state" .state "name" .name "margin" $m "src" $src "abs" (math.Abs $m) "pvi" .pvi) -}}
   {{- end -}}
 
@@ -30,7 +23,7 @@
   <table class="full">
     <thead><tr>
       <th class="wrap">Race</th><th class="num">Margin</th>
-      <th class="num">Baseline</th><th class="wrap">From</th>
+      <th class="num">Partisan lean</th><th class="wrap">Source</th>
     </tr></thead>
     <tbody>
     {{ range sort $rows "abs" "asc" }}
@@ -45,7 +38,7 @@
           {{ with .pvi }}{{ if lt . 0.0 }}R+{{ math.Abs . }}{{ else }}D+{{ . }}{{ end }}
           {{ else }}<span class="muted">&mdash;</span>{{ end }}
         </td>
-        <td class="wrap"><span class="muted">{{ with .src }}{{ . }}{{ else }}no published average{{ end }}</span></td>
+        <td class="wrap"><span class="muted">{{ with .src }}{{ . }}{{ else }}none yet{{ end }}</span></td>
       </tr>
     {{ end }}
     </tbody>

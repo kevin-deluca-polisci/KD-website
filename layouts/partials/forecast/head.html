@@ -21,25 +21,16 @@ document.documentElement.className+=" js";})();
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
 
-  /* THE PALETTE IS DEFINED TWICE: here, as the CSS custom properties that
-     actually paint, and in forecast/collect/charts.py COLORS, which stamps
-     `color` / `color_dark` into the chart payload. Both must be changed
-     together. That duplication is almost certainly how --c-class kept
-     polling's dark step (#199e70) unnoticed: the two are in different facets
-     and no chart draws them together, so an exact ΔE 0.0 collision was
-     invisible. Corrected to #3fae5e on 2026-08-31 — the only candidate green
-     tried that clears the 15-point normal-vision floor against academic
-     (15.6) while staying inside the dark lightness band. */
+  /* Series colours are also set in forecast/collect/charts.py COLORS.
+     Change both together. */
   /* ---- tokens. Light is the base; dark redefines the same names. ---- */
   :root{
     --bg:#f6f6f4; --surface:#ffffff; --border:#e4e4e0; --border-strong:#d4d4ce;
     --ink:#141414; --ink-2:#55554f; --ink-3:#84847c;
     --accent:#0b1e3a; --accent-ink:#ffffff; --link:#1c5fa8;
     --D:#1c5fa8; --R:#b02a2a;
-    --c-fundamentals:#4a3aa7; --c-polling:#008300;
-    --c-professional:#eda100; --c-market:#e87ba4;
-    --c-academic:#0077a8;
-    --c-class:#1baf7a; --c-composite:#2a78d6; --c-expert:#e34948;
+    --c-polling:#008300; --c-market:#e87ba4; --c-professional:#eda100;
+    --c-academic:#0077a8; --c-class:#4a3aa7;
     --grid:#e6e6e2; --warn-bg:#fff8e6; --warn-line:#d9a520; --warn-ink:#7a5c00;
     --alert-bg:#fdecea; --alert-line:#b02a2a; --alert-ink:#7a1c1c;
   }
@@ -52,10 +43,8 @@ document.documentElement.className+=" js";})();
       --ink:#f4f4f0; --ink-2:#c3c2b7; --ink-3:#8f8f86;
       --accent:#0d1b30; --accent-ink:#f4f4f0; --link:#79aef0;
       --D:#79aef0; --R:#e57373;
-      --c-fundamentals:#9085e9; --c-polling:#199e70;
-      --c-professional:#c98500; --c-market:#dc63a8;
-      --c-academic:#3a97c9;
-      --c-class:#3fae5e; --c-composite:#3987e5; --c-expert:#e66767;
+      --c-polling:#199e70; --c-market:#dc63a8; --c-professional:#c98500;
+      --c-academic:#2696e4; --c-class:#825ea9;
       --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
       --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
     }
@@ -65,10 +54,8 @@ document.documentElement.className+=" js";})();
     --ink:#f4f4f0; --ink-2:#c3c2b7; --ink-3:#8f8f86;
     --accent:#0d1b30; --accent-ink:#f4f4f0; --link:#79aef0;
     --D:#79aef0; --R:#e57373;
-    --c-fundamentals:#9085e9; --c-polling:#199e70;
-    --c-professional:#c98500; --c-market:#dc63a8;
-    --c-academic:#3a97c9;
-    --c-class:#3fae5e; --c-composite:#3987e5; --c-expert:#e66767;
+    --c-polling:#199e70; --c-market:#dc63a8; --c-professional:#c98500;
+    --c-academic:#2696e4; --c-class:#825ea9;
     --grid:#333330; --warn-bg:#2b2410; --warn-line:#a37c14; --warn-ink:#e6c76a;
     --alert-bg:#2e1614; --alert-line:#b02a2a; --alert-ink:#f0a9a4;
   }
@@ -249,27 +236,11 @@ document.documentElement.className+=" js";})();
      colour while the page still builds. Attributes like SVG `fill` and
      `stroke` are not CSS contexts and interpolate fine, which is why the
      charts kept their colours and only the legends went blank. */
-  .swatch.fundamentals{background:var(--c-fundamentals)}
   .swatch.polling{background:var(--c-polling)}
   .swatch.professional{background:var(--c-professional)}
   .swatch.market{background:var(--c-market)}
   .swatch.academic{background:var(--c-academic)}
   .swatch.class{background:var(--c-class)}
-  .swatch.composite{background:var(--c-composite)}
-  .swatch.expert{background:var(--c-expert)}
-
-  /* ONE FACET AT A TIME.
-     `category` used to answer two questions at once — what a forecast is made
-     of, and who made it — so the academic and fundamentals lines were largely
-     the same models drawn twice. They are separate axes now, and the tracker
-     shows one of them, because showing both would put the same forecaster on
-     the chart twice under two names.
-     The toggle stamps data-view-facet on the panel box; every series carries
-     data-fk. Markets are "both" — a traded price is a method AND a kind of
-     forecaster, and it is the same three exchanges either way — so it never
-     hides and the two views stay comparable. */
-  [data-view-facet="type"]   [data-fk="source"],
-  [data-view-facet="source"] [data-fk="type"]   { display:none }
 
   /* The across-families row of the comparison table. Set apart by a rule and
      weight rather than by a fill, because it is a summary of the rows above

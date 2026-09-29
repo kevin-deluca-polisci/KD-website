@@ -910,10 +910,13 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             continue
         if r["source_id"] in NOT_A_FORECASTER:
             continue
-        got = facets.facets(r["source_id"], r["category"])
+        got = facets.on_line(r["source_id"], r["category"], r["race_id"])
         if got is None or got[0] == "reference":
             continue
-        for facet, grp in (("type", got[0]), ("source", got[1])):
+        # Sources only since 2026-09-29; the type view was removed. The
+        # `facet` column is kept (always "source") so readers of older
+        # releases do not break.
+        for facet, grp in (("source", got[1]),):
             key = (r["snapshot_date"], facet, grp, r["race_id"],
                    r["chamber"], r["state"], r["district"], r["quantity"],
                    r["unit"])
@@ -1073,7 +1076,7 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
          "provenance": r.get("provenance") or "captured"}
         for r in rows
         if r["publication"] == "individual" and r["quantity"] not in NO_AVERAGE
-        and r["quantity"] not in NEVER_PUBLISH
+        and r["quantity"] not in NEVER_PUBLISH and facets.in_archive(r["source_id"])
     ]
     return averages, by_source, suppressed
 
@@ -1651,8 +1654,7 @@ def main(argv=None) -> int:
         grp_sources[k].update(a_.get("_contributors") or ())
 
     for facet, order, labels in (
-            ("type", facets.TYPE_ORDER, facets.TYPE_LABEL),
-            ("source", facets.SOURCE_ORDER, facets.SOURCE_LABEL)):
+            ("source", facets.SOURCE_ORDER, facets.SOURCE_LABEL),):
         here = [g for (f, g) in cells if f == facet]
         ranked = [g for g in order if g in here] + sorted(
             g for g in here if g not in order)
