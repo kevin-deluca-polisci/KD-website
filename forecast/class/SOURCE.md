@@ -28,6 +28,7 @@ presidential approval, 2026 gas price, 2026 real income), runs it with
 - Approval: the site's approval average (`forecast/data/2026/derived/approval.json`, series `aggregate`), latest value on or before the date.
 - Gas: average of 2026 weekly prices up to the date (FRED `GASREGW`).
 - Real income: average of the 2026 months released by the date (FRED `A229RX0`). Before any 2026 month is out, the 2025 value is used.
+- Dates in 2025 (the series starts 2025-01-20): no 2026 data exist yet, so the economy terms use the trailing year, the latest 52 weeks of gas prices and 12 published months of income against the 52 weeks and 12 months before. The script receives this as a 2026 value equal to the 2025 value times (1 + change).
 - District maps: the course race file has each House district's partisan lean on the November 2026 lines. For a date when a state was using different lines (Alabama, Florida, Louisiana and Tennessee before their 2026 maps; Missouri's 2025 map until 2026-09-10), those districts' lean is shifted by the difference between the two maps, taken from the site's district data (`forecast/model/maps.py`). Candidates and incumbency are unchanged. The shifted file exists only in a temporary folder during the run. `class_inputs.csv` records which states were on other lines for each date.
 
 It runs every day in the capture workflow. Past dates can be recomputed with

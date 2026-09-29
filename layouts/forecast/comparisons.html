@@ -69,21 +69,33 @@
   {{- end }}
 
   <!-- ============ per race, as a range rather than a table ============ -->
-  {{- with $s.plot }}
+  {{- if or $s.plot $s.plot_margin }}
   <div class="card">
     <h2>Senate, race by race</h2>
-    <p class="sub">Chance of a Democratic win in each competitive seat. Each
-       mark is one source; the grey band runs from the lowest to the highest.
-       The spread column is the gap in points.
-       {{- $miss := $s.categories_missing_per_race }}
-       {{- if $miss }} No per-race number yet from
-       {{ range $i, $c := $miss }}{{ if $i }}, {{ end }}{{ index $s.labels $c }}{{ end }}.{{ end }}</p>
+    <div class="segs" data-toggle-group="raceplot">
+      <span class="seglabel">Showing</span>
+      <div class="seg" data-dim="mode">
+        <button type="button" data-value="margin" aria-selected="true">Margin</button>
+        <button type="button" data-value="prob" aria-selected="false">Chance of winning</button>
+      </div>
+    </div>
+    <div data-group="raceplot">
+    {{- range $mode := (slice "margin" "prob") }}
+    {{- $pl := cond (eq $mode "margin") $s.plot_margin $s.plot }}
+    {{- with $pl }}
+    <div data-panel data-mode="{{ $mode }}">
+    <p class="sub">{{ if eq $mode "margin" }}Expected Democratic margin in each
+       competitive seat, in points (cut off at 30). Markets appear only in the
+       chance-of-winning view.{{ else }}Chance of a Democratic win in each
+       competitive seat. Race polling averages appear only in the margin
+       view.{{ end }} Each mark is one source; the grey band runs from the
+       lowest to the highest, and the spread column is the gap in points.</p>
 
     {{- $RH := 26.0 }}{{ $L := 54.0 }}{{ $W := 512.0 }}{{ $T := 30.0 }}
     {{- $H := mul $RH (len .rows) }}
     <div class="tscroll">
     <svg viewBox="0 0 720 {{ add $H (add $T 26) }}" role="img"
-         aria-label="Democratic win probability for each competitive Senate seat, by source">
+         aria-label="{{ if eq $mode "margin" }}Expected Democratic margin{{ else }}Democratic win probability{{ end }} for each competitive Senate seat, by source">
       {{- range .ticks }}
       {{- $x := add $L (mul (div .x 100.0) $W) }}
       <line class="{{ if eq (printf "%v" .x) "50" }}baseline{{ else }}gridline{{ end }}"
@@ -128,6 +140,10 @@
       </svg>{{ index $s.labels . }}</span>
       {{- end }}
       <span><span class="swatch range"></span>range across sources</span>
+    </div>
+    </div>
+    {{- end }}
+    {{- end }}
     </div>
     <p class="thin-note">Competitive seats only. All races are on the
        <a href="/forecast/contests/">contests page</a>.</p>

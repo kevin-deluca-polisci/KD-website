@@ -672,6 +672,7 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
         "across_families": across,
         "races": races,
         "plot": _spread_plot(races),
+        "plot_margin": _spread_plot(races, "margin"),
         "categories": CATEGORY_ORDER,
         "labels": CATEGORY_LABEL,
         "categories_per_race": covered,
@@ -679,7 +680,10 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
     }
 
 
-def _spread_plot(races: list[dict]) -> dict | None:
+MARGIN_CLIP = 30.0
+
+
+def _spread_plot(races: list[dict], mode: str = "prob") -> dict | None:
     """The per-race comparison as positions on one probability axis.
 
     This was a table: a column per method, a percentage in every cell, and a
@@ -704,10 +708,18 @@ def _spread_plot(races: list[dict]) -> dict | None:
     for r in races:
         if not r.get("competitive"):
             continue
-        pts = [{"key": c, "label": CATEGORY_LABEL[c],
-                "prob": v["prob"], "x": round(v["prob"] * 100, 2)}
-               for c in CATEGORY_ORDER
-               if (v := r["cats"].get(c)) and v.get("prob") is not None]
+        if mode == "margin":
+            # Margin axis: R+30 at the left edge, D+30 at the right.
+            pts = [{"key": c, "label": CATEGORY_LABEL[c], "margin": v["margin"],
+                    "x": round((max(-MARGIN_CLIP, min(MARGIN_CLIP, v["margin"]))
+                                + MARGIN_CLIP) / (2 * MARGIN_CLIP) * 100, 2)}
+                   for c in CATEGORY_ORDER
+                   if (v := r["cats"].get(c)) and v.get("margin") is not None]
+        else:
+            pts = [{"key": c, "label": CATEGORY_LABEL[c],
+                    "prob": v["prob"], "x": round(v["prob"] * 100, 2)}
+                   for c in CATEGORY_ORDER
+                   if (v := r["cats"].get(c)) and v.get("prob") is not None]
         # One mark is a value, not a comparison. A single-method row on a
         # card about disagreement is noise, and its band would be zero wide.
         if len(pts) < 2:
@@ -717,7 +729,7 @@ def _spread_plot(races: list[dict]) -> dict | None:
             "state": r["state"], "race_id": r["race_id"],
             "points": pts, "n_cats": len(pts),
             "x_lo": min(xs), "x_hi": max(xs),
-            "spread": round(max(xs) - min(xs), 1),
+            "spread": round((max(xs) - min(xs)) * (0.6 if mode == "margin" else 1), 1),
         })
     if not rows:
         return None
@@ -737,7 +749,12 @@ def _spread_plot(races: list[dict]) -> dict | None:
         "rows": rows,
         "categories": used,
         "labels": {c: CATEGORY_LABEL[c] for c in used},
-        "ticks": [{"x": v, "label": f"{v}%"} for v in (0, 25, 50, 75, 100)],
+        "mode": mode,
+        "ticks": ([{"x": v, "label": f"{v}%"} for v in (0, 25, 50, 75, 100)]
+                  if mode != "margin" else
+                  [{"x": 0, "label": "R+30"}, {"x": 25, "label": "R+15"},
+                   {"x": 50, "label": "Even"}, {"x": 75, "label": "D+15"},
+                   {"x": 100, "label": "D+30"}]),
         "n_rows": len(rows),
         "widest": max(r["spread"] for r in rows),
         "median_spread": round(

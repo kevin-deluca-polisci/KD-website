@@ -19,6 +19,9 @@ Inputs for a date D:
                (FRED A229RX0) for months released by D. A month is treated as
                released on the last day of the following month. Before any
                2026 month is out, the 2025 value is used (no change).
+    2025 dates the economy terms use the trailing year instead: the latest
+               52 weeks of gas prices and 12 published months of income
+               against the 52 weeks / 12 months before.
 
 District maps: the course race file has each district's partisan lean on
 the lines used in November 2026. For an earlier date, districts in states
@@ -61,7 +64,8 @@ OUT = HERE / "output"
 APPROVAL_JSON = REPO / "forecast" / "data" / "2026" / "derived" / "approval.json"
 
 LOCK = dt.date(2026, 11, 1)
-FIRST = dt.date(2026, 1, 5)          # first 2026 weekly gas reading
+FIRST = dt.date(2025, 1, 20)         # start of the series (inauguration)
+FIRST_2026 = dt.date(2026, 1, 5)     # first 2026 weekly gas reading
 FRED = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={}"
 UA = "PLSC 2219 Forecast Archive (Yale University) (+https://kevinmdeluca.com/forecast/2026/)"
 
@@ -159,32 +163,65 @@ def _month_end(y: int, m: int) -> dt.date:
     return nxt - dt.timedelta(days=1)
 
 
-def inputs_for(day: dt.date, approval, gas, income, income_2025: float) -> dict | None:
+def _released_months(income, day: dt.date) -> list[tuple[dt.date, float]]:
+    """Monthly values published by `day` (a month counts as published on the
+    last day of the following month)."""
+    out = []
+    for d, v in income:
+        nm_y, nm_m = (d.year + (d.month == 12), d.month % 12 + 1)
+        if _month_end(nm_y, nm_m) <= day:
+            out.append((d, v))
+    return sorted(out)
+
+
+def inputs_for(day: dt.date, approval, gas, income, base_2025: dict) -> dict | None:
+    """The four inputs for `day`.
+
+    From 2026-01-05 on: 2026 averages to date, as the course defines them.
+
+    Before that (2025), no 2026 data exist, so the economy terms use the
+    trailing year: the average of the latest 52 weeks of gas prices (12
+    published months of income) against the 52 weeks (12 months) before.
+    That change is passed to the course script by setting its 2026 value to
+    the 2025 value times (1 + change), so the script computes exactly that
+    percentage change.
+    """
     appr = [(d, v) for d, v in approval if d <= day]
     if not appr:
         return None
-    gas_2026 = [v for d, v in gas if dt.date(2026, 1, 1) <= d <= day]
-    if not gas_2026:
-        return None
-    released = []
-    for d, v in income:
-        if d.year != 2026:
-            continue
-        nm_y, nm_m = (d.year + (d.month == 12), d.month % 12 + 1)
-        if _month_end(nm_y, nm_m) <= day:
-            released.append((d, v))
-    inc = statistics.fmean(v for _, v in released) if released else income_2025
-    return {
-        "date": day.isoformat(),
-        "approval": round(appr[-1][1], 2),
-        "approval_as_of": appr[-1][0].isoformat(),
-        "gas_ytd": round(statistics.fmean(gas_2026), 4),
-        "gas_weeks": len(gas_2026),
-        "real_income_2026": round(inc, 1),
-        "income_months": len(released),
-        # A row computed after its own date is a recomputation; the site says so.
-        "computed_on": dt.date.today().isoformat(),
-    }
+    rec = {"date": day.isoformat(),
+           "approval": round(appr[-1][1], 2),
+           "approval_as_of": appr[-1][0].isoformat()}
+
+    if day >= FIRST_2026:
+        gas_2026 = [v for d, v in gas if dt.date(2026, 1, 1) <= d <= day]
+        if not gas_2026:
+            return None
+        released = [(d, v) for d, v in _released_months(income, day) if d.year == 2026]
+        inc = statistics.fmean(v for _, v in released) if released else base_2025["income"]
+        rec.update({"economy_basis": "2026 to date",
+                    "gas_ytd": round(statistics.fmean(gas_2026), 4),
+                    "gas_weeks": len(gas_2026),
+                    "real_income_2026": round(inc, 1),
+                    "income_months": len(released)})
+    else:
+        last = [v for d, v in gas if day - dt.timedelta(days=364) < d <= day]
+        prev = [v for d, v in gas
+                if day - dt.timedelta(days=728) < d <= day - dt.timedelta(days=364)]
+        months = _released_months(income, day)
+        if len(last) < 40 or len(prev) < 40 or len(months) < 24:
+            return None
+        g_chg = statistics.fmean(last) / statistics.fmean(prev) - 1
+        i_chg = (statistics.fmean(v for _, v in months[-12:])
+                 / statistics.fmean(v for _, v in months[-24:-12]) - 1)
+        rec.update({"economy_basis": "trailing year",
+                    "gas_ytd": round(base_2025["gas"] * (1 + g_chg), 4),
+                    "gas_weeks": len(last),
+                    "real_income_2026": round(base_2025["income"] * (1 + i_chg), 1),
+                    "income_months": 12})
+    # A row computed after its own date is a recomputation; the site says so.
+    rec["computed_on"] = dt.date.today().isoformat()
+    return rec
 
 
 # --------------------------------------------------------------------------
@@ -380,7 +417,9 @@ def main(argv=None) -> int:
     gas = fred_series("GASREGW", a.gas_csv)
     income = fred_series("A229RX0", a.income_csv)
     with open(INPUTS / "economy_sept.csv", newline="") as fh:
-        income_2025 = float(next(r for r in csv.DictReader(fh) if r["year"] == "2025")["real_disp_income"])
+        row_2025 = next(r for r in csv.DictReader(fh) if r["year"] == "2025")
+        base_2025 = {"income": float(row_2025["real_disp_income"]),
+                     "gas": float(row_2025["gas_price"])}
 
     have = {r["as_of"] for r in _read(TIMESERIES)}
     days = [start + dt.timedelta(days=i) for i in range((end - start).days + 1)]
@@ -391,7 +430,7 @@ def main(argv=None) -> int:
         print("  no district map data found; every date uses the November lines")
     results, skipped = [], []
     for day in todo:
-        inp = inputs_for(day, approval, gas, income, income_2025)
+        inp = inputs_for(day, approval, gas, income, base_2025)
         if inp is None:
             skipped.append(day.isoformat())
             continue
