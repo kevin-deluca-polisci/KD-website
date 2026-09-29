@@ -873,6 +873,2327 @@
       "source": "Wikipedia's approval aggregator table (CC BY-SA), excluding the row Wikipedia computes itself. Starts at the first capture: an aggregator's average is overwritten in place, so a past value is only recoverable if we were there to read it.",
       "points": [
         {
+          "date": "2025-02-25",
+          "approve": 48.7,
+          "n": 2,
+          "low": 48.1,
+          "high": 49.3,
+          "members": {
+            "538": 48.1,
+            "RealClearPolitics": 49.3
+          }
+        },
+        {
+          "date": "2025-02-28",
+          "approve": 48.7,
+          "n": 2,
+          "low": 48.1,
+          "high": 49.3,
+          "members": {
+            "538": 48.1,
+            "RealClearPolitics": 49.3
+          }
+        },
+        {
+          "date": "2025-03-01",
+          "approve": 48.7,
+          "n": 2,
+          "low": 48.1,
+          "high": 49.3,
+          "members": {
+            "538": 48.1,
+            "RealClearPolitics": 49.3
+          }
+        },
+        {
+          "date": "2025-03-02",
+          "approve": 48.35,
+          "n": 2,
+          "low": 47.9,
+          "high": 48.8,
+          "members": {
+            "538": 47.9,
+            "RealClearPolitics": 48.8
+          }
+        },
+        {
+          "date": "2025-03-04",
+          "approve": 48.35,
+          "n": 2,
+          "low": 47.9,
+          "high": 48.8,
+          "members": {
+            "538": 47.9,
+            "RealClearPolitics": 48.8
+          }
+        },
+        {
+          "date": "2025-03-05",
+          "approve": 48.2,
+          "n": 2,
+          "low": 47.6,
+          "high": 48.8,
+          "members": {
+            "538": 47.6,
+            "RealClearPolitics": 48.8
+          }
+        },
+        {
+          "date": "2025-03-06",
+          "approve": 48.8,
+          "n": 1,
+          "low": 48.8,
+          "high": 48.8,
+          "members": {
+            "RealClearPolitics": 48.8
+          }
+        },
+        {
+          "date": "2025-03-07",
+          "approve": 48.9,
+          "n": 1,
+          "low": 48.9,
+          "high": 48.9,
+          "members": {
+            "RealClearPolitics": 48.9
+          }
+        },
+        {
+          "date": "2025-03-08",
+          "approve": 48.9,
+          "n": 1,
+          "low": 48.9,
+          "high": 48.9,
+          "members": {
+            "RealClearPolitics": 48.9
+          }
+        },
+        {
+          "date": "2025-03-09",
+          "approve": 48.9,
+          "n": 1,
+          "low": 48.9,
+          "high": 48.9,
+          "members": {
+            "RealClearPolitics": 48.9
+          }
+        },
+        {
+          "date": "2025-03-10",
+          "approve": 48.9,
+          "n": 1,
+          "low": 48.9,
+          "high": 48.9,
+          "members": {
+            "RealClearPolitics": 48.9
+          }
+        },
+        {
+          "date": "2025-03-11",
+          "approve": 48.4,
+          "n": 1,
+          "low": 48.4,
+          "high": 48.4,
+          "members": {
+            "RealClearPolitics": 48.4
+          }
+        },
+        {
+          "date": "2025-03-12",
+          "approve": 48.3,
+          "n": 1,
+          "low": 48.3,
+          "high": 48.3,
+          "members": {
+            "RealClearPolitics": 48.3
+          }
+        },
+        {
+          "date": "2025-03-13",
+          "approve": 47.8,
+          "n": 1,
+          "low": 47.8,
+          "high": 47.8,
+          "members": {
+            "RealClearPolitics": 47.8
+          }
+        },
+        {
+          "date": "2025-03-14",
+          "approve": 47.8,
+          "n": 1,
+          "low": 47.8,
+          "high": 47.8,
+          "members": {
+            "RealClearPolitics": 47.8
+          }
+        },
+        {
+          "date": "2025-03-15",
+          "approve": 47.4,
+          "n": 2,
+          "low": 47.0,
+          "high": 47.8,
+          "members": {
+            "RacetotheWH": 47.0,
+            "RealClearPolitics": 47.8
+          }
+        },
+        {
+          "date": "2025-03-16",
+          "approve": 47.6,
+          "n": 2,
+          "low": 47.0,
+          "high": 48.2,
+          "members": {
+            "RacetotheWH": 47.0,
+            "RealClearPolitics": 48.2
+          }
+        },
+        {
+          "date": "2025-03-17",
+          "approve": 47.6,
+          "n": 2,
+          "low": 47.3,
+          "high": 47.9,
+          "members": {
+            "RacetotheWH": 47.3,
+            "RealClearPolitics": 47.9
+          }
+        },
+        {
+          "date": "2025-03-18",
+          "approve": 47.6,
+          "n": 2,
+          "low": 47.3,
+          "high": 47.9,
+          "members": {
+            "RacetotheWH": 47.3,
+            "RealClearPolitics": 47.9
+          }
+        },
+        {
+          "date": "2025-03-19",
+          "approve": 47.3,
+          "n": 2,
+          "low": 46.8,
+          "high": 47.8,
+          "members": {
+            "RacetotheWH": 46.8,
+            "RealClearPolitics": 47.8
+          }
+        },
+        {
+          "date": "2025-03-20",
+          "approve": 47.3,
+          "n": 2,
+          "low": 46.8,
+          "high": 47.8,
+          "members": {
+            "RacetotheWH": 46.8,
+            "RealClearPolitics": 47.8
+          }
+        },
+        {
+          "date": "2025-03-22",
+          "approve": 47.3,
+          "n": 2,
+          "low": 46.8,
+          "high": 47.8,
+          "members": {
+            "RacetotheWH": 46.8,
+            "RealClearPolitics": 47.8
+          }
+        },
+        {
+          "date": "2025-03-24",
+          "approve": 47.5,
+          "n": 2,
+          "low": 47.1,
+          "high": 47.9,
+          "members": {
+            "RacetotheWH": 47.1,
+            "RealClearPolitics": 47.9
+          }
+        },
+        {
+          "date": "2025-03-25",
+          "approve": 47.4,
+          "n": 2,
+          "low": 46.9,
+          "high": 47.9,
+          "members": {
+            "RacetotheWH": 46.9,
+            "RealClearPolitics": 47.9
+          }
+        },
+        {
+          "date": "2025-03-26",
+          "approve": 47.55,
+          "n": 2,
+          "low": 47.0,
+          "high": 48.1,
+          "members": {
+            "RacetotheWH": 47.0,
+            "RealClearPolitics": 48.1
+          }
+        },
+        {
+          "date": "2025-03-27",
+          "approve": 47.55,
+          "n": 2,
+          "low": 47.0,
+          "high": 48.1,
+          "members": {
+            "RacetotheWH": 47.0,
+            "RealClearPolitics": 48.1
+          }
+        },
+        {
+          "date": "2025-03-28",
+          "approve": 47.3,
+          "n": 2,
+          "low": 47.0,
+          "high": 47.6,
+          "members": {
+            "RacetotheWH": 47.0,
+            "RealClearPolitics": 47.6
+          }
+        },
+        {
+          "date": "2025-03-30",
+          "approve": 47.2,
+          "n": 2,
+          "low": 46.6,
+          "high": 47.8,
+          "members": {
+            "RacetotheWH": 46.6,
+            "RealClearPolitics": 47.8
+          }
+        },
+        {
+          "date": "2025-03-31",
+          "approve": 47.4,
+          "n": 2,
+          "low": 46.9,
+          "high": 47.9,
+          "members": {
+            "RacetotheWH": 46.9,
+            "RealClearPolitics": 47.9
+          }
+        },
+        {
+          "date": "2025-04-02",
+          "approve": 47.25,
+          "n": 2,
+          "low": 46.8,
+          "high": 47.7,
+          "members": {
+            "RacetotheWH": 46.8,
+            "RealClearPolitics": 47.7
+          }
+        },
+        {
+          "date": "2025-04-03",
+          "approve": 47.25,
+          "n": 2,
+          "low": 46.8,
+          "high": 47.7,
+          "members": {
+            "RacetotheWH": 46.8,
+            "RealClearPolitics": 47.7
+          }
+        },
+        {
+          "date": "2025-04-04",
+          "approve": 46.85,
+          "n": 2,
+          "low": 46.1,
+          "high": 47.6,
+          "members": {
+            "RacetotheWH": 46.1,
+            "RealClearPolitics": 47.6
+          }
+        },
+        {
+          "date": "2025-04-06",
+          "approve": 46.9,
+          "n": 2,
+          "low": 46.1,
+          "high": 47.7,
+          "members": {
+            "RacetotheWH": 46.1,
+            "RealClearPolitics": 47.7
+          }
+        },
+        {
+          "date": "2025-04-08",
+          "approve": 46.65,
+          "n": 2,
+          "low": 45.8,
+          "high": 47.5,
+          "members": {
+            "RacetotheWH": 45.8,
+            "RealClearPolitics": 47.5
+          }
+        },
+        {
+          "date": "2025-04-09",
+          "approve": 46.15,
+          "n": 2,
+          "low": 45.3,
+          "high": 47.0,
+          "members": {
+            "RacetotheWH": 45.3,
+            "RealClearPolitics": 47.0
+          }
+        },
+        {
+          "date": "2025-04-12",
+          "approve": 45.8,
+          "n": 2,
+          "low": 44.9,
+          "high": 46.7,
+          "members": {
+            "RacetotheWH": 44.9,
+            "RealClearPolitics": 46.7
+          }
+        },
+        {
+          "date": "2025-04-14",
+          "approve": 45.8,
+          "n": 2,
+          "low": 44.9,
+          "high": 46.7,
+          "members": {
+            "RacetotheWH": 44.9,
+            "RealClearPolitics": 46.7
+          }
+        },
+        {
+          "date": "2025-04-15",
+          "approve": 45.8,
+          "n": 2,
+          "low": 44.9,
+          "high": 46.7,
+          "members": {
+            "RacetotheWH": 44.9,
+            "RealClearPolitics": 46.7
+          }
+        },
+        {
+          "date": "2025-04-16",
+          "approve": 45.8,
+          "n": 2,
+          "low": 44.9,
+          "high": 46.7,
+          "members": {
+            "RacetotheWH": 44.9,
+            "RealClearPolitics": 46.7
+          }
+        },
+        {
+          "date": "2025-04-17",
+          "approve": 45.8,
+          "n": 2,
+          "low": 44.9,
+          "high": 46.7,
+          "members": {
+            "RacetotheWH": 44.9,
+            "RealClearPolitics": 46.7
+          }
+        },
+        {
+          "date": "2025-04-18",
+          "approve": 45.8,
+          "n": 2,
+          "low": 44.9,
+          "high": 46.7,
+          "members": {
+            "RacetotheWH": 44.9,
+            "RealClearPolitics": 46.7
+          }
+        },
+        {
+          "date": "2025-04-20",
+          "approve": 45.8,
+          "n": 2,
+          "low": 45.1,
+          "high": 46.5,
+          "members": {
+            "RacetotheWH": 45.1,
+            "RealClearPolitics": 46.5
+          }
+        },
+        {
+          "date": "2025-04-21",
+          "approve": 45.92,
+          "n": 4,
+          "low": 45.1,
+          "high": 46.5,
+          "members": {
+            "RacetotheWH": 45.1,
+            "RealClearPolitics": 46.5,
+            "Votehub (Time-Weighted)": 45.6,
+            "Votehub (Unweighted)": 46.5
+          }
+        },
+        {
+          "date": "2025-04-22",
+          "approve": 45.67,
+          "n": 6,
+          "low": 44.6,
+          "high": 46.5,
+          "members": {
+            "Race to the WH": 44.6,
+            "Real Clear Politics": 46.5,
+            "Silver Bulletin": 45.6,
+            "Strength in Numbers": 45.2,
+            "Votehub (Time-Weighted)": 45.6,
+            "Votehub (Unweighted)": 46.5
+          }
+        },
+        {
+          "date": "2025-04-23",
+          "approve": 45.42,
+          "n": 6,
+          "low": 44.4,
+          "high": 46.6,
+          "members": {
+            "Race to the WH": 44.4,
+            "Real Clear Politics": 46.6,
+            "Silver Bulletin": 45.4,
+            "Strength in Numbers": 44.5,
+            "Votehub (Time-Weighted)": 45.4,
+            "Votehub (Unweighted)": 46.2
+          }
+        },
+        {
+          "date": "2025-04-25",
+          "approve": 44.87,
+          "n": 6,
+          "low": 44.0,
+          "high": 46.1,
+          "members": {
+            "Race to the WH": 44.1,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 44.7,
+            "Strength in Numbers": 44.0,
+            "Votehub (Time-Weighted)": 44.7,
+            "Votehub (Unweighted)": 45.6
+          }
+        },
+        {
+          "date": "2025-04-26",
+          "approve": 44.87,
+          "n": 6,
+          "low": 44.0,
+          "high": 46.1,
+          "members": {
+            "Race to the WH": 44.1,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 44.7,
+            "Strength in Numbers": 44.0,
+            "Votehub (Time-Weighted)": 44.7,
+            "Votehub (Unweighted)": 45.6
+          }
+        },
+        {
+          "date": "2025-04-27",
+          "approve": 44.87,
+          "n": 6,
+          "low": 44.0,
+          "high": 46.1,
+          "members": {
+            "Race to the WH": 44.1,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 44.7,
+            "Strength in Numbers": 44.0,
+            "Votehub (Time-Weighted)": 44.7,
+            "Votehub (Unweighted)": 45.6
+          }
+        },
+        {
+          "date": "2025-04-28",
+          "approve": 44.42,
+          "n": 6,
+          "low": 43.6,
+          "high": 45.4,
+          "members": {
+            "Race to the WH": 43.6,
+            "Real Clear Politics": 45.4,
+            "Silver Bulletin": 44.1,
+            "Strength in Numbers": 43.6,
+            "Votehub (Time-Weighted)": 44.4,
+            "Votehub (Unweighted)": 45.4
+          }
+        },
+        {
+          "date": "2025-04-29",
+          "approve": 44.22,
+          "n": 6,
+          "low": 43.2,
+          "high": 45.4,
+          "members": {
+            "Race to the WH": 43.5,
+            "Real Clear Politics": 45.1,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 43.2,
+            "Votehub (Time-Weighted)": 44.3,
+            "Votehub (Unweighted)": 45.4
+          }
+        },
+        {
+          "date": "2025-05-01",
+          "approve": 44.22,
+          "n": 6,
+          "low": 43.3,
+          "high": 45.2,
+          "members": {
+            "Race to the WH": 43.6,
+            "Real Clear Politics": 45.1,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 43.3,
+            "Votehub (Time-Weighted)": 44.3,
+            "Votehub (Unweighted)": 45.2
+          }
+        },
+        {
+          "date": "2025-05-06",
+          "approve": 44.22,
+          "n": 6,
+          "low": 43.3,
+          "high": 45.2,
+          "members": {
+            "Race to the WH": 43.6,
+            "Real Clear Politics": 45.1,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 43.3,
+            "Votehub (Time-Weighted)": 44.3,
+            "Votehub (Unweighted)": 45.2
+          }
+        },
+        {
+          "date": "2025-05-07",
+          "approve": 44.27,
+          "n": 6,
+          "low": 43.5,
+          "high": 45.2,
+          "members": {
+            "Race to the WH": 43.8,
+            "Real Clear Politics": 45.2,
+            "Silver Bulletin": 44.2,
+            "Strength in Numbers": 43.5,
+            "Votehub (Time-Weighted)": 44.2,
+            "Votehub (Unweighted)": 44.7
+          }
+        },
+        {
+          "date": "2025-05-08",
+          "approve": 44.27,
+          "n": 6,
+          "low": 43.5,
+          "high": 45.2,
+          "members": {
+            "Race to the WH": 43.8,
+            "Real Clear Politics": 45.2,
+            "Silver Bulletin": 44.2,
+            "Strength in Numbers": 43.5,
+            "Votehub (Time-Weighted)": 44.2,
+            "Votehub (Unweighted)": 44.7
+          }
+        },
+        {
+          "date": "2025-05-11",
+          "approve": 44.38,
+          "n": 6,
+          "low": 43.7,
+          "high": 45.3,
+          "members": {
+            "Race to the WH": 44.0,
+            "Real Clear Politics": 45.3,
+            "Silver Bulletin": 44.4,
+            "Strength in Numbers": 43.7,
+            "Votehub (Time-Weighted)": 44.2,
+            "Votehub (Unweighted)": 44.7
+          }
+        },
+        {
+          "date": "2025-05-13",
+          "approve": 44.38,
+          "n": 6,
+          "low": 43.7,
+          "high": 45.3,
+          "members": {
+            "Race to the WH": 44.0,
+            "Real Clear Politics": 45.3,
+            "Silver Bulletin": 44.4,
+            "Strength in Numbers": 43.7,
+            "Votehub (Time-Weighted)": 44.2,
+            "Votehub (Unweighted)": 44.7
+          }
+        },
+        {
+          "date": "2025-05-14",
+          "approve": 44.38,
+          "n": 6,
+          "low": 43.7,
+          "high": 45.3,
+          "members": {
+            "Race to the WH": 44.0,
+            "Real Clear Politics": 45.3,
+            "Silver Bulletin": 44.4,
+            "Strength in Numbers": 43.7,
+            "Votehub (Time-Weighted)": 44.2,
+            "Votehub (Unweighted)": 44.7
+          }
+        },
+        {
+          "date": "2025-05-17",
+          "approve": 44.38,
+          "n": 6,
+          "low": 43.7,
+          "high": 45.3,
+          "members": {
+            "Race to the WH": 44.0,
+            "Real Clear Politics": 45.3,
+            "Silver Bulletin": 44.4,
+            "Strength in Numbers": 43.7,
+            "Votehub (Time-Weighted)": 44.2,
+            "Votehub (Unweighted)": 44.7
+          }
+        },
+        {
+          "date": "2025-05-20",
+          "approve": 44.98,
+          "n": 6,
+          "low": 43.7,
+          "high": 47.1,
+          "members": {
+            "Race to the WH": 44.0,
+            "Real Clear Politics": 47.1,
+            "Silver Bulletin": 46.2,
+            "Strength in Numbers": 43.7,
+            "Votehub (Time-Weighted)": 44.2,
+            "Votehub (Unweighted)": 44.7
+          }
+        },
+        {
+          "date": "2025-05-23",
+          "approve": 45.78,
+          "n": 5,
+          "low": 44.0,
+          "high": 47.6,
+          "members": {
+            "Race to the WH": 45.4,
+            "Real Clear Politics": 47.6,
+            "Silver Bulletin": 46.0,
+            "Strength in Numbers": 44.0,
+            "Votehub (Time-Weighted)": 45.9
+          }
+        },
+        {
+          "date": "2025-05-26",
+          "approve": 45.68,
+          "n": 5,
+          "low": 43.9,
+          "high": 47.5,
+          "members": {
+            "Race to the WH": 45.2,
+            "Real Clear Politics": 47.5,
+            "Silver Bulletin": 46.0,
+            "Strength in Numbers": 43.9,
+            "Votehub (Time-Weighted)": 45.8
+          }
+        },
+        {
+          "date": "2025-05-31",
+          "approve": 45.68,
+          "n": 5,
+          "low": 43.9,
+          "high": 47.5,
+          "members": {
+            "Race to the WH": 45.2,
+            "Real Clear Politics": 47.5,
+            "Silver Bulletin": 46.0,
+            "Strength in Numbers": 43.9,
+            "Votehub (Time-Weighted)": 45.8
+          }
+        },
+        {
+          "date": "2025-06-03",
+          "approve": 45.66,
+          "n": 5,
+          "low": 43.9,
+          "high": 47.5,
+          "members": {
+            "Race to the WH": 45.2,
+            "Real Clear Politics": 47.5,
+            "Silver Bulletin": 45.9,
+            "Strength in Numbers": 43.9,
+            "Votehub (Time-Weighted)": 45.8
+          }
+        },
+        {
+          "date": "2025-06-06",
+          "approve": 45.62,
+          "n": 5,
+          "low": 43.9,
+          "high": 47.3,
+          "members": {
+            "Race to the WH": 45.2,
+            "Real Clear Politics": 47.3,
+            "Silver Bulletin": 45.9,
+            "Strength in Numbers": 43.9,
+            "Votehub (Time-Weighted)": 45.8
+          }
+        },
+        {
+          "date": "2025-06-08",
+          "approve": 45.68,
+          "n": 5,
+          "low": 43.9,
+          "high": 47.6,
+          "members": {
+            "Race to the WH": 45.2,
+            "Real Clear Politics": 47.6,
+            "Silver Bulletin": 45.9,
+            "Strength in Numbers": 43.9,
+            "VoteHub (Time-Weighted)": 45.8
+          }
+        },
+        {
+          "date": "2025-06-11",
+          "approve": 45.24,
+          "n": 5,
+          "low": 44.2,
+          "high": 46.8,
+          "members": {
+            "Race to the WH": 44.2,
+            "Real Clear Politics": 46.8,
+            "Silver Bulletin": 46.0,
+            "Strength in Numbers": 44.9,
+            "VoteHub (Time-Weighted)": 44.3
+          }
+        },
+        {
+          "date": "2025-06-18",
+          "approve": 45.24,
+          "n": 5,
+          "low": 44.2,
+          "high": 46.8,
+          "members": {
+            "Race to the WH": 44.2,
+            "Real Clear Politics": 46.8,
+            "Silver Bulletin": 46.0,
+            "Strength in Numbers": 44.9,
+            "VoteHub (Time-Weighted)": 44.3
+          }
+        },
+        {
+          "date": "2025-06-20",
+          "approve": 45.22,
+          "n": 5,
+          "low": 43.8,
+          "high": 46.7,
+          "members": {
+            "Race to the WH": 44.5,
+            "Real Clear Politics": 46.3,
+            "Silver Bulletin": 46.7,
+            "Strength in Numbers": 43.8,
+            "VoteHub (Time-Weighted)": 44.8
+          }
+        },
+        {
+          "date": "2025-06-21",
+          "approve": 45.22,
+          "n": 5,
+          "low": 43.8,
+          "high": 46.7,
+          "members": {
+            "Race to the WH": 44.5,
+            "Real Clear Politics": 46.3,
+            "Silver Bulletin": 46.7,
+            "Strength in Numbers": 43.8,
+            "VoteHub (Time-Weighted)": 44.8
+          }
+        },
+        {
+          "date": "2025-06-22",
+          "approve": 45.22,
+          "n": 5,
+          "low": 43.8,
+          "high": 46.7,
+          "members": {
+            "Race to the WH": 44.5,
+            "Real Clear Politics": 46.3,
+            "Silver Bulletin": 46.7,
+            "Strength in Numbers": 43.8,
+            "VoteHub (Time-Weighted)": 44.8
+          }
+        },
+        {
+          "date": "2025-06-24",
+          "approve": 45.22,
+          "n": 5,
+          "low": 43.8,
+          "high": 46.7,
+          "members": {
+            "Race to the WH": 44.5,
+            "Real Clear Politics": 46.3,
+            "Silver Bulletin": 46.7,
+            "Strength in Numbers": 43.8,
+            "VoteHub (Time-Weighted)": 44.8
+          }
+        },
+        {
+          "date": "2025-06-27",
+          "approve": 44.66,
+          "n": 5,
+          "low": 42.9,
+          "high": 46.1,
+          "members": {
+            "Race to the WH": 44.6,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 45.3,
+            "Strength in Numbers": 42.9,
+            "VoteHub (Time-Weighted)": 44.4
+          }
+        },
+        {
+          "date": "2025-07-03",
+          "approve": 44.66,
+          "n": 5,
+          "low": 42.9,
+          "high": 46.1,
+          "members": {
+            "Race to the WH": 44.6,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 45.3,
+            "Strength in Numbers": 42.9,
+            "VoteHub (Time-Weighted)": 44.4
+          }
+        },
+        {
+          "date": "2025-07-05",
+          "approve": 44.64,
+          "n": 5,
+          "low": 43.1,
+          "high": 46.3,
+          "members": {
+            "Race to the WH": 44.5,
+            "Real Clear Politics": 46.3,
+            "Silver Bulletin": 44.9,
+            "Strength in Numbers": 43.1,
+            "VoteHub (Time-Weighted)": 44.4
+          }
+        },
+        {
+          "date": "2025-07-12",
+          "approve": 44.64,
+          "n": 5,
+          "low": 43.1,
+          "high": 46.3,
+          "members": {
+            "Race to the WH": 44.5,
+            "Real Clear Politics": 46.3,
+            "Silver Bulletin": 44.9,
+            "Strength in Numbers": 43.1,
+            "VoteHub (Time-Weighted)": 44.4
+          }
+        },
+        {
+          "date": "2025-07-13",
+          "approve": 44.64,
+          "n": 5,
+          "low": 43.1,
+          "high": 46.3,
+          "members": {
+            "Race to the WH": 44.5,
+            "Real Clear Politics": 46.3,
+            "Silver Bulletin": 44.9,
+            "Strength in Numbers": 43.1,
+            "VoteHub (Time-Weighted)": 44.4
+          }
+        },
+        {
+          "date": "2025-07-17",
+          "approve": 43.92,
+          "n": 6,
+          "low": 42.5,
+          "high": 45.6,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Race to the WH": 43.7,
+            "Real Clear Politics": 45.6,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 42.5,
+            "VoteHub (Time-Weighted)": 43.9
+          }
+        },
+        {
+          "date": "2025-07-18",
+          "approve": 43.92,
+          "n": 6,
+          "low": 42.5,
+          "high": 45.6,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Race to the WH": 43.7,
+            "Real Clear Politics": 45.6,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 42.5,
+            "VoteHub (Time-Weighted)": 43.9
+          }
+        },
+        {
+          "date": "2025-07-20",
+          "approve": 44.01,
+          "n": 7,
+          "low": 42.5,
+          "high": 45.6,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 44.6,
+            "Race to the WH": 43.7,
+            "Real Clear Politics": 45.6,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 42.5,
+            "VoteHub (Time-Weighted)": 43.9
+          }
+        },
+        {
+          "date": "2025-07-21",
+          "approve": 44.11,
+          "n": 7,
+          "low": 42.9,
+          "high": 45.5,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 44.6,
+            "Race to the WH": 43.9,
+            "Real Clear Politics": 45.5,
+            "Silver Bulletin": 44.0,
+            "Strength in Numbers": 42.9,
+            "VoteHub (Time-Weighted)": 43.9
+          }
+        },
+        {
+          "date": "2025-07-23",
+          "approve": 43.87,
+          "n": 7,
+          "low": 42.2,
+          "high": 45.5,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 43.7,
+            "Race to the WH": 43.7,
+            "Real Clear Politics": 45.5,
+            "Silver Bulletin": 43.5,
+            "Strength in Numbers": 42.2,
+            "VoteHub (Time-Weighted)": 44.5
+          }
+        },
+        {
+          "date": "2025-07-24",
+          "approve": 43.87,
+          "n": 7,
+          "low": 42.2,
+          "high": 45.5,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 43.7,
+            "Race to the WH": 43.7,
+            "Real Clear Politics": 45.5,
+            "Silver Bulletin": 43.5,
+            "Strength in Numbers": 42.2,
+            "VoteHub (Time-Weighted)": 44.5
+          }
+        },
+        {
+          "date": "2025-07-28",
+          "approve": 44.37,
+          "n": 7,
+          "low": 42.5,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 45.6,
+            "Race to the WH": 43.6,
+            "Real Clear Politics": 45.9,
+            "Silver Bulletin": 44.6,
+            "Strength in Numbers": 42.5,
+            "VoteHub (Time-Weighted)": 44.4
+          }
+        },
+        {
+          "date": "2025-08-01",
+          "approve": 44.11,
+          "n": 7,
+          "low": 42.1,
+          "high": 46.3,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 44.2,
+            "Race to the WH": 43.9,
+            "Real Clear Politics": 46.3,
+            "Silver Bulletin": 44.2,
+            "Strength in Numbers": 42.1,
+            "VoteHub (Time-Weighted)": 44.1
+          }
+        },
+        {
+          "date": "2025-08-05",
+          "approve": 44.11,
+          "n": 7,
+          "low": 42.1,
+          "high": 46.3,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 44.2,
+            "Race to the WH": 43.9,
+            "Real Clear Politics": 46.3,
+            "Silver Bulletin": 44.2,
+            "Strength in Numbers": 42.1,
+            "VoteHub (Time-Weighted)": 44.1
+          }
+        },
+        {
+          "date": "2025-08-06",
+          "approve": 43.66,
+          "n": 7,
+          "low": 42.1,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 43.5,
+            "Race to the WH": 42.5,
+            "Real Clear Politics": 45.9,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 42.1,
+            "VoteHub (Time-Weighted)": 43.8
+          }
+        },
+        {
+          "date": "2025-08-09",
+          "approve": 43.66,
+          "n": 7,
+          "low": 42.1,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 43.5,
+            "Race to the WH": 42.5,
+            "Real Clear Politics": 45.9,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 42.1,
+            "VoteHub (Time-Weighted)": 43.8
+          }
+        },
+        {
+          "date": "2025-08-15",
+          "approve": 43.66,
+          "n": 7,
+          "low": 42.1,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 43.5,
+            "Race to the WH": 42.5,
+            "Real Clear Politics": 45.9,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 42.1,
+            "VoteHub (Time-Weighted)": 43.8
+          }
+        },
+        {
+          "date": "2025-08-18",
+          "approve": 43.66,
+          "n": 7,
+          "low": 42.1,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 43.5,
+            "Race to the WH": 42.5,
+            "Real Clear Politics": 45.9,
+            "Silver Bulletin": 43.8,
+            "Strength in Numbers": 42.1,
+            "VoteHub (Time-Weighted)": 43.8
+          }
+        },
+        {
+          "date": "2025-08-23",
+          "approve": 44.2,
+          "n": 7,
+          "low": 41.7,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 45.6,
+            "Race to the WH": 43.5,
+            "Real Clear Politics": 45.9,
+            "Silver Bulletin": 44.1,
+            "Strength in Numbers": 41.7,
+            "VoteHub (Time-Weighted)": 44.6
+          }
+        },
+        {
+          "date": "2025-08-24",
+          "approve": 44.2,
+          "n": 7,
+          "low": 41.7,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 45.6,
+            "Race to the WH": 43.5,
+            "Real Clear Politics": 45.9,
+            "Silver Bulletin": 44.1,
+            "Strength in Numbers": 41.7,
+            "VoteHub (Time-Weighted)": 44.6
+          }
+        },
+        {
+          "date": "2025-08-26",
+          "approve": 44.2,
+          "n": 7,
+          "low": 41.7,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 45.6,
+            "Race to the WH": 43.5,
+            "Real Clear Politics": 45.9,
+            "Silver Bulletin": 44.1,
+            "Strength in Numbers": 41.7,
+            "VoteHub (Time-Weighted)": 44.6
+          }
+        },
+        {
+          "date": "2025-08-30",
+          "approve": 44.2,
+          "n": 7,
+          "low": 41.7,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 45.6,
+            "Race to the WH": 43.5,
+            "Real Clear Politics": 45.9,
+            "Silver Bulletin": 44.1,
+            "Strength in Numbers": 41.7,
+            "VoteHub (Time-Weighted)": 44.6
+          }
+        },
+        {
+          "date": "2025-09-05",
+          "approve": 43.79,
+          "n": 9,
+          "low": 41.0,
+          "high": 45.9,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 45.9,
+            "Race to the WH": 43.7,
+            "Real Clear Politics": 45.4,
+            "Silver Bulletin": 44.4,
+            "Strength in Numbers": 43.1,
+            "The Economist": 41.0,
+            "The New York Times": 43.0,
+            "VoteHub (Time-Weighted)": 44.6
+          }
+        },
+        {
+          "date": "2025-09-07",
+          "approve": 43.84,
+          "n": 9,
+          "low": 41.0,
+          "high": 45.4,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 45.1,
+            "Race to the WH": 44.0,
+            "Real Clear Politics": 45.4,
+            "Silver Bulletin": 44.4,
+            "Strength in Numbers": 43.1,
+            "The Economist": 41.0,
+            "The New York Times": 43.0,
+            "VoteHub (Time-Weighted)": 44.6
+          }
+        },
+        {
+          "date": "2025-09-16",
+          "approve": 43.56,
+          "n": 9,
+          "low": 39.0,
+          "high": 46.0,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 44.9,
+            "Race to the WH": 44.3,
+            "Real Clear Politics": 46.0,
+            "Silver Bulletin": 44.3,
+            "Strength in Numbers": 42.1,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub (Time-Weighted)": 44.4
+          }
+        },
+        {
+          "date": "2025-09-19",
+          "approve": 43.83,
+          "n": 9,
+          "low": 39.0,
+          "high": 46.1,
+          "members": {
+            "Ballotpedia": 45.0,
+            "Decision Desk HQ": 46.0,
+            "Race to the WH": 44.2,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 44.5,
+            "Strength in Numbers": 42.2,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub (Time-Weighted)": 44.5
+          }
+        },
+        {
+          "date": "2025-09-20",
+          "approve": 44.0,
+          "n": 9,
+          "low": 39.0,
+          "high": 46.6,
+          "members": {
+            "Ballotpedia": 45.0,
+            "Decision Desk HQ": 46.6,
+            "Race to the WH": 44.3,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 44.9,
+            "Strength in Numbers": 42.3,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub (Time-Weighted)": 44.8
+          }
+        },
+        {
+          "date": "2025-09-21",
+          "approve": 44.03,
+          "n": 9,
+          "low": 39.0,
+          "high": 46.5,
+          "members": {
+            "Ballotpedia": 45.0,
+            "Decision Desk HQ": 46.5,
+            "Race to the WH": 44.3,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 44.9,
+            "Strength in Numbers": 42.7,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub (Time-Weighted)": 44.8
+          }
+        },
+        {
+          "date": "2025-09-22",
+          "approve": 44.03,
+          "n": 9,
+          "low": 39.0,
+          "high": 46.5,
+          "members": {
+            "Ballotpedia": 45.0,
+            "Decision Desk HQ": 46.5,
+            "Race to the WH": 44.3,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 44.9,
+            "Strength in Numbers": 42.7,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 44.8
+          }
+        },
+        {
+          "date": "2025-09-24",
+          "approve": 43.64,
+          "n": 9,
+          "low": 39.0,
+          "high": 46.1,
+          "members": {
+            "Ballotpedia": 45.0,
+            "Decision Desk HQ": 45.9,
+            "Race to the WH": 43.4,
+            "Real Clear Politics": 46.1,
+            "Silver Bulletin": 43.9,
+            "Strength in Numbers": 41.9,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 44.6
+          }
+        },
+        {
+          "date": "2025-09-28",
+          "approve": 43.27,
+          "n": 9,
+          "low": 39.0,
+          "high": 45.3,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 45.2,
+            "Race to the WH": 43.1,
+            "Real Clear Politics": 45.3,
+            "Silver Bulletin": 43.7,
+            "Strength in Numbers": 42.0,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 44.1
+          }
+        },
+        {
+          "date": "2025-10-02",
+          "approve": 43.27,
+          "n": 9,
+          "low": 39.0,
+          "high": 45.3,
+          "members": {
+            "Ballotpedia": 44.0,
+            "Decision Desk HQ": 45.2,
+            "Race to the WH": 43.1,
+            "Real Clear Politics": 45.3,
+            "Silver Bulletin": 43.7,
+            "Strength in Numbers": 42.0,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 44.1
+          }
+        },
+        {
+          "date": "2025-10-04",
+          "approve": 43.18,
+          "n": 9,
+          "low": 40.0,
+          "high": 45.0,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 45.0,
+            "Race to the WH": 43.0,
+            "Real Clear Politics": 44.9,
+            "Silver Bulletin": 43.5,
+            "Strength in Numbers": 42.0,
+            "The Economist": 40.0,
+            "The New York Times": 43.0,
+            "VoteHub": 44.2
+          }
+        },
+        {
+          "date": "2025-10-07",
+          "approve": 43.12,
+          "n": 9,
+          "low": 40.0,
+          "high": 44.9,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 44.6,
+            "Race to the WH": 42.9,
+            "Real Clear Politics": 44.9,
+            "Silver Bulletin": 43.6,
+            "Strength in Numbers": 42.1,
+            "The Economist": 40.0,
+            "The New York Times": 43.0,
+            "VoteHub": 44.0
+          }
+        },
+        {
+          "date": "2025-10-09",
+          "approve": 42.76,
+          "n": 9,
+          "low": 39.0,
+          "high": 44.9,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 43.7,
+            "FiftyPlusOne": 41.7,
+            "Race to the WH": 42.3,
+            "Real Clear Politics": 44.9,
+            "Silver Bulletin": 43.4,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 43.8
+          }
+        },
+        {
+          "date": "2025-10-12",
+          "approve": 43.02,
+          "n": 9,
+          "low": 39.0,
+          "high": 45.3,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 45.0,
+            "FiftyPlusOne": 41.8,
+            "Race to the WH": 42.3,
+            "Real Clear Politics": 45.3,
+            "Silver Bulletin": 43.9,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 43.9
+          }
+        },
+        {
+          "date": "2025-10-17",
+          "approve": 43.41,
+          "n": 9,
+          "low": 40.0,
+          "high": 45.8,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 45.8,
+            "FiftyPlusOne": 41.7,
+            "Race to the WH": 43.8,
+            "Real Clear Politics": 45.2,
+            "Silver Bulletin": 44.1,
+            "The Economist": 40.0,
+            "The New York Times": 43.0,
+            "VoteHub": 44.1
+          }
+        },
+        {
+          "date": "2025-10-23",
+          "approve": 43.03,
+          "n": 9,
+          "low": 39.0,
+          "high": 45.3,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 44.9,
+            "FiftyPlusOne": 41.6,
+            "Race to the WH": 43.2,
+            "Real Clear Politics": 45.3,
+            "Silver Bulletin": 43.5,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 43.8
+          }
+        },
+        {
+          "date": "2025-10-28",
+          "approve": 43.07,
+          "n": 9,
+          "low": 39.0,
+          "high": 45.3,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 45.3,
+            "FiftyPlusOne": 41.6,
+            "Race to the WH": 43.2,
+            "Real Clear Politics": 44.9,
+            "Silver Bulletin": 43.8,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 43.8
+          }
+        },
+        {
+          "date": "2025-10-29",
+          "approve": 42.86,
+          "n": 9,
+          "low": 39.0,
+          "high": 44.9,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 44.8,
+            "FiftyPlusOne": 41.3,
+            "Race to the WH": 42.8,
+            "Real Clear Politics": 44.9,
+            "Silver Bulletin": 43.3,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 43.6
+          }
+        },
+        {
+          "date": "2025-10-30",
+          "approve": 42.86,
+          "n": 9,
+          "low": 39.0,
+          "high": 44.9,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 44.8,
+            "FiftyPlusOne": 41.3,
+            "Race to the WH": 42.8,
+            "Real Clear Politics": 44.9,
+            "Silver Bulletin": 43.3,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 43.6
+          }
+        },
+        {
+          "date": "2025-10-31",
+          "approve": 42.86,
+          "n": 9,
+          "low": 39.0,
+          "high": 44.9,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 44.8,
+            "FiftyPlusOne": 41.3,
+            "Race to the WH": 42.8,
+            "Real Clear Politics": 44.9,
+            "Silver Bulletin": 43.3,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 43.6
+          }
+        },
+        {
+          "date": "2025-11-03",
+          "approve": 42.57,
+          "n": 9,
+          "low": 39.0,
+          "high": 44.3,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 44.1,
+            "FiftyPlusOne": 40.9,
+            "Race to the WH": 42.5,
+            "Real Clear Politics": 44.3,
+            "Silver Bulletin": 42.9,
+            "The Economist": 39.0,
+            "The New York Times": 43.0,
+            "VoteHub": 43.4
+          }
+        },
+        {
+          "date": "2025-11-04",
+          "approve": 42.06,
+          "n": 9,
+          "low": 39.0,
+          "high": 43.4,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 43.1,
+            "FiftyPlusOne": 40.8,
+            "Race to the WH": 42.0,
+            "Real Clear Politics": 43.4,
+            "Silver Bulletin": 42.2,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 43.0
+          }
+        },
+        {
+          "date": "2025-11-06",
+          "approve": 42.03,
+          "n": 9,
+          "low": 39.0,
+          "high": 43.3,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 43.1,
+            "FiftyPlusOne": 40.8,
+            "Race to the WH": 42.0,
+            "Real Clear Politics": 43.3,
+            "Silver Bulletin": 42.1,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 43.0
+          }
+        },
+        {
+          "date": "2025-11-07",
+          "approve": 41.72,
+          "n": 9,
+          "low": 39.0,
+          "high": 43.0,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.0,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.9,
+            "Real Clear Politics": 42.9,
+            "Silver Bulletin": 41.8,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.8
+          }
+        },
+        {
+          "date": "2025-11-10",
+          "approve": 41.76,
+          "n": 9,
+          "low": 39.0,
+          "high": 43.1,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.1,
+            "FiftyPlusOne": 40.2,
+            "Race to the WH": 41.9,
+            "Real Clear Politics": 42.9,
+            "Silver Bulletin": 41.9,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.8
+          }
+        },
+        {
+          "date": "2025-11-11",
+          "approve": 41.68,
+          "n": 9,
+          "low": 39.0,
+          "high": 42.8,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 42.6,
+            "FiftyPlusOne": 40.3,
+            "Race to the WH": 41.8,
+            "Real Clear Politics": 42.8,
+            "Silver Bulletin": 41.8,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.8
+          }
+        },
+        {
+          "date": "2025-11-12",
+          "approve": 41.39,
+          "n": 9,
+          "low": 39.0,
+          "high": 42.8,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.8,
+            "FiftyPlusOne": 39.9,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 42.8,
+            "Silver Bulletin": 41.8,
+            "The Economist": 39.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.8
+          }
+        },
+        {
+          "date": "2025-11-13",
+          "approve": 41.24,
+          "n": 9,
+          "low": 39.0,
+          "high": 42.8,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.2,
+            "FiftyPlusOne": 40.0,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 42.4,
+            "Silver Bulletin": 41.4,
+            "The Economist": 39.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.8
+          }
+        },
+        {
+          "date": "2025-11-14",
+          "approve": 41.2,
+          "n": 9,
+          "low": 39.0,
+          "high": 42.7,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.3,
+            "FiftyPlusOne": 39.9,
+            "Race to the WH": 41.2,
+            "Real Clear Politics": 42.4,
+            "Silver Bulletin": 41.3,
+            "The Economist": 39.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.7
+          }
+        },
+        {
+          "date": "2025-11-15",
+          "approve": 41.31,
+          "n": 9,
+          "low": 39.0,
+          "high": 42.3,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 42.3,
+            "FiftyPlusOne": 40.0,
+            "Race to the WH": 41.5,
+            "Real Clear Politics": 42.3,
+            "Silver Bulletin": 41.4,
+            "The Economist": 39.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-11-16",
+          "approve": 41.31,
+          "n": 9,
+          "low": 39.0,
+          "high": 42.3,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 42.3,
+            "FiftyPlusOne": 40.0,
+            "Race to the WH": 41.5,
+            "Real Clear Politics": 42.3,
+            "Silver Bulletin": 41.4,
+            "The Economist": 39.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-11-18",
+          "approve": 41.47,
+          "n": 9,
+          "low": 39.0,
+          "high": 43.0,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 42.4,
+            "FiftyPlusOne": 40.4,
+            "Race to the WH": 41.5,
+            "Real Clear Politics": 43.0,
+            "Silver Bulletin": 41.6,
+            "The Economist": 39.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-11-19",
+          "approve": 41.46,
+          "n": 9,
+          "low": 40.0,
+          "high": 43.1,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.9,
+            "FiftyPlusOne": 40.3,
+            "Race to the WH": 41.3,
+            "Real Clear Politics": 43.1,
+            "Silver Bulletin": 41.5,
+            "The Economist": 40.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.0
+          }
+        },
+        {
+          "date": "2025-11-20",
+          "approve": 41.41,
+          "n": 9,
+          "low": 40.0,
+          "high": 42.7,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.9,
+            "FiftyPlusOne": 40.2,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 42.7,
+            "Silver Bulletin": 41.5,
+            "The Economist": 40.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.0
+          }
+        },
+        {
+          "date": "2025-11-21",
+          "approve": 41.31,
+          "n": 9,
+          "low": 39.8,
+          "high": 42.5,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.9,
+            "FiftyPlusOne": 39.8,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 42.5,
+            "Silver Bulletin": 41.2,
+            "The Economist": 40.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.0
+          }
+        },
+        {
+          "date": "2025-11-22",
+          "approve": 41.31,
+          "n": 9,
+          "low": 39.8,
+          "high": 42.5,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.9,
+            "FiftyPlusOne": 39.8,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 42.5,
+            "Silver Bulletin": 41.2,
+            "The Economist": 40.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.0
+          }
+        },
+        {
+          "date": "2025-11-23",
+          "approve": 41.31,
+          "n": 9,
+          "low": 40.0,
+          "high": 42.7,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.5,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 42.7,
+            "Silver Bulletin": 41.2,
+            "The Economist": 40.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.9
+          }
+        },
+        {
+          "date": "2025-11-24",
+          "approve": 41.31,
+          "n": 9,
+          "low": 40.0,
+          "high": 42.7,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.5,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.3,
+            "Real Clear Politics": 42.7,
+            "Silver Bulletin": 41.3,
+            "The Economist": 40.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.9
+          }
+        },
+        {
+          "date": "2025-11-25",
+          "approve": 41.28,
+          "n": 9,
+          "low": 39.6,
+          "high": 42.8,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.8,
+            "FiftyPlusOne": 39.6,
+            "Race to the WH": 40.6,
+            "Real Clear Politics": 42.8,
+            "Silver Bulletin": 41.4,
+            "The Economist": 40.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-11-26",
+          "approve": 41.06,
+          "n": 9,
+          "low": 38.0,
+          "high": 42.8,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 41.8,
+            "FiftyPlusOne": 39.6,
+            "Race to the WH": 40.6,
+            "Real Clear Politics": 42.8,
+            "Silver Bulletin": 41.4,
+            "The Economist": 38.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-11-29",
+          "approve": 40.84,
+          "n": 9,
+          "low": 38.0,
+          "high": 42.8,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 40.9,
+            "FiftyPlusOne": 39.6,
+            "Race to the WH": 40.3,
+            "Real Clear Politics": 42.8,
+            "Silver Bulletin": 41.2,
+            "The Economist": 38.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.8
+          }
+        },
+        {
+          "date": "2025-11-30",
+          "approve": 40.83,
+          "n": 9,
+          "low": 38.0,
+          "high": 42.7,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 40.9,
+            "FiftyPlusOne": 39.6,
+            "Race to the WH": 40.3,
+            "Real Clear Politics": 42.7,
+            "Silver Bulletin": 41.2,
+            "The Economist": 38.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.8
+          }
+        },
+        {
+          "date": "2025-12-01",
+          "approve": 40.8,
+          "n": 9,
+          "low": 38.0,
+          "high": 42.6,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 40.9,
+            "FiftyPlusOne": 39.6,
+            "Race to the WH": 40.3,
+            "Real Clear Politics": 42.6,
+            "Silver Bulletin": 41.0,
+            "The Economist": 38.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.8
+          }
+        },
+        {
+          "date": "2025-12-03",
+          "approve": 40.67,
+          "n": 9,
+          "low": 38.0,
+          "high": 42.4,
+          "members": {
+            "Ballotpedia": 41.0,
+            "Decision Desk HQ": 40.9,
+            "FiftyPlusOne": 39.6,
+            "Race to the WH": 40.3,
+            "Real Clear Politics": 42.4,
+            "Silver Bulletin": 41.0,
+            "The Economist": 38.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.8
+          }
+        },
+        {
+          "date": "2025-12-04",
+          "approve": 40.67,
+          "n": 9,
+          "low": 38.0,
+          "high": 42.4,
+          "members": {
+            "Ballotpedia": 41.0,
+            "Decision Desk HQ": 40.9,
+            "FiftyPlusOne": 39.6,
+            "Race to the WH": 40.3,
+            "Real Clear Politics": 42.4,
+            "Silver Bulletin": 41.0,
+            "The Economist": 38.0,
+            "The New York Times": 41.0,
+            "VoteHub": 41.8
+          }
+        },
+        {
+          "date": "2025-12-05",
+          "approve": 41.02,
+          "n": 9,
+          "low": 38.0,
+          "high": 42.9,
+          "members": {
+            "Ballotpedia": 41.0,
+            "Decision Desk HQ": 42.6,
+            "FiftyPlusOne": 39.4,
+            "Race to the WH": 40.8,
+            "Real Clear Politics": 42.9,
+            "Silver Bulletin": 41.4,
+            "The Economist": 38.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.1
+          }
+        },
+        {
+          "date": "2025-12-09",
+          "approve": 41.02,
+          "n": 9,
+          "low": 38.0,
+          "high": 42.9,
+          "members": {
+            "Ballotpedia": 41.0,
+            "Decision Desk HQ": 42.6,
+            "FiftyPlusOne": 39.4,
+            "Race to the WH": 40.8,
+            "Real Clear Politics": 42.9,
+            "Silver Bulletin": 41.4,
+            "The Economist": 38.0,
+            "The New York Times": 41.0,
+            "VoteHub": 42.1
+          }
+        },
+        {
+          "date": "2025-12-11",
+          "approve": 42.23,
+          "n": 9,
+          "low": 40.0,
+          "high": 43.9,
+          "members": {
+            "Ballotpedia": 43.0,
+            "Decision Desk HQ": 43.1,
+            "FiftyPlusOne": 40.0,
+            "Race to the WH": 42.1,
+            "Real Clear Politics": 43.9,
+            "Silver Bulletin": 42.4,
+            "The Economist": 41.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.6
+          }
+        },
+        {
+          "date": "2025-12-12",
+          "approve": 42.18,
+          "n": 9,
+          "low": 40.3,
+          "high": 44.0,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 44.0,
+            "FiftyPlusOne": 40.3,
+            "Race to the WH": 41.7,
+            "Real Clear Politics": 43.9,
+            "Silver Bulletin": 42.4,
+            "The Economist": 41.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-12-13",
+          "approve": 42.17,
+          "n": 10,
+          "low": 40.3,
+          "high": 44.0,
+          "members": {
+            "Ballotline": 42.1,
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 44.0,
+            "FiftyPlusOne": 40.3,
+            "Race to the WH": 41.7,
+            "Real Clear Politics": 43.9,
+            "Silver Bulletin": 42.4,
+            "The Economist": 41.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-12-14",
+          "approve": 42.19,
+          "n": 10,
+          "low": 40.1,
+          "high": 44.0,
+          "members": {
+            "Ballotline": 42.1,
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 44.0,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.9,
+            "Real Clear Politics": 43.7,
+            "Silver Bulletin": 42.8,
+            "The Economist": 41.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-12-17",
+          "approve": 42.61,
+          "n": 10,
+          "low": 40.8,
+          "high": 44.2,
+          "members": {
+            "Ballotline": 42.3,
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 44.2,
+            "FiftyPlusOne": 40.8,
+            "Race to the WH": 42.7,
+            "Real Clear Politics": 43.6,
+            "Silver Bulletin": 43.0,
+            "The Economist": 42.0,
+            "The New York Times": 43.0,
+            "VoteHub": 42.5
+          }
+        },
+        {
+          "date": "2025-12-20",
+          "approve": 42.27,
+          "n": 10,
+          "low": 40.8,
+          "high": 43.9,
+          "members": {
+            "Ballotline": 42.0,
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.9,
+            "FiftyPlusOne": 40.8,
+            "Race to the WH": 42.4,
+            "Real Clear Politics": 43.3,
+            "Silver Bulletin": 42.0,
+            "The Economist": 42.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-12-22",
+          "approve": 42.21,
+          "n": 10,
+          "low": 40.5,
+          "high": 43.8,
+          "members": {
+            "Ballotline": 42.0,
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.8,
+            "FiftyPlusOne": 40.5,
+            "Race to the WH": 41.8,
+            "Real Clear Politics": 43.6,
+            "Silver Bulletin": 42.1,
+            "The Economist": 42.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-12-23",
+          "approve": 42.07,
+          "n": 10,
+          "low": 40.1,
+          "high": 43.4,
+          "members": {
+            "Ballotline": 42.0,
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.4,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.8,
+            "Real Clear Politics": 43.0,
+            "Silver Bulletin": 42.1,
+            "The Economist": 42.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-12-25",
+          "approve": 41.74,
+          "n": 10,
+          "low": 39.0,
+          "high": 43.4,
+          "members": {
+            "Ballotline": 42.0,
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.4,
+            "FiftyPlusOne": 40.0,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 43.1,
+            "Silver Bulletin": 42.0,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.5
+          }
+        },
+        {
+          "date": "2025-12-26",
+          "approve": 41.75,
+          "n": 10,
+          "low": 39.0,
+          "high": 43.4,
+          "members": {
+            "Ballotline": 42.0,
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.4,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 43.1,
+            "Silver Bulletin": 42.0,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.5
+          }
+        },
+        {
+          "date": "2025-12-27",
+          "approve": 41.75,
+          "n": 10,
+          "low": 39.0,
+          "high": 43.4,
+          "members": {
+            "Ballotline": 42.0,
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.4,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 43.1,
+            "Silver Bulletin": 42.0,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.5
+          }
+        },
+        {
+          "date": "2025-12-28",
+          "approve": 41.71,
+          "n": 9,
+          "low": 39.0,
+          "high": 43.7,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.7,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 43.1,
+            "Silver Bulletin": 41.8,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-12-30",
+          "approve": 41.71,
+          "n": 9,
+          "low": 39.0,
+          "high": 43.7,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 43.7,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 43.1,
+            "Silver Bulletin": 41.8,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
+          "date": "2025-12-31",
+          "approve": 41.84,
+          "n": 9,
+          "low": 39.0,
+          "high": 44.2,
+          "members": {
+            "Ballotpedia": 42.0,
+            "Decision Desk HQ": 44.2,
+            "FiftyPlusOne": 40.1,
+            "Race to the WH": 41.4,
+            "Real Clear Politics": 43.4,
+            "Silver Bulletin": 42.2,
+            "The Economist": 39.0,
+            "The New York Times": 42.0,
+            "VoteHub": 42.3
+          }
+        },
+        {
           "date": "2026-01-01",
           "approve": 41.9,
           "n": 9,
@@ -3755,29 +6076,29 @@
     "h": 190.0,
     "lines": {
       "model_input": {
-        "polyline": "66.4,31.3 73.2,29.9 80.1,37.9 86.9,47.0 93.8,46.4 100.7,45.3 107.5,52.4 114.4,60.3 121.2,70.4 128.1,71.2 135.0,70.3 141.8,60.4 148.7,61.1 155.6,68.2 162.4,66.9 169.3,65.3 176.1,69.9 183.0,74.3 189.9,68.9 196.7,65.2 203.6,73.3 210.5,81.7 217.3,92.4 224.2,80.1 231.0,70.9 237.9,89.0 244.8,80.0 251.6,74.3 258.5,72.6 265.4,74.0 272.2,79.8 279.1,84.3 285.9,85.1 292.8,83.7 299.7,82.7 306.5,85.0 313.4,87.4 320.3,97.3 327.1,99.8 334.0,97.4 340.8,91.8 347.7,87.7 354.6,88.6 361.4,92.3 368.3,101.2 375.2,86.8 382.0,85.8 388.9,97.8 395.7,104.2 402.6,98.4 409.5,109.1 416.3,108.0 423.2,98.4 430.1,102.2 436.9,108.6 443.8,109.2 450.6,113.6 457.5,113.4 464.4,108.8 471.2,109.1 478.1,122.6 485.0,125.2 491.8,116.2 498.7,113.5 505.5,127.0 512.4,127.0 519.3,113.9 526.1,111.4 533.0,115.0 539.8,117.8 546.7,119.2 553.6,121.3 560.4,118.5 567.3,121.8 574.2,126.1 581.0,124.3 587.9,129.9 594.7,129.7 601.6,130.8 608.5,135.8 615.3,127.5 622.2,123.3 629.1,155.7 632.0,161.7",
+        "polyline": "66.4,33.1 73.2,31.7 80.1,39.6 86.9,48.6 93.8,48.0 100.7,46.9 107.5,53.9 114.4,61.7 121.2,71.6 128.1,72.5 135.0,71.6 141.8,61.8 148.7,62.5 155.6,69.5 162.4,68.2 169.3,66.6 176.1,71.1 183.0,75.5 189.9,70.2 196.7,66.6 203.6,74.5 210.5,82.8 217.3,93.4 224.2,81.2 231.0,72.1 237.9,90.0 244.8,81.1 251.6,75.6 258.5,73.9 265.4,75.2 272.2,81.0 279.1,85.4 285.9,86.2 292.8,84.8 299.7,83.9 306.5,86.1 313.4,88.4 320.3,98.2 327.1,100.7 334.0,98.4 340.8,92.8 347.7,88.8 354.6,89.7 361.4,93.3 368.3,102.0 375.2,87.9 382.0,86.9 388.9,98.8 395.7,105.0 402.6,99.3 409.5,109.9 416.3,108.8 423.2,99.3 430.1,103.0 436.9,109.3 443.8,110.0 450.6,114.3 457.5,114.1 464.4,109.6 471.2,109.9 478.1,123.2 485.0,125.8 491.8,116.9 498.7,114.2 505.5,127.5 512.4,127.5 519.3,114.6 526.1,112.1 533.0,115.7 539.8,118.4 546.7,119.8 553.6,121.9 560.4,119.2 567.3,122.4 574.2,126.6 581.0,124.9 587.9,130.4 594.7,130.2 601.6,131.3 608.5,136.2 615.3,128.0 622.2,123.9 629.1,155.9 632.0,161.8",
         "label": "Adults-sample polls (what the models use)",
         "end": {
           "x": 632.0,
-          "y": 161.7,
+          "y": 161.8,
           "v": 31.38
         }
       },
       "field": {
-        "polyline": "66.4,18.3 73.2,19.0 80.1,20.1 86.9,21.7 93.8,24.7 100.7,25.9 107.5,37.6 114.4,41.5 121.2,44.6 128.1,50.8 135.0,42.3 141.8,30.7 148.7,30.5 155.6,27.3 162.4,22.3 169.3,33.8 176.1,35.3 183.0,34.0 189.9,37.0 196.7,33.3 203.6,44.0 210.5,50.5 217.3,50.9 224.2,46.8 231.0,41.5 237.9,43.7 244.8,44.6 251.6,47.3 258.5,46.5 265.4,47.5 272.2,48.7 279.1,49.3 285.9,45.5 292.8,42.3 299.7,47.9 306.5,63.1 313.4,66.4 320.3,66.4 327.1,69.7 334.0,67.9 340.8,64.4 347.7,58.9 354.6,62.3 361.4,62.4 368.3,58.7 375.2,61.9 382.0,67.0 388.9,69.8 395.7,69.9 402.6,70.4 409.5,72.1 416.3,71.8 423.2,63.3 430.1,63.2 436.9,69.3 443.8,79.7 450.6,83.6 457.5,81.1 464.4,73.5 471.2,75.8 478.1,86.7 485.0,88.1 491.8,88.0 498.7,87.9 505.5,93.8 512.4,92.6 519.3,86.7 526.1,89.9 533.0,90.3 539.8,85.8 546.7,83.6 553.6,78.6 560.4,77.8 567.3,84.5 574.2,90.7 581.0,89.3 587.9,87.6 594.7,92.4 601.6,89.3 608.5,88.0 615.3,88.8 622.2,92.3 629.1,98.9 632.0,100.8",
+        "polyline": "66.4,20.2 73.2,20.9 80.1,22.0 86.9,23.6 93.8,26.6 100.7,27.8 107.5,39.3 114.4,43.1 121.2,46.2 128.1,52.3 135.0,43.9 141.8,32.5 148.7,32.3 155.6,29.1 162.4,24.2 169.3,35.6 176.1,37.0 183.0,35.7 189.9,38.7 196.7,35.1 203.6,45.6 210.5,52.0 217.3,52.4 224.2,48.4 231.0,43.1 237.9,45.3 244.8,46.2 251.6,48.9 258.5,48.1 265.4,49.1 272.2,50.2 279.1,50.8 285.9,47.1 292.8,43.9 299.7,49.4 306.5,64.5 313.4,67.7 320.3,67.7 327.1,71.0 334.0,69.2 340.8,65.7 347.7,60.3 354.6,63.7 361.4,63.8 368.3,60.1 375.2,63.3 382.0,68.3 388.9,71.1 395.7,71.2 402.6,71.7 409.5,73.4 416.3,73.0 423.2,64.7 430.1,64.6 436.9,70.6 443.8,80.9 450.6,84.8 457.5,82.2 464.4,74.8 471.2,77.0 478.1,87.8 485.0,89.2 491.8,89.1 498.7,88.9 505.5,94.8 512.4,93.6 519.3,87.8 526.1,90.9 533.0,91.3 539.8,86.9 546.7,84.8 553.6,79.8 560.4,78.9 567.3,85.6 574.2,91.7 581.0,90.3 587.9,88.6 594.7,93.4 601.6,90.3 608.5,89.0 615.3,89.8 622.2,93.3 629.1,99.8 632.0,101.6",
         "label": "All polls, every population",
         "end": {
           "x": 632.0,
-          "y": 100.8,
+          "y": 101.6,
           "v": 38.72
         }
       },
       "aggregate": {
-        "polyline": "366.3,74.3 367.3,74.8 369.3,74.8 371.2,73.9 372.2,74.5 374.2,74.5 377.1,75.8 379.1,76.4 380.1,76.8 381.0,78.5 385.0,81.8 385.9,84.4 386.9,84.0 389.9,83.6 391.8,83.6 392.8,83.2 393.8,83.2 394.8,82.0 396.7,82.2 398.7,82.2 399.7,77.9 400.6,80.3 401.6,80.7 402.6,80.7 405.5,82.0 406.5,83.5 407.5,84.1 408.5,112.5 412.4,87.7 413.4,88.6 415.3,85.5 416.3,84.1 417.3,84.7 418.3,86.6 419.3,85.8 420.2,86.1 421.2,86.1 422.2,82.4 425.2,83.1 426.1,83.7 429.1,82.7 432.0,81.7 433.0,82.6 434.0,84.4 435.0,82.7 435.9,82.7 438.9,83.0 440.8,86.9 442.8,87.5 444.8,88.0 445.7,87.1 446.7,90.0 447.7,90.8 448.7,91.4 449.7,91.6 452.6,94.0 453.6,95.4 455.5,96.6 456.5,99.0 459.5,98.0 471.2,93.6 472.2,94.3 474.2,94.3 475.1,102.7 476.1,102.7 477.1,102.7 478.1,102.7 479.1,99.9 480.0,99.9 482.0,99.3 484.0,99.2 485.0,101.8 486.9,102.2 487.9,102.4 488.9,103.4 490.8,103.8 491.8,103.8 494.8,104.5 495.7,105.1 496.7,105.1 500.6,105.3 501.6,105.3 503.6,105.2 507.5,104.7 509.5,104.7 514.4,104.7 516.3,106.3 518.3,104.5 519.3,104.5 521.2,104.5 522.2,104.5 525.1,104.5 532.0,104.2 533.0,97.0 539.8,97.0 545.7,96.8 551.6,96.8 553.6,97.5 561.4,98.1 565.3,98.1 567.3,100.5 572.2,100.5 573.2,109.6 575.1,109.6 576.1,109.6 578.1,109.6 580.0,108.4 586.9,108.4 589.8,110.2 590.8,111.0 594.7,111.0 595.7,111.0 597.7,111.0 598.7,111.0 599.6,109.4 600.6,109.4 601.6,109.4 602.6,109.4 603.6,106.7 604.6,106.7 605.5,106.7 606.5,106.7 607.5,106.7 608.5,106.7 609.5,106.7 610.4,108.1 611.4,109.7 612.4,110.6 613.4,111.5 614.4,112.7 615.3,111.7 616.3,111.7 617.3,111.9 618.3,111.9 619.3,111.9 620.2,111.9 621.2,111.7 622.2,107.1 623.2,107.1 624.2,109.0 625.1,113.0 626.1,116.2 627.1,116.6 628.1,116.6 629.1,116.6 630.0,116.7 631.0,112.6 632.0,112.6",
+        "polyline": "62.4,19.8 65.4,19.8 66.4,19.8 67.3,22.7 69.3,22.7 70.3,23.9 71.3,19.0 72.2,18.2 73.2,18.2 74.2,18.2 75.2,18.2 76.2,22.3 77.1,23.1 78.1,27.2 79.1,27.2 80.1,30.5 81.1,28.9 82.0,28.9 83.0,28.9 84.0,31.3 85.0,31.3 86.9,31.3 88.9,29.7 89.9,30.5 90.9,29.3 91.8,29.3 92.8,31.3 94.8,32.1 95.8,30.5 97.7,31.7 98.7,31.7 99.7,35.0 101.6,34.6 103.6,36.6 104.6,40.7 107.5,43.6 109.5,43.6 110.5,43.6 111.4,43.6 112.4,43.6 113.4,43.6 115.4,43.6 116.3,42.6 117.3,44.7 118.3,46.7 120.3,51.2 121.2,51.2 122.2,51.2 123.2,54.9 124.2,56.6 126.2,56.6 131.1,56.6 132.0,56.1 133.0,56.1 136.0,55.2 137.9,55.2 138.9,55.2 141.8,55.2 144.8,50.3 147.7,43.8 150.7,44.6 155.6,44.6 158.5,44.8 161.4,45.1 163.4,44.6 166.3,48.2 173.2,48.2 175.2,48.4 176.1,48.4 177.1,48.4 179.1,48.4 182.0,53.0 187.9,53.0 189.9,53.1 196.7,53.1 197.7,53.1 201.6,59.0 202.6,59.0 204.6,58.3 205.6,57.5 207.5,59.4 208.5,59.4 212.4,55.3 216.3,57.5 220.3,57.5 221.2,61.1 224.2,61.1 230.1,61.1 233.0,61.1 237.9,56.7 238.9,56.7 240.8,56.7 244.8,56.7 250.7,60.1 252.6,59.7 261.4,62.0 264.4,59.8 265.4,58.4 266.3,58.1 267.3,58.1 269.3,61.3 273.2,64.3 277.1,64.3 279.1,65.1 282.0,65.6 284.0,68.5 286.9,66.4 291.8,63.2 297.7,66.3 302.6,66.0 303.6,67.7 304.6,67.7 305.6,67.7 308.5,70.1 309.5,74.3 311.4,74.5 312.4,77.0 315.4,76.7 316.3,77.4 317.3,79.8 318.3,81.0 319.3,81.3 320.3,80.4 321.2,80.4 323.2,79.1 324.2,79.2 325.2,79.6 326.1,80.4 327.1,80.4 328.1,80.4 329.1,80.4 330.1,80.7 331.0,82.5 334.0,84.3 335.0,84.3 335.9,84.6 337.9,85.7 338.9,85.7 339.9,82.8 343.8,82.8 345.7,72.9 346.7,73.3 347.7,73.4 348.7,73.2 351.6,69.8 354.6,72.5 356.5,73.0 357.5,74.2 359.5,76.9 360.4,76.8 361.4,76.8 362.4,77.1 364.4,77.1 365.4,76.1 366.3,75.6 367.3,76.0 369.3,76.0 371.2,75.2 372.2,75.7 374.2,75.7 377.1,77.0 379.1,77.6 380.1,78.0 381.0,79.7 385.0,83.0 385.9,85.5 386.9,85.1 389.9,84.7 391.8,84.8 392.8,84.3 393.8,84.3 394.8,83.1 396.7,83.3 398.7,83.3 399.7,79.1 400.6,81.5 401.6,81.8 402.6,81.8 405.5,83.1 406.5,84.6 407.5,85.2 408.5,113.3 412.4,88.8 413.4,89.7 415.3,86.6 416.3,85.2 417.3,85.8 418.3,87.7 419.3,86.9 420.2,87.1 421.2,87.1 422.2,83.5 425.2,84.2 426.1,84.8 429.1,83.8 432.0,82.8 433.0,83.7 434.0,85.5 435.0,83.8 435.9,83.8 438.9,84.1 440.8,88.0 442.8,88.5 444.8,89.1 445.7,88.2 446.7,91.0 447.7,91.8 448.7,92.4 449.7,92.6 452.6,95.0 453.6,96.4 455.5,97.5 456.5,99.9 459.5,98.9 471.2,94.6 472.2,95.2 474.2,95.2 475.1,103.5 476.1,103.5 477.1,103.5 478.1,103.5 479.1,100.8 480.0,100.8 482.0,100.2 484.0,100.1 485.0,102.7 486.9,103.1 487.9,103.3 488.9,104.3 490.8,104.7 491.8,104.7 494.8,105.3 495.7,105.9 496.7,105.9 500.6,106.1 501.6,106.1 503.6,106.0 507.5,105.5 509.5,105.5 514.4,105.5 516.3,107.1 518.3,105.3 519.3,105.3 521.2,105.3 522.2,105.3 525.1,105.3 532.0,105.0 533.0,98.0 539.8,98.0 545.7,97.7 551.6,97.7 553.6,98.4 561.4,99.0 565.3,99.0 567.3,101.4 572.2,101.4 573.2,110.3 575.1,110.3 576.1,110.3 578.1,110.3 580.0,109.2 586.9,109.2 589.8,111.0 590.8,111.8 594.7,111.8 595.7,111.8 597.7,111.8 598.7,111.8 599.6,110.2 600.6,110.2 601.6,110.2 602.6,110.2 603.6,107.5 604.6,107.5 605.5,107.5 606.5,107.5 607.5,107.5 608.5,107.5 609.5,107.5 610.4,108.9 611.4,110.5 612.4,111.4 613.4,112.2 614.4,113.4 615.3,112.5 616.3,112.5 617.3,112.6 618.3,112.6 619.3,112.6 620.2,112.6 621.2,112.5 622.2,107.9 623.2,107.9 624.2,109.8 625.1,113.8 626.1,116.9 627.1,117.3 628.1,117.3 629.1,117.3 630.0,117.4 631.0,113.4 632.0,113.4",
         "label": "Average of the published aggregators",
         "end": {
           "x": 632.0,
-          "y": 112.6,
+          "y": 113.4,
           "v": 37.29
         }
       },
@@ -3785,62 +6106,62 @@
         "marks": [
           {
             "x": 34.0,
-            "y": 32.0,
+            "y": 33.8,
             "v": 47.0
           },
           {
             "x": 53.6,
-            "y": 48.6,
+            "y": 50.2,
             "v": 45.0
           },
           {
             "x": 81.1,
-            "y": 65.2,
+            "y": 66.6,
             "v": 43.0
           },
           {
             "x": 109.5,
-            "y": 56.9,
+            "y": 58.4,
             "v": 44.0
           },
           {
             "x": 142.8,
-            "y": 65.2,
+            "y": 66.6,
             "v": 43.0
           },
           {
             "x": 174.2,
-            "y": 90.1,
+            "y": 91.1,
             "v": 40.0
           },
           {
             "x": 205.6,
-            "y": 115.0,
+            "y": 115.7,
             "v": 37.0
           },
           {
             "x": 235.0,
-            "y": 90.1,
+            "y": 91.1,
             "v": 40.0
           },
           {
             "x": 261.4,
-            "y": 90.1,
+            "y": 91.1,
             "v": 40.0
           },
           {
             "x": 290.8,
-            "y": 81.8,
+            "y": 83.0,
             "v": 41.0
           },
           {
             "x": 330.1,
-            "y": 123.3,
+            "y": 123.9,
             "v": 36.0
           },
           {
             "x": 349.7,
-            "y": 123.3,
+            "y": 123.9,
             "v": 36.0
           }
         ],
@@ -3850,15 +6171,15 @@
     "yticks": [
       {
         "v": 35,
-        "y": 131.6
+        "y": 132.1
       },
       {
         "v": 40,
-        "y": 90.1
+        "y": 91.1
       },
       {
         "v": 45,
-        "y": 48.6
+        "y": 50.2
       }
     ],
     "xticks": [
@@ -3888,6 +6209,6 @@
       }
     ],
     "y_lo": 30.4,
-    "y_hi": 49.6
+    "y_hi": 49.9
   }
 }
