@@ -1767,7 +1767,62 @@ def main(argv=None) -> int:
     for p in write(a.cycle, averages, by_source, suppressed, ratings,
                    registry=_load_reg(a.cycle)):
         print(f"  wrote {p.relative_to(REPO_ROOT)}")
+    for p in write_pending(a.cycle, rows, ratings):
+        print(f"  wrote {p.relative_to(REPO_ROOT)}  (PRIVATE, not yet public)")
     return 0
+
+
+PENDING_FIELDS = ["snapshot_date", "source_id", "publication", "line", "race_id",
+                  "chamber", "state", "district", "quantity", "value", "unit",
+                  "as_of", "provenance"]
+
+
+def write_pending(cycle: int, rows: list[dict], ratings: list[dict]) -> list[Path]:
+    """The not-yet-public tier of the archive.
+
+    Individual forecasts from sources whose terms do not yet allow
+    republication by name, in the same shape as the public
+    forecasts_by_source.csv, plus the race ratings. Written under
+    model_private/, which the daily job pushes to the private archive
+    repository and never to the public one. When a forecaster gives
+    permission, their rows move to the public release unchanged.
+    """
+    out_dir = DATA_DIR / str(cycle) / "model_private" / "pending"
+    keep, seen = [], set()
+    for r in rows:
+        if r.get("publication") == "individual":
+            continue                          # already public by name
+        sid = r["source_id"]
+        if not facets.in_archive(sid):
+            continue
+        got = facets.on_line(sid, r["category"], r.get("race_id", ""))
+        if got is None or got[0] == "reference" or got[1] == "class":
+            continue
+        if r["quantity"] in NEVER_PUBLISH or r["quantity"] in NOT_A_FORECAST:
+            continue
+        rec = {**r, "line": got[1], "as_of": r.get("as_of") or r["snapshot_date"],
+               "provenance": r.get("provenance") or "captured"}
+        key = tuple(rec.get(k, "") for k in PENDING_FIELDS)
+        if key in seen:
+            continue
+        seen.add(key)
+        keep.append(rec)
+    written = []
+    for name, data, fields in (
+            ("forecasts_by_source_pending.csv", keep, PENDING_FIELDS),
+            ("ratings_pending.csv", ratings,
+             list(ratings[0].keys()) if ratings else [])):
+        if not data:
+            continue
+        out_dir.mkdir(parents=True, exist_ok=True)
+        path = out_dir / name
+        with path.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore",
+                               lineterminator="\n")
+            w.writeheader()
+            w.writerows(data)
+        written.append(path)
+    return written
 
 
 if __name__ == "__main__":

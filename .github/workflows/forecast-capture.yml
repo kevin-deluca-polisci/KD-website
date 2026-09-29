@@ -307,6 +307,8 @@ jobs:
           python3 forecast/class/run_class.py $CLASS_ARGS \
             || echo "::warning::class model did not run; the class line keeps its last value"
           python3 forecast/collect/publish.py   --cycle "$CYCLE"
+          # The shareable copy: forecast/archive/<cycle>/, rebuilt from derived/.
+          python3 forecast/collect/release.py   --cycle "$CYCLE"
  
       # Runs AFTER the models, because it carries a file they write, and
       # BEFORE the public commit, so a failure here is loud rather than
@@ -363,12 +365,18 @@ jobs:
           # An explicit allowlist, never `git add -A`. gitignore is the first
           # line of defence, not the only one — model_private/ was once tracked
           # and pushed because the live .gitignore had drifted.
-          git add "forecast/data/${CYCLE}/raw_manifest.csv" \
-                  "forecast/data/${CYCLE}/manifest.csv" \
-                  "forecast/data/${CYCLE}/derived" \
-                  "forecast/data/${CYCLE}/site.json" \
-                  "assets/forecast_${CYCLE}.json" \
-                  "forecast/class/output" 2>/dev/null || true
+          # One path at a time: a single `git add` with a path that does not
+          # exist yet (say, the class output on a day the model failed) adds
+          # nothing at all.
+          for p in "forecast/data/${CYCLE}/raw_manifest.csv" \
+                   "forecast/data/${CYCLE}/manifest.csv" \
+                   "forecast/data/${CYCLE}/derived" \
+                   "forecast/data/${CYCLE}/site.json" \
+                   "assets/forecast_${CYCLE}.json" \
+                   "forecast/class/output" \
+                   "forecast/archive/${CYCLE}"; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
           git diff --staged --quiet && { echo "nothing to commit"; exit 0; }
           git commit -m "forecast: daily update $(date -u +%Y-%m-%d)"
           for i in 1 2 3; do

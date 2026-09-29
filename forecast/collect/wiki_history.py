@@ -386,7 +386,11 @@ def main(argv=None) -> int:
         print(f"\n  next: python3 forecast/collect/parse.py --cycle {a.cycle} --all")
         print("        every recovered day parses with the existing reader, and")
         print("        its rows land dated to the revision, provenance=archival")
-    return 0 if total.get("written") or a.dry_run else 1
+    # Success means nothing is left to do, not that something was written:
+    # a re-run over a window that is already complete must not fail the job.
+    if a.dry_run or total.get("written"):
+        return 0
+    return 1 if (failed or left > 0 or total.get("stopped_on_budget")) else 0
 
 
 if __name__ == "__main__":

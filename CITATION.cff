@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use the U.S. Election Forecast Archive, please cite it as below."
+type: dataset
+title: "U.S. Election Forecast Archive: 2026 Midterm Elections"
+version: "0.1"
+date-released: "2026-09-29"
+authors:
+  - family-names: "DeLuca"
+    given-names: "Kevin"
+    affiliation: "Yale University"
+license: CC-BY-4.0
+url: "https://github.com/kevin-deluca-polisci/KD-website/tree/main/forecast/archive/2026"
+repository-code: "https://github.com/kevin-deluca-polisci/KD-website"
+abstract: >-
+  Daily forecasts of the 2026 U.S. House and Senate elections from polling
+  averages, prediction markets, professional forecasters and published academic
+  models, with the averages shown on the Election Forecast Tracker.
+keywords:
+  - elections
+  - forecasting
+  - 2026 midterm elections
+  - prediction markets
+  - polling
