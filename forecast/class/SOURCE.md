@@ -35,6 +35,10 @@ It runs every day in the capture workflow. Past dates can be recomputed with
 `--backfill`. Those use the approval data available on each date but today's
 FRED data. The model stops updating after November 1, 2026.
 
+Versions of the national equation that have already been tested (consumer
+sentiment, income, gas, approval only) and what was concluded are in
+`NATIONAL_MODEL_TRIALS.md`.
+
 ## Outputs (`output/`)
 
 | File | What it is |
