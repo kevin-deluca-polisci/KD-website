@@ -5,8 +5,7 @@ averages, prediction markets, professional forecasters and published academic
 models, collected by Kevin DeLuca (Yale University) for PLSC 2219.
 
 **Version 0.1 (preliminary).** These files are updated every day until the
-election. A final version, with a DOI and the forecasts that cannot be
-published yet, will be released after the election.
+election. A final version with a DOI will be released after the election.
 
 The data are shown on the Election Forecast Tracker:
 https://kevinmdeluca.com/forecast/
@@ -24,9 +23,9 @@ Please also cite the original forecasters when you use their numbers.
 |---|---|
 | `timeline.csv` | The daily national series on the tracker's chart: one row per date, line and quantity. |
 | `category_averages.csv` | Every published average, by date, line, race and quantity. |
-| `suppressed.csv` | Averages that were computed but are withheld (see "What is withheld"). Same columns, with the values left blank. |
+| `suppressed.csv` | Averages held back under the three-forecast rule (see below). Same columns, with the values left blank. |
 | `forecasts_by_source.csv` | Individual forecasts from sources whose terms allow republication by name. |
-| `approval.csv` | Daily average of the published presidential approval aggregators. An input, not a forecast. |
+| `approval.csv` | Daily average of the published presidential approval aggregators, used as a model input. |
 | `files.csv` | Row counts and SHA-256 hashes for the files above. |
 
 ## Coverage
@@ -48,7 +47,7 @@ Each forecast belongs to one line, based on who made it.
 | `polling` | National: polling averages from Silver Bulletin, RealClearPolitics, Decision Desk HQ, FiftyPlusOne, VoteHub and Race to the WH (mostly as listed on Wikipedia), plus a simple average of individual generic ballot polls. Senate races: the polling averages listed in each race's Wikipedia article. |
 | `market` | Kalshi, Polymarket, PredictIt. |
 | `professional` | Race to the WH. More forecasters will be added. |
-| `academic` | Bafumi, Erikson and Wlezien (generic ballot); a referendum model (Tufte; Lewis-Beck and Tien); Lockerbie (economic pessimism); Lewis-Beck and Quinlan (political history); Ray Fair's House vote equation. Except for Fair, these are published models run by this archive on current data, not the authors' own forecasts. |
+| `academic` | Bafumi, Erikson and Wlezien (generic ballot); a referendum model (Tufte; Lewis-Beck and Tien); Lockerbie (economic pessimism); Lewis-Beck and Quinlan (political history); Ray Fair's House vote equation. Except for Fair, this archive runs the published models on current data. |
 
 `forecasts_by_source.csv` also includes inputs (`line` = `input`): economic
 data from FRED, past election returns from the MIT Election Data and Science
@@ -71,7 +70,7 @@ Lab, and presidential approval polling from Wikipedia.
     rows, the chance of controlling the chamber (218 House seats; 51 Senate
     seats, since a 50-50 Senate is Republican control).
   - `seats_D` (`seats`): expected Democratic seats in the chamber. Senate
-    totals include seats not up in 2026.
+    totals are for the full chamber of 100.
 
 **`category_averages.csv` and `suppressed.csv`**
 
@@ -79,19 +78,19 @@ Lab, and presidential approval polling from Wikipedia.
 - `mean`, `min`, `max`, `sd`: the average of the forecasts in the line and
   their spread. Each source counts once.
 - `n_sources`: number of forecasts in the average. `n_gated`: how many of
-  them come from sources whose terms do not allow republication by name.
+  them come from sources that restrict republication by name.
 - `n_retrospective`: how many were computed afterward for a past date.
-- `partial`, `n_withheld`: `partial` = 1 marks an average of only the openly
-  publishable sources in a cell whose full average is withheld;
-  `n_withheld` is how many forecasts were left out.
+- `partial`, `n_withheld`: `partial` = 1 marks an average of only the sources
+  that can be named, for a cell whose full average is held back;
+  `n_withheld` is the number of other forecasts in the full average.
 - `tier`: `open` if every forecast in the average can be published by name,
   `gated` otherwise.
 - `display`: `ok` (three or more forecasts), `thin` (two) or `single` (one).
 - `sole_source`: the source, when there is only one and it can be named.
 - `oldest_as_of`, `n_carried`: the publication date of the oldest forecast
-  in the average, and how many forecasts were carried forward from an
-  earlier day because the source had not updated.
-- `reason` (`suppressed.csv` only): why the average is withheld.
+  in the average, and how many forecasts were carried forward from the
+  source's most recent earlier forecast.
+- `reason` (`suppressed.csv` only): why the average is held back.
 
 **`forecasts_by_source.csv`**
 
@@ -137,9 +136,9 @@ The collection and processing code is in this repository under
 ## Assumptions and processing
 
 - **Averages.** A line's value is the simple mean of the forecasts in it on
-  that date, one value per source. If a source did not update on a day, its
-  latest earlier value is used (`n_carried`). When a source is added or stops
-  updating, the average can move even if no forecast changed.
+  that date, one value per source, using each source's most recent forecast
+  as of that date (`n_carried`). The average also moves when a source is
+  added or stops updating.
 - **Seat counts from a national margin.** Some sources publish only a
   national House vote margin (the polling averages and most academic models).
   For those, this archive computes seat counts and chances of control: each
@@ -147,11 +146,9 @@ The collection and processing code is in this repository under
   that seat's partisan lean, with a normal error, simulated 20,000 times with
   one national error shared by all races. Senate state lean is estimated from
   past election returns; House district lean from district-level election
-  results on the current lines. These seat counts can differ from a
-  forecaster's own.
+  results on the current lines.
 - **Race-level polling.** A Senate race's polling value is the average of
-  the polling averages listed in that race's Wikipedia article. The national
-  polling average is never used as a race's polling number.
+  the polling averages listed in that race's Wikipedia article.
 - **District maps.** Seat counts use the district map in force on each date.
   Several states redrew their maps in 2025 and 2026; Missouri's 2025 map was
   in force from 2025-09-28 until the U.S. Supreme Court blocked it on
@@ -161,20 +158,13 @@ The collection and processing code is in this repository under
   with inputs collected here (approval, income, the generic ballot), except
   the referendum model, which is refit on past midterms.
 
-## What is withheld
+## The three-forecast rule
 
-Some forecasters allow their numbers to be collected but not republished
-during the election. Their forecasts are used only inside averages, and an
-average that includes any of them is published only when at least three such
-forecasts are in it, so that no single forecast can be worked out from it.
-Withheld averages are listed in `suppressed.csv`.
-
-The individual forecasts from these sources, and forecasters added later, are
-kept separately and will be released with the final version once
-permission is given.
-
-Not included: race ratings (collected, not yet released), endorsements, and
-the PLSC 2219 class model.
+Some forecasters allow their numbers to be collected but restrict
+republication during the election. Their forecasts are used inside averages,
+and an average that includes any of them is published once at least three
+such forecasts are in it. Averages below that number are listed in
+`suppressed.csv`.
 
 ## License
 
