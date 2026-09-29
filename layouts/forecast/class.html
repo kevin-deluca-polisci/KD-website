@@ -1,0 +1,325 @@
+{{/* The PLSC 2219 class model. Everything comes from $d.class_page, built by
+     charts.build_class_page() from forecast/class/output. Chart geometry is
+     computed in Python (pixels in a 360 x 170 viewBox); this only draws. */}}
+{{- $d := resources.Get "forecast_2026.json" | transform.Unmarshal -}}
+{{- $c := $d.class_page -}}
+{{ partial "forecast/head.html" (dict "page" . "d" $d) }}
+{{ partial "forecast/nav.html" (dict "page" . "d" $d) }}
+
+<style>
+  .cp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px 26px}
+  .cp-chart h3{font-size:.92em;margin:0 0 4px;font-weight:600}
+  .cp-chart svg{width:100%;height:auto;display:block;overflow:visible}
+  .cp-wrap{position:relative}
+  .cp-tip{position:absolute;top:4px;pointer-events:none;background:var(--surface);
+          border:1px solid var(--border-strong);border-radius:6px;padding:4px 8px;
+          font-size:.78em;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+  .cp-tip b{font-weight:650}
+  .cp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+  .cp-stat .big{font-size:2.1em}
+  .cp-eq{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+         background:var(--bg);border:1px solid var(--border);border-radius:6px;
+         padding:8px 12px;margin:8px 0 10px;overflow-x:auto;white-space:nowrap}
+  .cp-bar-d{fill:var(--D)} .cp-bar-r{fill:var(--R)}
+  svg [hidden]{display:none}
+</style>
+
+<div class="wrap viz">
+{{ if not $c }}
+  <div class="card"><h2>Class model</h2>
+    <p class="sub">The class model has not been run yet.</p></div>
+{{ else }}
+  {{- $l := $c.latest -}}
+  {{- $in := $c.inputs -}}
+
+  <!-- ============ headline ============ -->
+  <div class="card">
+    <h2>PLSC 2219 class model</h2>
+    <p class="sub">A forecast of every 2026 House and Senate race, built by the
+       class in problem sets 4 through 7. It uses presidential approval, the
+       economy and each seat's partisan lean. It does not use polls. As of
+       <b>{{ $l.as_of }}</b>.</p>
+    <div class="cp-stats">
+      <div class="cp-stat">
+        <div class="muted">Chance Democrats win the House</div>
+        <div class="big">{{ printf "%.0f%%" (mul (float $l.p_house) 100) }}</div>
+        <div class="muted">{{ $l.house_seats_median }} seats (80% range {{ $l.house_lo80 }}–{{ $l.house_hi80 }}). 218 for a majority.</div>
+      </div>
+      <div class="cp-stat">
+        <div class="muted">Chance Democrats win the Senate</div>
+        <div class="big">{{ printf "%.0f%%" (mul (float $l.p_senate) 100) }}</div>
+        <div class="muted">{{ $l.senate_seats_median }} seats (80% range {{ $l.senate_lo80 }}–{{ $l.senate_hi80 }}). 51 for a majority.</div>
+      </div>
+      <div class="cp-stat">
+        <div class="muted">Chance Democrats win both</div>
+        <div class="big">{{ printf "%.0f%%" (mul (float $l.p_both) 100) }}</div>
+      </div>
+      <div class="cp-stat">
+        <div class="muted">National Democratic share of the House vote</div>
+        <div class="big">{{ printf "%.1f%%" (float $l.nat_dem_share) }}</div>
+        <div class="muted">Two-party vote.</div>
+      </div>
+    </div>
+    <p class="thin-note">The model stops updating on November 1, 2026. The
+       forecast as of that date is final.</p>
+  </div>
+
+  <!-- ============ charts over time ============ -->
+  <div class="card">
+    <h2>Over time</h2>
+    <p class="sub">The model is re-run every day with that day's inputs. Only the
+       national inputs change, so every race moves together.
+       {{- with $c.recomputed_through }} Values through {{ . }} were computed
+       afterward, using the approval average available on each date and current
+       economic data.{{ end }}</p>
+    <div class="cp-grid">
+      {{- range $p := $c.panels }}
+      <div class="cp-chart">
+        <h3>{{ $p.title }}</h3>
+        <div class="cp-wrap">
+        <svg viewBox="0 0 360 170" role="img" aria-label="{{ $p.title }} over time" data-cp>
+          {{- range $p.y_ticks }}
+          <line class="gridline" x1="{{ $p.plot.l }}" x2="{{ $p.plot.r }}" y1="{{ .y }}" y2="{{ .y }}"/>
+          <text class="tick" x="{{ sub $p.plot.l 6 }}" y="{{ add .y 4 }}" text-anchor="end">{{ .label }}</text>
+          {{- end }}
+          {{- with $p.ref_y }}
+          <line class="baseline" x1="{{ $p.plot.l }}" x2="{{ $p.plot.r }}" y1="{{ . }}" y2="{{ . }}"/>
+          {{- end }}
+          {{- with $p.band }}
+          <polygon points="{{ . }}" fill="var(--c-class)" opacity=".16"/>
+          {{- end }}
+          <polyline points="{{ $p.line }}" fill="none" stroke="var(--c-class)"
+                    stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="{{ $p.last.x }}" cy="{{ $p.last.y }}" r="4" fill="var(--c-class)"
+                  stroke="var(--surface)" stroke-width="2"/>
+          {{- range $p.date_ticks }}
+          <text class="tick" x="{{ .x }}" y="{{ add $p.plot.b 17 }}" text-anchor="{{ .anchor }}">{{ .label }}</text>
+          {{- end }}
+          <g data-cross hidden>
+            <line class="crosshair" y1="{{ $p.plot.t }}" y2="{{ $p.plot.b }}"/>
+            <circle r="4" fill="var(--c-class)" stroke="var(--surface)" stroke-width="2"/>
+          </g>
+          <rect data-catch x="{{ $p.plot.l }}" y="{{ $p.plot.t }}"
+                width="{{ sub $p.plot.r $p.plot.l }}" height="{{ sub $p.plot.b $p.plot.t }}"
+                fill="transparent" style="pointer-events:all"/>
+        </svg>
+        <div class="cp-tip" data-tip hidden></div>
+        <script type="application/json" data-hover>{{ $p.hover | jsonify }}</script>
+        </div>
+        <p class="thin-note" style="margin-top:2px">Latest: <b>{{ $p.last.label }}</b>{{ with $p.ref_label }} · line at {{ . }}{{ end }}</p>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+
+  <!-- ============ seat distributions ============ -->
+  {{- with $c.hist }}
+  <div class="card">
+    <h2>Simulated seats</h2>
+    <p class="sub">The share of 10,000 simulated elections that end with each
+       number of Democratic seats. Blue bars are Democratic majorities.</p>
+    <div class="cp-grid">
+      {{- range $h := . }}
+      <div class="cp-chart">
+        <h3>{{ $h.label }}: Democrats win a majority in {{ printf "%.0f" $h.p_majority }}% of simulations</h3>
+        <svg viewBox="0 0 360 170" role="img" aria-label="Distribution of simulated Democratic {{ $h.label }} seats">
+          {{- range $h.bars }}
+          <rect x="{{ .x }}" y="{{ .y }}" width="{{ .w }}" height="{{ .h }}" rx="1"
+                class="{{ if .dem }}cp-bar-d{{ else }}cp-bar-r{{ end }}" opacity=".85">
+            <title>{{ .seats }} seats: {{ .pct }}% of simulations</title>
+          </rect>
+          {{- end }}
+          <line x1="{{ $h.maj_x }}" x2="{{ $h.maj_x }}" y1="{{ sub $h.plot.t 4 }}" y2="{{ $h.plot.b }}"
+                stroke="var(--ink)" stroke-width="1.3" stroke-dasharray="3 3"/>
+          <text class="tick" x="{{ add $h.maj_x 4 }}" y="{{ add $h.plot.t 4 }}" style="fill:var(--ink-2)">{{ $h.majority }} for a majority</text>
+          <line class="gridline" x1="{{ $h.plot.l }}" x2="{{ $h.plot.r }}" y1="{{ $h.plot.b }}" y2="{{ $h.plot.b }}"/>
+          {{- range $h.x_ticks }}
+          <text class="tick" x="{{ .x }}" y="{{ add $h.plot.b 17 }}" text-anchor="middle">{{ .label }}</text>
+          {{- end }}
+        </svg>
+      </div>
+      {{- end }}
+    </div>
+    <p class="thin-note">Senate totals include the Democratic seats not up this
+       year. A 50–50 Senate counts as Republican control.</p>
+  </div>
+  {{- end }}
+
+  <!-- ============ competitive races ============ -->
+  <div class="card">
+    <h2>Competitive races</h2>
+    <p class="sub">Races where each side has at least a 5% chance, ordered from
+       least to most likely to be won by the Democratic side.</p>
+    <div class="segs" data-toggle-group="cprace">
+      <span class="seglabel">Chamber</span>
+      <div class="seg" data-dim="chamber">
+        <button type="button" data-value="senate" aria-selected="true">Senate ({{ len $c.senate_races }})</button>
+        <button type="button" data-value="house" aria-selected="false">House ({{ len $c.house_races }})</button>
+      </div>
+    </div>
+    <div data-group="cprace">
+      {{- range $ck := (slice "senate" "house") }}
+      {{- $rows := cond (eq $ck "senate") $c.senate_races $c.house_races }}
+      <div data-panel data-chamber="{{ $ck }}">
+        <div class="tscroll">
+        <table class="full">
+          <tr><th>{{ if eq $ck "senate" }}State{{ else }}District{{ end }}</th>
+              <th class="wrap">Democratic side</th><th class="wrap">Republican side</th>
+              <th class="num">Predicted D share</th><th class="num">80% range</th>
+              <th class="num">P(D wins)</th></tr>
+          {{- range $rows }}
+          <tr>
+            <td><strong>{{ .label }}</strong></td>
+            <td class="wrap">{{ .dem_candidate }}</td>
+            <td class="wrap">{{ .rep_candidate }}</td>
+            <td class="num {{ if ge .share 50.0 }}D{{ else }}R{{ end }}">{{ printf "%.1f" .share }}%</td>
+            <td class="num muted">{{ printf "%.1f" .lo }}–{{ printf "%.1f" .hi }}</td>
+            <td class="num"><strong>{{ printf "%.0f%%" (mul .win_prob_D 100) }}</strong></td>
+          </tr>
+          {{- end }}
+        </table>
+        </div>
+      </div>
+      {{- end }}
+    </div>
+    <p class="thin-note">Shares are of the two-party vote. Where an independent
+       runs in place of a party's nominee (Nebraska, for example), they are
+       counted as that side's candidate.</p>
+  </div>
+
+  <!-- ============ specification ============ -->
+  {{- $cf := $c.coef }}{{ $ft := $c.fit }}
+  <div class="card prose">
+    <h2>How the model works</h2>
+
+    <h3>1. The national vote</h3>
+    <p>A regression of the change in the president's party's share of the
+       House vote on {{ with index $ft "national" }}{{ printf "%.0f" .n }} elections, {{ printf "%.0f" .first_year }} to {{ printf "%.0f" .last_year }}{{ end }}:</p>
+    <div class="cp-eq">change = a + b1·midterm + b2·income_1yr + b3·gas_1yr + b4·approval</div>
+    {{- with index $cf "national" }}
+    <table>
+      <tr><th>Term</th><th class="num">Estimate</th><th class="num">Std. error</th></tr>
+      {{- range $t := (slice "(Intercept)" "midterm" "income_1yr" "gas_1yr" "approval") }}
+      {{- with index $cf.national $t }}
+      <tr><td>{{ if eq $t "(Intercept)" }}Intercept{{ else }}{{ $t }}{{ end }}</td>
+          <td class="num">{{ printf "%.3f" .est }}</td><td class="num muted">{{ printf "%.3f" .se }}</td></tr>
+      {{- end }}
+      {{- end }}
+    </table>
+    {{- end }}
+    <p class="thin-note">midterm = 1 in 2026. income_1yr and gas_1yr are percent
+       changes from the previous year in real disposable income per capita and
+       the average gas price. approval is presidential approval, in percent.</p>
+
+    <p>Today's inputs and result:</p>
+    <table>
+      <tr><td>Presidential approval</td><td class="num">{{ printf "%.1f%%" (float $l.approval) }}</td>
+          <td class="muted wrap">{{ with $in }}Average of the published approval aggregators, as of {{ .approval_as_of }}{{ end }}</td></tr>
+      <tr><td>Gas price, 2026 average</td><td class="num">${{ printf "%.2f" (float $l.gas_ytd) }}</td>
+          <td class="muted wrap">{{ printf "%+.1f" (float $l.gas_1yr) }}% on 2025{{ with $in }}; EIA weekly price, {{ .gas_weeks }} weeks{{ end }}</td></tr>
+      <tr><td>Real disposable income</td><td class="num">{{ printf "%+.2f%%" (float $l.income_1yr) }}</td>
+          <td class="muted wrap">Change on 2025{{ with $in }}; {{ .income_months }} months of 2026 data{{ end }}</td></tr>
+      <tr><td><strong>Predicted change for Republicans</strong></td>
+          <td class="num"><strong>{{ printf "%+.2f" (float $l.pred_change_in_party) }}</strong></td>
+          <td class="muted wrap">points{{ with index $ft "national" }}, from {{ printf "%.1f" .rep_prev_share }}% in 2024{{ end }}</td></tr>
+      <tr><td><strong>National Democratic share</strong></td>
+          <td class="num"><strong>{{ printf "%.2f%%" (float $l.nat_dem_share) }}</strong></td><td></td></tr>
+    </table>
+
+    <h3>2. Each race</h3>
+    <p>The Democratic share of the two-party vote in each race, fit separately
+       for the House and the Senate on contested races from
+       {{ with index $ft "house" }}{{ printf "%.0f" .first_year }} to {{ printf "%.0f" .last_year }}{{ end }}:</p>
+    <div class="cp-eq">dem_share = a + b1·PVI + b2·nat_d + b3·inc_d</div>
+    <table>
+      <tr><th>Term</th><th class="num">House</th><th class="num">Senate</th></tr>
+      {{- range $t := (slice "(Intercept)" "pvi" "nat_d" "inc_d") }}
+      <tr><td>{{ if eq $t "(Intercept)" }}Intercept{{ else if eq $t "pvi" }}PVI{{ else }}{{ $t }}{{ end }}</td>
+        {{- range $m := (slice "house" "senate") }}
+        {{- with index $cf $m }}{{ with index . $t }}
+        <td class="num">{{ printf "%.3f" .est }} <span class="muted">({{ printf "%.3f" .se }})</span></td>
+        {{- end }}{{ end }}
+        {{- end }}
+      </tr>
+      {{- end }}
+      <tr><td>Race-level error (points)</td>
+        {{- range $m := (slice "house" "senate") }}{{ with index $ft $m }}<td class="num">{{ printf "%.2f" .resid_se }}</td>{{ end }}{{ end }}</tr>
+      <tr><td>Races used</td>
+        {{- range $m := (slice "house" "senate") }}{{ with index $ft $m }}<td class="num">{{ printf "%.0f" .n }}</td>{{ end }}{{ end }}</tr>
+    </table>
+    <p class="thin-note">Standard errors in parentheses. PVI is the seat's
+       partisan lean in points: 0.75 × its 2024 presidential lean plus 0.25 ×
+       its 2020 lean, on the 2026 lines (2024 alone in states that redrew
+       after 2024). nat_d is the national Democratic share. inc_d is +1 for a
+       Democratic incumbent, −1 for a Republican incumbent, 0 for an open
+       seat.</p>
+
+    <h3>3. Uncertainty</h3>
+    <p>Each race has two sources of error: how far the national vote could
+       miss{{ with index $ft "national" }} ({{ printf "%.2f" .total_error }} points nationally{{ end }}{{ with index $ft "house" }}, {{ printf "%.2f" .nat_error_per_race }} in a House race{{ end }}{{ with index $ft "senate" }} and {{ printf "%.2f" .nat_error_per_race }} in a Senate race{{ end }}),
+       and race-level error. Combined, the error in a single race is
+       {{ with index $ft "house" }}{{ printf "%.2f" .total_error }}{{ end }} points in the House and
+       {{ with index $ft "senate" }}{{ printf "%.2f" .total_error }}{{ end }} in the Senate.
+       A race's win probability is the chance a normal distribution with that
+       spread, centered on the prediction, lands above 50%.</p>
+    <p>Seat totals come from 10,000 simulated elections. Each simulation draws
+       one national error shared by every race in both chambers, plus a separate
+       error for each race. The random seed is fixed, so the same inputs give
+       the same numbers.</p>
+    {{- with $c.n_fixed }}
+    <p class="thin-note">{{ . }} House races are already settled (no Republican
+       on the ballot, or two candidates from the same party) and are fixed at 0
+       or 1.</p>
+    {{- end }}
+  </div>
+
+  <div class="card prose">
+    <h2>Updates</h2>
+    <p>Only the national inputs change between updates: approval (the site's
+       average of the published approval aggregators), the 2026 average gas
+       price (EIA weekly, via FRED) and real disposable income per capita (via
+       FRED). The model itself does not change. It stops updating on November
+       1, 2026.</p>
+  </div>
+{{ end }}
+</div>
+{{ partial "forecast/foot.html" (dict "page" . "d" $d) }}
+
+<script>
+(function () {
+  document.querySelectorAll("svg[data-cp]").forEach(function (svg) {
+    var wrap = svg.parentNode;
+    var tag = wrap.querySelector("script[data-hover]");
+    var tip = wrap.querySelector("[data-tip]");
+    var cross = svg.querySelector("[data-cross]");
+    var catcher = svg.querySelector("[data-catch]");
+    if (!tag || !tip || !cross || !catcher) return;
+    var pts;
+    try { pts = JSON.parse(tag.textContent); } catch (e) { return; }
+    if (!pts || !pts.length) return;
+    var line = cross.querySelector("line"), dot = cross.querySelector("circle");
+    var M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    function nice(iso) { var p = iso.split("-"); return M[+p[1] - 1] + " " + (+p[2]); }
+    function show(evt) {
+      var pt = svg.createSVGPoint(); pt.x = evt.clientX; pt.y = evt.clientY;
+      var m = svg.getScreenCTM(); if (!m) return;
+      var x = pt.matrixTransform(m.inverse()).x;
+      var best = pts[0];
+      for (var i = 1; i < pts.length; i++) if (Math.abs(pts[i].x - x) < Math.abs(best.x - x)) best = pts[i];
+      line.setAttribute("x1", best.x); line.setAttribute("x2", best.x);
+      dot.setAttribute("cx", best.x); dot.setAttribute("cy", best.y);
+      cross.removeAttribute("hidden");
+      tip.innerHTML = nice(best.d) + ": <b>" + best.t + "</b>";
+      tip.removeAttribute("hidden");
+      var box = svg.getBoundingClientRect(), px = (best.x / 360) * box.width;
+      var right = px > box.width * 0.6;
+      tip.style.left = right ? "auto" : (px + 10) + "px";
+      tip.style.right = right ? (box.width - px + 10) + "px" : "auto";
+    }
+    function hide() { cross.setAttribute("hidden", ""); tip.setAttribute("hidden", ""); }
+    catcher.addEventListener("pointermove", show);
+    catcher.addEventListener("pointerdown", show);
+    catcher.addEventListener("pointerleave", hide);
+  });
+})();
+</script>

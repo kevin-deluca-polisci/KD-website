@@ -1085,6 +1085,7 @@ def main(argv=None) -> int:
         "approval": approval,
         "senate_table": senate,
         "class_summary": charts.class_latest(),
+        "class_page": charts.build_class_page(),
         "academic_models": academic,
         # Without the district arrays. All 435 of them tripled the size of a
         # file every visitor downloads, to feed a chart that draws 45 — and the

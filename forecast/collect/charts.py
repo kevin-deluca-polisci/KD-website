@@ -1487,6 +1487,191 @@ def class_recomputed_through(class_dir: Path = CLASS_DIR) -> str | None:
     return last
 
 
+# --------------------------------------------------------------------------
+# The class model page. Geometry is computed here in pixels for a fixed
+# 360 x 170 viewBox; the template only draws.
+# --------------------------------------------------------------------------
+CP_W, CP_H = 360, 170                  # viewBox
+CP_L, CP_R, CP_T, CP_B = 46, 14, 12, 26  # plot margins
+
+
+def _cp_panel(key: str, title: str, dates: list[str], vals: list[float | None],
+              unit: str, lo: list | None = None, hi: list | None = None,
+              ref: float | None = None, ref_label: str = "",
+              domain: tuple[float, float] | None = None) -> dict | None:
+    pts = [(d, v, (lo[i] if lo else None), (hi[i] if hi else None))
+           for i, (d, v) in enumerate(zip(dates, vals)) if v is not None]
+    if not pts:
+        return None
+    pw, ph = CP_W - CP_L - CP_R, CP_H - CP_T - CP_B
+    if domain:
+        y0, y1 = domain
+    else:
+        allv = [v for _, v, a, b in pts for v in (v, a, b) if v is not None]
+        if ref is not None:
+            allv.append(ref)
+        y0, y1 = min(allv), max(allv)
+        pad = max((y1 - y0) * 0.12, 0.5 if unit != "seats" else 2)
+        y0, y1 = y0 - pad, y1 + pad
+    d0 = dt.date.fromisoformat(pts[0][0])
+    span = max((dt.date.fromisoformat(pts[-1][0]) - d0).days, 1)
+
+    def X(d: str) -> float:
+        return round(CP_L + pw * (dt.date.fromisoformat(d) - d0).days / span, 2)
+
+    def Y(v: float) -> float:
+        return round(CP_T + ph * (1 - (v - y0) / (y1 - y0)), 2)
+
+    line = " ".join(f"{X(d)},{Y(v)}" for d, v, _, _ in pts)
+    band = ""
+    if lo and hi and all(a is not None and b is not None for _, _, a, b in pts):
+        top = [f"{X(d)},{Y(b)}" for d, _, _, b in pts]
+        bot = [f"{X(d)},{Y(a)}" for d, _, a, _ in reversed(pts)]
+        band = " ".join(top + bot)
+    tv = _nice_ticks(y0, y1, 4)
+    if unit == "seats":                       # whole seats only
+        tv = [t for t in tv if abs(t - round(t)) < 1e-9] or \
+             list(range(math.ceil(y0), math.floor(y1) + 1, max(1, round((y1 - y0) / 4))))
+    whole = all(abs(t - round(t)) < 1e-9 for t in tv) or unit == "usd"
+    ticks = [{"y": Y(t), "label": _cp_fmt(t, unit, tick=True) if whole
+              else f"{t:.1f}" + ("%" if unit in ("pct", "prob") else "")}
+             for t in tv]
+    dts = [{"x": round(t["x"] * pw / 100 + CP_L, 2), "anchor": t["anchor"],
+            "label": t["label"]}
+           for t in _date_ticks([p[0] for p in pts],
+                                lambda d: 100 * (dt.date.fromisoformat(d) - d0).days / span)]
+    last = pts[-1]
+    return {
+        "key": key, "title": title, "unit": unit,
+        "line": line, "band": band,
+        "y_ticks": ticks, "date_ticks": dts,
+        "ref_y": Y(ref) if ref is not None and y0 <= ref <= y1 else None,
+        "ref_label": ref_label,
+        "last": {"x": X(last[0]), "y": Y(last[1]), "label": _cp_fmt(last[1], unit)},
+        "plot": {"l": CP_L, "t": CP_T, "r": CP_W - CP_R, "b": CP_H - CP_B},
+        # For the hover script: one entry per point, pixel x and y plus text.
+        "hover": [{"x": X(d), "y": Y(v), "d": d,
+                   "t": _cp_fmt(v, unit) + (f" ({_cp_fmt(a, unit)}–{_cp_fmt(b, unit)})"
+                                            if a is not None and b is not None else "")}
+                  for d, v, a, b in pts],
+    }
+
+
+def _cp_fmt(v: float, unit: str, tick: bool = False) -> str:
+    if unit == "prob":
+        return f"{v:.0f}%"
+    if unit == "pct":
+        return f"{v:.0f}%" if tick else f"{v:.1f}%"
+    if unit == "usd":
+        return f"${v:.2f}"
+    return f"{v:.0f}"
+
+
+def _cp_hist(sims: list[int], majority: int, label: str) -> dict | None:
+    if not sims:
+        return None
+    from collections import Counter
+    c = Counter(sims)
+    lo, hi = min(c), max(c)
+    n = len(sims)
+    pw, ph = CP_W - CP_L - CP_R, CP_H - CP_T - CP_B
+    lo, hi = min(lo, majority - 1), max(hi, majority)
+    slot = pw / (hi - lo + 1)
+    top = max(c.values()) / n
+    bars = []
+    for k in range(lo, hi + 1):
+        share = c.get(k, 0) / n
+        if not share:
+            continue
+        h = 0.9 * ph * share / top      # headroom for the majority label
+        bars.append({"x": round(CP_L + (k - lo) * slot + 0.5, 2),
+                     "y": round(CP_T + ph - h, 2), "w": round(max(slot - 1, 0.8), 2),
+                     "h": round(h, 2), "seats": k, "pct": round(100 * share, 1),
+                     "dem": k >= majority})
+    step = next(s for s in (1, 2, 5, 10, 20, 25, 50) if (hi - lo) / s <= 8)
+    xt = [{"x": round(CP_L + (k - lo + 0.5) * slot, 2), "label": str(k)}
+          for k in range(lo, hi + 1) if k % step == 0]
+    return {"label": label, "bars": bars, "x_ticks": xt, "majority": majority,
+            "maj_x": round(CP_L + (majority - lo) * slot, 2),
+            "plot": {"l": CP_L, "t": CP_T, "r": CP_W - CP_R, "b": CP_H - CP_B},
+            "p_majority": round(100 * sum(1 for s in sims if s >= majority) / n, 1)}
+
+
+def build_class_page(class_dir: Path = CLASS_DIR) -> dict | None:
+    """Everything the class model page draws, from forecast/class/output."""
+    ts = sorted(_rd(class_dir / "class_timeseries.csv"), key=lambda r: r["as_of"])
+    if not ts:
+        return None
+    dates = [r["as_of"] for r in ts]
+    col = lambda k: [_f(r.get(k)) for r in ts]
+    pct = lambda xs: [None if x is None else 100 * x for x in xs]
+    panels = [p for p in (
+        _cp_panel("p_house", "Chance Democrats win the House", dates,
+                  pct(col("p_house")), "prob", ref=50, domain=(0, 100)),
+        _cp_panel("p_senate", "Chance Democrats win the Senate", dates,
+                  pct(col("p_senate")), "prob", ref=50, domain=(0, 100)),
+        _cp_panel("house_seats", "Democratic House seats (median, 80% range)", dates,
+                  col("house_seats_median"), "seats", col("house_lo80"),
+                  col("house_hi80"), ref=218, ref_label="218"),
+        _cp_panel("senate_seats", "Democratic Senate seats (median, 80% range)", dates,
+                  col("senate_seats_median"), "seats", col("senate_lo80"),
+                  col("senate_hi80"), ref=51, ref_label="51"),
+        _cp_panel("nat", "National Democratic share of the House vote", dates,
+                  col("nat_dem_share"), "pct", ref=50, ref_label="50%"),
+        _cp_panel("approval", "Input: presidential approval", dates,
+                  col("approval"), "pct"),
+        _cp_panel("gas", "Input: average 2026 gas price", dates,
+                  col("gas_ytd"), "usd"),
+    ) if p]
+
+    sims_h, sims_s = [], []
+    for r in _rd(class_dir / "seat_sims_class_latest.csv"):
+        try:
+            sims_h.append(int(float(r["house_dem_seats"])))
+            sims_s.append(int(float(r["senate_dem_seats"])))
+        except (KeyError, ValueError):
+            continue
+
+    races = []
+    for r in class_races(class_dir):
+        if 0.05 < r["win_prob_D"] < 0.95:
+            races.append(r)
+    lat = {r["race_id"]: r for r in _rd(class_dir / "forecast_class_latest.csv")}
+    for r in races:
+        src = lat.get(r["race_id"], {})
+        r["share"] = round(100 * (_f(src.get("pred_dem_share")) or 0), 1)
+        r["lo"] = round(100 * (_f(src.get("lo_80")) or 0), 1)
+        r["hi"] = round(100 * (_f(src.get("hi_80")) or 0), 1)
+        r["label"] = r["state"] if r["office"] == "senate" else (
+            f"{r['state']}-{'AL' if r['state'] in ('AK', 'DE', 'ND', 'SD', 'VT', 'WY') else str(r['district']).lstrip('0')}")
+        r.pop("pvi", None)          # no partisan index on district rows
+        if r["office"] == "senate":
+            r["district"] = ""
+    races.sort(key=lambda r: (r["win_prob_D"], r["label"]))
+
+    coef = {}
+    for r in _rd(class_dir / "class_spec_coef.csv"):
+        coef.setdefault(r["model"], {})[r["term"]] = {
+            "est": _f(r["estimate"]), "se": _f(r["std_error"])}
+    fit = {r["model"]: {k: _f(v) if k != "model" else v for k, v in r.items()}
+           for r in _rd(class_dir / "class_spec_fit.csv")}
+    inputs = _rd(class_dir / "class_inputs.csv")
+    latest = ts[-1]
+    return {
+        "latest": latest,
+        "inputs": max(inputs, key=lambda r: r["date"]) if inputs else None,
+        "panels": panels,
+        "hist": [h for h in (_cp_hist(sims_h, 218, "House"),
+                             _cp_hist(sims_s, 51, "Senate")) if h],
+        "senate_races": [r for r in races if r["office"] == "senate"],
+        "house_races": [r for r in races if r["office"] == "house"],
+        "coef": coef, "fit": fit,
+        "recomputed_through": class_recomputed_through(class_dir),
+        "n_fixed": sum(1 for r in lat.values() if str(r.get("scored")) == "0"),
+        "first_date": dates[0],
+    }
+
+
 def build(derived: Path, snapshot: str, rebuild: bool = False) -> dict:
     rows = update_timeline(derived, snapshot, rebuild) + class_rows(through=snapshot)
     out = {p: build_panel(rows, p, RANGE_DEFAULT_DAYS) for p in PANELS}

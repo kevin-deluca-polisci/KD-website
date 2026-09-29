@@ -42,3 +42,4 @@ FRED data. The model stops updating after November 1, 2026.
 | `class_inputs.csv` | The inputs used for each date and when it was computed. |
 | `forecast_class_latest.csv` | Every race, latest date. |
 | `seat_sims_class_latest.csv` | Simulated seat totals, latest date. |
+| `class_spec_coef.csv`, `class_spec_fit.csv` | The fitted coefficients, standard errors and error sizes, for the class model page. Written by a few lines `run_class.py` appends to the script; they only save what the script already computed. |

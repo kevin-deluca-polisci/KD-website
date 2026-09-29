@@ -142,6 +142,31 @@ def inputs_for(day: dt.date, approval, gas, income, income_2025: float) -> dict 
 # --------------------------------------------------------------------------
 # running the course script
 
+# Appended after the course script. It only WRITES what the fitted models
+# already hold (coefficients, standard errors, residual SEs, race counts) so the
+# site can print the specification; it changes nothing the script computes.
+SPEC_EPILOGUE = r"""
+
+# ---- added by run_class.py: model specification for the site (output only)
+.spec_of <- function(m, name) {
+  cf <- summary(m)$coefficients
+  tibble(model = name, term = rownames(cf), estimate = cf[, 1], std_error = cf[, 2])
+}
+write_csv(bind_rows(.spec_of(m_nat, "national"), .spec_of(m_house, "house"),
+                    .spec_of(m_senate, "senate")),
+          file.path(OUT_DIR, "class_spec_coef.csv"))
+write_csv(tibble(model = c("national", "house", "senate"),
+                 resid_se = c(summary(m_nat)$sigma, sigma(m_house), sigma(m_senate)),
+                 n = c(nobs(m_nat), nobs(m_house), nobs(m_senate)),
+                 nat_error_per_race = c(NA, e_h["nat_race"], e_s["nat_race"]),
+                 total_error = c(sigma_nat, e_h["total"], e_s["total"]),
+                 first_year = c(min(national_data$year), min(cycles), min(cycles)),
+                 last_year = c(max(national_data$year), max(cycles), max(cycles)),
+                 rep_prev_share = c(rep_prev, NA, NA)),
+          file.path(OUT_DIR, "class_spec_fit.csv"))
+"""
+
+
 def _patched_script(inp: dict, out_dir: Path) -> str:
     src = SCRIPT.read_text()
     vals = {
@@ -162,7 +187,7 @@ def _patched_script(inp: dict, out_dir: Path) -> str:
             raise RuntimeError(f"class_forecast.R: expected one `{key} <-` line, found {n}. "
                                "The course script has changed shape; update this runner.")
         src = re.sub(pat, lambda _m, v=vals[key]: v, src, count=1, flags=re.M)
-    return src
+    return src + SPEC_EPILOGUE
 
 
 def run_one(inp: dict) -> dict:
@@ -180,7 +205,8 @@ def run_one(inp: dict) -> dict:
         with open(out_dir / f"forecast_class_{stamp}.csv", newline="") as fh:
             races = list(csv.DictReader(fh))
         sims = (out_dir / f"seat_sims_class_{stamp}.csv").read_text()
-    return {"summary": summary, "races": races, "sims": sims}
+        spec = {n: (out_dir / f"class_spec_{n}.csv").read_text() for n in ("coef", "fit")}
+    return {"summary": summary, "races": races, "sims": sims, "spec": spec}
 
 
 # --------------------------------------------------------------------------
@@ -230,6 +256,8 @@ def store(results: list[tuple[dict, dict]]) -> None:
     if newest[0]["date"] >= ts[-1]["as_of"]:
         _write(LATEST_RACES, newest[1]["races"], list(newest[1]["races"][0].keys()))
         LATEST_SIMS.write_text(newest[1]["sims"])
+        for n, text in newest[1]["spec"].items():
+            (OUT / f"class_spec_{n}.csv").write_text(text)
 
 
 # --------------------------------------------------------------------------
