@@ -58598,9 +58598,9 @@ snapshot_date,facet,category,race_id,chamber,state,district,quantity,unit,n_sour
 2026-09-29,source,academic,SEN_WV_2026,senate,WV,,win_prob_D,prob,5,0,0,0,0,0.0,0.0,0.0,0.0,open,ok,,2026-07-31,1
 2026-09-29,source,academic,SEN_WY_2026,senate,WY,,margin_D,pct,5,0,0,0,0,-31.73,-37.19,-23.2,5.6844,open,ok,,2026-07-31,1
 2026-09-29,source,academic,SEN_WY_2026,senate,WY,,win_prob_D,prob,5,0,0,0,0,0.0,0.0,0.0,0.0,open,ok,,2026-07-31,1
-2026-09-29,source,market,GOV_AL_2026,governor,AL,,win_prob_D,prob,2,0,0,0,0,0.0835,0.08,0.087,0.0049,open,thin,,2026-09-29,0
+2026-09-29,source,market,GOV_AL_2026,governor,AL,,win_prob_D,prob,2,0,0,0,0,0.0832,0.08,0.0865,0.0046,open,thin,,2026-09-29,0
 2026-09-29,source,market,GOV_AL_2026,governor,AL,,win_prob_R,prob,2,0,0,0,0,0.9213,0.9125,0.93,0.0124,open,thin,,2026-09-29,0
-2026-09-29,source,market,GOV_AR_2026,governor,AR,,win_prob_D,prob,1,0,0,0,0,0.025,0.025,0.025,,open,single,polymarket,2026-09-29,0
+2026-09-29,source,market,GOV_AR_2026,governor,AR,,win_prob_D,prob,1,0,0,0,0,0.027,0.027,0.027,,open,single,polymarket,2026-09-29,0
 2026-09-29,source,market,GOV_AR_2026,governor,AR,,win_prob_R,prob,1,0,0,0,0,0.9705,0.9705,0.9705,,open,single,polymarket,2026-09-29,0
 2026-09-29,source,market,GOV_AZ_2026,governor,AZ,,win_prob_D,prob,2,0,0,0,0,0.8825,0.88,0.885,0.0035,open,thin,,2026-09-29,0
 2026-09-29,source,market,GOV_AZ_2026,governor,AZ,,win_prob_R,prob,2,0,0,0,0,0.1025,0.1,0.105,0.0035,open,thin,,2026-09-29,0
@@ -58617,9 +58617,9 @@ snapshot_date,facet,category,race_id,chamber,state,district,quantity,unit,n_sour
 2026-09-29,source,market,GOV_IA_2026,governor,IA,,win_prob_D,prob,2,0,0,0,0,0.8225,0.82,0.825,0.0035,open,thin,,2026-09-29,0
 2026-09-29,source,market,GOV_IA_2026,governor,IA,,win_prob_R,prob,2,0,0,0,0,0.1775,0.155,0.2,0.0318,open,thin,,2026-09-29,0
 2026-09-29,source,market,GOV_ID_2026,governor,ID,,win_prob_D,prob,1,0,0,0,0,0.027,0.027,0.027,,open,single,polymarket,2026-09-29,0
-2026-09-29,source,market,GOV_ID_2026,governor,ID,,win_prob_R,prob,1,0,0,0,0,0.9735,0.9735,0.9735,,open,single,polymarket,2026-09-29,0
-2026-09-29,source,market,GOV_IL_2026,governor,IL,,win_prob_D,prob,1,0,0,0,0,0.967,0.967,0.967,,open,single,polymarket,2026-09-29,0
-2026-09-29,source,market,GOV_IL_2026,governor,IL,,win_prob_R,prob,1,0,0,0,0,0.028,0.028,0.028,,open,single,polymarket,2026-09-29,0
+2026-09-29,source,market,GOV_ID_2026,governor,ID,,win_prob_R,prob,1,0,0,0,0,0.9755,0.9755,0.9755,,open,single,polymarket,2026-09-29,0
+2026-09-29,source,market,GOV_IL_2026,governor,IL,,win_prob_D,prob,1,0,0,0,0,0.9715,0.9715,0.9715,,open,single,polymarket,2026-09-29,0
+2026-09-29,source,market,GOV_IL_2026,governor,IL,,win_prob_R,prob,1,0,0,0,0,0.023,0.023,0.023,,open,single,polymarket,2026-09-29,0
 2026-09-29,source,market,GOV_KS_2026,governor,KS,,win_prob_D,prob,2,0,0,0,0,0.3525,0.275,0.43,0.1096,open,thin,,2026-09-29,0
 2026-09-29,source,market,GOV_KS_2026,governor,KS,,win_prob_R,prob,2,0,0,0,0,0.7325,0.73,0.735,0.0035,open,thin,,2026-09-29,0
 2026-09-29,source,market,GOV_MA_2026,governor,MA,,win_prob_D,prob,2,0,0,0,0,0.966,0.962,0.97,0.0057,open,thin,,2026-09-29,0
@@ -58658,7 +58658,7 @@ snapshot_date,facet,category,race_id,chamber,state,district,quantity,unit,n_sour
 2026-09-29,source,market,GOV_VT_2026,governor,VT,,win_prob_R,prob,1,0,0,0,0,0.83,0.83,0.83,,open,single,predictit,2026-09-29,0
 2026-09-29,source,market,GOV_WI_2026,governor,WI,,win_prob_D,prob,1,0,0,0,0,0.8,0.8,0.8,,open,single,predictit,2026-09-29,0
 2026-09-29,source,market,GOV_WI_2026,governor,WI,,win_prob_R,prob,1,0,0,0,0,0.2,0.2,0.2,,open,single,predictit,2026-09-29,0
-2026-09-29,source,market,NATL_HOUSE_2026,national,,,margin_D,pct,2,0,0,0,0,8.442,8.1823,8.7017,0.3673,open,thin,,2026-09-29,0
+2026-09-29,source,market,NATL_HOUSE_2026,national,,,margin_D,pct,2,0,0,0,0,8.4464,8.2143,8.6786,0.3283,open,thin,,2026-09-29,0
 2026-09-29,source,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,234.38,234.38,234.38,,open,single,kalshi,2026-09-29,0
 2026-09-29,source,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,3,0,0,0,0,0.9084,0.9,0.925,0.0144,open,ok,,2026-09-29,0
 2026-09-29,source,market,NATL_HOUSE_2026,national,,,win_prob_R,prob,2,0,0,0,0,0.0975,0.085,0.11,0.0177,open,thin,,2026-09-29,0
