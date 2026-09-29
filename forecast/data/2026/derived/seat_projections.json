@@ -3305,7 +3305,7 @@
           49,
           58
         ],
-        "prob_D_50_plus": 0.8782,
+        "prob_D_50_plus": 0.8783,
         "prob_D_51_plus": 0.7721
       },
       "races": {
@@ -3493,11 +3493,11 @@
           235,
           298
         ],
-        "prob_D_majority": 0.9866,
+        "prob_D_majority": 0.9867,
         "majority_at": 218,
         "pvi_source": "dra",
         "sigma_source": "house-calibrated on 768 district-cycles [2022, 2024], baseline dra, with_incumbency",
-        "sigma_national": 5.547752808988764,
+        "sigma_national": 5.543851435705368,
         "sigma_state": 3.39,
         "sigma_district": 13.39,
         "sigma_total": 14.88,
