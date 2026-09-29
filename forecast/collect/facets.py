@@ -160,11 +160,23 @@ POLLING_NATIONAL_ONLY = {"class_polling", "polling_reconstructed"}
 NATIONAL_RACES = ("NATL_",)
 
 
-def on_line(source_id: str, category: str, race_id: str) -> tuple[str, str] | None:
-    """facets(), plus the race-level rule for the polling line."""
+# Row provenance for values this archive computed (seats.py pushing a
+# source's national margin through the seat model), as opposed to values
+# read from the source itself.
+COMPUTED = ("computed", "retrospective")
+
+
+def on_line(source_id: str, category: str, race_id: str,
+            provenance: str = "") -> tuple[str, str] | None:
+    """facets(), plus the race-level rule for the polling line: a race's
+    polling number must be a polling average OF THAT RACE. Rows that carry a
+    national polling average to the race (the class polling model, the
+    reconstructed average, or any aggregator's national number run through
+    the seat model) count only for national quantities."""
     got = facets(source_id, category)
-    if got and got[1] == "polling" and source_id in POLLING_NATIONAL_ONLY \
-            and not (race_id or "").startswith(NATIONAL_RACES):
+    if got and got[1] == "polling" \
+            and not (race_id or "").startswith(NATIONAL_RACES) \
+            and (source_id in POLLING_NATIONAL_ONLY or provenance in COMPUTED):
         return None
     return got
 

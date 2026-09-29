@@ -1536,10 +1536,7 @@ def _cp_panel(key: str, title: str, dates: list[str], vals: list[float | None],
     ticks = [{"y": Y(t), "label": _cp_fmt(t, unit, tick=True) if whole
               else f"{t:.1f}" + ("%" if unit in ("pct", "prob") else "")}
              for t in tv]
-    dts = [{"x": round(t["x"] * pw / 100 + CP_L, 2), "anchor": t["anchor"],
-            "label": t["label"]}
-           for t in _date_ticks([p[0] for p in pts],
-                                lambda d: 100 * (dt.date.fromisoformat(d) - d0).days / span)]
+    dts = _cp_date_ticks(d0, dt.date.fromisoformat(pts[-1][0]), X)
     last = pts[-1]
     return {
         "key": key, "title": title, "unit": unit,
@@ -1555,6 +1552,36 @@ def _cp_panel(key: str, title: str, dates: list[str], vals: list[float | None],
                                             if a is not None and b is not None else "")}
                   for d, v, a, b in pts],
     }
+
+
+def _cp_date_ticks(d0: dt.date, dn: dt.date, X) -> list[dict]:
+    """Month ticks for the small class-page charts: first-of-month marks
+    only, spaced so the labels cannot touch, the year on the first one."""
+    pw = CP_W - CP_L - CP_R
+    min_gap = 0.16 * pw                      # about 50px at full size
+    for step in (1, 2, 3, 6):
+        marks, y, m = [], d0.year, d0.month
+        while True:
+            m += 1
+            if m > 12:
+                m, y = 1, y + 1
+            cur = dt.date(y, m, 1)
+            if cur > dn:
+                break
+            if (m - 1) % step == 0:
+                marks.append(cur)
+        xs = [X(c.isoformat()) for c in marks]
+        if all(b - a >= min_gap for a, b in zip(xs, xs[1:])):
+            break
+    out, last_year = [], None
+    for c in marks:
+        x = X(c.isoformat())
+        if x > CP_W - CP_R - 14:             # too close to the right edge
+            continue
+        label = c.strftime("%b %Y") if c.year != last_year else c.strftime("%b")
+        last_year = c.year
+        out.append({"x": x, "anchor": "middle", "label": label})
+    return out
 
 
 def _cp_fmt(v: float, unit: str, tick: bool = False) -> str:

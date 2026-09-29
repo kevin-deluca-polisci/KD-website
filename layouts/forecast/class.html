@@ -37,7 +37,7 @@
     <h2>PLSC 2219 class model</h2>
     <p class="sub">A forecast of every 2026 House and Senate race, built by the
        class in problem sets 4 through 7. It uses presidential approval, the
-       economy and each seat's partisan lean. It does not use polls. As of
+       economy and each seat's partisan lean. As of
        <b>{{ $l.as_of }}</b>.</p>
     <div class="cp-stats">
       <div class="cp-stat">
@@ -67,8 +67,8 @@
   <!-- ============ charts over time ============ -->
   <div class="card">
     <h2>Over time</h2>
-    <p class="sub">The model is re-run every day with that day's inputs. Only the
-       national inputs change, so every race moves together.
+    <p class="sub">The model is re-run every day with that day's national
+       inputs and the district maps in force that day.
        {{- with $c.recomputed_through }} Values through {{ . }} were computed
        afterward, using the approval average available on each date and current
        economic data.{{ end }}</p>
@@ -275,11 +275,13 @@
 
   <div class="card prose">
     <h2>Updates</h2>
-    <p>Only the national inputs change between updates: approval (the site's
+    <p>Each update uses the latest national inputs: approval (the site's
        average of the published approval aggregators), the 2026 average gas
        price (EIA weekly, via FRED) and real disposable income per capita (via
-       FRED). The model itself does not change. It stops updating on November
-       1, 2026.</p>
+       FRED). Each date also uses the district maps in force on that date, so
+       the forecast shifts when a state's new map takes effect. The
+       coefficients stay the same. The model stops updating on November 1,
+       2026.</p>
   </div>
 {{ end }}
 </div>

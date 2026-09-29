@@ -910,7 +910,7 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             continue
         if r["source_id"] in NOT_A_FORECASTER:
             continue
-        got = facets.on_line(r["source_id"], r["category"], r["race_id"])
+        got = facets.on_line(r["source_id"], r["category"], r["race_id"], r.get("provenance", ""))
         if got is None or got[0] == "reference":
             continue
         # Sources only since 2026-09-29; the type view was removed. The
@@ -1795,7 +1795,7 @@ def write_pending(cycle: int, rows: list[dict], ratings: list[dict]) -> list[Pat
         sid = r["source_id"]
         if not facets.in_archive(sid):
             continue
-        got = facets.on_line(sid, r["category"], r.get("race_id", ""))
+        got = facets.on_line(sid, r["category"], r.get("race_id", ""), r.get("provenance", ""))
         if got is None or got[0] == "reference" or got[1] == "class":
             continue
         if r["quantity"] in NEVER_PUBLISH or r["quantity"] in NOT_A_FORECAST:

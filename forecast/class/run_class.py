@@ -20,6 +20,14 @@ Inputs for a date D:
                released on the last day of the following month. Before any
                2026 month is out, the 2025 value is used (no change).
 
+District maps: the course race file has each district's partisan lean on
+the lines used in November 2026. For an earlier date, districts in states
+whose map in force on that date was different get their lean shifted by the
+change between the two maps, measured from the site's district data
+(forecast/model/maps.py, forecast/conditions/redistricting_effective.csv).
+Candidates and incumbency are unchanged. The adjusted race file is written
+only to a temporary folder; no district lean is saved.
+
 FRED values are the current vintage, not the values available on each past
 date. Past dates computed by this runner are recomputations with today's
 model, and the site labels them that way.
@@ -74,6 +82,46 @@ INPUT_LINES = {
     "DATA_DIR": r'^DATA_DIR\s*<-.*$',
     "OUT_DIR": r'^OUT_DIR\s*<-.*$',
 }
+
+
+# --------------------------------------------------------------------------
+# district maps
+
+sys.path.insert(0, str(REPO / "forecast" / "model"))
+import maps  # noqa: E402
+
+PARSED = REPO / "forecast" / "data" / "2026" / "parsed"
+ELECTION = "2026-11-03"
+
+
+def district_maps() -> tuple[dict, dict] | None:
+    """Current and previous-lines district lean from the newest parsed file
+    that has them. Private data: used in memory only."""
+    if not PARSED.exists():
+        return None
+    for f in sorted(PARSED.glob("*.csv"), reverse=True):
+        with open(f, newline="", encoding="utf-8") as fh:
+            rows = [r for r in csv.DictReader(fh) if r.get("source_id") == "cook_pvi"]
+        if rows:
+            cur, pri = maps.split_rows(rows, "cook_pvi")
+            if cur:
+                return cur, pri
+    return None
+
+
+def map_shift(day: str, dm: tuple[dict, dict] | None) -> tuple[dict, str]:
+    """{race_id: change in lean} for districts not on their November lines."""
+    if dm is None:
+        return {}, "November 2026 lines (no map data available)"
+    cur, pri = dm
+    final, _ = maps.baseline_asof(cur, pri, ELECTION)
+    base, detail = maps.baseline_asof(cur, pri, day)
+    shift = {rid: base[rid] - final[rid] for rid in base
+             if rid in final and abs(base[rid] - final[rid]) > 1e-9}
+    if not shift:
+        return {}, "November 2026 lines"
+    states = sorted({rid.split("_")[1] for rid in shift})
+    return shift, f"{', '.join(states)} on the lines in force on {day}"
 
 
 # --------------------------------------------------------------------------
@@ -167,7 +215,7 @@ write_csv(tibble(model = c("national", "house", "senate"),
 """
 
 
-def _patched_script(inp: dict, out_dir: Path) -> str:
+def _patched_script(inp: dict, out_dir: Path, data_dir: Path | None = None) -> str:
     src = SCRIPT.read_text()
     vals = {
         "AS_OF": f'AS_OF            <- as.Date("{inp["date"]}")',
@@ -178,7 +226,7 @@ def _patched_script(inp: dict, out_dir: Path) -> str:
                           f'{inp["approval_as_of"]}. Gas: FRED GASREGW, '
                           f'{inp["gas_weeks"]} weeks of 2026. Income: FRED A229RX0, '
                           f'{inp["income_months"]} months of 2026."'),
-        "DATA_DIR": f'DATA_DIR    <- "{INPUTS.as_posix()}"',
+        "DATA_DIR": f'DATA_DIR    <- "{(data_dir or INPUTS).as_posix()}"',
         "OUT_DIR": f'OUT_DIR     <- "{out_dir.as_posix()}"',
     }
     for key, pat in INPUT_LINES.items():
@@ -190,11 +238,32 @@ def _patched_script(inp: dict, out_dir: Path) -> str:
     return src + SPEC_EPILOGUE
 
 
-def run_one(inp: dict) -> dict:
+def _inputs_with_shift(dest: Path, shift: dict) -> Path:
+    """Copy the course inputs, shifting House districts' lean by `shift`."""
+    dest.mkdir(parents=True, exist_ok=True)
+    for f in INPUTS.glob("*.csv"):
+        if f.name != "races_2026.csv":
+            shutil.copy(f, dest / f.name)
+    with open(INPUTS / "races_2026.csv", newline="") as fh:
+        rd = csv.DictReader(fh)
+        fields, rows = rd.fieldnames, list(rd)
+    for r in rows:
+        d = shift.get(r["race_id"])
+        if d and r.get("office") == "house" and r.get("pvi") not in ("", "NA", None):
+            r["pvi"] = repr(round(float(r["pvi"]) + d, 4))
+    with open(dest / "races_2026.csv", "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=fields, lineterminator="\n")
+        w.writeheader()
+        w.writerows(rows)
+    return dest
+
+
+def run_one(inp: dict, shift: dict | None = None) -> dict:
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         out_dir = tmp / "output"
-        (tmp / "class_forecast.R").write_text(_patched_script(inp, out_dir))
+        data_dir = _inputs_with_shift(tmp / "inputs", shift) if shift else None
+        (tmp / "class_forecast.R").write_text(_patched_script(inp, out_dir, data_dir))
         res = subprocess.run(["Rscript", "class_forecast.R"], cwd=tmp,
                              capture_output=True, text=True)
         if res.returncode != 0:
@@ -248,7 +317,8 @@ def store(results: list[tuple[dict, dict]]) -> None:
     log = [r for r in _read(INPUT_LOG) if r["date"] not in done]
     log += [inp for inp, _ in results]
     log.sort(key=lambda r: r["date"])
-    _write(INPUT_LOG, log, list(results[0][0].keys()))
+    fields = list(dict.fromkeys(k for r in [inp for inp, _ in results] + log for k in r))
+    _write(INPUT_LOG, log, fields)
 
     # "latest" means the newest date in the time series, not the newest date
     # in this particular run.
@@ -300,7 +370,9 @@ def main(argv=None) -> int:
         inp = {"date": end.isoformat(), "approval": a.approval, "approval_as_of": end.isoformat(),
                "gas_ytd": a.gas, "gas_weeks": 0, "real_income_2026": a.income, "income_months": 0,
                "computed_on": dt.date.today().isoformat()}
-        store([(inp, run_one(inp))])
+        shift, label = map_shift(end.isoformat(), district_maps())
+        inp["district_map"], inp["districts_shifted"] = label, len(shift)
+        store([(inp, run_one(inp, shift))])
         print(f"  computed {end} from the inputs given")
         return 0
 
@@ -314,13 +386,19 @@ def main(argv=None) -> int:
     days = [start + dt.timedelta(days=i) for i in range((end - start).days + 1)]
     todo = [d for d in days if a.redo or d.isoformat() not in have or d == end]
 
+    dm = district_maps()
+    if dm is None:
+        print("  no district map data found; every date uses the November lines")
     results, skipped = [], []
     for day in todo:
         inp = inputs_for(day, approval, gas, income, income_2025)
         if inp is None:
             skipped.append(day.isoformat())
             continue
-        results.append((inp, run_one(inp)))
+        shift, label = map_shift(day.isoformat(), dm)
+        inp["district_map"] = label
+        inp["districts_shifted"] = len(shift)
+        results.append((inp, run_one(inp, shift)))
     if skipped:
         print(f"  skipped {len(skipped)} date(s) with no approval or gas data yet "
               f"({skipped[0]} .. {skipped[-1]})")

@@ -68,7 +68,7 @@
   <div class="card prose">
     <h2>Academic models</h2>
     <p>These are published models from political science research, run by this
-       site on current data. They are not the authors' own 2026 forecasts.</p>
+       site on current data.</p>
     <ul>
       {{- range $k, $m := .models }}
       <li><strong>{{ $m.name }}</strong>. <span class="muted">{{ $m.citation }}</span></li>
@@ -89,9 +89,10 @@
        presidential approval. Seats and
        chances of control come from 10,000 simulations.</p>
     <p>It is re-run each day with the latest approval average, gas prices and
-       income. Dates before it was added to the site were computed afterward
-       from the approval data available on each date and the current economic
-       data. The model stops updating on November 1.</p>
+       income, and the district maps in force on that day. Dates before it was
+       added to the site were computed afterward from the approval data
+       available on each date and the current economic data. The model stops
+       updating on November 1.</p>
   </div>
 
 </div>

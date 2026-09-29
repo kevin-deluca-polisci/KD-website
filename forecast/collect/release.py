@@ -87,7 +87,7 @@ def by_source(rows: list[dict]) -> list[dict]:
             continue
         # on_line: a race row from a source that only carries the national
         # polling average to each race is not that race's polling.
-        got = facets.on_line(sid, r["category"], r.get("race_id", ""))
+        got = facets.on_line(sid, r["category"], r.get("race_id", ""), r.get("provenance", ""))
         if got is None:
             continue
         line = "input" if got[0] == "reference" else got[1]
