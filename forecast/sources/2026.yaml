@@ -276,6 +276,13 @@ sources:
         - name: forecast_senate
           url: https://votes.decisiondeskhq.com/forecast/2026/senate
     notes: >
+      TERMS CHECKED 2026-09-29: DDHQ's Terms of Service prohibit "scraping
+      data or other Content from the Site for any purpose" and copying or
+      redistributing content; use is personal and non-commercial only. Do not
+      build a direct collector without written permission. Its polling
+      averages listed in Wikipedia's tables are collected through the
+      Wikipedia sources and stay in the collaborator tier (decided 2026-09-29).
+      .
       ROBOTS: RESOLVED 2026-08-29. votes.decisiondeskhq.com/robots.txt reads
       `User-Agent: * / Allow: /` with /api/, /admin/, /broadcast/, /onboarding/,
       /sign-in and /sign-up disallowed. /forecast/2026 is permitted.
@@ -1019,6 +1026,12 @@ sources:
     # individual value, so the exact number is not reproduced anywhere on the
     # public side. The methods page must say plainly that this source is read
     # as republished by Wikipedia and not collected from the publisher.
+    #
+    # TERMS CHECKED 2026-09-29: FiftyPlusOne's Terms of Service forbid scraping
+    # or crawling the API "or any associated sites" beyond what the terms
+    # permit, and forbid redistributing or building a shared dataset from API
+    # data; Standard/Premium licences are personal and non-commercial. Direct
+    # collection needs an Enterprise licence or written permission.
     #
     # FIFTYPLUSONE SPECIFICALLY. `permission_pending` means nobody has refused;
     # permission has not yet been sought. Raising the tier also recovers
