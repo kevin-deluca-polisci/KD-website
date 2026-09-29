@@ -1533,7 +1533,7 @@ def _cp_panel(key: str, title: str, dates: list[str], vals: list[float | None],
         tv = [t for t in tv if abs(t - round(t)) < 1e-9] or \
              list(range(math.ceil(y0), math.floor(y1) + 1, max(1, round((y1 - y0) / 4))))
     whole = all(abs(t - round(t)) < 1e-9 for t in tv) or unit == "usd"
-    ticks = [{"y": Y(t), "label": _cp_fmt(t, unit, tick=True) if whole
+    ticks = [{"y": Y(t), "label": _cp_fmt(t, unit, tick=True) if whole or unit == "chg"
               else f"{t:.1f}" + ("%" if unit in ("pct", "prob") else "")}
              for t in tv]
     dts = _cp_date_ticks(d0, dt.date.fromisoformat(pts[-1][0]), X)
@@ -1591,6 +1591,10 @@ def _cp_fmt(v: float, unit: str, tick: bool = False) -> str:
         return f"{v:.0f}%" if tick else f"{v:.1f}%"
     if unit == "usd":
         return f"${v:.2f}"
+    if unit == "chg":                         # percent change, signed
+        if abs(v) < (1e-9 if tick else 0.05):
+            return "0%" if tick else "0.0%"
+        return f"{v:+.0f}%" if tick and abs(v - round(v)) < 1e-9 else f"{v:+.1f}%"
     return f"{v:.0f}"
 
 
@@ -1647,8 +1651,10 @@ def build_class_page(class_dir: Path = CLASS_DIR) -> dict | None:
                   col("nat_dem_share"), "pct", ref=50, ref_label="50%"),
         _cp_panel("approval", "Input: presidential approval", dates,
                   col("approval"), "pct"),
-        _cp_panel("gas", "Input: average 2026 gas price", dates,
-                  col("gas_ytd"), "usd"),
+        _cp_panel("gas", "Input: gas price, change over the past year", dates,
+                  col("gas_1yr"), "chg", ref=0),
+        _cp_panel("income", "Input: real disposable income, change over the past year",
+                  dates, col("income_1yr"), "chg", ref=0),
     ) if p]
 
     sims_h, sims_s = [], []

@@ -208,17 +208,17 @@
     </table>
     {{- end }}
     <p class="thin-note">midterm = 1 in 2026. income_1yr and gas_1yr are percent
-       changes from the previous year in real disposable income per capita and
-       the average gas price. approval is presidential approval, in percent.</p>
+       changes over one year in real disposable income per capita and the
+       average gas price. approval is presidential approval, in percent.</p>
 
     <p>Today's inputs and result:</p>
     <table>
       <tr><td>Presidential approval</td><td class="num">{{ printf "%.1f%%" (float $l.approval) }}</td>
           <td class="muted wrap">{{ with $in }}Average of the published approval aggregators, as of {{ .approval_as_of }}{{ end }}</td></tr>
-      <tr><td>Gas price, 2026 average</td><td class="num">${{ printf "%.2f" (float $l.gas_ytd) }}</td>
-          <td class="muted wrap">{{ printf "%+.1f" (float $l.gas_1yr) }}% on 2025{{ with $in }}; EIA weekly price, {{ .gas_weeks }} weeks{{ end }}</td></tr>
+      <tr><td>Gas price</td><td class="num">{{ printf "%+.1f%%" (float $l.gas_1yr) }}</td>
+          <td class="muted wrap">Average of the last 52 weeks{{ with $in }}{{ with .gas_12m }} (${{ printf "%.2f" (float .) }}){{ end }}{{ end }} against the 52 weeks before; EIA weekly price</td></tr>
       <tr><td>Real disposable income</td><td class="num">{{ printf "%+.2f%%" (float $l.income_1yr) }}</td>
-          <td class="muted wrap">Change on 2025{{ with $in }}; {{ .income_months }} months of 2026 data{{ end }}</td></tr>
+          <td class="muted wrap">Average of the last 12 months released{{ with $in }}{{ with .income_last_month }}, through {{ . }}{{ end }}{{ end }}, against the 12 months before; per capita</td></tr>
       <tr><td><strong>Predicted change for Republicans</strong></td>
           <td class="num"><strong>{{ printf "%+.2f" (float $l.pred_change_in_party) }}</strong></td>
           <td class="muted wrap">points{{ with index $ft "national" }}, from {{ printf "%.1f" .rep_prev_share }}% in 2024{{ end }}</td></tr>
@@ -276,10 +276,10 @@
   <div class="card prose">
     <h2>Updates</h2>
     <p>Each update uses the latest national inputs: approval (the site's
-       average of the published approval aggregators), the 2026 average gas
-       price (EIA weekly, via FRED) and real disposable income per capita (via
-       FRED). For dates in 2025, before any 2026 data, the gas and income terms
-       use the change over the preceding year. Each date also uses the
+       average of the published approval aggregators), the change in the gas
+       price over the last 52 weeks (EIA weekly, via FRED) and the change in
+       real disposable income per capita over the last 12 months released (via
+       FRED). The same one-year rule is used for every date. Each date also uses the
        district maps in force on that date, so
        the forecast shifts when a state's new map takes effect. The
        coefficients stay the same. The model stops updating on November 1,

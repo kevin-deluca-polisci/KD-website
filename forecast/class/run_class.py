@@ -13,15 +13,22 @@ Inputs for a date D:
     approval   the site's average of the published approval aggregators,
                latest value on or before D (forecast/data/2026/derived/
                approval.json, series "aggregate")
-    gas        average of the EIA weekly U.S. regular retail gas price
-               (FRED GASREGW) over 2026 weeks dated on or before D
-    income     average of 2026 monthly real disposable income per capita
-               (FRED A229RX0) for months released by D. A month is treated as
-               released on the last day of the following month. Before any
-               2026 month is out, the 2025 value is used (no change).
-    2025 dates the economy terms use the trailing year instead: the latest
-               52 weeks of gas prices and 12 published months of income
-               against the 52 weeks / 12 months before.
+    gas        percent change in the average EIA weekly U.S. regular retail
+               gas price (FRED GASREGW): the latest 52 weeks dated on or
+               before D against the 52 weeks before those
+    income     percent change in real disposable income per capita (FRED
+               A229RX0): the latest 12 months released by D against the 12
+               months before those. A month is treated as released on the
+               last day of the following month.
+    The same one-year rule is used for every date, so the series is
+    comparable from start to finish. The course script takes a 2026 level
+    and computes the change from 2025, so the runner passes the 2025 value
+    times (1 + change). `--economy course` uses the course's own definition
+    instead (2026 average to date against 2025).
+
+    Consumer sentiment (FRED UMCSENT, the same 12-month windows) is recorded
+    for the alternative national models in national_variants.R. The class
+    model does not use it.
 
 District maps: the course race file has each district's partisan lean on
 the lines used in November 2026. For an earlier date, districts in states
@@ -65,7 +72,7 @@ APPROVAL_JSON = REPO / "forecast" / "data" / "2026" / "derived" / "approval.json
 
 LOCK = dt.date(2026, 11, 1)
 FIRST = dt.date(2025, 1, 20)         # start of the series (inauguration)
-FIRST_2026 = dt.date(2026, 1, 5)     # first 2026 weekly gas reading
+FIRST_2026 = dt.date(2026, 1, 5)     # first 2026 weekly gas reading (--economy course)
 FRED = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={}"
 UA = "PLSC 2219 Forecast Archive (Yale University) (+https://kevinmdeluca.com/forecast/2026/)"
 
@@ -174,51 +181,68 @@ def _released_months(income, day: dt.date) -> list[tuple[dt.date, float]]:
     return sorted(out)
 
 
-def inputs_for(day: dt.date, approval, gas, income, base_2025: dict) -> dict | None:
-    """The four inputs for `day`.
+def _mean(xs) -> float:
+    return statistics.fmean(xs)
 
-    From 2026-01-05 on: 2026 averages to date, as the course defines them.
 
-    Before that (2025), no 2026 data exist, so the economy terms use the
-    trailing year: the average of the latest 52 weeks of gas prices (12
-    published months of income) against the 52 weeks (12 months) before.
-    That change is passed to the course script by setting its 2026 value to
-    the 2025 value times (1 + change), so the script computes exactly that
-    percentage change.
+def one_year(day: dt.date, gas, income, sentiment) -> dict | None:
+    """The one-year economic changes for `day`, the same rule for every date.
+
+    gas: mean of the latest 52 weekly prices dated on or before `day` against
+    the mean of the 52 before them. income and sentiment: mean of the latest
+    12 released months against the 12 before them."""
+    weeks = [v for d, v in gas if d <= day]
+    months = [v for _, v in _released_months(income, day)]
+    if len(weeks) < 104 or len(months) < 24:
+        return None
+    g1, g0 = _mean(weeks[-52:]), _mean(weeks[-104:-52])
+    i1, i0 = _mean(months[-12:]), _mean(months[-24:-12])
+    rec = {"gas_12m": round(g1, 4), "gas_prev_12m": round(g0, 4),
+           "gas_1yr": round(100 * (g1 / g0 - 1), 4),
+           "income_12m": round(i1, 1), "income_prev_12m": round(i0, 1),
+           "income_1yr": round(100 * (i1 / i0 - 1), 4),
+           "income_last_month": _released_months(income, day)[-1][0].strftime("%Y-%m")}
+    sm = [v for _, v in _released_months(sentiment, day)] if sentiment else []
+    if len(sm) >= 24:
+        rec.update({"sentiment_12m": round(_mean(sm[-12:]), 3),
+                    "sentiment_prev_12m": round(_mean(sm[-24:-12]), 3),
+                    "sentiment_last_month":
+                        _released_months(sentiment, day)[-1][0].strftime("%Y-%m")})
+    return rec
+
+
+def inputs_for(day: dt.date, approval, gas, income, sentiment, base_2025: dict,
+               rule: str = "one_year") -> dict | None:
+    """The inputs for `day`.
+
+    rule "one_year" (default): the one-year changes from one_year(), for
+    every date. The course script computes the change from its 2025 row, so
+    it is given 2026 values equal to the 2025 values times (1 + change).
+
+    rule "course": the course's own definition from 2026-01-05 on (2026
+    average to date against 2025); one-year changes before that.
     """
     appr = [(d, v) for d, v in approval if d <= day]
     if not appr:
         return None
+    econ = one_year(day, gas, income, sentiment)
+    if econ is None:
+        return None
     rec = {"date": day.isoformat(),
            "approval": round(appr[-1][1], 2),
-           "approval_as_of": appr[-1][0].isoformat()}
+           "approval_as_of": appr[-1][0].isoformat(),
+           "economy_rule": "one-year change", **econ}
 
-    if day >= FIRST_2026:
+    if rule == "course" and day >= FIRST_2026:
         gas_2026 = [v for d, v in gas if dt.date(2026, 1, 1) <= d <= day]
-        if not gas_2026:
-            return None
-        released = [(d, v) for d, v in _released_months(income, day) if d.year == 2026]
-        inc = statistics.fmean(v for _, v in released) if released else base_2025["income"]
-        rec.update({"economy_basis": "2026 to date",
-                    "gas_ytd": round(statistics.fmean(gas_2026), 4),
-                    "gas_weeks": len(gas_2026),
-                    "real_income_2026": round(inc, 1),
-                    "income_months": len(released)})
-    else:
-        last = [v for d, v in gas if day - dt.timedelta(days=364) < d <= day]
-        prev = [v for d, v in gas
-                if day - dt.timedelta(days=728) < d <= day - dt.timedelta(days=364)]
-        months = _released_months(income, day)
-        if len(last) < 40 or len(prev) < 40 or len(months) < 24:
-            return None
-        g_chg = statistics.fmean(last) / statistics.fmean(prev) - 1
-        i_chg = (statistics.fmean(v for _, v in months[-12:])
-                 / statistics.fmean(v for _, v in months[-24:-12]) - 1)
-        rec.update({"economy_basis": "trailing year",
-                    "gas_ytd": round(base_2025["gas"] * (1 + g_chg), 4),
-                    "gas_weeks": len(last),
-                    "real_income_2026": round(base_2025["income"] * (1 + i_chg), 1),
-                    "income_months": 12})
+        released = [v for d, v in _released_months(income, day) if d.year == 2026]
+        g = _mean(gas_2026)
+        i = _mean(released) if released else base_2025["income"]
+        rec.update({"economy_rule": "2026 to date (course)",
+                    "gas_1yr": round(100 * (g / base_2025["gas"] - 1), 4),
+                    "income_1yr": round(100 * (i / base_2025["income"] - 1), 4)})
+    rec["gas_input"] = round(base_2025["gas"] * (1 + rec["gas_1yr"] / 100), 6)
+    rec["income_input"] = round(base_2025["income"] * (1 + rec["income_1yr"] / 100), 3)
     # A row computed after its own date is a recomputation; the site says so.
     rec["computed_on"] = dt.date.today().isoformat()
     return rec
@@ -257,12 +281,12 @@ def _patched_script(inp: dict, out_dir: Path, data_dir: Path | None = None) -> s
     vals = {
         "AS_OF": f'AS_OF            <- as.Date("{inp["date"]}")',
         "APPROVAL_2026": f'APPROVAL_2026    <- {inp["approval"]}',
-        "GAS_2026": f'GAS_2026         <- {inp["gas_ytd"]}',
-        "REAL_INCOME_2026": f'REAL_INCOME_2026 <- {inp["real_income_2026"]}',
+        "GAS_2026": f'GAS_2026         <- {inp["gas_input"]}',
+        "REAL_INCOME_2026": f'REAL_INCOME_2026 <- {inp["income_input"]}',
         "INPUT_SOURCES": ('INPUT_SOURCES    <- "Approval: site aggregator average, '
                           f'{inp["approval_as_of"]}. Gas: FRED GASREGW, '
-                          f'{inp["gas_weeks"]} weeks of 2026. Income: FRED A229RX0, '
-                          f'{inp["income_months"]} months of 2026."'),
+                          f'{inp.get("economy_rule", "given")}. Income: FRED A229RX0, '
+                          f'{inp.get("economy_rule", "given")}."'),
         "DATA_DIR": f'DATA_DIR    <- "{(data_dir or INPUTS).as_posix()}"',
         "OUT_DIR": f'OUT_DIR     <- "{out_dir.as_posix()}"',
     }
@@ -308,6 +332,11 @@ def run_one(inp: dict, shift: dict | None = None) -> dict:
         stamp = inp["date"]
         with open(out_dir / "class_timeseries.csv", newline="") as fh:
             summary = list(csv.DictReader(fh))[-1]
+        # The script's gas_ytd column is the level passed in (2025 x (1 +
+        # change)); record the actual average price over the window instead.
+        summary = {("gas_avg" if k == "gas_ytd" else k):
+                   (inp.get("gas_12m", v) if k == "gas_ytd" else v)
+                   for k, v in summary.items()}
         with open(out_dir / f"forecast_class_{stamp}.csv", newline="") as fh:
             races = list(csv.DictReader(fh))
         sims = (out_dir / f"seat_sims_class_{stamp}.csv").read_text()
@@ -328,7 +357,7 @@ def _read(path: Path) -> list[dict]:
 def _write(path: Path, rows: list[dict], fields: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=fields, lineterminator="\n")
+        w = csv.DictWriter(fh, fieldnames=fields, lineterminator="\n", restval="")
         w.writeheader()
         w.writerows(rows)
 
@@ -339,7 +368,11 @@ def store(results: list[tuple[dict, dict]]) -> None:
     ts = [r for r in _read(TIMESERIES) if r["as_of"] not in done]
     ts += [res["summary"] for _, res in results]
     ts.sort(key=lambda r: r["as_of"])
-    _write(TIMESERIES, ts, list(results[0][1]["summary"].keys()))
+    # Rows from an earlier version of the runner can have other columns; keep
+    # the union so a partial rerun never fails (a full --backfill --redo
+    # rewrites every row with the current columns).
+    _write(TIMESERIES, ts, list(dict.fromkeys(
+        k for r in [res["summary"] for _, res in results] + ts for k in r)))
 
     fields = ["as_of", "race_id", "state", "dem_candidate", "rep_candidate",
               "pred_dem_share", "p_dem_win", "lo_80", "hi_80"]
@@ -378,11 +411,14 @@ def main(argv=None) -> int:
     ap.add_argument("--redo", action="store_true",
                     help="recompute dates that already have a row")
     ap.add_argument("--approval", type=float, help="override approval (one date only)")
-    ap.add_argument("--gas", type=float, help="override 2026 average gas price (one date only)")
-    ap.add_argument("--income", type=float, help="override 2026 real income (one date only)")
+    ap.add_argument("--gas", type=float, help="override gas, 1-year %% change (one date only)")
+    ap.add_argument("--income", type=float, help="override income, 1-year %% change (one date only)")
+    ap.add_argument("--economy", choices=["one_year", "course"], default="one_year",
+                    help="economy rule (default: one-year change for every date)")
     ap.add_argument("--out", type=Path, help="write outputs here instead (testing)")
     ap.add_argument("--gas-csv", type=Path, help="local copy of FRED GASREGW (testing)")
     ap.add_argument("--income-csv", type=Path, help="local copy of FRED A229RX0 (testing)")
+    ap.add_argument("--sentiment-csv", type=Path, help="local copy of FRED UMCSENT (testing)")
     a = ap.parse_args(argv)
 
     global OUT, TIMESERIES, SENATE_HIST, INPUT_LOG, LATEST_RACES, LATEST_SIMS
@@ -400,12 +436,19 @@ def main(argv=None) -> int:
     if start < FIRST:
         start = FIRST
 
+    with open(INPUTS / "economy_sept.csv", newline="") as fh:
+        row_2025 = next(r for r in csv.DictReader(fh) if r["year"] == "2025")
+        base_2025 = {"income": float(row_2025["real_disp_income"]),
+                     "gas": float(row_2025["gas_price"])}
+
     if a.approval is not None and a.gas is not None and a.income is not None:
         if a.backfill:
             print("  --approval/--gas/--income apply to one date; drop --backfill")
             return 2
         inp = {"date": end.isoformat(), "approval": a.approval, "approval_as_of": end.isoformat(),
-               "gas_ytd": a.gas, "gas_weeks": 0, "real_income_2026": a.income, "income_months": 0,
+               "economy_rule": "given", "gas_1yr": a.gas, "income_1yr": a.income,
+               "gas_input": round(base_2025["gas"] * (1 + a.gas / 100), 6),
+               "income_input": round(base_2025["income"] * (1 + a.income / 100), 3),
                "computed_on": dt.date.today().isoformat()}
         shift, label = map_shift(end.isoformat(), district_maps())
         inp["district_map"], inp["districts_shifted"] = label, len(shift)
@@ -416,10 +459,11 @@ def main(argv=None) -> int:
     approval = approval_points()
     gas = fred_series("GASREGW", a.gas_csv)
     income = fred_series("A229RX0", a.income_csv)
-    with open(INPUTS / "economy_sept.csv", newline="") as fh:
-        row_2025 = next(r for r in csv.DictReader(fh) if r["year"] == "2025")
-        base_2025 = {"income": float(row_2025["real_disp_income"]),
-                     "gas": float(row_2025["gas_price"])}
+    try:
+        sentiment = fred_series("UMCSENT", a.sentiment_csv)
+    except Exception as e:                    # only the comparison models use it
+        print(f"  consumer sentiment not read ({e}); continuing without it")
+        sentiment = []
 
     have = {r["as_of"] for r in _read(TIMESERIES)}
     days = [start + dt.timedelta(days=i) for i in range((end - start).days + 1)]
@@ -430,7 +474,7 @@ def main(argv=None) -> int:
         print("  no district map data found; every date uses the November lines")
     results, skipped = [], []
     for day in todo:
-        inp = inputs_for(day, approval, gas, income, base_2025)
+        inp = inputs_for(day, approval, gas, income, sentiment, base_2025, a.economy)
         if inp is None:
             skipped.append(day.isoformat())
             continue
@@ -439,7 +483,7 @@ def main(argv=None) -> int:
         inp["districts_shifted"] = len(shift)
         results.append((inp, run_one(inp, shift)))
     if skipped:
-        print(f"  skipped {len(skipped)} date(s) with no approval or gas data yet "
+        print(f"  skipped {len(skipped)} date(s) without approval or two years of economic data "
               f"({skipped[0]} .. {skipped[-1]})")
     if not results:
         print("  nothing computed")

@@ -306,6 +306,10 @@ jobs:
           [ "${{ inputs.backfill_class }}" = "true" ] && CLASS_ARGS="--backfill --redo"
           python3 forecast/class/run_class.py $CLASS_ARGS \
             || echo "::warning::class model did not run; the class line keeps its last value"
+          # Other versions of the national equation (consumer sentiment etc.),
+          # for comparison only; not shown on the site.
+          Rscript forecast/class/national_variants.R \
+            || echo "::warning::national model comparison did not run"
           python3 forecast/collect/publish.py   --cycle "$CYCLE"
           # The shareable copy: forecast/archive/<cycle>/, rebuilt from derived/.
           python3 forecast/collect/release.py   --cycle "$CYCLE"
