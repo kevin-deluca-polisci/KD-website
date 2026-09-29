@@ -13,7 +13,7 @@
 # the GitHub token your Terminal already uses.
 set -euo pipefail
 
-DEST="${1:-$HOME/Library/CloudStorage/Dropbox/Election Forecast Archive (collaborators)}"
+DEST="${1:-$HOME/Library/CloudStorage/Dropbox/Yale/ElectionData/ForecastDataArchive}"
 CACHE="${CACHE:-$HOME/.cache/forecast-archive}"
 PUBLIC_REPO="${PUBLIC_REPO:-https://github.com/kevin-deluca-polisci/KD-website.git}"
 PRIVATE_REPO="${PRIVATE_REPO:-https://github.com/kevin-deluca-polisci/plsc2219-raw.git}"
