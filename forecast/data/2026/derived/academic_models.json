@@ -16,12 +16,12 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 6.24,
-      "margin_D_80_low": 2.21,
-      "margin_D_80_high": 10.26,
+      "margin_D": 6.18,
+      "margin_D_80_low": 2.15,
+      "margin_D_80_high": 10.2,
       "inputs": {
-        "generic_ballot_D": 9.242,
-        "generic_ballot_share_deviation": 4.621,
+        "generic_ballot_D": 9.123,
+        "generic_ballot_share_deviation": 4.561,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
         "days_to_election": 34,
         "president_party": "R",
@@ -42,8 +42,8 @@
           "constant": 1.03,
           "root_mse": 3.3
         },
-        "bew_direct_D_seat_share": 57.24,
-        "bew_direct_D_seats": 249.0
+        "bew_direct_D_seat_share": 57.18,
+        "bew_direct_D_seats": 248.7
       },
       "notes": [
         "tide is BEW's vote equation; their separate seats equation is reported as a diagnostic and is not used downstream"
@@ -102,9 +102,9 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 15.04,
-      "margin_D_80_low": 7.9,
-      "margin_D_80_high": 22.11,
+      "margin_D": 15.71,
+      "margin_D_80_low": 9.13,
+      "margin_D_80_high": 22.29,
       "inputs": {
         "pct_expect_worse": 37.0,
         "pct_expect_worse_source": "University of Michigan Surveys of Consumers, Table 8, WORSE OFF row, monthly, 2026-06 (carried forward from 2026-06)",
@@ -198,7 +198,7 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 1.06,
+      "margin_D": 2.96,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
@@ -245,7 +245,7 @@
           "out_of_sample_mae": 2.7,
           "calls_control": "72%"
         },
-        "inversion_extrapolated": true,
+        "inversion_extrapolated": false,
         "benchmark": {
           "claim": "Democrats lose Senate control with a net loss of three seats; House a knife-edge race at 215 D seats",
           "authors": "Lewis-Beck & Quinlan",
@@ -255,8 +255,7 @@
       },
       "notes": [
         "forecasts SEAT COUNTS directly from institutional facts \u2014 no polls, no economy, no popularity. The margin shown is our seat curve run backwards from its House number, not theirs",
-        "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it",
-        "the House number falls outside today's range of tides, so the inversion is extrapolated"
+        "its Senate figure of 49 D seats is computed from a SEPARATE published equation, not from our partisan-lean machinery \u2014 the only Senate number on this site that is independent of it"
       ]
     }
   },
