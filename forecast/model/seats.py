@@ -1144,7 +1144,8 @@ def main(argv=None) -> int:
             # SEATS BEFORE EACH LATE ENTRANT'S FIRST FORECAST. See
             # REPROJECT_BACKWARD. Only dates this run is rebuilding.
             back = reproject_backward(hist, ah, pvi, states, rows, sigma,
-                                      a.holdover_d, set(todo))
+                                      a.holdover_d,
+                                      None if a.reproject_backward else set(todo))
             print(f"  re-projected {back} seat count(s) for dates before a "
                   f"source's first forecast, each on its own date's map")
             print(f"  backfilled {filled} academic projection(s) across "

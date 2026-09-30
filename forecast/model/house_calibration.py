@@ -151,8 +151,19 @@ def load_baseline_dra() -> dict[tuple, dict[str, float]]:
     """
     import dra_import as di
     out: dict[tuple, dict[str, float]] = {}
-    for f in (REPO / "forecast" / "data" / "DRA").rglob("*.csv"):
-        ver = "current" if "current" in f.parent.name.lower() else "prior"
+    # ONLY THE TWO 2020-ROUND FOLDERS, IN A FIXED ORDER. On 2026-09-10 the
+    # 2010-round maps were added beside them (maps2018-2020/, for the
+    # endorsement-quality model). Every folder not named "current" was read as
+    # "prior", so those older lines could overwrite the real prior map for the
+    # redrawn states, depending on the order the filesystem listed the
+    # folders. From 2026-09-22 they did: slope 0.68, district sigma 13.4 and
+    # incumbency 13.3 points, the exact failure described above, against 0.92,
+    # 8.7 and 5.4 with the right files.
+    folders = {"current map": "current", "prior map": "prior"}
+    files = sorted(f for f in (REPO / "forecast" / "data" / "DRA").rglob("*.csv")
+                   if f.parent.name.lower() in folders)
+    for f in files:
+        ver = folders[f.parent.name.lower()]
         st = di.infer(f.name)["state"]
         if not st:
             continue

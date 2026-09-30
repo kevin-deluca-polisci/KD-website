@@ -113,6 +113,11 @@ on:
         required: false
         default: "wikipedia"
 
+      seats_rebuild_from:
+        description: "Rebuild seat counts for every date from this one to today (YYYY-MM-DD; blank = none)"
+        required: false
+        default: ""
+
       reproject_seats:
         description: "Recompute seat counts for the dates before each late-entering source's first forecast, on each date's own map (one-off, about 30 minutes)"
         type: boolean
@@ -305,6 +310,7 @@ jobs:
           SEAT_ARGS=""
           [ "${{ inputs.backfill_academic }}" = "true" ] && SEAT_ARGS="--backfill-academic"
           [ "${{ inputs.reproject_seats }}" = "true" ] && SEAT_ARGS="$SEAT_ARGS --reproject-backward"
+          [ -n "${{ inputs.seats_rebuild_from }}" ] && SEAT_ARGS="$SEAT_ARGS --backfill-history --backfill-from ${{ inputs.seats_rebuild_from }}"
           python3 forecast/model/seats.py       --cycle "$CYCLE" $SEAT_ARGS          
           AGG_ARGS=""
           [ "${{ inputs.force_aggregate }}" = "true" ] && AGG_ARGS="--force"
@@ -321,7 +327,12 @@ jobs:
           # for comparison only; not shown on the site.
           Rscript forecast/class/national_variants.R \
             || echo "::warning::national model comparison did not run"
-          python3 forecast/collect/publish.py   --cycle "$CYCLE"
+          # The chart's timeline only adds today's date on a normal run. When
+          # past seat counts were recomputed, rebuild it so the chart shows them.
+          PUB_ARGS=""
+          { [ "${{ inputs.reproject_seats }}" = "true" ] || [ -n "${{ inputs.seats_rebuild_from }}" ] \
+            || [ "${{ inputs.backfill_academic }}" = "true" ]; } && PUB_ARGS="--rebuild-timeline"
+          python3 forecast/collect/publish.py   --cycle "$CYCLE" $PUB_ARGS
           # The shareable copy: forecast/archive/<cycle>/, rebuilt from derived/.
           python3 forecast/collect/release.py   --cycle "$CYCLE"
  
