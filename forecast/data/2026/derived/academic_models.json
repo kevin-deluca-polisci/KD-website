@@ -20,8 +20,8 @@
       "margin_D_80_low": 2.21,
       "margin_D_80_high": 10.26,
       "inputs": {
-        "generic_ballot_D": 9.244,
-        "generic_ballot_share_deviation": 4.622,
+        "generic_ballot_D": 9.242,
+        "generic_ballot_share_deviation": 4.621,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
         "days_to_election": 34,
         "president_party": "R",
@@ -60,14 +60,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": true,
-      "margin_D": 8.52,
-      "margin_D_80_low": 0.37,
-      "margin_D_80_high": 16.67,
+      "margin_D": 7.21,
+      "margin_D_80_low": -0.94,
+      "margin_D_80_high": 15.37,
       "inputs": {
         "approval": 31.9,
         "approval_source": "mean of 5 adults-sample approval poll(s) in the 14 days to 2026-09-30. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
-        "income_growth": -0.039,
-        "income_source": "FRED income_growth_ytd as of 2026-09-30, 7 month(s) of the year in hand"
+        "income_growth": 0.916,
+        "income_source": "FRED income_growth_ytd as of 2026-09-30, 8 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
@@ -78,7 +78,7 @@
         "r2": 0.273,
         "loeo_rmse": 3.18,
         "fitted_on": "20 midterms, 1946-2022",
-        "pres_party_two_party_vote": 45.74,
+        "pres_party_two_party_vote": 46.39,
         "benchmark": {
           "claim": "Republicans lose about 28 House seats and the House",
           "authors": "Charles Tien and Michael S. Lewis-Beck",
@@ -104,7 +104,7 @@
       "refit_on_our_history": false,
       "margin_D": 15.04,
       "margin_D_80_low": 7.9,
-      "margin_D_80_high": 22.1,
+      "margin_D_80_high": 22.11,
       "inputs": {
         "pct_expect_worse": 37.0,
         "pct_expect_worse_source": "University of Michigan Surveys of Consumers, Table 8, WORSE OFF row, monthly, 2026-06 (carried forward from 2026-06)",
@@ -129,7 +129,7 @@
         "pres_party_seat_change": -48.1,
         "implied_D_seats": 263.1,
         "inversion_extrapolated": true,
-        "curve_points_used": 9,
+        "curve_points_used": 11,
         "sensitivity_month": [
           {
             "month": "Mar 2026",
