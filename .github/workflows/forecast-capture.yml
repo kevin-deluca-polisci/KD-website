@@ -133,7 +133,11 @@ env:
 jobs:
   capture:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    # A daily run takes minutes. The one-off backfills do not: recomputing
+    # the academic and polling models for every date since January 2025
+    # (backfill_academic) ran past 90 minutes on 2026-09-29. GitHub allows
+    # up to 360.
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v6
  
