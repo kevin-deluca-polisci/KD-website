@@ -221,6 +221,66 @@ REPROJECT_BACKWARD = {
 BACKWARD_N_SIMS = 5000
 
 
+def reproject_backward(hist: dict, ah: dict, pvi: dict, states: list,
+                       rows: list, sigma: float, holdover_D: int,
+                       dates_ok: set | None = None) -> int:
+    """Seats and chances for the dates before each REPROJECT_BACKWARD
+    source's first forecast, from that first margin, on each date's own map
+    and horizon. Edits `hist` in place; returns the number of projections.
+
+    `ah` is the academic history as {date: {"models": {...}}}, used only for
+    a model's own stated uncertainty. `dates_ok`, when given, limits the fill
+    to those dates. A date where the source has a projection of its own is
+    never touched."""
+    back = 0
+    full_sims = polling.N_SIMS
+    polling.N_SIMS = BACKWARD_N_SIMS
+    try:
+        for sid in sorted(REPROJECT_BACKWARD):
+            have = sorted(d0 for d0, day in hist.items()
+                          if sid in (day.get("projections") or {})
+                          and not (day["projections"][sid] or {}).get("carried_back"))
+            if not have:
+                continue
+            first = have[0]
+            src = hist[first]["projections"][sid]
+            if src.get("tide_D") is None:
+                continue
+            m_src = ((ah.get(first) or {}).get("models") or {}).get(sid)
+            floor = (published_sigma(sid, m_src) if m_src is not None
+                     else PUBLISHED_SIGMA_MARGIN.get(sid))
+            targets = sorted(d for d in hist
+                             if d < first and (dates_ok is None or d in dates_ok))
+            print(f"    {sid}: first forecast {first}, "
+                  f"re-projecting {len(targets)} earlier date(s)")
+            for d0 in targets:
+                day = hist[d0]
+                day.setdefault("projections", {})
+                cur = day["projections"].get(sid)
+                if cur and not cur.get("carried_back"):
+                    continue
+                p0 = project(float(src["tide_D"]), pvi, states, rows, sigma,
+                             holdover_D, asof=d0, sigma_floor=floor)
+                p0["category"] = src.get("category")
+                p0["categories"] = src.get("categories") or [src.get("category")]
+                p0["publication"] = src.get("publication") or "private"
+                # The margin reaches the line through carry_backward in
+                # aggregate.py; this entry contributes seats only.
+                p0["margin_published_elsewhere"] = True
+                p0["seats_published_elsewhere"] = False
+                p0["as_of"] = src.get("as_of") or first
+                p0["provenance"] = "backfilled"
+                # National quantities only: no per-state rows for a date the
+                # source had not yet published anything.
+                p0["carried_back"] = True
+                p0["n_sims"] = BACKWARD_N_SIMS
+                day["projections"][sid] = p0
+                back += 1
+    finally:
+        polling.N_SIMS = full_sims
+    return back
+
+
 def external_tides(cycle: int, today: str) -> dict[str, dict]:
     """source_id -> {category, margin, as_of, publication} for outside tides.
 
@@ -511,6 +571,11 @@ def main(argv=None) -> int:
                          "(academic and polling) rather than only today. The "
                          "real name for this; --backfill-academic is kept as "
                          "an alias so existing workflow files keep working.")
+    ap.add_argument("--reproject-backward", action="store_true",
+                    help="only fill the seat counts for dates before each late "
+                         "entrant's first forecast (REPROJECT_BACKWARD), on each "
+                         "date's own map. Much faster than --backfill-history, "
+                         "which also does this.")
     ap.add_argument("--backfill-academic", action="store_true",
                     help="project every date in model_private/"
                          "academic_models_history.json, not just today. Slow "
@@ -1077,54 +1142,9 @@ def main(argv=None) -> int:
                 if i % 20 == 0 or i == len(todo):
                     print(f"    {i}/{len(todo)} dates")
             # SEATS BEFORE EACH LATE ENTRANT'S FIRST FORECAST. See
-            # REPROJECT_BACKWARD. Only dates this run is rebuilding, and only
-            # dates on which the source has no projection of its own.
-            todo_set = set(todo)
-            back = 0
-            full_sims = polling.N_SIMS
-            polling.N_SIMS = BACKWARD_N_SIMS
-            try:
-                for sid in sorted(REPROJECT_BACKWARD):
-                    have = sorted(d0 for d0, day in hist.items()
-                                  if sid in (day.get("projections") or {})
-                                  and not (day["projections"][sid] or {})
-                                  .get("carried_back"))
-                    if not have:
-                        continue
-                    first = have[0]
-                    src = hist[first]["projections"][sid]
-                    if src.get("tide_D") is None:
-                        continue
-                    m_src = ((ah.get(first) or {}).get("models") or {}).get(sid)
-                    floor = (published_sigma(sid, m_src)
-                             if m_src is not None
-                             else PUBLISHED_SIGMA_MARGIN.get(sid))
-                    for d0 in sorted(d for d in hist if d < first and d in todo_set):
-                        day = hist[d0]
-                        day.setdefault("projections", {})
-                        cur = day["projections"].get(sid)
-                        if cur and not cur.get("carried_back"):
-                            continue
-                        p0 = project(float(src["tide_D"]), pvi, states, rows,
-                                     sigma, a.holdover_d, asof=d0,
-                                     sigma_floor=floor)
-                        p0["category"] = src.get("category")
-                        p0["categories"] = src.get("categories") or [src.get("category")]
-                        p0["publication"] = src.get("publication") or "private"
-                        # The margin reaches the line through carry_backward in
-                        # aggregate.py; this entry contributes seats only.
-                        p0["margin_published_elsewhere"] = True
-                        p0["seats_published_elsewhere"] = False
-                        p0["as_of"] = src.get("as_of") or first
-                        p0["provenance"] = "backfilled"
-                        # National quantities only: no per-state rows for a
-                        # date the source had not yet published anything.
-                        p0["carried_back"] = True
-                        p0["n_sims"] = BACKWARD_N_SIMS
-                        day["projections"][sid] = p0
-                        back += 1
-            finally:
-                polling.N_SIMS = full_sims
+            # REPROJECT_BACKWARD. Only dates this run is rebuilding.
+            back = reproject_backward(hist, ah, pvi, states, rows, sigma,
+                                      a.holdover_d, set(todo))
             print(f"  re-projected {back} seat count(s) for dates before a "
                   f"source's first forecast, each on its own date's map")
             print(f"  backfilled {filled} academic projection(s) across "
@@ -1156,6 +1176,20 @@ def main(argv=None) -> int:
             print("    not contain what you just built, and aggregate.py will")
             print("    refuse the run.")
 
+    if a.reproject_backward and not (a.backfill_academic or a.backfill_history):
+        # THE CHEAP ONE-OFF. --backfill-history does this too, but it also
+        # recomputes every model on every date, which ran past four hours on
+        # 2026-09-30. This touches only the dates before each late entrant's
+        # first forecast.
+        ah_only: dict = {}
+        ah_p2 = priv / "academic_models_history.json"
+        if ah_p2.exists():
+            for d0, dd in json.loads(ah_p2.read_text()).items():
+                ah_only[d0] = {"models": dd.get("models") or {}}
+        back = reproject_backward(hist, ah_only, pvi, states, rows, sigma,
+                                  a.holdover_d, None)
+        print(f"  re-projected {back} seat count(s) for dates before a "
+              f"source's first forecast, each on its own date's map")
     hist_p.write_text(json.dumps(hist, indent=1, sort_keys=True))
     print(f"  wrote {hist_p.relative_to(REPO)}   PRIVATE — "
           f"{len(hist)} date(s) of projections retained")

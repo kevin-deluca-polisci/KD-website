@@ -113,6 +113,12 @@ on:
         required: false
         default: "wikipedia"
 
+      reproject_seats:
+        description: "Recompute seat counts for the dates before each late-entering source's first forecast, on each date's own map (one-off, about 30 minutes)"
+        type: boolean
+        required: false
+        default: false
+
       backfill_class:
         description: "Recompute the class model for every date since 2025-01-20 (run after the approval backfill)"
         type: boolean
@@ -298,6 +304,7 @@ jobs:
           # and four empty cells.
           SEAT_ARGS=""
           [ "${{ inputs.backfill_academic }}" = "true" ] && SEAT_ARGS="--backfill-academic"
+          [ "${{ inputs.reproject_seats }}" = "true" ] && SEAT_ARGS="$SEAT_ARGS --reproject-backward"
           python3 forecast/model/seats.py       --cycle "$CYCLE" $SEAT_ARGS          
           AGG_ARGS=""
           [ "${{ inputs.force_aggregate }}" = "true" ] && AGG_ARGS="--force"
