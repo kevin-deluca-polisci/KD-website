@@ -113,6 +113,11 @@ on:
         required: false
         default: "wikipedia"
 
+      senate_from:
+        description: "Recompute the polling line's Senate seats from this date to today, with race polls where they exist (YYYY-MM-DD; blank = none)"
+        required: false
+        default: ""
+
       seats_rebuild_from:
         description: "Rebuild seat counts for every date from this one to today (YYYY-MM-DD; blank = none)"
         required: false
@@ -311,6 +316,7 @@ jobs:
           [ "${{ inputs.backfill_academic }}" = "true" ] && SEAT_ARGS="--backfill-academic"
           [ "${{ inputs.reproject_seats }}" = "true" ] && SEAT_ARGS="$SEAT_ARGS --reproject-backward"
           [ -n "${{ inputs.seats_rebuild_from }}" ] && SEAT_ARGS="$SEAT_ARGS --backfill-history --backfill-from ${{ inputs.seats_rebuild_from }}"
+          [ -n "${{ inputs.senate_from }}" ] && SEAT_ARGS="$SEAT_ARGS --senate-from ${{ inputs.senate_from }}"
           python3 forecast/model/seats.py       --cycle "$CYCLE" $SEAT_ARGS          
           AGG_ARGS=""
           [ "${{ inputs.force_aggregate }}" = "true" ] && AGG_ARGS="--force"
@@ -331,6 +337,7 @@ jobs:
           # past seat counts were recomputed, rebuild it so the chart shows them.
           PUB_ARGS=""
           { [ "${{ inputs.reproject_seats }}" = "true" ] || [ -n "${{ inputs.seats_rebuild_from }}" ] \
+            || [ -n "${{ inputs.senate_from }}" ] \
             || [ "${{ inputs.backfill_academic }}" = "true" ]; } && PUB_ARGS="--rebuild-timeline"
           python3 forecast/collect/publish.py   --cycle "$CYCLE" $PUB_ARGS
           # The shareable copy: forecast/archive/<cycle>/, rebuilt from derived/.

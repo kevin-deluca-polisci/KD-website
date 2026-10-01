@@ -155,6 +155,12 @@ The collection and processing code is in this repository under
   one national error shared by all races. Senate state lean is estimated from
   past election returns; House district lean from district-level election
   results on the current lines.
+- **Polling line, Senate.** For the polling line's Senate seats and chance
+  of control, a race with its own polling averages (see the next item) uses
+  their mean as its expected margin: each aggregator's most recent value
+  within the past 60 days. Other races use the national margin and state
+  lean as above. The errors are the same for both. From 2026-10-01; earlier
+  dates were recomputed the same way.
 - **Race-level polling.** A Senate race's polling value is the average of
   the polling averages listed in that race's Wikipedia article.
 - **District maps.** Seat counts use the district map in force on each date.

@@ -114,12 +114,6 @@ title = "Kevin DeLuca"
     weight = 7
 
   [[menu.main]]
-    identifier = "blog"
-    name = "Blog"
-    url = "/blog/"
-    weight = 8
-
-  [[menu.main]]
     identifier = "forecast"
     name = "2026 Forecast"
     url = "/forecast/"

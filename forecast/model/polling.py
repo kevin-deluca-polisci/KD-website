@@ -763,7 +763,13 @@ def senate_slope(cycle: int = 2026) -> tuple[float, str]:
 
 def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
                     sigma_total: float, holdover_D: int | None,
-                    slope: float | None = None) -> dict:
+                    slope: float | None = None,
+                    polled: dict[str, float] | None = None) -> dict:
+    """`polled`, when given, is {state: margin_D} from that race's own polling
+    averages. Those races use the polled margin as their expected margin in
+    place of the national tide carried through state lean; every other race
+    is unchanged. The errors are the same for both, including the shared
+    national error, so a polled race still moves with the others."""
     sigma_state = math.sqrt(max(sigma_total ** 2 - _SIGMA_NAT ** 2,
                                 SIGMA_STATE_FLOOR ** 2))
     slope_src = "caller"
@@ -787,10 +793,14 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
         # holds each of the 35 seats up, and who is retiring — and it must
         # arrive together with a refitted slope and sigma, never alone.
         mu = tide + slope * _pvi_to_margin(pvi[st]) + inc_pts * inc.get(st, 0)
+        basis = "national"
+        if polled and st in polled:
+            mu, basis = float(polled[st]), "race polls"
         races[st] = {
             "expected_margin_D": round(mu, 2),
             "pvi": round(pvi[st], 2),
             "win_prob_D": round(_norm_cdf(mu / sigma_total), 4),
+            "basis": basis,
         }
 
     rng = random.Random(SEED)
@@ -820,6 +830,7 @@ def senate_forecast(tide: float, pvi: dict[str, float], states: list[str],
         "baseline_slope_source": slope_src,
         "incumbency_pts": round(inc_pts, 2),
         "n_incumbents": sum(1 for st in races if inc.get(st, 0)),
+        "n_race_polled": sum(1 for r in races.values() if r["basis"] == "race polls"),
         "races": races,
     }
     if holdover_D is not None:

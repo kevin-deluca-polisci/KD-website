@@ -193,6 +193,71 @@ HOUSE_MAJORITY = 218
 TIDE_MAX_AGE_DAYS = 200
 
 # --------------------------------------------------------------------------
+# SENATE: RACE POLLS WHERE THEY EXIST (decided 2026-10-01)
+#
+# The polling line's Senate seats and chances used to come only from each
+# polling average's NATIONAL margin carried through state lean. Now a race
+# with its own polling averages (the table in the race's Wikipedia article)
+# uses the mean of those averages instead, and only the other races use the
+# national margin. Applies to polling-line projections only.
+#
+# Per race and per aggregator, the most recent value captured on or before the
+# date, ignored once older than RACE_POLL_MAX_AGE_DAYS; then the mean across
+# aggregators. National-only and computed sources are excluded, the same rule
+# facets.on_line applies to the race pages.
+RACE_POLL_MAX_AGE_DAYS = 60
+RACE_POLL_EXCLUDE = {"class_polling", "polling_reconstructed"}
+_RACE_POLL_INDEX: dict | None = None
+
+
+def _race_poll_index(cycle: int) -> dict:
+    """{state: [(snapshot_date, source_id, margin_D)]}, read once."""
+    global _RACE_POLL_INDEX
+    if _RACE_POLL_INDEX is not None:
+        return _RACE_POLL_INDEX
+    idx: dict = {}
+    for f in sorted(glob.glob(str(DATA / str(cycle) / "parsed" / "*.csv"))):
+        with open(f, encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                rid = r.get("race_id") or ""
+                if (r.get("category") != "polling" or not rid.startswith("SEN_")
+                        or r.get("quantity") != "margin_D"
+                        or r.get("source_id") in RACE_POLL_EXCLUDE
+                        or r.get("provenance") in ("computed", "retrospective")):
+                    continue
+                try:
+                    v = float(r["value"])
+                except (TypeError, ValueError):
+                    continue
+                idx.setdefault(rid.split("_")[1], []).append(
+                    (r["snapshot_date"], r["source_id"], v))
+    for st in idx:
+        idx[st].sort()
+    _RACE_POLL_INDEX = idx
+    return idx
+
+
+def race_poll_margins(date: str, cycle: int = 2026) -> dict[str, float]:
+    """{state: mean of the race's polling averages as of `date`}."""
+    d = dt.date.fromisoformat(date)
+    out = {}
+    for st, obs in _race_poll_index(cycle).items():
+        latest: dict[str, tuple[str, float]] = {}
+        for sd, sid, v in obs:
+            if sd > date:
+                break
+            latest[sid] = (sd, v)
+        vals = [v for sd, v in latest.values()
+                if (d - dt.date.fromisoformat(sd)).days <= RACE_POLL_MAX_AGE_DAYS]
+        if vals:
+            out[st] = round(sum(vals) / len(vals), 3)
+    return out
+
+
+def polled_for(category: str | None, date: str, cycle: int = 2026) -> dict | None:
+    return race_poll_margins(date, cycle) if category == "polling" else None
+
+# --------------------------------------------------------------------------
 # SEATS FOR THE DATES BEFORE A SOURCE ENTERED
 #
 # aggregate.py's carry_backward shows a late entrant's FIRST margin on the
@@ -260,7 +325,8 @@ def reproject_backward(hist: dict, ah: dict, pvi: dict, states: list,
                 if cur and not cur.get("carried_back"):
                     continue
                 p0 = project(float(src["tide_D"]), pvi, states, rows, sigma,
-                             holdover_D, asof=d0, sigma_floor=floor)
+                             holdover_D, asof=d0, sigma_floor=floor,
+                             polled=polled_for(src.get("category"), d0))
                 p0["category"] = src.get("category")
                 p0["categories"] = src.get("categories") or [src.get("category")]
                 p0["publication"] = src.get("publication") or "private"
@@ -414,9 +480,32 @@ def published_sigma(source_id: str, m: dict | None = None) -> float | None:
     return sig if sig > 0 else None
 
 
+def senate_part(tide: float, pvi: dict, states: list, sigma: float,
+                holdover_D: int, polled: dict | None = None) -> dict:
+    """The Senate half of a projection: {"senate": {...}, "races": {...}}.
+    Call polling.set_horizon first; project() does."""
+    sen = polling.senate_forecast(tide, pvi, states, sigma, holdover_D,
+                                  polled=polled)
+    return {
+        "senate": {
+            "n_races": sen["n_races"],
+            "n_race_polled": sen.get("n_race_polled", 0),
+            "expected_D_seats_up": sen["expected_D_seats_up"],
+            "D_seats_up_80pct": sen["D_seats_up_80pct"],
+            "expected_D_total": round(sen["expected_D_seats_up"] + holdover_D, 2),
+            "D_total_80pct": [sen["D_seats_up_80pct"][0] + holdover_D,
+                              sen["D_seats_up_80pct"][1] + holdover_D],
+            "prob_D_50_plus": sen.get("prob_D_50_plus"),
+            "prob_D_51_plus": sen.get("prob_D_51_plus"),
+        },
+        "races": sen["races"],
+    }
+
+
 def project(tide: float, pvi: dict, states: list, rows: list,
             sigma: float, holdover_D: int, asof: str | None = None,
-            sigma_floor: float | None = None) -> dict:
+            sigma_floor: float | None = None,
+            polled: dict | None = None) -> dict:
     """One tide in, one full set of seat answers out.
 
     `asof` is the date being projected, and it selects TWO things.
@@ -431,24 +520,9 @@ def project(tide: float, pvi: dict, states: list, rows: list,
     sigma silently leaks into the next projection.
     """
     polling.set_horizon(asof, floor=sigma_floor)
-    sen = polling.senate_forecast(tide, pvi, states, sigma, holdover_D)
+    out = {"tide_D": round(tide, 3),
+           **senate_part(tide, pvi, states, sigma, holdover_D, polled)}
     house = public_house(polling.house_forecast(tide, rows, sigma, asof=asof))
-    out = {
-        "tide_D": round(tide, 3),
-        "senate": {
-            "n_races": sen["n_races"],
-            "expected_D_seats_up": sen["expected_D_seats_up"],
-            "D_seats_up_80pct": sen["D_seats_up_80pct"],
-            # Total chamber, which is the number a reader actually wants:
-            # "49 of 100" rather than "15 of 35".
-            "expected_D_total": round(sen["expected_D_seats_up"] + holdover_D, 2),
-            "D_total_80pct": [sen["D_seats_up_80pct"][0] + holdover_D,
-                              sen["D_seats_up_80pct"][1] + holdover_D],
-            "prob_D_50_plus": sen.get("prob_D_50_plus"),
-            "prob_D_51_plus": sen.get("prob_D_51_plus"),
-        },
-        "races": sen["races"],
-    }
     if house:
         out["house"] = {
             "map_vintage": house.get("map_vintage"),
@@ -571,6 +645,11 @@ def main(argv=None) -> int:
                          "(academic and polling) rather than only today. The "
                          "real name for this; --backfill-academic is kept as "
                          "an alias so existing workflow files keep working.")
+    ap.add_argument("--senate-from", default=None,
+                    help="recompute only the Senate part of the polling-line "
+                         "projections for every stored date from this one "
+                         "(YYYY-MM-DD), using race polls where they exist. "
+                         "Fast: the House is left as stored.")
     ap.add_argument("--reproject-backward", action="store_true",
                     help="only fill the seat counts for dates before each late "
                          "entrant's first forecast (REPROJECT_BACKWARD), on each "
@@ -791,7 +870,8 @@ def main(argv=None) -> int:
         p = project(tide, pvi, states, rows, sigma, a.holdover_d, asof=date,
                     sigma_floor=(acad_sigma.get(name)
                                  if name in acad_sigma
-                                 else published_sigma(name)))
+                                 else published_sigma(name)),
+                    polled=polled_for(category, date, a.cycle))
         # The category travels WITH the projection. aggregate.py files each
         # one under it, so adding a model is a registry entry plus a line in
         # EXTERNAL_TIDE_SOURCES and nothing downstream has to learn its name.
@@ -1062,7 +1142,8 @@ def main(argv=None) -> int:
                     # districts that did not exist until August.
                     p0 = project(float(m["margin_D"]), pvi, states, rows,
                                  sigma, a.holdover_d, asof=d0,
-                                 sigma_floor=published_sigma(key, m))
+                                 sigma_floor=published_sigma(key, m),
+                                 polled=polled_for(m.get("category"), d0, a.cycle))
                     p0["category"] = m.get("category") or "academic"
                     p0["categories"] = (m.get("categories")
                                         or [p0["category"]])
@@ -1114,7 +1195,8 @@ def main(argv=None) -> int:
                 for sid, t in external_tides(a.cycle, d0).items():
                     p0 = project(float(t["margin"]), pvi, states, rows,
                                  sigma, a.holdover_d, asof=d0,
-                                 sigma_floor=PUBLISHED_SIGMA_MARGIN.get(sid))
+                                 sigma_floor=PUBLISHED_SIGMA_MARGIN.get(sid),
+                                 polled=polled_for(t["category"], d0, a.cycle))
                     p0["category"] = t["category"]
                     p0["categories"] = [t["category"]]
                     p0["publication"] = t["publication"]
@@ -1176,6 +1258,27 @@ def main(argv=None) -> int:
             print("    leaves the Action rebuilding from a history that does")
             print("    not contain what you just built, and aggregate.py will")
             print("    refuse the run.")
+
+    if a.senate_from:
+        # SENATE ONLY, for the history. See RACE POLLS WHERE THEY EXIST above.
+        # The House half of each stored projection is left exactly as it was.
+        n = 0
+        for d0 in sorted(d for d in hist if d >= a.senate_from):
+            for sid, p in ((hist[d0] or {}).get("projections") or {}).items():
+                if p.get("category") != "polling" or p.get("tide_D") is None:
+                    continue
+                if sid not in ("class_polling", "polling_reconstructed") \
+                        and sid not in EXTERNAL_TIDE_SOURCES:
+                    continue
+                polling.set_horizon(d0, floor=PUBLISHED_SIGMA_MARGIN.get(sid))
+                part = senate_part(float(p["tide_D"]), pvi, states, sigma,
+                                   a.holdover_d, race_poll_margins(d0, a.cycle))
+                if p.get("carried_back"):
+                    part.pop("races", None)
+                p.update(part)
+                n += 1
+        print(f"  Senate recomputed for {n} polling projection(s) from "
+              f"{a.senate_from}, with race polls where they exist")
 
     if a.reproject_backward and not (a.backfill_academic or a.backfill_history):
         # THE CHEAP ONE-OFF. --backfill-history does this too, but it also
