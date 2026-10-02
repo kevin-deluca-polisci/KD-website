@@ -19926,18 +19926,18 @@
       "senate": {
         "n_races": 35,
         "n_race_polled": 15,
-        "expected_D_seats_up": 17.63,
+        "expected_D_seats_up": 17.66,
         "D_seats_up_80pct": [
           13,
           21
         ],
-        "expected_D_total": 51.63,
+        "expected_D_total": 51.66,
         "D_total_80pct": [
           47,
           55
         ],
-        "prob_D_50_plus": 0.7428,
-        "prob_D_51_plus": 0.6558
+        "prob_D_50_plus": 0.7459,
+        "prob_D_51_plus": 0.6593
       },
       "races": {
         "AK": {
@@ -20025,9 +20025,9 @@
           "basis": "race polls"
         },
         "ME": {
-          "expected_margin_D": 1.25,
+          "expected_margin_D": 1.48,
           "pvi": 3.82,
-          "win_prob_D": 0.592,
+          "win_prob_D": 0.6088,
           "basis": "race polls"
         },
         "MI": {
@@ -20109,9 +20109,9 @@
           "basis": "national"
         },
         "SC": {
-          "expected_margin_D": -1.8,
+          "expected_margin_D": -1.6,
           "pvi": -8.28,
-          "win_prob_D": 0.3687,
+          "win_prob_D": 0.3829,
           "basis": "race polls"
         },
         "SD": {
@@ -26562,18 +26562,18 @@
       "senate": {
         "n_races": 35,
         "n_race_polled": 15,
-        "expected_D_seats_up": 17.62,
+        "expected_D_seats_up": 17.65,
         "D_seats_up_80pct": [
           13,
           21
         ],
-        "expected_D_total": 51.62,
+        "expected_D_total": 51.65,
         "D_total_80pct": [
           47,
           55
         ],
-        "prob_D_50_plus": 0.7425,
-        "prob_D_51_plus": 0.6554
+        "prob_D_50_plus": 0.7457,
+        "prob_D_51_plus": 0.659
       },
       "races": {
         "AK": {
@@ -26661,9 +26661,9 @@
           "basis": "race polls"
         },
         "ME": {
-          "expected_margin_D": 1.25,
+          "expected_margin_D": 1.48,
           "pvi": 3.82,
-          "win_prob_D": 0.592,
+          "win_prob_D": 0.6088,
           "basis": "race polls"
         },
         "MI": {
@@ -26745,9 +26745,9 @@
           "basis": "national"
         },
         "SC": {
-          "expected_margin_D": -1.8,
+          "expected_margin_D": -1.6,
           "pvi": -8.28,
-          "win_prob_D": 0.3687,
+          "win_prob_D": 0.3829,
           "basis": "race polls"
         },
         "SD": {
