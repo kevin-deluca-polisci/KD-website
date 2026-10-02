@@ -340,3 +340,33 @@ Sources for extending the archive back before 2026:
   model outputs and are the first thing to pull. Check each dataset's
   licence before republishing.
 - **JHK Forecasts** history: ask Jack Kersting for his historical data.
+
+### Sources to add later (noted 2026-10-02)
+
+Current cycle:
+
+- **Split Ticket**: model published at
+  theargumentmag.com/p/split-ticket-2026-midterms-model (registry id
+  `split_ticket`; licence still pending).
+- **FiftyPlusOne**: fiftyplusone.news/forecast/house, once Kevin's API access
+  is live. Read the subscription terms before setting `publication`.
+- **Silver Bulletin model**: natesilver.net/p/nate-silver-2026-midterm-election-polls-model
+  needs subscriber access; republication needs permission.
+- **Decision Desk HQ**: the forecast page looks reachable, but the terms
+  prohibit scraping and `/api/` is disallowed; needs written permission or a
+  data arrangement.
+- **VoteHub**: terms prohibit scraping, but their data science lead (see
+  votehub.com/about) is a former Yale student who worked with Josh Kalla.
+  Kevin can email him directly to ask for their forecast data and permission.
+- **Cook Political Report and Sabato's Crystal Ball ratings**, read directly
+  rather than through Wikipedia's tables (registry ids `cook`, `sabato`).
+  Ratings are collected but not scored or averaged (score/RULES.md §2).
+
+Older cycles:
+
+- **Zoltar** (zoltardata.com/project/218): 2020 forecasts from
+  FiveThirtyEight (four model versions), The Economist, JHK and The Progress
+  Campaign, daily from March 1 to November 3, 2020: Senate seats and control,
+  electoral votes, and vote share by state. Downloadable through its query
+  interface and API (zoltardata.com/api/). The site code is GPLv3; the data's
+  terms are set per project and need checking.

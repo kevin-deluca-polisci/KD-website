@@ -29,7 +29,7 @@ What to record for each forecaster, where published:
 | The Economist | not collected (registration wall) | check GitHub for a data release; permission request; else manual record |
 | FiftyPlusOne / G. Elliott Morris | not collected (terms unread) | read the subscription terms; permission request; else manual record |
 | Split Ticket (via 270toWin / The Argument) | not collected | permission request (the Datawrapper CSV route is already verified); else manual record |
-| VoteHub | not collected (terms prohibit scraping) | permission request, else manual record |
+| VoteHub | not collected (terms prohibit scraping) | email their data science lead (a former Yale student) for the data; else manual record |
 | JHK Forecasts | not collected | ask Jack Kersting directly |
 
 ## Three tracks
