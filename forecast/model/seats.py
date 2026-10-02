@@ -645,6 +645,11 @@ def main(argv=None) -> int:
                          "(academic and polling) rather than only today. The "
                          "real name for this; --backfill-academic is kept as "
                          "an alias so existing workflow files keep working.")
+    ap.add_argument("--project-models", default=None,
+                    help="comma-separated academic model keys: project only these "
+                         "over every date in academic_models_history.json (from "
+                         "--backfill-from if given). For adding one model without "
+                         "rebuilding the whole history.")
     ap.add_argument("--senate-from", default=None,
                     help="recompute only the Senate part of the polling-line "
                          "projections for every stored date from this one "
@@ -1258,6 +1263,36 @@ def main(argv=None) -> int:
             print("    leaves the Action rebuilding from a history that does")
             print("    not contain what you just built, and aggregate.py will")
             print("    refuse the run.")
+
+    if a.project_models:
+        # ONE NEW MODEL, WHOLE HISTORY. --backfill-history re-projects every
+        # model on every date, which no longer fits in a run. This projects
+        # only the named academic models, from the history academic.py
+        # --backfill wrote, each on its own date's map.
+        keys = {k.strip() for k in a.project_models.split(",") if k.strip()}
+        ah_p = priv / "academic_models_history.json"
+        n = 0
+        if ah_p.exists():
+            for d0, dd in sorted(json.loads(ah_p.read_text()).items()):
+                if d0 == date or (a.backfill_from and d0 < a.backfill_from):
+                    continue
+                for key, m in ((dd or {}).get("models") or {}).items():
+                    if key not in keys or m.get("margin_D") is None:
+                        continue
+                    p0 = project(float(m["margin_D"]), pvi, states, rows, sigma,
+                                 a.holdover_d, asof=d0,
+                                 sigma_floor=published_sigma(key, m))
+                    p0["category"] = m.get("category") or "academic"
+                    p0["categories"] = m.get("categories") or [p0["category"]]
+                    p0["publication"] = m.get("publication") or "individual"
+                    p0["margin_published_elsewhere"] = False
+                    p0["seats_published_elsewhere"] = False
+                    p0["as_of"] = d0
+                    p0["provenance"] = m.get("provenance") or "backfilled"
+                    day = hist.setdefault(d0, {"snapshot_date": d0, "projections": {}})
+                    day.setdefault("projections", {})[key] = p0
+                    n += 1
+        print(f"  projected {n} date(s) for {sorted(keys)}")
 
     if a.senate_from:
         # SENATE ONLY, for the history. See RACE POLLS WHERE THEY EXIST above.

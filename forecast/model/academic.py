@@ -719,7 +719,8 @@ LOCKERBIE_SAMPLE_MAX = {"pct_expect_worse": 32.0, "open_seats": 56}
 
 # Models whose `tide_D` is not their own forecast but this file's inversion of
 # their seat count. They must never define the curve they are inverted through.
-INVERTED_MODELS = {"academic_political_history", "academic_economic_pessimism"}
+INVERTED_MODELS = {"academic_political_history", "academic_economic_pessimism",
+                   "academic_abramowitz"}
 
 
 def _published_tide_seat_pairs(cycle: int) -> list:
@@ -1148,6 +1149,93 @@ def run_lbq(c: Ctx) -> Result | None:
 # fundamentals lines on the day it lands, without anybody's forecast having
 # changed. See the note on panel composition in collect/publish.py.
 
+# ---------------------------------------------------------------------------
+# MODEL — Abramowitz's generic ballot midterm model  (added 2026-10-02)
+# ---------------------------------------------------------------------------
+# A midterm-only model: seat change for the president's party in the House and
+# the Senate, regressed on the generic ballot margin for the president's party
+# and the number of seats that party is defending, 20 midterms 1946-2022.
+#
+# WHAT IS PUBLISHED, AND THEREFORE WHAT WE USE. His 2026 article gives the
+# slopes in the text (about 2.6 House seats and 0.36 Senate seats per point of
+# generic ballot) and one conditional forecast: with the parties tied on the
+# generic ballot, Republicans lose about 13 House seats and about 5 Senate
+# seats, defending 220 House seats and 22 of the 35 Senate seats up. The
+# tables with the intercepts are images. Because the seats-defended term is
+# fixed for 2026, the equation for this cycle needs only the tied-ballot
+# anchor and the generic-ballot slope:
+#
+#     House:  R seat change = -13 + 2.6 x (R minus D generic ballot)
+#     Senate: R seat change =  -5 + 0.36 x (R minus D generic ballot)
+#
+# The coefficients are rounded as he states them. His generic ballot is the
+# RealClearPolitics average; ours is the generic ballot average our polling
+# model reads (unshrunk), so the input differs slightly.
+#
+# THE SENATE NUMBER IS RECORDED, NOT DRAWN. As with Lewis-Beck & Quinlan, the
+# House seat count is turned into a national margin with our seat curve and the
+# site's Senate figures for this model come from that margin and state lean.
+# His own Senate figure is kept in the diagnostics. He notes that his Senate
+# model does not account for the specific Senate map.
+ABRAMOWITZ_CITE = ("Abramowitz, 'Generic Ballot Model Gives Democrats Strong "
+                   "Chance to Take Back House in 2026', Rasmussen Reports / "
+                   "Sabato's Crystal Ball, April 24, 2025")
+ABRAMOWITZ = {
+    "house_tied_R_change": -13.0, "house_per_point": 2.6,
+    "senate_tied_R_change": -5.0, "senate_per_point": 0.36,
+    "house_seats_held_R": 220, "senate_seats_held_D": 47,
+    "senate_seats_defended_R": 22,
+    "published_slopes": {"house_per_point": 2.6, "house_per_seat_defended": -0.54,
+                         "senate_per_point": 0.36, "senate_per_seat_defended": -0.83},
+    "fit": "OLS, 20 midterms 1946-2022; House R-squared > 0.8, Senate about 0.67",
+}
+
+
+def run_abramowitz(c: Ctx) -> Result | None:
+    gb_d = c.generic_ballot_D
+    if gb_d is None:
+        return None
+    k = ABRAMOWITZ
+    gb_pres = -gb_d                       # the president's party is Republican
+    house_change = k["house_tied_R_change"] + k["house_per_point"] * gb_pres
+    senate_change = k["senate_tied_R_change"] + k["senate_per_point"] * gb_pres
+    d_house = 435.0 - (k["house_seats_held_R"] + house_change)
+    d_senate = k["senate_seats_held_D"] - senate_change
+
+    pairs = _published_tide_seat_pairs(c.cycle)
+    got = implied_tide_for_seats(pairs, d_house)
+    if got is None:
+        return None
+    tide, extrapolated = got
+    notes = ["forecasts SEAT CHANGE directly from the generic ballot and the "
+             "seats the president's party is defending. The margin shown is our "
+             "seat curve run backwards from its House number, not his",
+             f"his Senate equation gives {d_senate:.1f} Democratic seats; the "
+             f"site's Senate figures for this model use our state-lean machinery"]
+    if extrapolated:
+        notes.append("the House number falls outside today's range of tides, "
+                     "so the inversion is extrapolated")
+    return Result(
+        margin_D=tide,
+        interval_80=None,
+        inputs={"generic_ballot_D": round(gb_d, 2),
+                "generic_ballot_source": c.generic_ballot_source,
+                "house_seats_defended_R": k["house_seats_held_R"],
+                "senate_seats_defended_R": k["senate_seats_defended_R"]},
+        diagnostics={"house_R_seat_change": round(house_change, 1),
+                     "implied_D_seats": round(d_house, 1),
+                     "senate_R_seat_change": round(senate_change, 1),
+                     "senate_D_seats": round(d_senate, 1),
+                     "coefficients": {kk: vv for kk, vv in k.items()
+                                      if isinstance(vv, (int, float))},
+                     "published_slopes": k["published_slopes"],
+                     "fit": k["fit"],
+                     "inversion_extrapolated": extrapolated,
+                     "curve_points_used": len(pairs)},
+        notes=notes,
+    )
+
+
 MODELS = [
     {
         "key": "academic_bew",
@@ -1159,6 +1247,18 @@ MODELS = [
         "status": "implemented",
         "refit": False,
         "run": run_bew,
+    },
+    {
+        "key": "academic_abramowitz",
+        "categories": ["academic", "polling"],
+        "name": "Generic ballot midterm model (Abramowitz)",
+        "citation": ABRAMOWITZ_CITE,
+        "attribution": "Our implementation of Abramowitz's published 2026 "
+                       "midterm equations, run on our generic-ballot average.",
+        "status": "implemented",
+        "coefficients_published": ABRAMOWITZ["published_slopes"],
+        "refit": False,
+        "run": run_abramowitz,
     },
     {
         "key": "academic_referendum",
@@ -1484,6 +1584,8 @@ def backfill(cycle: int, approval: float, include_referendum: bool,
         # move, and a flat LBQ line is the finding. The test is not "does it
         # vary" but "is every input the value that input actually had".
         for key, fn, gate in (
+                ("academic_abramowitz", run_abramowitz,
+                 lambda c: c.generic_ballot_D is not None),
                 ("academic_referendum", run_referendum,
                  lambda c: c.approval is not None and c.income is not None),
                 ("academic_economic_pessimism", run_lockerbie,

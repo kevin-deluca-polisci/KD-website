@@ -323,3 +323,20 @@ with attribution. Worth confirming before it becomes load-bearing.
 Tag and freeze the archive, mint a DOI, flip the private repo. Permission
 requests to 50+1, DDHQ, The Economist and Split Ticket for republication of
 their series, which have been deliberately not asked during the cycle.
+
+### Older cycles (noted 2026-10-02, not started)
+
+Sources for extending the archive back before 2026:
+
+- **FiveThirtyEight Index** (github.com/palewire/fivethirtyeightindex.com,
+  MIT): an index of everything fivethirtyeight.com published, rebuilt from
+  the Wayback Machine. It lists articles, not forecast numbers, but it is a
+  finding aid: about 1,900 `project` entries with Wayback links to the
+  forecast pages (2014 Senate onward), and a `datasets.csv` that points to
+  538's own forecast data, also mirrored on archive.org:
+  `house-forecast-2018`, `senate-forecast-2018`, `governors-forecast-2018`,
+  `election-forecasts-2020`, `election-forecasts-2022`, `forecast-review`
+  and `partisan-lean` (github.com/fivethirtyeight/data). Those are daily
+  model outputs and are the first thing to pull. Check each dataset's
+  licence before republishing.
+- **JHK Forecasts** history: ask Jack Kersting for his historical data.

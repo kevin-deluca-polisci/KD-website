@@ -47,7 +47,7 @@ Each forecast belongs to one line, based on who made it.
 | `polling` | National: polling averages from Silver Bulletin, RealClearPolitics, Decision Desk HQ, FiftyPlusOne, VoteHub and Race to the WH (mostly as listed on Wikipedia), plus a simple average of individual generic ballot polls. Senate races: the polling averages listed in each race's Wikipedia article. |
 | `market` | Kalshi, Polymarket, PredictIt. |
 | `professional` | Race to the WH. More forecasters will be added. |
-| `academic` | Bafumi, Erikson and Wlezien (generic ballot); a referendum model (Tufte; Lewis-Beck and Tien); Lockerbie (economic pessimism); Lewis-Beck and Quinlan (political history); Ray Fair's House vote equation. Except for Fair, this archive runs the published models on current data. |
+| `academic` | Bafumi, Erikson and Wlezien (generic ballot); Abramowitz (generic ballot and seats defended); a referendum model (Tufte; Lewis-Beck and Tien); Lockerbie (economic pessimism); Lewis-Beck and Quinlan (political history); Ray Fair's House vote equation. Except for Fair, this archive runs the published models on current data. |
 
 `forecasts_by_source.csv` also includes inputs (`line` = `input`): economic
 data from FRED, past election returns from the MIT Election Data and Science

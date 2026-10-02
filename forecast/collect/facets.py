@@ -100,6 +100,7 @@ BY_SOURCE: dict[str, tuple[str, str]] = {
     "academic_bew": ("polling", "academic"),
     "academic_economic_pessimism": ("fundamentals", "academic"),
     "academic_political_history": ("fundamentals", "academic"),
+    "academic_abramowitz": ("polling", "academic"),
     "academic_referendum": ("fundamentals", "academic"),
     "academic_state_approval_economy": ("fundamentals", "academic"),
     "fair": ("fundamentals", "academic"),
