@@ -114,7 +114,7 @@ on:
         default: "wikipedia"
 
       add_academic_model:
-        description: "Add one academic model's full history: its key, e.g. academic_abramowitz (blank = none)"
+        description: "Add one academic model's history: its key, e.g. academic_abramowitz; add @YYYY-MM-DD to fill only from that date (blank = none)"
         required: false
         default: ""
 
@@ -323,7 +323,11 @@ jobs:
           [ "${{ inputs.reproject_seats }}" = "true" ] && SEAT_ARGS="$SEAT_ARGS --reproject-backward"
           [ -n "${{ inputs.seats_rebuild_from }}" ] && SEAT_ARGS="$SEAT_ARGS --backfill-history --backfill-from ${{ inputs.seats_rebuild_from }}"
           [ -n "${{ inputs.senate_from }}" ] && SEAT_ARGS="$SEAT_ARGS --senate-from ${{ inputs.senate_from }}"
-          [ -n "${{ inputs.add_academic_model }}" ] && SEAT_ARGS="$SEAT_ARGS --project-models ${{ inputs.add_academic_model }}"
+          ADD_MODEL="${{ inputs.add_academic_model }}"
+          if [ -n "$ADD_MODEL" ]; then
+            SEAT_ARGS="$SEAT_ARGS --project-models ${ADD_MODEL%@*}"
+            case "$ADD_MODEL" in *@*) SEAT_ARGS="$SEAT_ARGS --backfill-from ${ADD_MODEL#*@}" ;; esac
+          fi
           python3 forecast/model/seats.py       --cycle "$CYCLE" $SEAT_ARGS          
           AGG_ARGS=""
           [ "${{ inputs.force_aggregate }}" = "true" ] && AGG_ARGS="--force"

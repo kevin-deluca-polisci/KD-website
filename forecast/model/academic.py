@@ -1520,7 +1520,11 @@ def backfill(cycle: int, approval: float, include_referendum: bool,
     floor = dt.date.fromisoformat(SERIES_START)
     today = dt.date.fromisoformat(newest_parsed_date(cycle)
                                   or dt.date.today().isoformat())
-    end = min(last_poll, today)
+    # Up to TODAY, not to the last poll's date. A date after the newest poll
+    # still has a full trailing window of polls; stopping at the last poll
+    # left a model added later with no history for the days between the
+    # newest poll and the day it was added (2026-09-29 to 10-01).
+    end = today
 
     out: dict[str, dict] = {}
     empty_windows = 0
