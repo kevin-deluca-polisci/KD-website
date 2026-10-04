@@ -26,7 +26,7 @@ from __future__ import annotations
 import re
 
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
-               race_id, state_from_text)
+               independent_is_d_side, race_id, state_from_text)
 
 # A market this cycle. PredictIt lists 2028 and other years in the same
 # document, and "the Senate" without a year would have swept them in.
@@ -139,6 +139,11 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             # survived depended on listing order; same trap, same fix.
             found: dict[str, float] = {}
             books: dict[str, dict] = {}
+            # AN INDEPENDENT STANDING IN FOR THE NOMINEE IS THE D SIDE. In
+            # Nebraska PredictIt lists Republican 0.70, Independent 0.29 and
+            # Democratic 0.01; reading "Democratic" put Osborn's race at 1%.
+            # Same rule as the Kalshi and Polymarket parsers.
+            ind_d = independent_is_d_side(rid)
             for c in m.get("contracts") or []:
                 if not isinstance(c, dict):
                     continue
@@ -146,7 +151,12 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                 p = _price(c)
                 if p is None:
                     continue
-                if _DEM.search(label):
+                if ind_d and re.search(r"\bindependent\b", label, re.I):
+                    found.setdefault("D", p)
+                    books.setdefault("D", c)
+                elif ind_d and _DEM.search(label):
+                    continue                  # a token Democrat, not the D side
+                elif _DEM.search(label):
                     found.setdefault("D", p)
                     books.setdefault("D", c)
                 elif _REP.search(label):

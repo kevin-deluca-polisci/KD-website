@@ -43,8 +43,8 @@ silently and produced numbers that looked reasonable:
 from __future__ import annotations
 import json, re
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
-               first_per_race, is_state, margin_ladder_expectation, race_id,
-               state_from_text)
+               first_per_race, independent_is_d_side, is_state,
+               margin_ladder_expectation, race_id, race_info, state_from_text)
 
 # NO re.I on the state group. Under IGNORECASE "[A-Z]{2}" matches any two
 # letters, which is how "Balance of power in the Senate" once filed every
@@ -177,25 +177,8 @@ def _micro_rows(m: dict, side: str, rid: str, chamber: str, state: str,
 # CANDIDATE NAMES, FOR EVENTS THAT GIVE NO PARTY. "Alaska Senate Election
 # Winner" (2026-10-04) lists "Sen. Dan Sullivan" and "Mary Peltola" with no (R)
 # or (D), so _sides() finds nothing and the race was dropped. The class model's
-# race file names each race's D-side and R-side candidates, and is the same
-# file that decides which side an independent stands on.
-_RACES: dict | None = None
-
-
-def _races() -> dict:
-    global _RACES
-    if _RACES is None:
-        import csv
-        from pathlib import Path
-        f = Path(__file__).resolve().parents[2] / "class" / "inputs" / "races_2026.csv"
-        _RACES = {}
-        if f.exists():
-            with open(f, newline="") as fh:
-                for r in csv.DictReader(fh):
-                    _RACES[r["race_id"]] = r
-    return _RACES
-
-
+# race file (race_info) names each race's D-side and R-side candidates, and is
+# the same file that decides which side an independent stands on.
 def _name_hit(name: str, label: str, full: bool) -> bool:
     parts = [w for w in re.findall(r"[A-Za-z'\-]+", name or "")
              if w.lower() not in {"jr", "sr", "ii", "iii"}]
@@ -215,10 +198,10 @@ def _candidate_sides(ev: dict, rid: str) -> dict:
     the D side (Nebraska, Osborn), "Independent" is that side and a
     "Democrat" market is left out, the same rule the Kalshi parser follows.
     """
-    race = _races().get(rid)
+    race = race_info(rid)
     if not race:
         return {}
-    ind_d = race.get("race_type") == "independent_D_side"
+    ind_d = independent_is_d_side(rid)
     ms = [m for m in (ev.get("markets") or []) if m.get("closed") is not True]
     label = lambda m: str(m.get("groupItemTitle") or m.get("question") or "")
     out: dict = {}

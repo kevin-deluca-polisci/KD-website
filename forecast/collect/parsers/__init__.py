@@ -265,6 +265,31 @@ def state_from_text(text: str) -> str | None:
     return None
 
 
+_RACE_INFO: dict | None = None
+
+
+def race_info(rid: str) -> dict:
+    """The class model's row for a race (forecast/class/inputs/races_2026.csv),
+    or {}. It names each race's D-side and R-side candidates and, through
+    race_type == "independent_D_side", the races where an independent stands
+    in for the Democratic nominee (Nebraska Senate, Osborn; Alaska at-large
+    House). Market parsers use it to decide which contract is the D side."""
+    global _RACE_INFO
+    if _RACE_INFO is None:
+        import csv
+        f = Path(__file__).resolve().parents[2] / "class" / "inputs" / "races_2026.csv"
+        _RACE_INFO = {}
+        if f.exists():
+            with open(f, newline="") as fh:
+                for r in csv.DictReader(fh):
+                    _RACE_INFO[r["race_id"]] = r
+    return _RACE_INFO.get(rid, {})
+
+
+def independent_is_d_side(rid: str) -> bool:
+    return race_info(rid).get("race_type") == "independent_D_side"
+
+
 def first_per_race(rows: list, label: str) -> list:
     """
     One row per (race_id, quantity), the first one seen.
