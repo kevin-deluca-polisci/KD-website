@@ -84,7 +84,7 @@ sources:
       # 2026-10-04 with the Elections category below. The exact naming is
       # confirmed from the first stored index; the near-miss log shows any
       # Senate-shaped series this pattern does not catch.
-      series_include: "^((KX)?SENATE[A-Z]{2}|HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KX[DR]HOUSESEATS|KX[DR]SENATESEATS|KXHOUSEPOPVOTEMARGIN|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
+      series_include: "^((KX)?SENATE[A-Z]{2}S?|HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KX[DR]HOUSESEATS|KX[DR]SENATESEATS|KXHOUSEPOPVOTEMARGIN|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
       series_exclude: "^(PRESPARTY|KXPRES)"
       series_category: Politics
       series_categories: [Politics, Elections]

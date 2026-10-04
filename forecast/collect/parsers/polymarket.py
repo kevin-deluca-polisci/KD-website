@@ -43,7 +43,8 @@ silently and produced numbers that looked reasonable:
 from __future__ import annotations
 import json, re
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
-               is_state, margin_ladder_expectation, race_id, state_from_text)
+               first_per_race, is_state, margin_ladder_expectation, race_id,
+               state_from_text)
 
 # NO re.I on the state group. Under IGNORECASE "[A-Z]{2}" matches any two
 # letters, which is how "Balance of power in the Senate" once filed every
@@ -170,6 +171,70 @@ def _micro_rows(m: dict, side: str, rid: str, chamber: str, state: str,
         out.append(ctx.row(art, race_id=rid, chamber=chamber, state=state,
                            district=district, quantity=name,
                            value=round(v, 6), unit=unit))
+    return out
+
+
+# CANDIDATE NAMES, FOR EVENTS THAT GIVE NO PARTY. "Alaska Senate Election
+# Winner" (2026-10-04) lists "Sen. Dan Sullivan" and "Mary Peltola" with no (R)
+# or (D), so _sides() finds nothing and the race was dropped. The class model's
+# race file names each race's D-side and R-side candidates, and is the same
+# file that decides which side an independent stands on.
+_RACES: dict | None = None
+
+
+def _races() -> dict:
+    global _RACES
+    if _RACES is None:
+        import csv
+        from pathlib import Path
+        f = Path(__file__).resolve().parents[2] / "class" / "inputs" / "races_2026.csv"
+        _RACES = {}
+        if f.exists():
+            with open(f, newline="") as fh:
+                for r in csv.DictReader(fh):
+                    _RACES[r["race_id"]] = r
+    return _RACES
+
+
+def _name_hit(name: str, label: str, full: bool) -> bool:
+    parts = [w for w in re.findall(r"[A-Za-z'\-]+", name or "")
+             if w.lower() not in {"jr", "sr", "ii", "iii"}]
+    if not parts:
+        return False
+    if full and len(parts) > 1:
+        return all(re.search(rf"\b{re.escape(w)}\b", label, re.I) for w in parts)
+    return bool(re.search(rf"\b{re.escape(parts[-1])}\b", label, re.I))
+
+
+def _candidate_sides(ev: dict, rid: str) -> dict:
+    """{market id: side} for an event about one race, from candidate names.
+
+    Full names first ("Dan Sullivan" and not "Daniel J. Sullivan Jr.", a
+    different candidate on the same Alaska ballot); the surname alone only
+    when no market carries the full name. In a race where an independent is
+    the D side (Nebraska, Osborn), "Independent" is that side and a
+    "Democrat" market is left out, the same rule the Kalshi parser follows.
+    """
+    race = _races().get(rid)
+    if not race:
+        return {}
+    ind_d = race.get("race_type") == "independent_D_side"
+    ms = [m for m in (ev.get("markets") or []) if m.get("closed") is not True]
+    label = lambda m: str(m.get("groupItemTitle") or m.get("question") or "")
+    out: dict = {}
+    for side, name in (("D", race.get("dem_candidate")), ("R", race.get("rep_candidate"))):
+        hits = [m for m in ms if _name_hit(name, label(m), True)]
+        if not hits:
+            hits = [m for m in ms if _name_hit(name, label(m), False)]
+        for m in hits:
+            out.setdefault(id(m), side)
+    if ind_d:
+        for m in ms:
+            lab = label(m)
+            if re.search(r"\bindependent\b", lab, re.I) and not _PARTY_TAG.search(lab):
+                out[id(m)] = "D"
+            elif _DEM.search(lab) and not _PARTY_TAG.search(lab):
+                out[id(m)] = None             # a token Democrat, not the D side
     return out
 
 
@@ -430,6 +495,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             # pages of a paged capture, and summing across pages would
             # multiply every probability by the page count.
             agg: dict[tuple, dict[str, float]] = {}
+            cand: dict[str, dict] = {}
             for m in ev.get("markets", []) or []:
                 if m.get("closed") is True:
                     continue
@@ -437,11 +503,23 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                 prices, outs = _prices(m), _outcomes(m)
                 if not prices:
                     continue
-                found = _sides(m, q, outs, prices)
-                if not found:
-                    continue
                 got = _target(f"{title} {q}", q)
                 if got is None:
+                    continue
+                if got[0] not in cand:
+                    cand[got[0]] = _candidate_sides(ev, got[0])
+                named = cand[got[0]].get(id(m), "unset")
+                if named is None:
+                    continue                  # excluded by the race's side rule
+                found = _sides(m, q, outs, prices)
+                if named != "unset" and (not found or len(found) == 1):
+                    # A Yes/No market on one candidate: the race file says
+                    # whose it is. Overrides a party word in the label only in
+                    # the independent-D-side case, where it was set to D above.
+                    yes = next((prices[i] for i, o in enumerate(outs)
+                                if _YES.match(o) and i < len(prices)), prices[0])
+                    found = {named: yes}
+                if not found:
                     continue
                 bucket = agg.setdefault(got, {})
                 for side, price in found.items():
@@ -473,6 +551,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     # the front of the series and nothing at all after February.
     direct = {r.race_id for r in rows if r.quantity == "win_prob_D"}
     rows.extend(r for rid, r in sorted(joint.items()) if rid not in direct)
+    rows = first_per_race(rows, "polymarket")
 
     if not rows:
         # NOTHING TO EMIT IS NOT THE SAME AS NOTHING UNDERSTOOD.

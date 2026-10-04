@@ -265,6 +265,36 @@ def state_from_text(text: str) -> str | None:
     return None
 
 
+def first_per_race(rows: list, label: str) -> list:
+    """
+    One row per (race_id, quantity), the first one seen.
+
+    From 2026-10-04 the market captures reach the same contract by more than
+    one route (a category sweep, a tag sweep, a search), so the same price
+    arrives two or three times. Left in, it is counted that many times in the
+    source's own value for the race. Different values for one race are named,
+    since that means two contracts were filed on one race (book depth and
+    volume drift between sweeps taken minutes apart, so only a win_prob gap of
+    more than two points counts).
+    """
+    seen: dict = {}
+    out = []
+    clash = set()
+    for r in rows:
+        k = (r.race_id, r.quantity)
+        if k in seen:
+            if (r.quantity.startswith("win_prob")
+                    and abs(float(seen[k]) - float(r.value)) > 0.02):
+                clash.add(r.race_id)
+            continue
+        seen[k] = r.value
+        out.append(r)
+    if clash:
+        print(f"      {label}: kept the first of differing values for "
+              f"{sorted(clash)[:8]}")
+    return out
+
+
 @dataclass
 class Row:
     snapshot_date: str

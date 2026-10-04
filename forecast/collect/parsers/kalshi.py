@@ -11,7 +11,8 @@ removed in Q1 2026. Do not coerce to int.
 from __future__ import annotations
 import re
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
-               is_state, margin_ladder_expectation, race_id, state_from_text)
+               first_per_race, is_state, margin_ladder_expectation, race_id,
+               state_from_text)
 
 # Kalshi ticker conventions are not documented and shift. These patterns are a
 # best effort; --inspect the first real capture and tighten them.
@@ -115,6 +116,71 @@ def _micro_rows(m: dict, side: str, rid: str, chamber: str, state: str,
             out.append(ctx.row(art, race_id=rid, chamber=chamber, state=state,
                                district=district, quantity=quantity,
                                value=round(v, 4), unit="count"))
+    return out
+
+
+# --------------------------------------------------------------------------
+# State Senate races (added 2026-10-04).
+#
+# Kalshi lists one series per state, SENATE<ST> (and SENATEOHS / SENATEFLS for
+# the two 2026 specials, KXSENATELA for Louisiana's new November general).
+# Each series holds an EVENT PER CYCLE: SENATEGA-26 and SENATEGA-28. Only the
+# 2026 event is this archive's election, so the event ticker must carry -26.
+# Within an event there is one Yes/No market per candidate or party, ticker
+# suffix -D, -R, or something else (-IND, -DOSB for Dan Osborn in Nebraska).
+#
+# THE DEMOCRATIC SIDE. Following the site's rule that an independent standing in
+# for a party's nominee counts as that side's candidate, every market whose
+# suffix starts with D is the Democratic side (Nebraska's Osborn is -DOSB), and
+# their prices are added. Other independents (-IND) are left out, as is the
+# Republican side's complement: 1 - P(R) would count them as Democrats.
+_STATE_SENATE = re.compile(r"^(KX)?SENATE([A-Z]{2})S?$")
+
+
+def _senate_state_rows(series: str, markets: list, art: LoadedArtifact,
+                       ctx: Context) -> list[Row]:
+    # THE TITLE NAMES THE STATE, NOT THE TICKER. On 2026-10-04 the event
+    # SENATELA-26 was Kentucky (title "...Senate race in Kentucky?", candidates
+    # Barr and Booker) while Louisiana's 2026 race sat under KXSENATELA-26NOV.
+    # Trusting the ticker filed Kentucky's price as a second Louisiana value.
+    # So each event takes its state from the market title when the title names
+    # one, and from the ticker only when it does not.
+    ticker_st = _STATE_SENATE.match(series).group(2)
+    events: dict[str, list] = {}
+    for m in markets:
+        ev = str(m.get("event_ticker") or "")
+        if not re.search(r"-26", ev):
+            continue                          # another cycle (-28) or no event
+        events.setdefault(ev, []).append(m)
+    out = []
+    for ev, ms in events.items():
+        st = None
+        for m in ms:
+            st = state_from_text(str(m.get("title") or ""))
+            if st:
+                break
+        st = st or ticker_st
+        if not is_state(st):
+            continue
+        rid = race_id("senate", st)
+        sides: dict[str, float] = {}
+        single: dict[str, dict] = {}
+        for m in ms:
+            suffix = str(m.get("ticker", ""))[len(ev):].lstrip("-").upper()
+            side = ("R" if suffix.startswith("R")
+                    else "D" if suffix.startswith("D") else None)
+            p = _price(m)
+            if side is None or p is None:
+                continue
+            sides[side] = round(sides.get(side, 0.0) + p, 6)
+            single[side] = m if side not in single else None
+        for side, p in sides.items():
+            out.append(ctx.row(art, race_id=rid, chamber="senate", state=st,
+                               district="", quantity=f"win_prob_{side}",
+                               value=round(min(p, 1.0), 4), unit="prob"))
+            if single.get(side):
+                out.extend(_micro_rows(single[side], side, rid, "senate", st,
+                                       "", art, ctx))
     return out
 
 
@@ -519,6 +585,16 @@ def _seat_rows(markets: list, art, ctx) -> list:
 # parser failure — an error that fires every day for a permanent, understood
 # condition is one nobody reads, and it would bury a real one.
 _UNPARSED_SERIES = {
+    "KXMIDTERMHAPPEN":
+        "whether the midterm elections take place on schedule. Not a forecast "
+        "of any race. Matched by KXMIDTERM.* from 2026-10-04.",
+    "KXMIDTERMVOTETURN":
+        "turnout in the midterms. Not a forecast of any race.",
+    "KXMIDTERMMOV":
+        "margin-of-victory ladders for single races (mostly governors, some "
+        "Senate). Not read yet; the generic classifier filed its rungs as "
+        "Senate win probabilities for AR, MT and NE. A candidate for "
+        "margin_ladder_expectation later.",
     # KXRHOUSESEATS WAS HERE AND IS NOT ANY MORE. It was declared unparsed
     # because the D ladder "already gives us the whole distribution" — true
     # from 2025-12-31, when Kalshi first listed KXDHOUSESEATS, and false for
@@ -669,6 +745,16 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                 superseded.add(series)
                 continue
 
+        if _STATE_SENATE.match(series):
+            seen_markets += len(markets)
+            priced += len(markets)
+            got = _senate_state_rows(series, markets, art, ctx)
+            rows.extend(got)
+            rows_by_series[series] += len(got)
+            if not got:
+                superseded.add(series)        # only other cycles listed (-28)
+            continue
+
         seen_markets += len(markets)
         # Ladders first: both kinds are read as a distribution ACROSS markets,
         # not one market at a time, so neither can go through the per-market
@@ -816,4 +902,4 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         print(f"      kalshi: {n} ticker(s) from {len(noise)} non-allowlisted "
               f"series ignored (capture predates the allowlist): "
               f"{noise[:6]}{' …' if len(noise) > 6 else ''}")
-    return rows
+    return first_per_race(rows, "kalshi")
