@@ -11,8 +11,8 @@ removed in Q1 2026. Do not coerce to int.
 from __future__ import annotations
 import re
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
-               first_per_race, is_state, margin_ladder_expectation, race_id,
-               state_from_text)
+               first_per_race, independent_is_d_side, is_state,
+               margin_ladder_expectation, race_id, race_info, state_from_text)
 
 # Kalshi ticker conventions are not documented and shift. These patterns are a
 # best effort; --inspect the first real capture and tighten them.
@@ -163,12 +163,28 @@ def _senate_state_rows(series: str, markets: list, art: LoadedArtifact,
         if not is_state(st):
             continue
         rid = race_id("senate", st)
+        # WHERE AN INDEPENDENT IS THE D SIDE, THE CANDIDATE DECIDES, NOT THE
+        # SUFFIX. Idaho lists Achilles (I) as -TACH and a token Democrat as -D;
+        # South Dakota the same with Bengs as -BBEN. Reading the suffix put
+        # both races at the token Democrat's half a cent, and in Nebraska it
+        # added the token Democrat's price to Osborn's. So in those races the D
+        # side is the market whose candidate is the race file's D-side
+        # candidate, and every other non-R market is left out.
+        ind_d = independent_is_d_side(rid)
+        d_last = (str(race_info(rid).get("dem_candidate") or "").split() or [""])[-1]
         sides: dict[str, float] = {}
         single: dict[str, dict] = {}
         for m in ms:
             suffix = str(m.get("ticker", ""))[len(ev):].lstrip("-").upper()
-            side = ("R" if suffix.startswith("R")
-                    else "D" if suffix.startswith("D") else None)
+            if ind_d:
+                who = str(m.get("yes_sub_title") or m.get("title") or "")
+                side = ("R" if suffix.startswith("R")
+                        else "D" if d_last and re.search(
+                            rf"\b{re.escape(d_last)}\b", who, re.I)
+                        else None)
+            else:
+                side = ("R" if suffix.startswith("R")
+                        else "D" if suffix.startswith("D") else None)
             p = _price(m)
             if side is None or p is None:
                 continue
