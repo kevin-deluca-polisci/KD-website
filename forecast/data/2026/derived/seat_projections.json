@@ -11,20 +11,20 @@
     "academic_abramowitz": {
       "tide_D": 12.82,
       "senate": {
-        "n_races": 39,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 21.36,
+        "expected_D_seats_up": 18.02,
         "D_seats_up_80pct": [
-          18,
-          25
+          15,
+          21
         ],
-        "expected_D_total": 55.36,
+        "expected_D_total": 52.02,
         "D_total_80pct": [
-          52,
-          59
+          49,
+          55
         ],
-        "prob_D_50_plus": 0.9996,
-        "prob_D_51_plus": 0.9963
+        "prob_D_50_plus": 0.8739,
+        "prob_D_51_plus": 0.7153
       },
       "races": {
         "AK": {
@@ -69,12 +69,6 @@
           "win_prob_D": 0.9993,
           "basis": "national"
         },
-        "HI": {
-          "expected_margin_D": 33.54,
-          "pvi": 12.59,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "IA": {
           "expected_margin_D": 2.8,
           "pvi": -6.09,
@@ -117,12 +111,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "MD": {
-          "expected_margin_D": 38.04,
-          "pvi": 15.32,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "ME": {
           "expected_margin_D": 13.41,
           "pvi": 3.82,
@@ -139,12 +127,6 @@
           "expected_margin_D": 16.98,
           "pvi": 2.53,
           "win_prob_D": 0.9992,
-          "basis": "national"
-        },
-        "MO": {
-          "expected_margin_D": -1.94,
-          "pvi": -8.97,
-          "win_prob_D": 0.3586,
           "basis": "national"
         },
         "MS": {
@@ -186,12 +168,6 @@
         "NM": {
           "expected_margin_D": 24.58,
           "pvi": 3.68,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
-        "NY": {
-          "expected_margin_D": 25.46,
-          "pvi": 7.68,
           "win_prob_D": 1.0,
           "basis": "national"
         },
@@ -3354,20 +3330,20 @@
     "academic_bew": {
       "tide_D": 6.75,
       "senate": {
-        "n_races": 39,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 18.41,
+        "expected_D_seats_up": 15.34,
         "D_seats_up_80pct": [
-          16,
-          21
+          13,
+          17
         ],
-        "expected_D_total": 52.41,
+        "expected_D_total": 49.34,
         "D_total_80pct": [
-          50,
-          55
+          47,
+          51
         ],
-        "prob_D_50_plus": 0.9595,
-        "prob_D_51_plus": 0.8942
+        "prob_D_50_plus": 0.4168,
+        "prob_D_51_plus": 0.2052
       },
       "races": {
         "AK": {
@@ -3412,12 +3388,6 @@
           "win_prob_D": 0.9809,
           "basis": "national"
         },
-        "HI": {
-          "expected_margin_D": 27.47,
-          "pvi": 12.59,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "IA": {
           "expected_margin_D": -3.27,
           "pvi": -6.09,
@@ -3460,12 +3430,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "MD": {
-          "expected_margin_D": 31.97,
-          "pvi": 15.32,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "ME": {
           "expected_margin_D": 7.34,
           "pvi": 3.82,
@@ -3482,12 +3446,6 @@
           "expected_margin_D": 10.91,
           "pvi": 2.53,
           "win_prob_D": 0.9789,
-          "basis": "national"
-        },
-        "MO": {
-          "expected_margin_D": -8.01,
-          "pvi": -8.97,
-          "win_prob_D": 0.0678,
           "basis": "national"
         },
         "MS": {
@@ -3530,12 +3488,6 @@
           "expected_margin_D": 18.51,
           "pvi": 3.68,
           "win_prob_D": 0.9997,
-          "basis": "national"
-        },
-        "NY": {
-          "expected_margin_D": 19.39,
-          "pvi": 7.68,
-          "win_prob_D": 0.9998,
           "basis": "national"
         },
         "OH": {
@@ -6697,20 +6649,20 @@
     "academic_economic_pessimism": {
       "tide_D": 15.78,
       "senate": {
-        "n_races": 39,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 23.41,
+        "expected_D_seats_up": 19.89,
         "D_seats_up_80pct": [
-          19,
-          29
+          16,
+          25
         ],
-        "expected_D_total": 57.41,
+        "expected_D_total": 53.89,
         "D_total_80pct": [
-          53,
-          63
+          50,
+          59
         ],
-        "prob_D_50_plus": 0.9992,
-        "prob_D_51_plus": 0.9968
+        "prob_D_50_plus": 0.9159,
+        "prob_D_51_plus": 0.8248
       },
       "races": {
         "AK": {
@@ -6755,12 +6707,6 @@
           "win_prob_D": 0.9999,
           "basis": "national"
         },
-        "HI": {
-          "expected_margin_D": 36.5,
-          "pvi": 12.59,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "IA": {
           "expected_margin_D": 5.76,
           "pvi": -6.09,
@@ -6803,12 +6749,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "MD": {
-          "expected_margin_D": 41.0,
-          "pvi": 15.32,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "ME": {
           "expected_margin_D": 16.37,
           "pvi": 3.82,
@@ -6825,12 +6765,6 @@
           "expected_margin_D": 19.94,
           "pvi": 2.53,
           "win_prob_D": 0.9999,
-          "basis": "national"
-        },
-        "MO": {
-          "expected_margin_D": 1.02,
-          "pvi": -8.97,
-          "win_prob_D": 0.575,
           "basis": "national"
         },
         "MS": {
@@ -6872,12 +6806,6 @@
         "NM": {
           "expected_margin_D": 27.54,
           "pvi": 3.68,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
-        "NY": {
-          "expected_margin_D": 28.42,
-          "pvi": 7.68,
           "win_prob_D": 1.0,
           "basis": "national"
         },
@@ -10040,20 +9968,20 @@
     "academic_political_history": {
       "tide_D": 2.95,
       "senate": {
-        "n_races": 39,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 16.92,
+        "expected_D_seats_up": 13.9,
         "D_seats_up_80pct": [
-          15,
-          19
+          11,
+          16
         ],
-        "expected_D_total": 50.92,
+        "expected_D_total": 47.9,
         "D_total_80pct": [
-          49,
-          53
+          45,
+          50
         ],
-        "prob_D_50_plus": 0.8032,
-        "prob_D_51_plus": 0.6448
+        "prob_D_50_plus": 0.1426,
+        "prob_D_51_plus": 0.044
       },
       "races": {
         "AK": {
@@ -10098,12 +10026,6 @@
           "win_prob_D": 0.914,
           "basis": "national"
         },
-        "HI": {
-          "expected_margin_D": 23.67,
-          "pvi": 12.59,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "IA": {
           "expected_margin_D": -7.07,
           "pvi": -6.09,
@@ -10146,12 +10068,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "MD": {
-          "expected_margin_D": 28.17,
-          "pvi": 15.32,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "ME": {
           "expected_margin_D": 3.54,
           "pvi": 3.82,
@@ -10168,12 +10084,6 @@
           "expected_margin_D": 7.11,
           "pvi": 2.53,
           "win_prob_D": 0.9074,
-          "basis": "national"
-        },
-        "MO": {
-          "expected_margin_D": -11.81,
-          "pvi": -8.97,
-          "win_prob_D": 0.0139,
           "basis": "national"
         },
         "MS": {
@@ -10216,12 +10126,6 @@
           "expected_margin_D": 14.71,
           "pvi": 3.68,
           "win_prob_D": 0.9969,
-          "basis": "national"
-        },
-        "NY": {
-          "expected_margin_D": 15.59,
-          "pvi": 7.68,
-          "win_prob_D": 0.9982,
           "basis": "national"
         },
         "OH": {
@@ -13383,20 +13287,20 @@
     "academic_referendum": {
       "tide_D": 7.14,
       "senate": {
-        "n_races": 39,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 18.73,
+        "expected_D_seats_up": 15.6,
         "D_seats_up_80pct": [
-          15,
-          23
+          12,
+          19
         ],
-        "expected_D_total": 52.73,
+        "expected_D_total": 49.6,
         "D_total_80pct": [
-          49,
-          57
+          46,
+          53
         ],
-        "prob_D_50_plus": 0.8889,
-        "prob_D_51_plus": 0.8245
+        "prob_D_50_plus": 0.4422,
+        "prob_D_51_plus": 0.2993
       },
       "races": {
         "AK": {
@@ -13441,12 +13345,6 @@
           "win_prob_D": 0.9841,
           "basis": "national"
         },
-        "HI": {
-          "expected_margin_D": 27.86,
-          "pvi": 12.59,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "IA": {
           "expected_margin_D": -2.88,
           "pvi": -6.09,
@@ -13489,12 +13387,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "MD": {
-          "expected_margin_D": 32.36,
-          "pvi": 15.32,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "ME": {
           "expected_margin_D": 7.73,
           "pvi": 3.82,
@@ -13511,12 +13403,6 @@
           "expected_margin_D": 11.3,
           "pvi": 2.53,
           "win_prob_D": 0.9824,
-          "basis": "national"
-        },
-        "MO": {
-          "expected_margin_D": -7.62,
-          "pvi": -8.97,
-          "win_prob_D": 0.0778,
           "basis": "national"
         },
         "MS": {
@@ -13559,12 +13445,6 @@
           "expected_margin_D": 18.9,
           "pvi": 3.68,
           "win_prob_D": 0.9998,
-          "basis": "national"
-        },
-        "NY": {
-          "expected_margin_D": 19.78,
-          "pvi": 7.68,
-          "win_prob_D": 0.9999,
           "basis": "national"
         },
         "OH": {
@@ -16726,20 +16606,20 @@
     "class_fundamentals": {
       "tide_D": 11.1,
       "senate": {
-        "n_races": 39,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 20.38,
+        "expected_D_seats_up": 17.15,
         "D_seats_up_80pct": [
-          18,
-          24
+          15,
+          20
         ],
-        "expected_D_total": 54.38,
+        "expected_D_total": 51.15,
         "D_total_80pct": [
-          52,
-          58
+          49,
+          54
         ],
-        "prob_D_50_plus": 0.998,
-        "prob_D_51_plus": 0.9887
+        "prob_D_50_plus": 0.775,
+        "prob_D_51_plus": 0.5707
       },
       "races": {
         "AK": {
@@ -16784,12 +16664,6 @@
           "win_prob_D": 0.998,
           "basis": "national"
         },
-        "HI": {
-          "expected_margin_D": 31.82,
-          "pvi": 12.59,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "IA": {
           "expected_margin_D": 1.08,
           "pvi": -6.09,
@@ -16832,12 +16706,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "MD": {
-          "expected_margin_D": 36.32,
-          "pvi": 15.32,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "ME": {
           "expected_margin_D": 11.69,
           "pvi": 3.82,
@@ -16854,12 +16722,6 @@
           "expected_margin_D": 15.26,
           "pvi": 2.53,
           "win_prob_D": 0.9978,
-          "basis": "national"
-        },
-        "MO": {
-          "expected_margin_D": -3.66,
-          "pvi": -8.97,
-          "win_prob_D": 0.2475,
           "basis": "national"
         },
         "MS": {
@@ -16901,12 +16763,6 @@
         "NM": {
           "expected_margin_D": 22.86,
           "pvi": 3.68,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
-        "NY": {
-          "expected_margin_D": 23.74,
-          "pvi": 7.68,
           "win_prob_D": 1.0,
           "basis": "national"
         },
@@ -20068,20 +19924,20 @@
     "class_polling": {
       "tide_D": 8.88,
       "senate": {
-        "n_races": 39,
+        "n_races": 35,
         "n_race_polled": 15,
-        "expected_D_seats_up": 20.86,
+        "expected_D_seats_up": 17.74,
         "D_seats_up_80pct": [
-          16,
-          25
+          13,
+          21
         ],
-        "expected_D_total": 54.86,
+        "expected_D_total": 51.74,
         "D_total_80pct": [
-          50,
-          59
+          47,
+          55
         ],
-        "prob_D_50_plus": 0.9417,
-        "prob_D_51_plus": 0.8958
+        "prob_D_50_plus": 0.755,
+        "prob_D_51_plus": 0.6665
       },
       "races": {
         "AK": {
@@ -20126,12 +19982,6 @@
           "win_prob_D": 0.926,
           "basis": "race polls"
         },
-        "HI": {
-          "expected_margin_D": 29.6,
-          "pvi": 12.59,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "IA": {
           "expected_margin_D": 1.33,
           "pvi": -6.09,
@@ -20174,12 +20024,6 @@
           "win_prob_D": 1.0,
           "basis": "race polls"
         },
-        "MD": {
-          "expected_margin_D": 34.1,
-          "pvi": 15.32,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "ME": {
           "expected_margin_D": 1.48,
           "pvi": 3.82,
@@ -20197,12 +20041,6 @@
           "pvi": 2.53,
           "win_prob_D": 0.6464,
           "basis": "race polls"
-        },
-        "MO": {
-          "expected_margin_D": -5.88,
-          "pvi": -8.97,
-          "win_prob_D": 0.1366,
-          "basis": "national"
         },
         "MS": {
           "expected_margin_D": -14.56,
@@ -20244,12 +20082,6 @@
           "expected_margin_D": 20.64,
           "pvi": 3.68,
           "win_prob_D": 0.9999,
-          "basis": "national"
-        },
-        "NY": {
-          "expected_margin_D": 21.52,
-          "pvi": 7.68,
-          "win_prob_D": 1.0,
           "basis": "national"
         },
         "OH": {
@@ -23410,20 +23242,20 @@
     "fair": {
       "tide_D": 1.78,
       "senate": {
-        "n_races": 39,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 16.33,
+        "expected_D_seats_up": 13.33,
         "D_seats_up_80pct": [
-          12,
-          19
+          9,
+          16
         ],
-        "expected_D_total": 50.33,
+        "expected_D_total": 47.33,
         "D_total_80pct": [
-          46,
-          53
+          43,
+          50
         ],
-        "prob_D_50_plus": 0.664,
-        "prob_D_51_plus": 0.5444
+        "prob_D_50_plus": 0.1605,
+        "prob_D_51_plus": 0.0803
       },
       "races": {
         "AK": {
@@ -23468,12 +23300,6 @@
           "win_prob_D": 0.8745,
           "basis": "national"
         },
-        "HI": {
-          "expected_margin_D": 22.5,
-          "pvi": 12.59,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "IA": {
           "expected_margin_D": -8.24,
           "pvi": -6.09,
@@ -23516,12 +23342,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "MD": {
-          "expected_margin_D": 27.0,
-          "pvi": 15.32,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "ME": {
           "expected_margin_D": 2.37,
           "pvi": 3.82,
@@ -23538,12 +23358,6 @@
           "expected_margin_D": 5.94,
           "pvi": 2.53,
           "win_prob_D": 0.8658,
-          "basis": "national"
-        },
-        "MO": {
-          "expected_margin_D": -12.98,
-          "pvi": -8.97,
-          "win_prob_D": 0.0078,
           "basis": "national"
         },
         "MS": {
@@ -23586,12 +23400,6 @@
           "expected_margin_D": 13.54,
           "pvi": 3.68,
           "win_prob_D": 0.9941,
-          "basis": "national"
-        },
-        "NY": {
-          "expected_margin_D": 14.42,
-          "pvi": 7.68,
-          "win_prob_D": 0.9964,
           "basis": "national"
         },
         "OH": {
@@ -26752,20 +26560,20 @@
     "polling_reconstructed": {
       "tide_D": 8.279,
       "senate": {
-        "n_races": 39,
+        "n_races": 35,
         "n_race_polled": 15,
-        "expected_D_seats_up": 20.83,
+        "expected_D_seats_up": 17.73,
         "D_seats_up_80pct": [
-          16,
-          25
+          13,
+          21
         ],
-        "expected_D_total": 54.83,
+        "expected_D_total": 51.73,
         "D_total_80pct": [
-          50,
-          59
+          47,
+          55
         ],
-        "prob_D_50_plus": 0.9411,
-        "prob_D_51_plus": 0.895
+        "prob_D_50_plus": 0.7549,
+        "prob_D_51_plus": 0.6662
       },
       "races": {
         "AK": {
@@ -26810,12 +26618,6 @@
           "win_prob_D": 0.926,
           "basis": "race polls"
         },
-        "HI": {
-          "expected_margin_D": 29.0,
-          "pvi": 12.59,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "IA": {
           "expected_margin_D": 1.33,
           "pvi": -6.09,
@@ -26858,12 +26660,6 @@
           "win_prob_D": 1.0,
           "basis": "race polls"
         },
-        "MD": {
-          "expected_margin_D": 33.5,
-          "pvi": 15.32,
-          "win_prob_D": 1.0,
-          "basis": "national"
-        },
         "ME": {
           "expected_margin_D": 1.48,
           "pvi": 3.82,
@@ -26881,12 +26677,6 @@
           "pvi": 2.53,
           "win_prob_D": 0.6464,
           "basis": "race polls"
-        },
-        "MO": {
-          "expected_margin_D": -6.49,
-          "pvi": -8.97,
-          "win_prob_D": 0.1136,
-          "basis": "national"
         },
         "MS": {
           "expected_margin_D": -15.16,
@@ -26928,12 +26718,6 @@
           "expected_margin_D": 20.04,
           "pvi": 3.68,
           "win_prob_D": 0.9999,
-          "basis": "national"
-        },
-        "NY": {
-          "expected_margin_D": 20.92,
-          "pvi": 7.68,
-          "win_prob_D": 1.0,
           "basis": "national"
         },
         "OH": {
