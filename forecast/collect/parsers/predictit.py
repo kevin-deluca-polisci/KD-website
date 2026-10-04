@@ -27,6 +27,7 @@ import re
 
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
                house_seats_from_r_ladder, independent_is_d_side,
+               senate_seats_from_r_ladder,
                margin_ladder_expectation, race_id,
                seat_bucket, state_from_text)
 
@@ -61,6 +62,8 @@ def _pv_bucket(label: str):
 
 
 _R_HOUSE_SEATS = re.compile(r"house\s+seats\s+will\s+(?:the\s+)?(?:republicans|gop)", re.I)
+# "How many Senate seats will the GOP control after the 2026 midterms?"
+_R_SENATE_SEATS = re.compile(r"senate\s+seats\s+will\s+(?:the\s+)?(?:republicans|gop)", re.I)
 
 _DEM = re.compile(r"\bdemocrat", re.I)
 _REP = re.compile(r"\brepublican|\bGOP\b", re.I)
@@ -163,6 +166,17 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                 if exp is not None:
                     matched += 1
                     rows.append(ctx.row(art, race_id=NATIONAL_HOUSE,
+                                        chamber="national", state="",
+                                        district="", quantity="seats_D",
+                                        value=round(exp, 2), unit="seats"))
+                continue
+            if _CYCLE.search(name) and _R_SENATE_SEATS.search(name):
+                buckets = [(seat_bucket(str(c.get("name") or "")), _price(c))
+                           for c in m.get("contracts") or [] if isinstance(c, dict)]
+                exp = senate_seats_from_r_ladder(buckets)
+                if exp is not None:
+                    matched += 1
+                    rows.append(ctx.row(art, race_id=NATIONAL_SENATE,
                                         chamber="national", state="",
                                         district="", quantity="seats_D",
                                         value=round(exp, 2), unit="seats"))

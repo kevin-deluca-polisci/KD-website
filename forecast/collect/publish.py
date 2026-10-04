@@ -644,6 +644,11 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
                     "prob": (w or {}).get("value"),
                     "withheld": bool((m or {}).get("withheld")
                                      or (w or {}).get("withheld")),
+                    # Kept apart for the per-race chart: a quantity withheld
+                    # under the disclosure floor is never filled in by
+                    # converting the other one (see _spread_plot).
+                    "margin_withheld": bool((m or {}).get("withheld")),
+                    "prob_withheld": bool((w or {}).get("withheld")),
                     "n": (m or w or {}).get("n"),
                 }
         ch = cls_hist.get(rid) or []
@@ -667,12 +672,14 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
     covered = sorted({c for r in races for c in r["cats"]},
                      key=CATEGORY_ORDER.index)
     missing = [c for c in CATEGORY_ORDER if c not in covered]
+    sigma = _race_sigma(d)
     return {
         "national": national,
         "across_families": across,
         "races": races,
-        "plot": _spread_plot(races),
-        "plot_margin": _spread_plot(races, "margin"),
+        "plot": _spread_plot(races, "prob", sigma),
+        "plot_margin": _spread_plot(races, "margin", sigma),
+        "convert_sigma": sigma,
         "categories": CATEGORY_ORDER,
         "labels": CATEGORY_LABEL,
         "categories_per_race": covered,
@@ -682,8 +689,47 @@ def build_spread(d: Path, latest: str, proj: dict | None, avgs: list[dict],
 
 MARGIN_CLIP = 30.0
 
+# CONVERTING BETWEEN A MARGIN AND A CHANCE, for the per-race chart only.
+#
+# Race polling averages publish a margin and no chance; markets publish a
+# chance and no margin. So until 2026-10-04 each was missing from one of the
+# chart's two views. Both views now show every category, the missing one
+# converted and drawn hollow:
+#
+#   chance from a margin   P = Phi(margin / sigma)
+#   margin from a chance   margin = sigma * Phi^-1(P)
+#
+# sigma is the polling model's total Senate race error (polling_model.json,
+# senate.sigma_total, calibrated on past Senate races), which is the same
+# number the polling line already uses to turn race polls into a chance. So a
+# converted polling chance is exactly what the polling line says for a polled
+# race, and a converted market margin is the margin that the same error model
+# would need to produce the market's price. Converted values exist only in the
+# plot payload: they are never written to category averages or the archive.
+_P_CLAMP = 0.001          # a price of 0 or 1 has no finite margin
+#
+# ONLY BETWEEN 5% AND 95% FOR A CHANCE TURNED INTO A MARGIN. Market prices on
+# safe seats sit at 96-99% whatever the real margin, because fees, the cost of
+# tying money up until November and longshot bias keep a price off the
+# ceiling. Converted, that put Oregon's market near D+12 beside academic and
+# class models at D+25 or more: the conversion reading the price ceiling, not
+# the market's view of the margin. Inside this band the conversion is
+# informative; outside it the mark is left off the margin view (it still shows,
+# unconverted, in the chance view). Margins turned into chances need no band.
+_P_CONVERT_MIN, _P_CONVERT_MAX = 0.05, 0.95
 
-def _spread_plot(races: list[dict], mode: str = "prob") -> dict | None:
+
+def _race_sigma(d: Path) -> float | None:
+    try:
+        pm = json.loads((d / "polling_model.json").read_text())
+        v = float((pm.get("senate") or {}).get("sigma_total"))
+        return v if v > 0 else None
+    except (OSError, ValueError, TypeError, AttributeError):
+        return None
+
+
+def _spread_plot(races: list[dict], mode: str = "prob",
+                 sigma: float | None = None) -> dict | None:
     """The per-race comparison as positions on one probability axis.
 
     This was a table: a column per method, a percentage in every cell, and a
@@ -708,18 +754,37 @@ def _spread_plot(races: list[dict], mode: str = "prob") -> dict | None:
     for r in races:
         if not r.get("competitive"):
             continue
-        if mode == "margin":
-            # Margin axis: R+30 at the left edge, D+30 at the right.
-            pts = [{"key": c, "label": CATEGORY_LABEL[c], "margin": v["margin"],
-                    "x": round((max(-MARGIN_CLIP, min(MARGIN_CLIP, v["margin"]))
-                                + MARGIN_CLIP) / (2 * MARGIN_CLIP) * 100, 2)}
-                   for c in CATEGORY_ORDER
-                   if (v := r["cats"].get(c)) and v.get("margin") is not None]
-        else:
-            pts = [{"key": c, "label": CATEGORY_LABEL[c],
-                    "prob": v["prob"], "x": round(v["prob"] * 100, 2)}
-                   for c in CATEGORY_ORDER
-                   if (v := r["cats"].get(c)) and v.get("prob") is not None]
+        nd = statistics.NormalDist()
+        pts = []
+        for c in CATEGORY_ORDER:
+            v = r["cats"].get(c)
+            if not v:
+                continue
+            m, pr, conv = v.get("margin"), v.get("prob"), False
+            if v.get("withheld") and (v.get("margin_withheld") is None
+                                      or v.get("prob_withheld") is None):
+                conv_ok = False           # an entry without the split flags
+            else:
+                conv_ok = True
+            if (mode == "margin" and m is None and pr is not None and sigma
+                    and conv_ok and not v.get("margin_withheld")
+                    and _P_CONVERT_MIN <= pr <= _P_CONVERT_MAX):
+                m = sigma * nd.inv_cdf(min(1 - _P_CLAMP, max(_P_CLAMP, pr)))
+                conv = True
+            if (mode != "margin" and pr is None and m is not None and sigma
+                    and conv_ok and not v.get("prob_withheld")):
+                pr = nd.cdf(m / sigma)
+                conv = True
+            if mode == "margin" and m is not None:
+                # Margin axis: R+30 at the left edge, D+30 at the right.
+                pts.append({"key": c, "label": CATEGORY_LABEL[c],
+                            "margin": round(m, 2), "converted": conv,
+                            "x": round((max(-MARGIN_CLIP, min(MARGIN_CLIP, m))
+                                        + MARGIN_CLIP) / (2 * MARGIN_CLIP) * 100, 2)})
+            elif mode != "margin" and pr is not None:
+                pts.append({"key": c, "label": CATEGORY_LABEL[c],
+                            "prob": round(pr, 4), "converted": conv,
+                            "x": round(pr * 100, 2)})
         # One mark is a value, not a comparison. A single-method row on a
         # card about disagreement is noise, and its band would be zero wide.
         if len(pts) < 2:
@@ -748,6 +813,9 @@ def _spread_plot(races: list[dict], mode: str = "prob") -> dict | None:
     return {
         "rows": rows,
         "categories": used,
+        "any_converted": any(p.get("converted") for r in rows for p in r["points"]),
+        "convert_band": [_P_CONVERT_MIN, _P_CONVERT_MAX],
+        "sigma": round(sigma, 2) if sigma else None,
         "labels": {c: CATEGORY_LABEL[c] for c in used},
         "mode": mode,
         "ticks": ([{"x": v, "label": f"{v}%"} for v in (0, 25, 50, 75, 100)]

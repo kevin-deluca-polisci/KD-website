@@ -279,9 +279,8 @@ def state_from_text(text: str) -> str | None:
 # convention (normalised by the ladder's mass, open ends one bucket wide, a
 # ladder holding too little mass refused rather than rescaled).
 #
-# HOUSE ONLY, as in the Kalshi parser: complementing a Republican Senate ladder
-# to 100 assumes every non-Republican senator is on the D side, which is a
-# decision about King, Sanders and Osborn to take on purpose, not here.
+# The Senate version (senate_seats_from_r_ladder, below) counts every
+# non-Republican senator as the D side, as the site does; see the note there.
 # Seats only: each exchange has its own chamber-control market for the chance.
 _SEAT_LABEL_PATTERNS = (
     (re.compile(r"^\s*(?:below|under|fewer than|less than)\s+(\d+)\s*$", re.I),
@@ -308,19 +307,33 @@ def seat_bucket(label: str):
     return None
 
 
-def house_seats_from_r_ladder(buckets: list) -> float | None:
-    """Expected Democratic House seats from [((lo, hi), price)] over R seats,
+def seats_from_r_ladder(buckets: list, total: int = 435,
+                        threshold: int = 218) -> float | None:
+    """Expected Democratic-side seats from [((lo, hi), price)] over R seats,
     or None when the ladder is too thin or holds too little mass."""
     from .kalshi import IncompleteLadder, _reflect, _seat_stats
-    flipped = [(_reflect(b, 435), p) for b, p in buckets if b is not None]
+    flipped = [(_reflect(b, total), p) for b, p in buckets if b is not None]
     flipped = [(b, p) for b, p in flipped if b is not None and p is not None]
     if len(flipped) < 3:
         return None
     try:
-        exp, _ = _seat_stats(flipped, 218, 435)
+        exp, _ = _seat_stats(flipped, threshold, total)
     except IncompleteLadder:
         return None
     return exp
+
+
+def house_seats_from_r_ladder(buckets: list) -> float | None:
+    return seats_from_r_ladder(buckets, 435, 218)
+
+
+# THE SENATE, REFLECTED TO 100, COUNTS EVERY NON-REPUBLICAN AS THE D SIDE.
+# Decided 2026-10-04: that is how the site already counts Senate seats (the
+# seat model's 47 D holdover includes King and Sanders, and a won independent
+# D-side race such as Osborn's counts toward the Democratic total), so
+# 100 - R seats is the same quantity the other Senate seat counts report.
+def senate_seats_from_r_ladder(buckets: list) -> float | None:
+    return seats_from_r_ladder(buckets, 100, 51)
 
 
 _RACE_INFO: dict | None = None

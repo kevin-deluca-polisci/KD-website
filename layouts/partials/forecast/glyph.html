@@ -3,21 +3,25 @@
      deficiency. The legend uses this same partial. An unknown key draws a
      dashed ring so it looks like a bug rather than data.
 
-     Expects: x, y (centre, in viewBox units), key (source), fill. */}}
+     Expects: x, y (centre, in viewBox units), key (source), fill.
+     Optional: hollow (true draws the outline only, in the same colour, for a
+     value converted from the other measure; see publish._spread_plot). */}}
 {{- $x := .x }}{{ $y := .y }}{{ $k := .key }}{{ $f := .fill }}
+{{- $sc := "none" }}{{ $sw := 0 }}
+{{- if .hollow }}{{ $sc = $f }}{{ $sw = 1.5 }}{{ $f = "var(--surface)" }}{{ end }}
 {{- if eq $k "polling" -}}
-<circle cx="{{ $x }}" cy="{{ $y }}" r="4.2" fill="{{ $f }}"/>
+<circle cx="{{ $x }}" cy="{{ $y }}" r="4.2" fill="{{ $f }}" stroke="{{ $sc }}" stroke-width="{{ $sw }}"/>
 {{- else if eq $k "professional" -}}
-<rect x="{{ sub $x 3.8 }}" y="{{ sub $y 3.8 }}" width="7.6" height="7.6" fill="{{ $f }}"/>
+<rect x="{{ sub $x 3.8 }}" y="{{ sub $y 3.8 }}" width="7.6" height="7.6" fill="{{ $f }}" stroke="{{ $sc }}" stroke-width="{{ $sw }}"/>
 {{- else if eq $k "market" -}}
-<path d="M {{ $x }} {{ sub $y 4.8 }} L {{ add $x 4.8 }} {{ add $y 3.9 }} L {{ sub $x 4.8 }} {{ add $y 3.9 }} Z" fill="{{ $f }}"/>
+<path d="M {{ $x }} {{ sub $y 4.8 }} L {{ add $x 4.8 }} {{ add $y 3.9 }} L {{ sub $x 4.8 }} {{ add $y 3.9 }} Z" fill="{{ $f }}" stroke="{{ $sc }}" stroke-width="{{ $sw }}"/>
 {{- else if eq $k "class" -}}
-<path d="M {{ $x }} {{ sub $y 5.2 }} L {{ add $x 5.2 }} {{ $y }} L {{ $x }} {{ add $y 5.2 }} L {{ sub $x 5.2 }} {{ $y }} Z" fill="{{ $f }}"/>
+<path d="M {{ $x }} {{ sub $y 5.2 }} L {{ add $x 5.2 }} {{ $y }} L {{ $x }} {{ add $y 5.2 }} L {{ sub $x 5.2 }} {{ $y }} Z" fill="{{ $f }}" stroke="{{ $sc }}" stroke-width="{{ $sw }}"/>
 {{- else if eq $k "academic" -}}
 <path d="M {{ sub $x 5.0 }} {{ sub $y 1.7 }} H {{ sub $x 1.7 }} V {{ sub $y 5.0 }}
          H {{ add $x 1.7 }} V {{ sub $y 1.7 }} H {{ add $x 5.0 }}
          V {{ add $y 1.7 }} H {{ add $x 1.7 }} V {{ add $y 5.0 }}
-         H {{ sub $x 1.7 }} V {{ add $y 1.7 }} H {{ sub $x 5.0 }} Z" fill="{{ $f }}"/>
+         H {{ sub $x 1.7 }} V {{ add $y 1.7 }} H {{ sub $x 5.0 }} Z" fill="{{ $f }}" stroke="{{ $sc }}" stroke-width="{{ $sw }}"/>
 {{- else -}}
 <circle cx="{{ $x }}" cy="{{ $y }}" r="4.4" fill="none"
         stroke="{{ $f }}" stroke-width="1.6" stroke-dasharray="2 2"/>

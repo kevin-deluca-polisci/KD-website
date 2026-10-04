@@ -85,11 +85,17 @@
     {{- with $pl }}
     <div data-panel data-mode="{{ $mode }}">
     <p class="sub">{{ if eq $mode "margin" }}Expected Democratic margin in each
-       competitive seat, in points (cut off at 30). Markets appear only in the
-       chance-of-winning view.{{ else }}Chance of a Democratic win in each
-       competitive seat. Race polling averages appear only in the margin
-       view.{{ end }} Each mark is one source; the grey band runs from the
-       lowest to the highest, and the spread column is the gap in points.</p>
+       competitive seat, in points (cut off at 30).{{ else }}Chance of a
+       Democratic win in each competitive seat.{{ end }} Each mark is one
+       source; the grey band runs from the lowest to the highest, and the
+       spread column is the gap in points.{{ if .any_converted }}
+       {{ if eq $mode "margin" }}Markets price a chance rather than a margin,
+       so their hollow marks show the margin that would give that chance. A
+       price above 95% or below 5% is left out of this view, because near
+       certainty a market price stops tracking the margin{{ else }}Race
+       polls give a margin rather than a chance, so their hollow marks show
+       the chance that margin implies{{ end }}, using the polling model's
+       Senate race error of {{ printf "%.1f" .sigma }} points.{{ end }}</p>
 
     {{- $RH := 26.0 }}{{ $L := 54.0 }}{{ $W := 512.0 }}{{ $T := 30.0 }}
     {{- $H := mul $RH (len .rows) }}
@@ -122,7 +128,8 @@
               stroke="var(--ink-3)" stroke-width="1.3"/>
         {{- range $row.points }}
         {{- partial "forecast/glyph.html" (dict "x" (add $lx (mul (div .x 100.0) $wd)) "y" $y
-                                  "key" .key "fill" (printf "var(--c-%s)" .key)) }}
+                                  "key" .key "fill" (printf "var(--c-%s)" .key)
+                                  "hollow" .converted) }}
         {{- end }}
         <text class="rowval" x="{{ add (add $lx $wd) 94 }}" y="{{ add $y 4 }}"
               text-anchor="end"
@@ -138,6 +145,11 @@
         {{- partial "forecast/glyph.html" (dict "x" 7.0 "y" 7.0 "key" .
                                    "fill" (printf "var(--c-%s)" .)) }}
       </svg>{{ index $s.labels . }}</span>
+      {{- end }}
+      {{- if .any_converted }}
+      <span><svg viewBox="0 0 14 14" style="width:13px;height:13px">
+        <circle cx="7" cy="7" r="4.2" fill="var(--surface)" stroke="var(--ink-3)" stroke-width="1.5"/>
+      </svg>converted from the other measure</span>
       {{- end }}
       <span><span class="swatch range"></span>range across sources</span>
     </div>
