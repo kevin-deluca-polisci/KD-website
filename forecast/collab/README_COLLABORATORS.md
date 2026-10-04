@@ -60,6 +60,22 @@ For real-time analysis, use `captured`, `archival` and `computed` rows.
 Each source has one value per day (`snapshot_date`); `as_of` is the date the
 source published it.
 
+## Notes on the market data
+
+- **Independents on the Democratic side.** In the Nebraska, Idaho and South
+  Dakota Senate races and Alaska's at-large House race, an independent
+  (Osborn, Achilles, Bengs, Hill) is treated as the Democratic-side candidate,
+  so `win_prob_D` is that independent's price, not the Democratic nominee's.
+  PredictIt lists no contract for the independents in Idaho and South Dakota,
+  so it has no `win_prob_D` value in those two races.
+- **Senate seats.** Democratic Senate seat counts include the independents
+  who caucus with Democrats. PredictIt prices Republican seats, so its count is
+  100 minus the Republican count.
+- **Coverage of individual Senate races.** PredictIt from 2026-08-21;
+  Polymarket 2026-08-21 to 08-29 and from 2026-10-04; Kalshi from 2026-10-04.
+  National chamber, seat and vote-margin markets start earlier; see each
+  source's first date in `forecasts_by_source.csv`.
+
 ## Columns
 
 Column definitions are the same as in the public README. The additions:
