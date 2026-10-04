@@ -107,11 +107,12 @@ title = "Kevin DeLuca"
     url = "/data/"
     weight = 6
 
-  [[menu.main]]
-    identifier = "media-tracker"
-    name = "Media Tracker"
-    url = "/media-tracker/"
-    weight = 7
+  # MEDIA TRACKER HIDDEN (2026-10-04); see content/media-tracker/_index.md.
+  # [[menu.main]]
+  #   identifier = "media-tracker"
+  #   name = "Media Tracker"
+  #   url = "/media-tracker/"
+  #   weight = 7
 
   [[menu.main]]
     identifier = "forecast"
