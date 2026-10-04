@@ -413,16 +413,24 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
     exclude = re.compile(exclude_raw, re.IGNORECASE) if exclude_raw else None
     limit = cfg.get("page_limit", 200)
     max_pages = cfg.get("max_pages", 20)
-    category = cfg.get("series_category")
+    # ONE OR MORE CATEGORIES. Kalshi files state Senate races under
+    # "Elections", not "Politics" (2026-10-04), so the index is read once per
+    # category. The first keeps the old artifact name, so the stored history
+    # reads the same; the others are named for their category.
+    categories = (cfg.get("series_categories")
+                  or [cfg.get("series_category")])
 
     n = b = 0
     notes: list[str] = []
     matched: list[str] = []
     excluded: list[str] = []
     near_missed: list[str] = []
-    cursor = None
 
-    for page in range(max_pages):
+    for ci, category in enumerate(categories):
+      cursor = None
+      prefix = ("series-page" if ci == 0
+                else f"series-{str(category).lower()}-page")
+      for page in range(max_pages):
         params = {"limit": limit}
         if category:
             params["category"] = category
@@ -430,7 +438,7 @@ def handle_kalshi(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tuple[in
             params["cursor"] = cursor
         url = f"{base}/series?{urllib.parse.urlencode(params)}"
         body, meta = fetcher.get(url)
-        b += store.write(src["id"], f"series-page-{page:02d}", body, meta)
+        b += store.write(src["id"], f"{prefix}-{page:02d}", body, meta)
         n += 1
 
         if fetcher.dry_run:
@@ -559,6 +567,26 @@ def handle_polymarket(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tupl
             n += 1
         except Exception as e:
             notes.append(f"active-events snapshot failed: {e}")
+
+    for tag in cfg.get("tag_slugs") or []:
+        params = {"tag_slug": tag, "closed": "false",
+                  "limit": cfg.get("page_limit", 500)}
+        url = f"{base}/events?{urllib.parse.urlencode(params)}"
+        try:
+            body, meta = fetcher.get(url)
+            b += store.write(src["id"], f"events-tag-{tag}", body, meta)
+            n += 1
+        except Exception as e:
+            notes.append(f"tag {tag} failed: {e}")
+
+    for q in cfg.get("search_queries") or []:
+        url = f"{base}/public-search?{urllib.parse.urlencode({'q': q, 'limit_per_type': 50})}"
+        try:
+            body, meta = fetcher.get(url)
+            b += store.write(src["id"], f"search-{store._slugify(q)}", body, meta)
+            n += 1
+        except Exception as e:
+            notes.append(f"search {q!r} failed: {e}")
 
     notes.append("per-seat market coverage was unverified in the audit; check the stored events")
     return n, b, notes

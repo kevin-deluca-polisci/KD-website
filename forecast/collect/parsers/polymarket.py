@@ -365,7 +365,8 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
     pv_only = True          # every event so far was one we recognise and skip
     for art in artifacts.values():
         payload = art.json()
-        events = payload if isinstance(payload, list) else payload.get("data", [payload])
+        events = (payload if isinstance(payload, list)
+                  else payload.get("data") or payload.get("events") or [payload])
         for ev in events:
             if not isinstance(ev, dict):
                 continue

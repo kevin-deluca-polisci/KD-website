@@ -1,16 +1,28 @@
 #!/bin/bash
-# Build the collaborator version of the U.S. Election Forecast Archive in a
-# Dropbox folder. Run it on your Mac whenever you want to update the copy:
+# Build the collaborator version of the U.S. Election Forecast Archive
+# (Version 0.1, pre-release) in a Dropbox folder. Run it on your Mac whenever
+# you want to update the copy:
 #
 #   bash forecast/collab/update_collaborator_copy.sh
 #   bash forecast/collab/update_collaborator_copy.sh "/path/to/shared folder"
 #
-# It downloads only the files it needs (the public archive tables and the
-# private collaborator tables), writes them to <folder>/current/, and saves a
-# dated zip of the same files in <folder>/snapshots/.
+# The folder it writes is a COPY for sharing (read-only for collaborators). It
+# is never read by the daily job; the working data stay in the two GitHub
+# repositories.
+#
+# It downloads what it needs into a cache (~/.cache/forecast-archive), then
+# writes to <folder>/current/:
+#   - the processed tables (public archive + collaborator tables)
+#   - raw/    every captured file, as received, except the sources below
+#   - parsed/ the rows read from those files, without the excluded sources
+# and saves a dated zip of the processed tables in <folder>/snapshots/.
+#
+# NOT COPIED (private tier; their terms do not allow sharing):
+#   cook_pvi, cook_state_pvi, dra, grant_williams
 #
 # Needs read access to the private repo kevin-deluca-polisci/plsc2219-raw with
-# the GitHub token your Terminal already uses.
+# the GitHub token your Terminal already uses. The first run downloads about
+# 2 GB; later runs fetch only what changed.
 set -euo pipefail
 
 DEST="${1:-$HOME/Library/CloudStorage/Dropbox/Yale/ElectionData/ForecastDataArchive}"
@@ -18,8 +30,10 @@ CACHE="${CACHE:-$HOME/.cache/forecast-archive}"
 PUBLIC_REPO="${PUBLIC_REPO:-https://github.com/kevin-deluca-polisci/KD-website.git}"
 PRIVATE_REPO="${PRIVATE_REPO:-https://github.com/kevin-deluca-polisci/plsc2219-raw.git}"
 CYCLE=2026
+VERSION="0.1"
+EXCLUDE="cook_pvi cook_state_pvi dra grant_williams"
 
-# Download (or refresh) just one folder of a repo.
+# Download (or refresh) just some folders of a repo.
 sparse_fetch() {   # url dir path...
   local url="$1" dir="$2"; shift 2
   if [ ! -d "$dir/.git" ]; then
@@ -35,11 +49,14 @@ sparse_fetch() {   # url dir path...
 mkdir -p "$CACHE"
 echo "Downloading the public archive tables..."
 sparse_fetch "$PUBLIC_REPO" "$CACHE/public" "forecast/archive/$CYCLE" "forecast/collab"
-echo "Downloading the collaborator tables (private repo)..."
-sparse_fetch "$PRIVATE_REPO" "$CACHE/private" "$CYCLE/model_private/pending"
+echo "Downloading the collaborator tables, raw files and parsed rows (private repo)..."
+sparse_fetch "$PRIVATE_REPO" "$CACHE/private" \
+  "$CYCLE/model_private/pending" "$CYCLE/raw" "$CYCLE/parsed"
 
 PUB="$CACHE/public/forecast/archive/$CYCLE"
 PRI="$CACHE/private/$CYCLE/model_private/pending"
+RAW="$CACHE/private/$CYCLE/raw"
+PARSED="$CACHE/private/$CYCLE/parsed"
 DOCS="$CACHE/public/forecast/collab"
 for f in "$PRI/forecasts_by_source_all.csv" "$PRI/category_averages_full.csv" \
          "$PUB/timeline.csv" "$PUB/approval.csv"; do
@@ -49,6 +66,7 @@ for f in "$PRI/forecasts_by_source_all.csv" "$PRI/category_averages_full.csv" \
     exit 1
   fi
 done
+[ -d "$RAW" ] || { echo "Missing $RAW. Nothing was changed."; exit 1; }
 
 DAY=$(date +%Y-%m-%d)
 STAGE=$(mktemp -d)
@@ -60,10 +78,13 @@ cp "$DOCS/README_COLLABORATORS.md" "$STAGE/README.md"
 cp "$DOCS/DATA_USE.md" "$STAGE/DATA_USE.md"
 
 {
+  echo "U.S. Election Forecast Archive: 2026 Midterm Elections"
+  echo "Version $VERSION (pre-release, for collaborators only)"
   echo "Built: $DAY"
   echo "Public archive commit:  $(git -C "$CACHE/public" rev-parse --short HEAD)"
   echo "Private archive commit: $(git -C "$CACHE/private" rev-parse --short HEAD)"
   echo "Latest data date: $(tail -n +2 "$STAGE/timeline.csv" | cut -d, -f1 | sort | tail -n 1)"
+  echo "Sources not included in raw/ and parsed/: $EXCLUDE"
 } > "$STAGE/version.txt"
 
 {
@@ -78,12 +99,71 @@ cp "$DOCS/DATA_USE.md" "$STAGE/DATA_USE.md"
 mv "$CACHE/files.csv" "$STAGE/files.csv"
 
 mkdir -p "$DEST/current" "$DEST/snapshots"
-rm -f "$DEST/current/"*
+
+# Processed tables: replace the top-level files only (raw/ and parsed/ are
+# updated in place below, so they are not copied twice).
+find "$DEST/current" -maxdepth 1 -type f -delete
 cp "$STAGE"/* "$DEST/current/"
-( cd "$STAGE" && zip -q -r "$DEST/snapshots/forecast-archive-collaborators-$DAY.zip" . )
+( cd "$STAGE" && zip -q -r "$DEST/snapshots/forecast-archive-v${VERSION}-$DAY.zip" . )
 rm -rf "$STAGE"
+
+# Raw files, as received. rsync copies only what changed since the last run.
+echo "Copying raw files..."
+RSYNC_EXCL=()
+for s in $EXCLUDE; do RSYNC_EXCL+=(--exclude "/$s/"); done
+mkdir -p "$DEST/current/raw"
+rsync -a --delete "${RSYNC_EXCL[@]}" "$RAW/" "$DEST/current/raw/"
+
+# Parsed rows, without the excluded sources.
+echo "Copying parsed rows..."
+mkdir -p "$DEST/current/parsed"
+EXCLUDE="$EXCLUDE" python3 - "$PARSED" "$DEST/current/parsed" <<'PY'
+import csv, os, sys
+src, dst = sys.argv[1], sys.argv[2]
+drop = set(os.environ["EXCLUDE"].split())
+keep = set()
+for name in sorted(os.listdir(src)):
+    if not name.endswith(".csv"):
+        continue
+    keep.add(name)
+    out = os.path.join(dst, name)
+    inp = os.path.join(src, name)
+    if os.path.exists(out) and os.path.getmtime(out) >= os.path.getmtime(inp):
+        continue
+    with open(inp, newline="", encoding="utf-8") as fh, \
+         open(out, "w", newline="", encoding="utf-8") as fo:
+        r = csv.DictReader(fh)
+        w = csv.DictWriter(fo, fieldnames=r.fieldnames, lineterminator="\n")
+        w.writeheader()
+        for row in r:
+            if row.get("source_id") not in drop:
+                w.writerow(row)
+for name in os.listdir(dst):
+    if name.endswith(".csv") and name not in keep:
+        os.remove(os.path.join(dst, name))
+PY
+
+# A list of every raw file with its size and SHA-256.
+echo "Listing raw files..."
+python3 - "$DEST/current/raw" "$DEST/current/raw_files.csv" <<'PY'
+import csv, hashlib, os, sys
+root, out = sys.argv[1], sys.argv[2]
+with open(out, "w", newline="") as fo:
+    w = csv.writer(fo, lineterminator="\n")
+    w.writerow(["path", "bytes", "sha256"])
+    for d, _dirs, files in sorted(os.walk(root)):
+        for name in sorted(files):
+            if name.startswith("."):
+                continue
+            p = os.path.join(d, name)
+            h = hashlib.sha256()
+            with open(p, "rb") as fh:
+                for chunk in iter(lambda: fh.read(1 << 20), b""):
+                    h.update(chunk)
+            w.writerow([os.path.relpath(p, root), os.path.getsize(p), h.hexdigest()])
+PY
 
 echo
 echo "Done. Updated: $DEST/current"
-echo "Snapshot:      $DEST/snapshots/forecast-archive-collaborators-$DAY.zip"
+echo "Snapshot:      $DEST/snapshots/forecast-archive-v${VERSION}-$DAY.zip"
 cat "$DEST/current/version.txt"

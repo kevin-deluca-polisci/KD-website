@@ -80,9 +80,14 @@ sources:
       # They are ALSO in series_always below, and that is the entry that does the
       # work: adding them here changed nothing, because Kalshi's series index
       # does not list them at all. See series_always.
-      series_include: "^(HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KX[DR]HOUSESEATS|KX[DR]SENATESEATS|KXHOUSEPOPVOTEMARGIN|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
+      # (KX)?SENATE[A-Z]{2}: one series per state Senate race, added
+      # 2026-10-04 with the Elections category below. The exact naming is
+      # confirmed from the first stored index; the near-miss log shows any
+      # Senate-shaped series this pattern does not catch.
+      series_include: "^((KX)?SENATE[A-Z]{2}|HOUSE|SENATE|HOUSEMOV|SENATEMOV|KXHOUSE|KXSENATE|KXSENATERUN|KXHOUSEMINORITY|KX[DR]HOUSESEATS|KX[DR]SENATESEATS|KXHOUSEPOPVOTEMARGIN|KXGENERICBALLOT.*|KXGOVERNOR.*|KXMIDTERM.*)$"
       series_exclude: "^(PRESPARTY|KXPRES)"
       series_category: Politics
+      series_categories: [Politics, Elections]
       page_limit: 200
       max_pages: 20
       # Fetched by name every run, whether or not discovery lists them.
@@ -173,6 +178,11 @@ sources:
       # a day for one page of data. Fixed 2026-08-19.
       snapshot_active_events: true
       page_limit: 500
+      # Added 2026-10-04 to find the state Senate race markets, which the two
+      # named slugs and the first page of active events never reached. Each
+      # response is stored whole; the parser reads every event in it.
+      tag_slugs: [senate, midterms]
+      search_queries: ["senate election winner"]
     notes: >
       robots.txt has no Disallow at all. Per-seat market coverage was UNVERIFIED
       in the audit; the stored event list is what settles it — grep the capture
