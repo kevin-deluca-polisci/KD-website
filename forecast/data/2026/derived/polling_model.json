@@ -48,14 +48,14 @@
     "SEED": 20261103
   },
   "senate": {
-    "n_races": 35,
+    "n_races": 39,
     "sigma_total": 5.37,
     "sigma_national": 3.606,
     "sigma_state": 3.98,
-    "expected_D_seats_up": 16.17,
+    "expected_D_seats_up": 19.3,
     "D_seats_up_80pct": [
-      14,
-      18
+      17,
+      22
     ],
     "baseline_slope": 0.823,
     "baseline_slope_source": "senate-calibrated on 30 state-year(s) [2024], with_incumbency",
@@ -105,6 +105,12 @@
         "win_prob_D": 0.9932,
         "basis": "national"
       },
+      "HI": {
+        "expected_margin_D": 29.6,
+        "pvi": 12.59,
+        "win_prob_D": 1.0,
+        "basis": "national"
+      },
       "IA": {
         "expected_margin_D": -1.14,
         "pvi": -6.09,
@@ -147,6 +153,12 @@
         "win_prob_D": 1.0,
         "basis": "national"
       },
+      "MD": {
+        "expected_margin_D": 34.1,
+        "pvi": 15.32,
+        "win_prob_D": 1.0,
+        "basis": "national"
+      },
       "ME": {
         "expected_margin_D": 9.47,
         "pvi": 3.82,
@@ -163,6 +175,12 @@
         "expected_margin_D": 13.04,
         "pvi": 2.53,
         "win_prob_D": 0.9924,
+        "basis": "national"
+      },
+      "MO": {
+        "expected_margin_D": -5.88,
+        "pvi": -8.97,
+        "win_prob_D": 0.1366,
         "basis": "national"
       },
       "MS": {
@@ -205,6 +223,12 @@
         "expected_margin_D": 20.64,
         "pvi": 3.68,
         "win_prob_D": 0.9999,
+        "basis": "national"
+      },
+      "NY": {
+        "expected_margin_D": 21.52,
+        "pvi": 7.68,
+        "win_prob_D": 1.0,
         "basis": "national"
       },
       "OH": {
@@ -275,12 +299,12 @@
       }
     },
     "holdover_D_assumed": 34,
-    "prob_D_50_plus": 0.6099,
-    "prob_D_51_plus": 0.3685,
+    "prob_D_50_plus": 0.9891,
+    "prob_D_51_plus": 0.9654,
     "prob_D_50_plus_sensitivity": {
-      "33": 0.3685,
-      "34": 0.6099,
-      "35": 0.8712
+      "33": 0.9654,
+      "34": 0.9891,
+      "35": 0.9981
     },
     "NOTE_holdover": "prob_D_50_plus depends on holdover_D, which is an ASSUMPTION passed in, not something derived from the archive. 50+ is stated rather than 'majority' because control at 50 turns on the vice-presidency."
   },
