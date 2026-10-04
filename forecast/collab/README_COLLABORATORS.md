@@ -32,11 +32,10 @@ in `snapshots/`.
 | `approval.csv` | Daily average of the published presidential approval aggregators. |
 | `files.csv` | Row counts and SHA-256 hashes of the tables above. |
 | `raw/` | Every file the archive captured, exactly as received: `raw/<source>/<date>/<file>`, each with a `.meta.json` recording the URL, time and hash. |
-| `parsed/` | One CSV per date with every value read from the raw files. `raw_path` and `raw_sha256` link each row to its raw file. |
 | `raw_files.csv` | Every file in `raw/` with its size and SHA-256. |
 | `version.txt` | Version, build date, and the versions of the data it was built from. |
 
-Not included in `raw/` and `parsed/`: Cook Political Report PVI, Dave's
+Not included in `raw/`: Cook Political Report PVI, Dave's
 Redistricting and one individual's model (Grant Williams). Their terms do not
 allow sharing.
 

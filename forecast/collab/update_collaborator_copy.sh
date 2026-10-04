@@ -14,7 +14,6 @@
 # writes to <folder>/current/:
 #   - the processed tables (public archive + collaborator tables)
 #   - raw/    every captured file, as received, except the sources below
-#   - parsed/ the rows read from those files, without the excluded sources
 # and saves a dated zip of the processed tables in <folder>/snapshots/.
 #
 # NOT COPIED (private tier; their terms do not allow sharing):
@@ -49,14 +48,13 @@ sparse_fetch() {   # url dir path...
 mkdir -p "$CACHE"
 echo "Downloading the public archive tables..."
 sparse_fetch "$PUBLIC_REPO" "$CACHE/public" "forecast/archive/$CYCLE" "forecast/collab"
-echo "Downloading the collaborator tables, raw files and parsed rows (private repo)..."
+echo "Downloading the collaborator tables and raw files (private repo)..."
 sparse_fetch "$PRIVATE_REPO" "$CACHE/private" \
-  "$CYCLE/model_private/pending" "$CYCLE/raw" "$CYCLE/parsed"
+  "$CYCLE/model_private/pending" "$CYCLE/raw"
 
 PUB="$CACHE/public/forecast/archive/$CYCLE"
 PRI="$CACHE/private/$CYCLE/model_private/pending"
 RAW="$CACHE/private/$CYCLE/raw"
-PARSED="$CACHE/private/$CYCLE/parsed"
 DOCS="$CACHE/public/forecast/collab"
 for f in "$PRI/forecasts_by_source_all.csv" "$PRI/category_averages_full.csv" \
          "$PUB/timeline.csv" "$PUB/approval.csv"; do
@@ -84,7 +82,7 @@ cp "$DOCS/DATA_USE.md" "$STAGE/DATA_USE.md"
   echo "Public archive commit:  $(git -C "$CACHE/public" rev-parse --short HEAD)"
   echo "Private archive commit: $(git -C "$CACHE/private" rev-parse --short HEAD)"
   echo "Latest data date: $(tail -n +2 "$STAGE/timeline.csv" | cut -d, -f1 | sort | tail -n 1)"
-  echo "Sources not included in raw/ and parsed/: $EXCLUDE"
+  echo "Sources not included in raw/: $EXCLUDE"
 } > "$STAGE/version.txt"
 
 {
@@ -100,8 +98,8 @@ mv "$CACHE/files.csv" "$STAGE/files.csv"
 
 mkdir -p "$DEST/current" "$DEST/snapshots"
 
-# Processed tables: replace the top-level files only (raw/ and parsed/ are
-# updated in place below, so they are not copied twice).
+# Processed tables: replace the top-level files only (raw/ is
+# updated in place below, so it is not copied twice).
 find "$DEST/current" -maxdepth 1 -type f -delete
 cp "$STAGE"/* "$DEST/current/"
 ( cd "$STAGE" && zip -q -r "$DEST/snapshots/forecast-archive-v${VERSION}-$DAY.zip" . )
@@ -114,34 +112,9 @@ for s in $EXCLUDE; do RSYNC_EXCL+=(--exclude "/$s/"); done
 mkdir -p "$DEST/current/raw"
 rsync -a --delete "${RSYNC_EXCL[@]}" "$RAW/" "$DEST/current/raw/"
 
-# Parsed rows, without the excluded sources.
-echo "Copying parsed rows..."
-mkdir -p "$DEST/current/parsed"
-EXCLUDE="$EXCLUDE" python3 - "$PARSED" "$DEST/current/parsed" <<'PY'
-import csv, os, sys
-src, dst = sys.argv[1], sys.argv[2]
-drop = set(os.environ["EXCLUDE"].split())
-keep = set()
-for name in sorted(os.listdir(src)):
-    if not name.endswith(".csv"):
-        continue
-    keep.add(name)
-    out = os.path.join(dst, name)
-    inp = os.path.join(src, name)
-    if os.path.exists(out) and os.path.getmtime(out) >= os.path.getmtime(inp):
-        continue
-    with open(inp, newline="", encoding="utf-8") as fh, \
-         open(out, "w", newline="", encoding="utf-8") as fo:
-        r = csv.DictReader(fh)
-        w = csv.DictWriter(fo, fieldnames=r.fieldnames, lineterminator="\n")
-        w.writeheader()
-        for row in r:
-            if row.get("source_id") not in drop:
-                w.writerow(row)
-for name in os.listdir(dst):
-    if name.endswith(".csv") and name not in keep:
-        os.remove(os.path.join(dst, name))
-PY
+# parsed/ was in the first 0.1 build; the private archive stopped updating it
+# on 2026-09-01, so it is no longer copied. The tables above hold every value.
+rm -rf "$DEST/current/parsed"
 
 # A list of every raw file with its size and SHA-256.
 echo "Listing raw files..."

@@ -370,6 +370,14 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         for ev in events:
             if not isinstance(ev, dict):
                 continue
+            # RESOLVED AND PAST EVENTS ARE NOT FORECASTS. The tag and search
+            # sweeps (2026-10-04) also return closed events, including the 2024
+            # Senate races, whose settled 0/1 prices would otherwise land on
+            # the 2026 race ids.
+            if ev.get("closed") is True or ev.get("archived") is True:
+                continue
+            if str(ev.get("endDate") or "9999")[:4] < "2026":
+                continue
             seen_events += 1
             title = str(ev.get("title") or ev.get("question") or "")
             # The margin ladder is read across markets, so it cannot go through
@@ -423,6 +431,8 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             # multiply every probability by the page count.
             agg: dict[tuple, dict[str, float]] = {}
             for m in ev.get("markets", []) or []:
+                if m.get("closed") is True:
+                    continue
                 q = str(m.get("question") or m.get("groupItemTitle") or title)
                 prices, outs = _prices(m), _outcomes(m)
                 if not prices:

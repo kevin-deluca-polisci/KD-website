@@ -580,7 +580,7 @@ def handle_polymarket(src: dict, fetcher: Fetcher, store: RawStore, **_) -> tupl
             notes.append(f"tag {tag} failed: {e}")
 
     for q in cfg.get("search_queries") or []:
-        url = f"{base}/public-search?{urllib.parse.urlencode({'q': q, 'limit_per_type': 50})}"
+        url = f"{base}/public-search?{urllib.parse.urlencode({'q': q, 'limit_per_type': 50, 'events_status': 'active'})}"
         try:
             body, meta = fetcher.get(url)
             b += store.write(src["id"], f"search-{store._slugify(q)}", body, meta)
