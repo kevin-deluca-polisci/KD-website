@@ -75,12 +75,12 @@
     <div class="segs" data-toggle-group="raceplot">
       <span class="seglabel">Showing</span>
       <div class="seg" data-dim="mode">
-        <button type="button" data-value="margin" aria-selected="true">Margin</button>
-        <button type="button" data-value="prob" aria-selected="false">Chance of winning</button>
+        <button type="button" data-value="prob" aria-selected="true">Chance of winning</button>
+        <button type="button" data-value="margin" aria-selected="false">Margin</button>
       </div>
     </div>
     <div data-group="raceplot">
-    {{- range $mode := (slice "margin" "prob") }}
+    {{- range $mode := (slice "prob" "margin") }}
     {{- $pl := cond (eq $mode "margin") $s.plot_margin $s.plot }}
     {{- with $pl }}
     <div data-panel data-mode="{{ $mode }}">

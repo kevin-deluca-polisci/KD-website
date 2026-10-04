@@ -265,6 +265,64 @@ def state_from_text(text: str) -> str | None:
     return None
 
 
+# --------------------------------------------------------------------------
+# HOUSE SEAT LADDERS QUOTED OVER REPUBLICAN SEATS (Polymarket, PredictIt).
+#
+# Until 2026-10-04 the markets' House seat count was Kalshi's ladder alone, so
+# the comparisons page showed one source for market seats while both other
+# exchanges were quoting a full seat distribution: Polymarket "Republican House
+# seats after the 2026 midterm elections?" (Below 190, 190-194, ..., 230+) and
+# PredictIt "How many House seats will Republicans win ...?" (192 or fewer,
+# 193 to 197, ..., 238 or more). Both are over R seats; reflected to 435 they
+# are D seats, the same move the Kalshi parser makes for KXRHOUSESEATS. The
+# arithmetic is Kalshi's _seat_stats, so the three exchanges are read with one
+# convention (normalised by the ladder's mass, open ends one bucket wide, a
+# ladder holding too little mass refused rather than rescaled).
+#
+# HOUSE ONLY, as in the Kalshi parser: complementing a Republican Senate ladder
+# to 100 assumes every non-Republican senator is on the D side, which is a
+# decision about King, Sanders and Osborn to take on purpose, not here.
+# Seats only: each exchange has its own chamber-control market for the chance.
+_SEAT_LABEL_PATTERNS = (
+    (re.compile(r"^\s*(?:below|under|fewer than|less than)\s+(\d+)\s*$", re.I),
+     lambda m: (None, int(m.group(1)) - 1)),
+    (re.compile(r"^\s*(?:\u2264|<=)\s*(\d+)\s*$|^\s*(\d+)\s+or\s+(?:fewer|less)\s*$", re.I),
+     lambda m: (None, int(m.group(1) or m.group(2)))),
+    (re.compile(r"^\s*(?:\u2265|>=)\s*(\d+)\s*$|^\s*(\d+)\s*(?:\+|or\s+more|and\s+(?:above|over))\s*$", re.I),
+     lambda m: (int(m.group(1) or m.group(2)), None)),
+    (re.compile(r"^\s*(?:above|over|more than)\s+(\d+)\s*$", re.I),
+     lambda m: (int(m.group(1)) + 1, None)),
+    (re.compile(r"^\s*(\d+)\s*(?:-|\u2013|to)\s*(\d+)\s*$", re.I),
+     lambda m: (min(int(m.group(1)), int(m.group(2))), max(int(m.group(1)), int(m.group(2))))),
+    (re.compile(r"^\s*(\d+)\s*$"), lambda m: (int(m.group(1)), int(m.group(1)))),
+)
+
+
+def seat_bucket(label: str):
+    """'190-194' -> (190, 194); '230+' -> (230, None); 'Below 190' ->
+    (None, 189); '192 or fewer' -> (None, 192). None if not a seat bucket."""
+    for rx, make in _SEAT_LABEL_PATTERNS:
+        m = rx.match(label or "")
+        if m:
+            return make(m)
+    return None
+
+
+def house_seats_from_r_ladder(buckets: list) -> float | None:
+    """Expected Democratic House seats from [((lo, hi), price)] over R seats,
+    or None when the ladder is too thin or holds too little mass."""
+    from .kalshi import IncompleteLadder, _reflect, _seat_stats
+    flipped = [(_reflect(b, 435), p) for b, p in buckets if b is not None]
+    flipped = [(b, p) for b, p in flipped if b is not None and p is not None]
+    if len(flipped) < 3:
+        return None
+    try:
+        exp, _ = _seat_stats(flipped, 218, 435)
+    except IncompleteLadder:
+        return None
+    return exp
+
+
 _RACE_INFO: dict | None = None
 
 

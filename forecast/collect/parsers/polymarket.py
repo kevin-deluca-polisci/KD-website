@@ -44,7 +44,8 @@ from __future__ import annotations
 import json, re
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
                first_per_race, independent_is_d_side, is_state,
-               margin_ladder_expectation, race_id, race_info, state_from_text)
+               house_seats_from_r_ladder, margin_ladder_expectation, race_id,
+               race_info, seat_bucket, state_from_text)
 
 # NO re.I on the state group. Under IGNORECASE "[A-Z]{2}" matches any two
 # letters, which is how "Balance of power in the Senate" once filed every
@@ -308,6 +309,31 @@ _JOINT_CONTROL = re.compile(
 # computed from a fragment of a joint distribution is not a marginal. If the
 # legs do not sum to roughly one, the event is incomplete and we emit nothing.
 _JOINT_EVENT = re.compile(r"balance\s+of\s+power", re.I)
+# "Republican House seats after the 2026 midterm elections?" A seat ladder,
+# read across its markets (see house_seats_from_r_ladder). Matched by title and
+# handled before the per-market loop, which would otherwise see "Republican"
+# and "House" in every rung and file the bucket prices as chamber control.
+_R_HOUSE_SEATS_EVENT = re.compile(r"republican\s+house\s+seats", re.I)
+
+
+def _house_seat_rows(ev: dict, art, ctx) -> list:
+    buckets = []
+    for m in ev.get("markets") or []:
+        if m.get("closed") is True:
+            continue
+        b = seat_bucket(str(m.get("groupItemTitle") or ""))
+        prices, outs = _prices(m), _outcomes(m)
+        if b is None or not prices:
+            continue
+        yes = next((prices[i] for i, o in enumerate(outs)
+                    if _YES.match(o) and i < len(prices)), prices[0])
+        buckets.append((b, yes))
+    exp = house_seats_from_r_ladder(buckets)
+    if exp is None:
+        return []
+    return [ctx.row(art, race_id=NATIONAL_HOUSE, chamber="national", state="",
+                    district="", quantity="seats_D", value=round(exp, 2),
+                    unit="seats")]
 _JOINT_MASS_MIN, _JOINT_MASS_MAX = 0.90, 1.15
 
 #                       leg label              -> (senate, house)
@@ -448,6 +474,9 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             # enforce it when the ladder was short.
             if _PV_EVENT.search(title):
                 rows.extend(_pv_rows(ev, title, art, ctx) or [])
+                continue
+            if _R_HOUSE_SEATS_EVENT.search(title):
+                rows.extend(_house_seat_rows(ev, art, ctx))
                 continue
             # MARGINALISE THE JOINT EVENT BEFORE SKIPPING IT. Same reasoning
             # as the popular-vote gate above: recognise the event by its title

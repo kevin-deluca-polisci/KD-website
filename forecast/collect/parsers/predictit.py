@@ -26,7 +26,9 @@ from __future__ import annotations
 import re
 
 from . import (Context, LoadedArtifact, NATIONAL_HOUSE, NATIONAL_SENATE, Row,
-               independent_is_d_side, race_id, state_from_text)
+               house_seats_from_r_ladder, independent_is_d_side,
+               margin_ladder_expectation, race_id,
+               seat_bucket, state_from_text)
 
 # A market this cycle. PredictIt lists 2028 and other years in the same
 # document, and "the Senate" without a year would have swept them in.
@@ -35,6 +37,30 @@ _SENATE = re.compile(r"\bsenate\b", re.I)
 _HOUSE = re.compile(r"\bhouse\b", re.I)
 _GOV = re.compile(r"\bgovernor|gubernatorial\b", re.I)
 _CONTROL = re.compile(r"control|win the|majority|which party", re.I)
+# "What will be the national vote margin in the 2026 House midterms?" The
+# same ladder Kalshi and Polymarket quote ("Democrats 9-12%", "Democrats ≥15%",
+# "Republicans >3%"), read with the same margin_ladder_expectation.
+_PV_MARGIN = re.compile(r"national\s+vote\s+margin|popular\s+vote\s+margin", re.I)
+_PV_BUCKET = re.compile(
+    r"^\s*(democrats?|republicans?)\s*(?:(\u2265|>=|>)\s*(\d+(?:\.\d+)?)"
+    r"|(\d+(?:\.\d+)?)\s*[-\u2013]\s*(\d+(?:\.\d+)?))\s*%?\s*$", re.I)
+
+
+def _pv_bucket(label: str):
+    """'Democrats 9-12%' -> (9, 12); 'Democrats ≥15%' -> (15, None);
+    'Republicans 0-3%' -> (-3, 0); 'Republicans >3%' -> (None, -3)."""
+    m = _PV_BUCKET.match(label or "")
+    if not m:
+        return None
+    dem = m.group(1).lower().startswith("d")
+    if m.group(3) is not None:
+        a = float(m.group(3))
+        return (a, None) if dem else (None, -a)
+    lo, hi = sorted((float(m.group(4)), float(m.group(5))))
+    return (lo, hi) if dem else (-hi, -lo)
+
+
+_R_HOUSE_SEATS = re.compile(r"house\s+seats\s+will\s+(?:the\s+)?(?:republicans|gop)", re.I)
 
 _DEM = re.compile(r"\bdemocrat", re.I)
 _REP = re.compile(r"\brepublican|\bGOP\b", re.I)
@@ -127,6 +153,34 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
                 continue
             seen_markets += 1
             name = str(m.get("name") or m.get("shortName") or "")
+            # "How many House seats will Republicans win in the 2026 midterm
+            # election?" A seat ladder over R seats, read as one distribution
+            # (see house_seats_from_r_ladder in parsers/__init__.py).
+            if _CYCLE.search(name) and _R_HOUSE_SEATS.search(name):
+                buckets = [(seat_bucket(str(c.get("name") or "")), _price(c))
+                           for c in m.get("contracts") or [] if isinstance(c, dict)]
+                exp = house_seats_from_r_ladder(buckets)
+                if exp is not None:
+                    matched += 1
+                    rows.append(ctx.row(art, race_id=NATIONAL_HOUSE,
+                                        chamber="national", state="",
+                                        district="", quantity="seats_D",
+                                        value=round(exp, 2), unit="seats"))
+                continue
+            if _CYCLE.search(name) and _PV_MARGIN.search(name):
+                buckets = [(_pv_bucket(str(c.get("name") or "")), _price(c))
+                           for c in m.get("contracts") or [] if isinstance(c, dict)]
+                buckets = [(b, p) for b, p in buckets if b is not None and p is not None]
+                mass = sum(p for _, p in buckets)
+                if len(buckets) >= 3 and 0.70 <= mass <= 1.60:
+                    exp = margin_ladder_expectation(buckets)
+                    if exp is not None:
+                        matched += 1
+                        rows.append(ctx.row(art, race_id=NATIONAL_HOUSE,
+                                            chamber="national", state="",
+                                            district="", quantity="margin_D",
+                                            value=round(exp, 4), unit="pct"))
+                continue
             got = _target(name)
             if got is None:
                 continue
