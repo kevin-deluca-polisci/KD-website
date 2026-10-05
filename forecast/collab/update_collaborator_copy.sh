@@ -110,7 +110,9 @@ echo "Copying raw files..."
 RSYNC_EXCL=()
 for s in $EXCLUDE; do RSYNC_EXCL+=(--exclude "/$s/"); done
 mkdir -p "$DEST/current/raw"
-rsync -a --delete "${RSYNC_EXCL[@]}" "$RAW/" "$DEST/current/raw/"
+# .DS_Store: Finder's folder settings, not data. --delete-excluded removes any
+# already copied (and anything matching the source exclusions above).
+rsync -a --delete --delete-excluded --exclude ".DS_Store" "${RSYNC_EXCL[@]}" "$RAW/" "$DEST/current/raw/"
 
 # parsed/ was in the first 0.1 build; the private archive stopped updating it
 # on 2026-09-01, so it is no longer copied. The tables above hold every value.
