@@ -41,7 +41,7 @@ allow sharing.
 
 ## Studying how forecasts change over time
 
-Use `forecasts_by_source.csv`, one source at a time. The line averages mix
+Use `forecasts_by_source.csv`. The line averages mix
 different sets of forecasters on different days, so their changes include
 sources joining and leaving.
 
@@ -63,18 +63,23 @@ source published it.
 ## Notes on the market data
 
 - **Independents on the Democratic side.** In the Nebraska, Idaho and South
-  Dakota Senate races and Alaska's at-large House race, an independent
-  (Osborn, Achilles, Bengs, Hill) is treated as the Democratic-side candidate,
-  so `win_prob_D` is that independent's price, not the Democratic nominee's.
-  PredictIt lists no contract for the independents in Idaho and South Dakota,
-  so it has no `win_prob_D` value in those two races.
+  Dakota Senate races, an independent (Osborn, Achilles, Bengs) is treated as
+  the Democratic-side candidate, so `win_prob_D` is that independent's price,
+  not the Democratic nominee's. PredictIt lists no contract for the
+  independents in Idaho and South Dakota, so it has no `win_prob_D` value in
+  those two races.
 - **Senate seats.** Democratic Senate seat counts include the independents
-  who caucus with Democrats. PredictIt prices Republican seats, so its count is
-  100 minus the Republican count.
+  who caucus with Democrats. Kalshi's contracts count them that way, and
+  PredictIt prices Republican seats, so its count is 100 minus the Republican
+  count.
 - **Coverage of individual Senate races.** PredictIt from 2026-08-21;
   Polymarket 2026-08-21 to 08-29 and from 2026-10-04; Kalshi from 2026-10-04.
-  National chamber, seat and vote-margin markets start earlier; see each
-  source's first date in `forecasts_by_source.csv`.
+- **Coverage of national markets.** Chamber control: Polymarket from
+  2025-07-19, Kalshi from 2025-09-14 (House) and 2025-12-21 (Senate),
+  PredictIt from 2026-08-21. House vote margin: Kalshi from 2026-02-05,
+  Polymarket from 2026-02-20, PredictIt from 2026-08-23. Seat counts: Kalshi
+  from 2025-09-14 (House) and 2025-12-21 (Senate), PredictIt from 2026-08-21,
+  Polymarket (House only) 2026-08-21 to 08-29 and from 2026-10-04.
 
 ## Columns
 
@@ -91,7 +96,3 @@ For this version:
 
 > DeLuca, Kevin. 2026. "U.S. Election Forecast Archive: 2026 Midterm
 > Elections." Version 0.1 (pre-release), [build date from `version.txt`].
-> Unpublished data, Yale University.
-
-Once the public version is released, please cite that version instead; we
-will send the citation and DOI.
