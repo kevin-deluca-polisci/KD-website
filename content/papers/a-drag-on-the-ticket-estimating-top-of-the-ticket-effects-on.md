@@ -19,6 +19,11 @@ figure_caption: ""
 # Coverage and explainers for THIS paper. Each entry: title, outlet, url, and
 # optionally date and note. Renders as its own section under the abstract.
 media:
+  - title: "Does the top of the ticket influence down-ballot races?"
+    outlet: "Harvard Kennedy School"
+    url: "https://www.hks.harvard.edu/faculty-research/policy-topics/democracy-governance/does-top-ticket-influence-down-ballot-races"
+    date: "October 5, 2026"
+    note: "Research summary"
   - title: "A drag on the ticket? Estimating top-of-the-ticket effects on down-ballot races"
     outlet: "American Journal of Political Science"
     url: "https://ajps.org/2025/12/01/a-drag-on-the-ticket-estimating-top%E2%80%90of%E2%80%90the%E2%80%90ticket-effects-on-down%E2%80%90ballot-races/"
