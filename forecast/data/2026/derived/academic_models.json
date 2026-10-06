@@ -16,12 +16,12 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 6.89,
-      "margin_D_80_low": 2.02,
-      "margin_D_80_high": 11.76,
+      "margin_D": 6.88,
+      "margin_D_80_low": 2.01,
+      "margin_D_80_high": 11.75,
       "inputs": {
-        "generic_ballot_D": 9.153,
-        "generic_ballot_share_deviation": 4.577,
+        "generic_ballot_D": 9.134,
+        "generic_ballot_share_deviation": 4.567,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
         "days_to_election": 28,
         "president_party": "R",
@@ -42,8 +42,8 @@
           "constant": 1.98,
           "root_mse": 4.04
         },
-        "bew_direct_D_seat_share": 57.92,
-        "bew_direct_D_seats": 252.0
+        "bew_direct_D_seat_share": 57.91,
+        "bew_direct_D_seats": 251.9
       },
       "notes": [
         "tide is BEW's vote equation; their separate seats equation is reported as a diagnostic and is not used downstream"
@@ -60,18 +60,18 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 13.02,
+      "margin_D": 13.0,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
-        "generic_ballot_D": 9.15,
+        "generic_ballot_D": 9.13,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
         "house_seats_defended_R": 220,
         "senate_seats_defended_R": 22
       },
       "diagnostics": {
-        "house_R_seat_change": -36.8,
-        "implied_D_seats": 251.8,
+        "house_R_seat_change": -36.7,
+        "implied_D_seats": 251.7,
         "senate_R_seat_change": -8.3,
         "senate_D_seats": 55.3,
         "coefficients": {
@@ -110,12 +110,12 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": true,
-      "margin_D": 7.06,
-      "margin_D_80_low": -1.09,
-      "margin_D_80_high": 15.21,
+      "margin_D": 7.09,
+      "margin_D_80_low": -1.06,
+      "margin_D_80_high": 15.24,
       "inputs": {
-        "approval": 34.83,
-        "approval_source": "mean of 4 adults-sample approval poll(s) in the 14 days to 2026-10-06. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
+        "approval": 34.26,
+        "approval_source": "mean of 5 adults-sample approval poll(s) in the 14 days to 2026-10-06. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
         "income_growth": 0.916,
         "income_source": "FRED income_growth_ytd as of 2026-10-06, 8 month(s) of the year in hand"
       },
@@ -128,7 +128,7 @@
         "r2": 0.273,
         "loeo_rmse": 3.18,
         "fitted_on": "20 midterms, 1946-2022",
-        "pres_party_two_party_vote": 46.47,
+        "pres_party_two_party_vote": 46.45,
         "benchmark": {
           "claim": "Republicans lose about 28 House seats and the House",
           "authors": "Charles Tien and Michael S. Lewis-Beck",
@@ -152,9 +152,9 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 15.82,
+      "margin_D": 15.81,
       "margin_D_80_low": 9.13,
-      "margin_D_80_high": 22.52,
+      "margin_D_80_high": 22.49,
       "inputs": {
         "pct_expect_worse": 37.0,
         "pct_expect_worse_source": "University of Michigan Surveys of Consumers, Table 8, WORSE OFF row, monthly, 2026-06 (carried forward from 2026-06)",
