@@ -3725,3 +3725,29 @@ run_started_at,snapshot_date,source_id,category,ok,artifacts,bytes,requests,skip
 2026-10-08T21:30:41.268611+00:00,2026-10-08,race_to_the_wh,professional,1,68,6607680,68,,,live data: 63/63 pointers fetched
 2026-10-08T21:30:41.268611+00:00,2026-10-08,fair,fundamentals,1,1,7052,1,,,
 2026-10-08T21:30:41.268611+00:00,2026-10-08,predictit,market,1,1,432955,1,,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,kalshi,market,1,79,12127111,79,,,"forced 1 series_always ticker(s) the index did not list: ['KXRSENATESEATS'] | 77 series matched, 105 explicitly excluded, 4142 unmatched | NEAR MISS — election-shaped but unmatched: ['KXRNCMIDTERMSPEAK', 'KXCAPCONTROL', 'KXFESTIVALEVENTDNCMIDTERMS', 'KXFESTIVALEVENTRNCMIDTERMS', 'KXMARENTCONTROL', 'KXRUNBYMIDTERM', 'KXNVCONTROLLER', 'KXDEMMIDTERMSSEATS']"
+2026-10-09T17:35:12.311745+00:00,2026-10-09,polymarket,market,1,6,12916315,6,,,per-seat market coverage was unverified in the audit; check the stored events
+2026-10-09T17:35:12.311745+00:00,2026-10-09,grant_williams,professional,0,0,0,0,disabled in registry,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,ddhq,professional,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,silver_bulletin,polling,1,2,1864641,2,,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,fred,fundamentals,1,2,15498,2,,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,medsl,fundamentals,1,2,94463,2,,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,cook_state_pvi,fundamentals,0,0,0,0,manual entry — use collect/manual_import.py,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,dra,fundamentals,0,0,0,0,manual entry — use collect/manual_import.py,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,cook_pvi,fundamentals,0,0,0,0,manual entry — use collect/manual_import.py,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,rcp,polling,0,0,0,0,disabled in registry,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,wiki_approval,fundamentals,1,1,153873,1,,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,wikipedia,expert_ordinal,1,4,951536,4,,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,wiki_endorsements,fundamentals,1,123,5757139,152,,,43 of 123 page(s) changed; the rest recorded as unchanged with no body stored | 29 planned title(s) do not exist (expected for a generated plan)
+2026-10-09T17:35:12.311745+00:00,2026-10-09,votehub,professional,0,0,0,0,LICENCE: prohibited — collection would violate stated terms,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,cook,expert_ordinal,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,inside_elections,expert_ordinal,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,twoseventy,polling,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,twoseventy_ratings,expert_ordinal,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,fiftyplusone,professional,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,split_ticket,professional,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,sabato,expert_ordinal,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,economist,professional,0,0,0,0,LICENCE: 'permission_pending' — not yet cleared for collection,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,race_to_the_wh,professional,1,68,6613529,68,,,live data: 63/63 pointers fetched
+2026-10-09T17:35:12.311745+00:00,2026-10-09,fair,fundamentals,1,1,7052,1,,,
+2026-10-09T17:35:12.311745+00:00,2026-10-09,predictit,market,1,1,433460,1,,,
