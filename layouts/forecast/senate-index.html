@@ -7,43 +7,60 @@
 <div class="card">
   <h2>Senate races</h2>
   <p class="sub">All {{ len $d.races }} contests on the 2026 ballot, closest
-  first, as of <b>{{ $d.latest_snapshot }}</b>. The margin is the polling
-  average where there is one, and the class model otherwise. Margins are
-  Democratic minus Republican.</p>
+  first, as of <b>{{ $d.latest_snapshot }}</b>. Margins are Democratic minus
+  Republican. The polling margin is the race's polling average, where there is
+  one, and the class model margin is the class model's prediction for every
+  race. Races are ordered by the polling margin where there is one and by the
+  class model margin otherwise.</p>
+
+  {{- /* National polling margin, the baseline for the expected margin. */ -}}
+  {{- $natpoll := 999.0 -}}
+  {{- with $d.spread }}{{ range .national }}{{ if eq .category "polling" }}{{ with .house_margin }}{{ $natpoll = . }}{{ end }}{{ end }}{{ end }}{{ end -}}
 
   {{- $rows := slice -}}
   {{- range $d.races -}}
-    {{- $m := 999.0 -}}{{- $src := "" -}}
-    {{- with index .current "polling" }}{{ with index . "margin_D" }}{{ $m = .mean }}{{ $src = "polling" }}{{ end }}{{ end -}}
-    {{- if eq $src "" }}{{ with index .current "class" }}{{ with index . "margin_D" }}{{ $m = .mean }}{{ $src = "class model" }}{{ end }}{{ end }}{{ end -}}
-    {{- $rows = $rows | append (dict "state" .state "name" .name "margin" $m "src" $src "abs" (math.Abs $m) "pvi" .pvi) -}}
+    {{- $pm := 999.0 -}}{{- $cm := 999.0 -}}{{- $lean := 999.0 -}}{{- $exp := 999.0 -}}{{- $over := 999.0 -}}
+    {{- with index .current "polling" }}{{ with index . "margin_D" }}{{ $pm = .mean }}{{ end }}{{ end -}}
+    {{- with index .current "class" }}{{ with index . "margin_D" }}{{ $cm = .mean }}{{ end }}{{ end -}}
+    {{- /* The site's partisan lean is in vote-share points; doubled, it is
+         on the margin scale used everywhere else in this table. */ -}}
+    {{- if ne (printf "%v" .pvi) "<nil>" }}{{ $lean = mul 2.0 .pvi }}{{ end -}}
+    {{- if and (ne $lean 999.0) (ne $natpoll 999.0) }}{{ $exp = add $natpoll $lean }}{{ end -}}
+    {{- if and (ne $pm 999.0) (ne $exp 999.0) }}{{ $over = sub $pm $exp }}{{ end -}}
+    {{- $key := cond (ne $pm 999.0) $pm $cm -}}
+    {{- $rows = $rows | append (dict "state" .state "name" .name "poll" $pm "cls" $cm "abs" (math.Abs $key) "lean" $lean "exp" $exp "over" $over) -}}
   {{- end -}}
 
   <div class="tscroll">
   <table class="full">
     <thead><tr>
-      <th class="wrap">Race</th><th class="num">Margin</th>
-      <th class="num">Partisan lean</th><th class="wrap">Source</th>
+      <th class="wrap">Race</th><th class="num">Polling margin</th>
+      <th class="num">Lean (in margin points)</th><th class="num">Expected margin*</th>
+      <th class="num">Over-performance</th><th class="num">Class model margin</th>
     </tr></thead>
     <tbody>
     {{ range sort $rows "abs" "asc" }}
       <tr>
         <td class="wrap"><a href="/forecast/senate/{{ lower .state }}/">{{ .name }}</a></td>
+        {{- range $v := (slice .poll .lean .exp .over .cls) }}
         <td class="num">
-          {{ if eq .margin 999.0 }}<span class="muted">&mdash;</span>
-          {{ else if gt .margin 0.0 }}<span class="D">D+{{ .margin }}</span>
-          {{ else }}<span class="R">R+{{ math.Abs .margin }}</span>{{ end }}
+          {{- if eq $v 999.0 }}<span class="muted">&mdash;</span>
+          {{- else if gt $v 0.0 }}<span class="D">D+{{ printf "%.1f" $v }}</span>
+          {{- else }}<span class="R">R+{{ printf "%.1f" (math.Abs $v) }}</span>{{ end -}}
         </td>
-        <td class="num">
-          {{ with .pvi }}{{ if lt . 0.0 }}R+{{ math.Abs . }}{{ else }}D+{{ . }}{{ end }}
-          {{ else }}<span class="muted">&mdash;</span>{{ end }}
-        </td>
-        <td class="wrap"><span class="muted">{{ with .src }}{{ . }}{{ else }}none yet{{ end }}</span></td>
+        {{- end }}
       </tr>
     {{ end }}
     </tbody>
   </table>
   </div>
+  <p class="thin-note">*Expected margin = national polling margin
+  {{- if ne $natpoll 999.0 }} ({{ if gt $natpoll 0.0 }}D+{{ printf "%.1f" $natpoll }}{{ else }}R+{{ printf "%.1f" (math.Abs $natpoll) }}{{ end }}){{ end }}
+  + lean in margin points: what the state would be expected to do in this
+  year's national environment. Over-performance = polling margin &minus;
+  expected margin, shown only for races with a polling average. Lean in margin
+  points is twice the state's partisan lean in vote share (the "partisan lean"
+  on each race page).</p>
 </div>
 </div>
 {{ partial "forecast/foot.html" (dict "page" . "d" $d) }}
