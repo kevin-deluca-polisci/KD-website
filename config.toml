@@ -23,10 +23,12 @@ title = "Kevin DeLuca"
   # no longer announces that it is provisional -- an internal note in config is
   # the right place for that, a caption on a page a stranger is reading is not.
   # Swapping it is an edit to these four lines and nothing else.
-  homeFigure        = "/blog-images/approval_vs_coverage_obama.png"
-  homeFigureAlt     = "Presidential approval plotted against the tone of news coverage"
-  homeFigureCaption = "News coverage and presidential approval move together. From work in progress on performance cues in news coverage."
-  homeFigureLink    = "/papers/performance-cues-in-news-coverage-predict-presidential-appro/"
+  # HIDDEN FOR NOW (2026-10-12): no figure on the homepage. To show it again,
+  # remove the "# " from the four lines below.
+  # homeFigure        = "/blog-images/approval_vs_coverage_obama.png"
+  # homeFigureAlt     = "Presidential approval plotted against the tone of news coverage"
+  # homeFigureCaption = "News coverage and presidential approval move together. From work in progress on performance cues in news coverage."
+  # homeFigureLink    = "/papers/performance-cues-in-news-coverage-predict-presidential-appro/"
 
   jobTitle    = "Assistant Professor of Political Science"
   affiliation = "Yale University"
