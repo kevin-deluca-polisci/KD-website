@@ -318,6 +318,11 @@ def load_history(cycle: int = 2026) -> list[dict]:
 WIKI_OWN_AVERAGE = re.compile(r"^'*\s*average\s*'*$", re.I)
 
 
+# Plausible range for a published approval average, in percent. Anything
+# outside it is a parsing error, not a reading (see aggregator_history).
+APPROVE_MIN, APPROVE_MAX = 20.0, 80.0
+
+
 def aggregator_history(cycle: int = 2026) -> dict[str, dict[str, float]]:
     """{capture_date: {aggregator: approve}} across every capture.
 
@@ -350,7 +355,19 @@ def aggregator_history(cycle: int = 2026) -> dict[str, dict[str, float]]:
                 continue
             if WIKI_OWN_AVERAGE.match(who):
                 continue
-            rows[who] = float(g["approve"])
+            # A ROW THE TABLE READER MISALIGNED IS NOT AN AGGREGATOR. On the
+            # 2026-02-13 revision one row came back as aggregator "40.7%" with
+            # approve 3.1 (a percentage in the name cell, the net figure in the
+            # approval cell), which pulled that day's average from 40.7 to 37.3
+            # and put a three-day dip in the class model's approval input. A
+            # real aggregator has letters in its name and a value no president
+            # has been outside of in modern polling.
+            if not re.search(r"[A-Za-z]", who):
+                continue
+            v = float(g["approve"])
+            if not (APPROVE_MIN <= v <= APPROVE_MAX):
+                continue
+            rows[who] = v
         if rows:
             out[day] = rows
     return out
