@@ -85,7 +85,8 @@ from __future__ import annotations
 
 import re
 
-from . import Context, LoadedArtifact, Row, race_id, state_from_text
+from . import (Context, LoadedArtifact, Row, independent_is_d_side, race_id,
+               race_info, state_from_text)
 
 # ---------------------------------------------------------------- allowlist --
 # ROW NAME -> REGISTRY SOURCE ID. An allowlist rather than "whatever the first
@@ -251,19 +252,32 @@ def _cells(block: str, marker: str) -> list[str]:
     return out
 
 
-def _party_columns(headers: list[str]) -> dict[str, int]:
+def _party_columns(headers: list[str], d_side: str | None = None) -> dict[str, int]:
     """{'D': i, 'R': j} from candidate headers ending in (D) / (R).
 
     Returns {} unless exactly one D and one R column are found. A race with two
     candidates of the same party -- Louisiana's runoff shape -- has no
     two-party margin to read, and guessing one would be worse than none.
+
+    AN INDEPENDENT ON THE D SIDE. Where the race file says an independent
+    stands in for the Democrat (Nebraska's Osborn, Idaho's Achilles, South
+    Dakota's Bengs), the aggregators head that column "Dan Osborn (I)" and
+    the race was dropped for having no (D). `d_side` is that candidate's
+    surname: an (I) column carrying it is the D side, and any (D) column, a
+    token nominee, is left out. Same rule as the market parsers.
     """
     found: dict[str, list[int]] = {}
     for i, h in enumerate(headers):
-        m = PARTY.search(_clean(h))
+        txt = _clean(h)
+        m = PARTY.search(txt)
         if not m:
             continue
         p = m.group(1).upper()[:1]
+        if d_side:
+            if p == "I" and re.search(rf"\b{re.escape(d_side)}\b", txt, re.I):
+                p = "D"
+            elif p == "D":
+                continue
         if p in ("D", "R"):
             found.setdefault(p, []).append(i)
     if sorted(found) != ["D", "R"] or any(len(v) != 1 for v in found.values()):
@@ -300,11 +314,12 @@ def _state_of(name: str) -> str | None:
     return state_from_text(m.group(1).replace("-", " "))
 
 
-def read_table(tbl: str) -> tuple[list[tuple[str, float, str | None]], int]:
+def read_table(tbl: str, d_side: str | None = None
+               ) -> tuple[list[tuple[str, float, str | None]], int]:
     """[(source_id, margin_D, updated_date)], and how many names were unknown."""
     blocks = re.split(r"^\|-", tbl, flags=re.M)
     headers = _cells(blocks[0], "!")
-    cols = _party_columns(headers)
+    cols = _party_columns(headers, d_side)
     if not cols:
         return [], 0
     out, unknown = [], 0
@@ -366,6 +381,10 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
         # race that is happening and stop updating the ones that are not. It
         # needs no candidate roster and no primary results, so it cannot go
         # stale the way a hardcoded matchup list would.
+        rid0 = race_id("senate", st)
+        d_side = None
+        if independent_is_d_side(rid0):
+            d_side = (str(race_info(rid0).get("dem_candidate") or "").split() or [None])[-1]
         best: list[tuple[str, float, str | None]] = []
         best_date = ""
         for off, tbl in _tables(wt):
@@ -375,7 +394,7 @@ def parse(artifacts: dict[str, LoadedArtifact], ctx: Context) -> list[Row]:
             path = _path(wt, off)
             if any(PHASE.search(p) for p in path):
                 continue
-            got, _unknown = read_table(tbl)
+            got, _unknown = read_table(tbl, d_side)
             if not got:
                 continue
             # A table with no readable date sorts oldest, so a dated table
