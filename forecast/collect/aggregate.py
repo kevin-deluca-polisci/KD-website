@@ -51,6 +51,15 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = REPO_ROOT / "forecast" / "data"
 
 MIN_N = 3           # disclosure floor for any average containing a gated source
+# Cells published with a lower floor, by Kevin's decision (2026-10-13): Idaho's
+# Senate race has two polling averages (Race to the WH and Silver Bulletin)
+# and no third. Publishing their mean names neither and reveals neither value:
+# with no other contributor in the cell there is nothing to subtract.
+MIN_N_EXCEPTIONS = {("polling", "SEN_ID_2026"): 2}
+
+
+def min_n_for(category: str, race_id: str) -> int:
+    return MIN_N_EXCEPTIONS.get((category, race_id), MIN_N)
 # How much of a date's published rows may disappear in a re-run before
 # aggregate.py refuses to write. Generous on purpose: a parser correction
 # removes a handful of cells, a lost day removes almost all of them, and the
@@ -1034,7 +1043,7 @@ def aggregate(rows: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
             # both necessary and permitted.
             "_contributors": sorted(per_source),
         }
-        if gated and n_gated < MIN_N:
+        if gated and n_gated < min_n_for(cat, rid):
             WITHHELD_FULL.append(dict(rec))
             suppressed.append({**rec, "mean": "", "min": "", "max": "", "sd": "",
                                "reason": f"only {n_gated} gated source(s) of "
@@ -1170,7 +1179,8 @@ def audit(rows: list[dict], averages, by_source, suppressed) -> list[str]:
                 f"LEAK: private source(s) {bad} contributed to the "
                 f"published average for {a['race_id']}/{a['quantity']}")
     for a in averages:
-        if a["tier"] == "gated" and int(a.get("n_gated", a["n_sources"])) < MIN_N:
+        if a["tier"] == "gated" and int(a.get("n_gated", a["n_sources"])) < min_n_for(
+                a.get("category", ""), a["race_id"]):
             problems.append(
                 f"LEAK: gated average published with n_gated="
                 f"{a.get('n_gated')} of n={a['n_sources']} "

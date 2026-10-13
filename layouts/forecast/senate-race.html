@@ -21,7 +21,12 @@
 
   {{- $labels := dict "polling" "Polling" "market" "Markets"
         "professional" "Professional" "academic" "Academic" "class" "Class model" -}}
-  {{- $order := slice "polling" "market" "professional" "academic" "class" -}}
+  {{- $order := slice "polling" "market" "academic" "class" -}}
+  {{- /* An independent standing in for the Democrat (Nebraska's Osborn,
+       Idaho's Achilles, South Dakota's Bengs): the "D" side of every number
+       on this page is that independent. */ -}}
+  {{- $ind := "" -}}{{- $rep := "" -}}
+  {{- range $race.candidates }}{{ if eq .party "I" }}{{ $ind = .name }}{{ else if eq .party "R" }}{{ $rep = .name }}{{ end }}{{ end -}}
 
   <div class="card">
     <h2>{{ .Title }}</h2>
@@ -29,10 +34,16 @@
       Forecasts for this seat as of <b>{{ $d.latest_snapshot }}</b>.
       {{ with $race.pvi }}
         Partisan lean:
-        <b>{{ if lt . 0.0 }}R+{{ math.Abs . }}{{ else }}D+{{ . }}{{ end }}</b>.
+        <b>{{ if lt . 0.0 }}R+{{ printf "%.1f" (math.Abs .) }}{{ else }}D+{{ printf "%.1f" . }}{{ end }}</b>.
       {{ end }}
       Margins are Democratic minus Republican.
     </p>
+    {{- if ne $ind "" }}
+    <p class="note">In this race the main opponent of Republican {{ $rep }} is
+      {{ $ind }}, an independent. Every margin and chance on this page compares
+      {{ $ind }} with {{ $rep }}, not a Democrat with a Republican: I+ means
+      {{ $ind }} is ahead, and P(D wins) is the chance that {{ $ind }} wins.</p>
+    {{- end }}
 
     {{ with $race.candidates }}
     <div class="candidates">
@@ -65,8 +76,9 @@
             {{ end }}
           </td>
           <td class="num">
-            {{ if $m }}{{ if gt $m.mean 0.0 }}<span class="D">D+{{ $m.mean }}</span>
-            {{ else }}<span class="R">R+{{ math.Abs $m.mean }}</span>{{ end }}
+            {{ if $m }}{{ if and (gt $m.mean 0.0) (ne $ind "") }}<span>I+{{ printf "%.1f" $m.mean }}</span>
+            {{ else if gt $m.mean 0.0 }}<span class="D">D+{{ printf "%.1f" $m.mean }}</span>
+            {{ else }}<span class="R">R+{{ printf "%.1f" (math.Abs $m.mean) }}</span>{{ end }}
             {{ else }}<span class="muted">&mdash;</span>{{ end }}
           </td>
           <td class="num">

@@ -31,7 +31,9 @@ NATL_SENATE = "NATL_SENATE_2026"
 # no Democrat on the ballot. Dan Osborn is running as an independent. A
 # two-party model cannot represent that at all, so Nebraska's number should be
 # read as "what a generic Democrat would do here", which is not the race.
-COMPETITIVE_LO, COMPETITIVE_HI = 0.01, 0.99
+# 5-95 since 2026-10-13, the same rule the class model page uses ("each side
+# has at least a 5% chance"); 1-99 counted Oregon and Colorado as competitive.
+COMPETITIVE_LO, COMPETITIVE_HI = 0.05, 0.95
 COMPETITIVE_NOTE = (
     "Races where the model puts the Democratic win probability between 1% and "
     "99%. The rest are not close under any assumption this model makes.")

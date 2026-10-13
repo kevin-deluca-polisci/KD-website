@@ -162,7 +162,7 @@
               <strong>{{ if eq $pan.unit "prob" }}{{ printf "%.0f%%" (mul $b.v 100) }}{{ else }}{{ printf "%.1f" $b.v }}{{ end }}</strong></td>
             <td class="num">
               {{- if gt $n 1 }}{{ $d := sub $b.v $a.v }}
-              {{- if gt $d 0.0 }}+{{ end }}{{ if eq $pan.unit "prob" }}{{ printf "%.0f" (mul $d 100) }} pts{{ else }}{{ printf "%.1f" $d }}{{ end }}
+              {{- if gt $d 0.0 }}+{{ end }}{{ if eq $pan.unit "prob" }}{{ $pp := printf "%.0f" (mul $d 100) }}{{ $pp }} {{ if or (eq $pp "1") (eq $pp "-1") }}pt{{ else }}pts{{ end }}{{ else }}{{ printf "%.1f" $d }}{{ end }}
               {{- else }}<span class="muted">—</span>{{ end }}</td>
             <td class="num muted">{{ $n }}</td>
           </tr>
@@ -266,8 +266,8 @@
       {{- $has_market := false }}
       {{- range .series }}{{ if eq .key "market" }}{{ $has_market = true }}{{ end }}{{ end }}
       {{- if $has_market }}
-      <p class="thin-note">The markets figure comes from Kalshi and Polymarket
-         contracts on the national popular-vote margin.</p>
+      <p class="thin-note">The markets figure comes from Kalshi, Polymarket and
+         PredictIt contracts on the national popular-vote margin.</p>
       {{- else }}
       <p class="thin-note">No market is quoting the national vote margin today.</p>
       {{- end }}

@@ -90,12 +90,12 @@
        source; the grey band runs from the lowest to the highest, and the
        spread column is the gap in points.{{ if .any_converted }}
        {{ if eq $mode "margin" }}Markets price a chance rather than a margin,
-       so their hollow marks show the margin that would give that chance. A
-       price above 95% or below 5% is left out of this view, because near
-       certainty a market price stops tracking the margin{{ else }}Race
+       so their hollow marks show the margin that would give that chance{{ else }}Race
        polls give a margin rather than a chance, so their hollow marks show
        the chance that margin implies{{ end }}, using the polling model's
-       Senate race error of {{ printf "%.1f" .sigma }} points.{{ end }}</p>
+       Senate race error of {{ printf "%.1f" .sigma }} points.{{ if eq $mode "margin" }} A
+       market price above 95% or below 5% is left out of this view, because
+       near certainty a price stops tracking the margin.{{ end }}{{ end }}</p>
 
     {{- $RH := 26.0 }}{{ $L := 54.0 }}{{ $W := 512.0 }}{{ $T := 30.0 }}
     {{- $H := mul $RH (len .rows) }}

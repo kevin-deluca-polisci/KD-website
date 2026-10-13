@@ -43,7 +43,7 @@
     <thead><tr>
       <th class="wrap">Race</th><th class="num">Polling margin</th>
       <th class="num">Lean (in margin points)</th><th class="num">Expected margin*</th>
-      <th class="num">Over-performance</th><th class="num">Class model margin</th>
+      <th class="num">Polls vs. expected<br><span class="muted" style="font-weight:400;font-size:0.85em">(polling margin &minus; expected)</span></th><th class="num">Class model margin</th>
     </tr></thead>
     <tbody>
     {{ range sort $rows "abs" "asc" }}
@@ -66,14 +66,16 @@
   <p class="thin-note">*Expected margin = national polling margin
   {{- if ne $natpoll 999.0 }} ({{ if gt $natpoll 0.0 }}D+{{ printf "%.1f" $natpoll }}{{ else }}R+{{ printf "%.1f" (math.Abs $natpoll) }}{{ end }}){{ end }}
   + lean in margin points: what the state would be expected to do in this
-  year's national environment. Over-performance = polling margin &minus;
-  expected margin, shown only for races with a polling average. Lean in margin
+  year's national environment. Polls vs. expected = polling margin &minus;
+  expected margin: how far the race's current polling average runs ahead of
+  (D+) or behind (R+) what the lean and the national environment predict,
+  shown only for races with a polling average. Lean in margin
   points is twice the state's partisan lean in vote share (the "partisan lean"
   on each race page).</p>
   {{- range $rows }}{{ if .flag }}
   <p class="thin-note">&dagger; {{ .name }}: the main opponent of Republican
   {{ .rep }} is {{ .ind }}, an independent. This race's polling margin,
-  over-performance and class model margin compare {{ .ind }} with
+  polls vs. expected and class model margin compare {{ .ind }} with
   {{ .rep }}, not a Democrat with a Republican; I+ means {{ .ind }} is
   ahead. The lean and expected margin are the usual Democratic-Republican
   baseline for the state.</p>
