@@ -19926,18 +19926,18 @@
       "senate": {
         "n_races": 35,
         "n_race_polled": 17,
-        "expected_D_seats_up": 18.26,
+        "expected_D_seats_up": 18.25,
         "D_seats_up_80pct": [
           14,
           22
         ],
-        "expected_D_total": 52.26,
+        "expected_D_total": 52.25,
         "D_total_80pct": [
           48,
           56
         ],
         "prob_D_50_plus": 0.7808,
-        "prob_D_51_plus": 0.7031
+        "prob_D_51_plus": 0.7029
       },
       "races": {
         "AK": {
@@ -19971,9 +19971,9 @@
           "basis": "national"
         },
         "FL": {
-          "expected_margin_D": -6.5,
+          "expected_margin_D": -6.8,
           "pvi": -5.39,
-          "win_prob_D": 0.1131,
+          "win_prob_D": 0.1027,
           "basis": "race polls"
         },
         "GA": {
@@ -26562,18 +26562,18 @@
       "senate": {
         "n_races": 35,
         "n_race_polled": 17,
-        "expected_D_seats_up": 18.25,
+        "expected_D_seats_up": 18.24,
         "D_seats_up_80pct": [
           14,
           22
         ],
-        "expected_D_total": 52.25,
+        "expected_D_total": 52.24,
         "D_total_80pct": [
           48,
           56
         ],
         "prob_D_50_plus": 0.7802,
-        "prob_D_51_plus": 0.7027
+        "prob_D_51_plus": 0.7025
       },
       "races": {
         "AK": {
@@ -26607,9 +26607,9 @@
           "basis": "national"
         },
         "FL": {
-          "expected_margin_D": -6.5,
+          "expected_margin_D": -6.8,
           "pvi": -5.39,
-          "win_prob_D": 0.1131,
+          "win_prob_D": 0.1027,
           "basis": "race polls"
         },
         "GA": {
