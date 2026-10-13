@@ -28,7 +28,14 @@
     {{- if and (ne $lean 999.0) (ne $natpoll 999.0) }}{{ $exp = add $natpoll $lean }}{{ end -}}
     {{- if and (ne $pm 999.0) (ne $exp 999.0) }}{{ $over = sub $pm $exp }}{{ end -}}
     {{- $key := cond (ne $pm 999.0) $pm $cm -}}
-    {{- $rows = $rows | append (dict "state" .state "name" .name "poll" $pm "cls" $cm "abs" (math.Abs $key) "lean" $lean "exp" $exp "over" $over) -}}
+    {{- /* AN INDEPENDENT ON THE DEMOCRATIC SIDE (Nebraska's Osborn). The
+         margins are the independent's against the Republican, so where such a
+         race has a polling margin it is labelled I+ and footnoted rather than
+         shown as a Democratic margin. */ -}}
+    {{- $ind := "" -}}{{- $rep := "" -}}
+    {{- range .candidates }}{{ if eq .party "I" }}{{ $ind = .name }}{{ else if eq .party "R" }}{{ $rep = .name }}{{ end }}{{ end -}}
+    {{- $flag := and (ne $ind "") (ne $pm 999.0) -}}
+    {{- $rows = $rows | append (dict "state" .state "name" .name "poll" $pm "cls" $cm "abs" (math.Abs $key) "lean" $lean "exp" $exp "over" $over "flag" $flag "ind" $ind "rep" $rep) -}}
   {{- end -}}
 
   <div class="tscroll">
@@ -41,10 +48,12 @@
     <tbody>
     {{ range sort $rows "abs" "asc" }}
       <tr>
-        <td class="wrap"><a href="/forecast/senate/{{ lower .state }}/">{{ .name }}</a></td>
-        {{- range $v := (slice .poll .lean .exp .over .cls) }}
+        <td class="wrap"><a href="/forecast/senate/{{ lower .state }}/">{{ .name }}</a>{{ if .flag }}&nbsp;&dagger;{{ end }}</td>
+        {{- $flag := .flag }}
+        {{- range $i, $v := (slice .poll .lean .exp .over .cls) }}
         <td class="num">
           {{- if eq $v 999.0 }}<span class="muted">&mdash;</span>
+          {{- else if and $flag (gt $v 0.0) (or (eq $i 0) (eq $i 3) (eq $i 4)) }}<span title="Independent ahead of the Republican">I+{{ printf "%.1f" $v }}</span>
           {{- else if gt $v 0.0 }}<span class="D">D+{{ printf "%.1f" $v }}</span>
           {{- else }}<span class="R">R+{{ printf "%.1f" (math.Abs $v) }}</span>{{ end -}}
         </td>
@@ -61,6 +70,14 @@
   expected margin, shown only for races with a polling average. Lean in margin
   points is twice the state's partisan lean in vote share (the "partisan lean"
   on each race page).</p>
+  {{- range $rows }}{{ if .flag }}
+  <p class="thin-note">&dagger; {{ .name }}: the main opponent of Republican
+  {{ .rep }} is {{ .ind }}, an independent. This race's polling margin,
+  over-performance and class model margin compare {{ .ind }} with
+  {{ .rep }}, not a Democrat with a Republican; I+ means {{ .ind }} is
+  ahead. The lean and expected margin are the usual Democratic-Republican
+  baseline for the state.</p>
+  {{- end }}{{ end }}
 </div>
 </div>
 {{ partial "forecast/foot.html" (dict "page" . "d" $d) }}
