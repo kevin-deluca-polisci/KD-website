@@ -39,6 +39,13 @@
        class in problem sets 4 through 7. It uses presidential approval, the
        economy and each seat's partisan lean. As of
        <b>{{ $l.as_of }}</b>.</p>
+    <p class="sub">It is best read as a fundamentals, or baseline, forecast.
+       It works from three things: the national environment implied by
+       approval and the economy, each seat's partisan lean, and incumbency.
+       So it shows what a typical candidate of each party would be expected to
+       get in that seat this year. A candidate who runs ahead of it, in the
+       polls now or in the results on election night, is in that sense
+       beating the fundamentals.</p>
     <div class="cp-stats">
       <div class="cp-stat">
         <div class="muted">Chance Democrats win the House</div>
@@ -255,11 +262,14 @@
        seat.</p>
 
     <h3>3. Uncertainty</h3>
-    <p>Each race has two sources of error: how far the national vote could
-       miss{{ with index $ft "national" }} ({{ printf "%.2f" .total_error }} points nationally{{ end }}{{ with index $ft "house" }}, {{ printf "%.2f" .nat_error_per_race }} in a House race{{ end }}{{ with index $ft "senate" }} and {{ printf "%.2f" .nat_error_per_race }} in a Senate race{{ end }}),
-       and race-level error. Combined, the error in a single race is
+    <p>Each race has two sources of error, both in points of the Democratic
+       share of the two-party vote. The first is how far the national vote
+       could miss{{ with index $ft "national" }}: {{ printf "%.2f" .total_error }} points nationally{{ end }}{{ with index $ft "house" }}, which moves a House race by {{ printf "%.2f" .nat_error_per_race }} points{{ end }}{{ with index $ft "senate" }} and a Senate race by {{ printf "%.2f" .nat_error_per_race }}{{ end }}.
+       The second is race-level error. Combined, the error in a single race is
        {{ with index $ft "house" }}{{ printf "%.2f" .total_error }}{{ end }} points in the House and
-       {{ with index $ft "senate" }}{{ printf "%.2f" .total_error }}{{ end }} in the Senate.
+       {{ with index $ft "senate" }}{{ printf "%.2f" .total_error }}{{ end }} in the Senate
+       (about {{ with index $ft "house" }}{{ printf "%.1f" (mul 2.0 .total_error) }}{{ end }} and
+       {{ with index $ft "senate" }}{{ printf "%.1f" (mul 2.0 .total_error) }}{{ end }} points of margin).
        A race's win probability is the chance a normal distribution with that
        spread, centered on the prediction, lands above 50%.</p>
     <p>Seat totals come from 10,000 simulated elections. Each simulation draws
