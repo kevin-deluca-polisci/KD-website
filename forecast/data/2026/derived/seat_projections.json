@@ -6888,7 +6888,7 @@
         "majority_at": 218,
         "pvi_source": "dra",
         "sigma_source": "house-calibrated on 768 district-cycles [2022, 2024], baseline dra, with_incumbency",
-        "sigma_national": 5.19272784019975,
+        "sigma_national": 5.192727840199749,
         "sigma_state": 4.19,
         "sigma_district": 8.82,
         "sigma_total": 11.06,
@@ -19937,7 +19937,7 @@
           56
         ],
         "prob_D_50_plus": 0.7803,
-        "prob_D_51_plus": 0.7011
+        "prob_D_51_plus": 0.7012
       },
       "races": {
         "AK": {
@@ -20127,9 +20127,9 @@
           "basis": "national"
         },
         "TX": {
-          "expected_margin_D": 2.77,
+          "expected_margin_D": 2.78,
           "pvi": -5.92,
-          "win_prob_D": 0.6968,
+          "win_prob_D": 0.6979,
           "basis": "race polls"
         },
         "VA": {
@@ -26573,7 +26573,7 @@
           56
         ],
         "prob_D_50_plus": 0.7797,
-        "prob_D_51_plus": 0.7007
+        "prob_D_51_plus": 0.7008
       },
       "races": {
         "AK": {
@@ -26763,9 +26763,9 @@
           "basis": "national"
         },
         "TX": {
-          "expected_margin_D": 2.77,
+          "expected_margin_D": 2.78,
           "pvi": -5.92,
-          "win_prob_D": 0.6968,
+          "win_prob_D": 0.6979,
           "basis": "race polls"
         },
         "VA": {
