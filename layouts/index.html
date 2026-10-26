@@ -102,6 +102,20 @@
             font-size: 0.9em;
             color: #666;
         }
+        /* PHOTO BESIDE THE BIO ON WIDE SCREENS, ABOVE IT ON PHONES. The photo
+           column is a fixed 250px; on a 390px phone that left the bio about
+           110px. Below 640px the two stack. min-width: 0 lets long words in
+           the bio wrap instead of pushing the column wider than the screen. */
+        .profile-row { display: flex; gap: 30px; align-items: flex-start; }
+        .profile-side { flex-shrink: 0; width: 250px; }
+        .profile-bio { flex: 1; min-width: 0; }
+        .profile-bio h1 { margin-bottom: 12px; line-height: 1.2; }
+        @media (max-width: 640px) {
+            .profile-row { flex-direction: column; align-items: center; gap: 20px; }
+            .profile-side { width: 200px; }
+            .profile-bio { width: 100%; }
+            nav { gap: 12px 20px; }
+        }
     </style>
     {{ partial "analytics.html" . }}
 </head>
@@ -115,8 +129,8 @@
     </header>
 
     <main>
-        <div style="display: flex; gap: 30px; align-items: flex-start;">
-            <div style="flex-shrink: 0; width: 250px;">
+        <div class="profile-row">
+            <div class="profile-side">
                 <img src="/images/profile.png" alt="Kevin DeLuca" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 {{/* PROFILE LINKS, DRIVEN BY THE SAME PARAMS AS THE JSON-LD.
                      Each href reads the config value that also populates `sameAs`
@@ -179,7 +193,8 @@
                     {{ end }}
                 </div>
             </div>
-            <div style="flex: 1;">
+            <div class="profile-bio">
+                <h1>{{ .Title }}</h1>
                 {{ .Content }}
             </div>
         </div>
