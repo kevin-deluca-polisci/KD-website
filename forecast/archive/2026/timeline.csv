@@ -1758,7 +1758,7 @@ date,line,quantity,unit,value,low,high,band_kind,n_sources
 2026-10-27,market,house_prob,prob,0.906,0.9,0.915,spread,3
 2026-10-27,academic,house_prob,prob,0.6831,0.3448,0.9881,spread,6
 2026-10-28,polling,house_prob,prob,0.8503,0.8184,0.887,spread,6
-2026-10-28,market,house_prob,prob,0.9024,0.89,0.915,spread,3
+2026-10-28,market,house_prob,prob,0.9079,0.89,0.925,spread,3
 2026-10-28,academic,house_prob,prob,0.6832,0.3448,0.9881,spread,6
 2025-01-20,polling,house_seats,seats,216.732,196.31,224.53,spread,5
 2025-01-20,academic,house_seats,seats,225.4967,206.26,247.5,spread,6
@@ -3462,8 +3462,8 @@ date,line,quantity,unit,value,low,high,band_kind,n_sources
 2026-10-27,market,house_seats,seats,235.7567,234.59,236.54,spread,3
 2026-10-27,academic,house_seats,seats,233.0,209.67,266.08,spread,6
 2026-10-28,polling,house_seats,seats,232.8783,230.93,235.36,spread,6
-2026-10-28,market,house_seats,seats,236.42,236.17,236.75,spread,3
-2026-10-28,academic,house_seats,seats,233.0067,209.67,266.08,spread,6
+2026-10-28,market,house_seats,seats,236.4633,235.9,237.14,spread,3
+2026-10-28,academic,house_seats,seats,232.9983,209.67,266.03,spread,6
 2025-01-20,polling,margin,pct,2.333,-4.6,6.598,spread,6
 2025-01-20,academic,margin,pct,4.0183,-1.68,10.2,spread,6
 2025-01-21,polling,margin,pct,2.333,-4.6,6.598,spread,6
@@ -5022,8 +5022,8 @@ date,line,quantity,unit,value,low,high,band_kind,n_sources
 2026-10-27,market,margin,pct,8.9519,8.6745,9.1615,spread,3
 2026-10-27,academic,margin,pct,7.8883,1.78,15.76,spread,6
 2026-10-28,polling,margin,pct,8.3505,7.8,8.951,spread,6
-2026-10-28,market,margin,pct,8.7741,8.6264,9.0265,spread,3
-2026-10-28,academic,margin,pct,7.89,1.78,15.76,spread,6
+2026-10-28,market,margin,pct,8.8137,8.6634,9.0256,spread,3
+2026-10-28,academic,margin,pct,7.8883,1.78,15.75,spread,6
 2025-01-20,polling,senate_prob,prob,0.0944,0.0075,0.1426,spread,5
 2025-01-20,academic,senate_prob,prob,0.1964,0.0264,0.474,spread,6
 2025-01-21,polling,senate_prob,prob,0.0944,0.0075,0.1426,spread,5
@@ -6782,8 +6782,8 @@ date,line,quantity,unit,value,low,high,band_kind,n_sources
 2026-10-27,polling,senate_prob,prob,0.6933,0.693,0.6936,spread,6
 2026-10-27,market,senate_prob,prob,0.6534,0.6353,0.665,spread,3
 2026-10-27,academic,senate_prob,prob,0.3638,0.0418,0.8249,spread,6
-2026-10-28,polling,senate_prob,prob,0.7177,0.7175,0.718,spread,6
-2026-10-28,market,senate_prob,prob,0.645,0.6201,0.665,spread,3
+2026-10-28,polling,senate_prob,prob,0.7178,0.7176,0.7181,spread,6
+2026-10-28,market,senate_prob,prob,0.6386,0.6208,0.665,spread,3
 2026-10-28,academic,senate_prob,prob,0.3639,0.0418,0.8249,spread,6
 2025-01-20,polling,senate_seats,seats,47.158,44.38,48.19,spread,5
 2025-01-20,academic,senate_seats,seats,48.2617,45.77,50.94,spread,6
@@ -8388,6 +8388,6 @@ date,line,quantity,unit,value,low,high,band_kind,n_sources
 2026-10-27,polling,senate_seats,seats,52.1633,52.16,52.17,spread,6
 2026-10-27,market,senate_seats,seats,50.945,50.84,51.05,spread,2
 2026-10-27,academic,senate_seats,seats,50.0217,47.33,53.87,spread,6
-2026-10-28,polling,senate_seats,seats,52.3333,52.33,52.34,spread,6
-2026-10-28,market,senate_seats,seats,50.83,50.76,50.9,spread,2
-2026-10-28,academic,senate_seats,seats,50.0233,47.33,53.87,spread,6
+2026-10-28,polling,senate_seats,seats,52.3417,52.33,52.35,spread,6
+2026-10-28,market,senate_seats,seats,50.885,50.74,51.03,spread,2
+2026-10-28,academic,senate_seats,seats,50.0217,47.33,53.86,spread,6
