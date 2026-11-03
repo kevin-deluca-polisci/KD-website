@@ -9,7 +9,7 @@
   <h1>Election Forecast Tracker</h1>
   <p class="tagline">Forecasts of the 2026 midterm elections from polls,
      prediction markets, academic models and the PLSC 2219 class model,
-     updated daily.</p>
+     updated daily through Election Day 2026.</p>
   <p class="byline">By <a href="/">Kevin DeLuca</a>, Department of Political Science, Yale University</p>
 
   <div class="strip">
@@ -17,7 +17,6 @@
     <span><b id="days-out">—</b> days out</span>
     <span>Snapshot <b id="snapshot-date" data-date="{{ $d.latest_snapshot }}">{{ $d.latest_snapshot }}</b></span>
     <span><b>{{ $d.snapshot_count }}</b> date{{ if ne $d.snapshot_count 1 }}s{{ end }} on the chart</span>
-    <span id="fresh-note"></span>
   </div>
 
   <nav class="pages">
@@ -30,8 +29,10 @@
     <a href="/forecast/about/"   class="{{ if eq $cur "/forecast/about/" }}on{{ end }}">About</a>
   </nav>
 
-  <div class="stale" id="stale-banner">
-    <strong>This page has not updated in <span id="stale-days"></span> days.</strong>
-    The numbers below are from the snapshot date above.
+  <div class="note">
+    <strong>This tracker is retired.</strong> Its final update was on
+    November 3, 2026, and the numbers on these pages are from that snapshot.
+    For the PLSC 2219 forecast contest, see the
+    <a href="https://kevin-deluca-polisci.github.io/plsc2219-forecasts/gallery.html">forecast gallery</a>.
   </div>
 </div>
