@@ -9,6 +9,7 @@
 
 {{ range $group := slice
      (dict "key" "published" "label" "Published")
+     (dict "key" "accepted"  "label" "Accepted")
      (dict "key" "rr"        "label" "Under review")
      (dict "key" "working"   "label" "Working papers") }}
   {{ $set := where $all "Params.status" $group.key }}

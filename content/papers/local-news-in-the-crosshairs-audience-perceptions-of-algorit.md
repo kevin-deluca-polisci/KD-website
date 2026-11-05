@@ -1,7 +1,7 @@
 ---
 title: "Local News in the Crosshairs: Audience Perceptions of Algorithmic News Sites"
-status: "rr"
-status_label: "Under Review"
+status: "accepted"
+status_label: "Conditionally Accepted at Political Communication"
 coauthors: "(with David A. Beavers)"
 pdf_url: "/pdfs/Beavers_DeLuca_2026.pdf"
 weight: 1
