@@ -1,6 +1,6 @@
 file,rows,bytes,sha256,description
-timeline.csv,8512,533683,ce3cfdc864781f07162d927ea1bac928f33f2e338ad99cc526398c6c7df1dc38,"The daily national series drawn on the site's chart, one row per date, line and quantity."
-category_averages.csv,69246,8074509,fb3b245c2b130c6e0906575fe193feebced925e20739e9e1a68cbc979ace9eb9,"Every published average: date, line, race and quantity."
+timeline.csv,8512,533683,7ee4705b1e5563616088263306b94b88602d67aab211d794a5fa49f2675bf77f,"The daily national series drawn on the site's chart, one row per date, line and quantity."
+category_averages.csv,69246,8074479,afb675b5033c47bcd720680baf23f50bb6d26a4235f35b41863105bcc4f7fb17,"Every published average: date, line, race and quantity."
 suppressed.csv,62874,16292074,33aa10d90b9d3458970d7843e7a986c6ed6265655a5dfe424e72c3ebdcac9513,Averages that exist but are withheld (fewer than three forecasts whose terms restrict republication).
-forecasts_by_source.csv,361947,38200940,6959a79047988767847ec2816efd9ac3fe7de76c4c15c4e7f8ac2da5e9866725,Individual forecasts from sources whose terms allow republication by name.
+forecasts_by_source.csv,361846,38190196,9111d318e0b659870801f2910d350847bc6ad7d7645aae40b9931ba6bbdb0e20,Individual forecasts from sources whose terms allow republication by name.
 approval.csv,339,9921,71d2da529508b886ae96a9556f0eb13043de2420bdf69768cb285c7c2b0cfc3b,"Daily average of the published presidential approval aggregators (an input, not a forecast)."
