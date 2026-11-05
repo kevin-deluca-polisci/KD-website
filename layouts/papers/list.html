@@ -8,11 +8,12 @@
 {{ $all := where .Site.RegularPages "Section" "papers" }}
 
 {{ range $group := slice
-     (dict "key" "published" "label" "Published")
-     (dict "key" "accepted"  "label" "Accepted")
-     (dict "key" "rr"        "label" "Under review")
-     (dict "key" "working"   "label" "Working papers") }}
-  {{ $set := where $all "Params.status" $group.key }}
+     (dict "keys" (slice "published")    "label" "Published")
+     (dict "keys" (slice "working" "rr") "label" "Working papers") }}
+  {{/* Two groups only (Kevin, Nov 2026): published (conditionally accepted or later) and working papers (under
+       review or earlier). A conditionally accepted paper is status "published" with pub_status set, which prints in
+       place of the year. */}}
+  {{ $set := where $all "Params.status" "in" $group.keys }}
   {{ with $set }}
   <h2 class="section-head">{{ $group.label }}</h2>
   {{/* NUMBERED, COUNTING DOWN, MATCHING THE HOMEPAGE. A CV numbers the most
@@ -32,7 +33,7 @@
       <a class="pl-title" href="{{ $pg.RelPermalink }}">{{ $pg.Title }}</a>
       <span class="pl-meta">
         {{ with $pg.Params.coauthors }}{{ . }} {{ end }}
-        {{ if eq $pg.Params.status "published" }}<em>{{ $pg.Params.journal }}</em>, {{ $pg.Params.year }}
+        {{ if eq $pg.Params.status "published" }}<em>{{ $pg.Params.journal }}</em>, {{ with $pg.Params.pub_status }}{{ . }}{{ else }}{{ $pg.Params.year }}{{ end }}
         {{ else }}{{ $pg.Params.status_label }}{{ end }}
       </span>
     </li>

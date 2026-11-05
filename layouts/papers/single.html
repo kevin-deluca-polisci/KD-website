@@ -16,7 +16,7 @@
   <p class="paper-meta">
     {{ with $p.coauthors }}{{ . }} · {{ end }}
     {{ if eq $p.status "published" }}
-      <em>{{ $p.journal }}</em>{{ with $p.volume }}, {{ . }}{{ end }}{{ with $p.issue }}({{ . }}){{ end }}{{ with $p.pages }}: {{ . }}{{ end }}, {{ $p.year }}
+      <em>{{ $p.journal }}</em>{{ with $p.volume }}, {{ . }}{{ end }}{{ with $p.issue }}({{ . }}){{ end }}{{ with $p.pages }}: {{ . }}{{ end }}, {{ with $p.pub_status }}{{ . }}{{ else }}{{ $p.year }}{{ end }}
     {{ else }}
       {{ $p.status_label | default "Working Paper" }}
     {{ end }}
