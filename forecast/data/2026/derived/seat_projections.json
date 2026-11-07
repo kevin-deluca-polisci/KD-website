@@ -1,5 +1,5 @@
 {
-  "snapshot_date": "2026-11-06",
+  "snapshot_date": "2026-11-07",
   "sigma": 5.37,
   "holdover_D": 34,
   "majority_at": {
@@ -11,20 +11,20 @@
     "academic_abramowitz": {
       "tide_D": 12.85,
       "senate": {
-        "n_races": 36,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 19.01,
+        "expected_D_seats_up": 18.04,
         "D_seats_up_80pct": [
-          16,
-          22
+          15,
+          21
         ],
-        "expected_D_total": 53.01,
+        "expected_D_total": 52.04,
         "D_total_80pct": [
-          50,
-          56
+          49,
+          55
         ],
-        "prob_D_50_plus": 0.9772,
-        "prob_D_51_plus": 0.8799
+        "prob_D_50_plus": 0.884,
+        "prob_D_51_plus": 0.7283
       },
       "races": {
         "AK": {
@@ -189,12 +189,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "PA": {
-          "expected_margin_D": 12.03,
-          "pvi": -0.5,
-          "win_prob_D": 0.9874,
-          "basis": "national"
-        },
         "RI": {
           "expected_margin_D": 31.65,
           "pvi": 7.96,
@@ -245,7 +239,7 @@
         }
       },
       "house": {
-        "map_vintage": "mixed as of 2026-11-06: MO reverted to previous lines",
+        "map_vintage": "mixed as of 2026-11-07: MO reverted to previous lines",
         "n_districts": 435,
         "expected_D_seats": 251.6,
         "D_seats_80pct": [
@@ -3331,25 +3325,25 @@
       "publication": "individual",
       "margin_published_elsewhere": false,
       "seats_published_elsewhere": false,
-      "as_of": "2026-11-06"
+      "as_of": "2026-11-07"
     },
     "academic_bew": {
       "tide_D": 6.74,
       "senate": {
-        "n_races": 36,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 16.2,
+        "expected_D_seats_up": 15.34,
         "D_seats_up_80pct": [
-          14,
-          18
+          13,
+          17
         ],
-        "expected_D_total": 50.2,
+        "expected_D_total": 49.34,
         "D_total_80pct": [
-          48,
-          52
+          47,
+          51
         ],
-        "prob_D_50_plus": 0.7015,
-        "prob_D_51_plus": 0.4036
+        "prob_D_50_plus": 0.4158,
+        "prob_D_51_plus": 0.2043
       },
       "races": {
         "AK": {
@@ -3514,12 +3508,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "PA": {
-          "expected_margin_D": 5.92,
-          "pvi": -0.5,
-          "win_prob_D": 0.8647,
-          "basis": "national"
-        },
         "RI": {
           "expected_margin_D": 25.54,
           "pvi": 7.96,
@@ -3570,7 +3558,7 @@
         }
       },
       "house": {
-        "map_vintage": "mixed as of 2026-11-06: MO reverted to previous lines",
+        "map_vintage": "mixed as of 2026-11-07: MO reverted to previous lines",
         "n_districts": 435,
         "expected_D_seats": 227.05,
         "D_seats_80pct": [
@@ -6656,25 +6644,25 @@
       "publication": "individual",
       "margin_published_elsewhere": false,
       "seats_published_elsewhere": false,
-      "as_of": "2026-11-06"
+      "as_of": "2026-11-07"
     },
     "academic_economic_pessimism": {
       "tide_D": 15.84,
       "senate": {
-        "n_races": 36,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 20.89,
+        "expected_D_seats_up": 19.93,
         "D_seats_up_80pct": [
-          17,
-          26
+          16,
+          25
         ],
-        "expected_D_total": 54.89,
+        "expected_D_total": 53.93,
         "D_total_80pct": [
-          51,
-          60
+          50,
+          59
         ],
-        "prob_D_50_plus": 0.9842,
-        "prob_D_51_plus": 0.9129
+        "prob_D_50_plus": 0.9165,
+        "prob_D_51_plus": 0.8267
       },
       "races": {
         "AK": {
@@ -6839,12 +6827,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "PA": {
-          "expected_margin_D": 15.02,
-          "pvi": -0.5,
-          "win_prob_D": 0.9974,
-          "basis": "national"
-        },
         "RI": {
           "expected_margin_D": 34.64,
           "pvi": 7.96,
@@ -6895,7 +6877,7 @@
         }
       },
       "house": {
-        "map_vintage": "mixed as of 2026-11-06: MO reverted to previous lines",
+        "map_vintage": "mixed as of 2026-11-07: MO reverted to previous lines",
         "n_districts": 435,
         "expected_D_seats": 266.5,
         "D_seats_80pct": [
@@ -9981,25 +9963,25 @@
       "publication": "individual",
       "margin_published_elsewhere": false,
       "seats_published_elsewhere": false,
-      "as_of": "2026-11-06"
+      "as_of": "2026-11-07"
     },
     "academic_political_history": {
       "tide_D": 2.96,
       "senate": {
-        "n_races": 36,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 14.57,
+        "expected_D_seats_up": 13.91,
         "D_seats_up_80pct": [
           12,
-          17
+          16
         ],
-        "expected_D_total": 48.57,
+        "expected_D_total": 47.91,
         "D_total_80pct": [
           46,
-          51
+          50
         ],
-        "prob_D_50_plus": 0.3618,
-        "prob_D_51_plus": 0.1319
+        "prob_D_50_plus": 0.1401,
+        "prob_D_51_plus": 0.0414
       },
       "races": {
         "AK": {
@@ -10164,12 +10146,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "PA": {
-          "expected_margin_D": 2.14,
-          "pvi": -0.5,
-          "win_prob_D": 0.6547,
-          "basis": "national"
-        },
         "RI": {
           "expected_margin_D": 21.76,
           "pvi": 7.96,
@@ -10220,7 +10196,7 @@
         }
       },
       "house": {
-        "map_vintage": "mixed as of 2026-11-06: MO reverted to previous lines",
+        "map_vintage": "mixed as of 2026-11-07: MO reverted to previous lines",
         "n_districts": 435,
         "expected_D_seats": 213.53,
         "D_seats_80pct": [
@@ -13306,25 +13282,25 @@
       "publication": "individual",
       "margin_published_elsewhere": false,
       "seats_published_elsewhere": false,
-      "as_of": "2026-11-06"
+      "as_of": "2026-11-07"
     },
     "academic_referendum": {
       "tide_D": 7.07,
       "senate": {
-        "n_races": 36,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 16.38,
+        "expected_D_seats_up": 15.57,
         "D_seats_up_80pct": [
           12,
-          20
+          19
         ],
-        "expected_D_total": 50.38,
+        "expected_D_total": 49.57,
         "D_total_80pct": [
           46,
-          54
+          53
         ],
-        "prob_D_50_plus": 0.6812,
-        "prob_D_51_plus": 0.435
+        "prob_D_50_plus": 0.4381,
+        "prob_D_51_plus": 0.2959
       },
       "races": {
         "AK": {
@@ -13489,12 +13465,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "PA": {
-          "expected_margin_D": 6.25,
-          "pvi": -0.5,
-          "win_prob_D": 0.8776,
-          "basis": "national"
-        },
         "RI": {
           "expected_margin_D": 25.87,
           "pvi": 7.96,
@@ -13545,7 +13515,7 @@
         }
       },
       "house": {
-        "map_vintage": "mixed as of 2026-11-06: MO reverted to previous lines",
+        "map_vintage": "mixed as of 2026-11-07: MO reverted to previous lines",
         "n_districts": 435,
         "expected_D_seats": 229.39,
         "D_seats_80pct": [
@@ -16631,25 +16601,25 @@
       "publication": "individual",
       "margin_published_elsewhere": false,
       "seats_published_elsewhere": false,
-      "as_of": "2026-11-06"
+      "as_of": "2026-11-07"
     },
     "class_fundamentals": {
       "tide_D": 10.81,
       "senate": {
-        "n_races": 36,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 17.97,
+        "expected_D_seats_up": 17.01,
         "D_seats_up_80pct": [
-          16,
-          21
+          15,
+          20
         ],
-        "expected_D_total": 51.97,
+        "expected_D_total": 51.01,
         "D_total_80pct": [
-          50,
-          55
+          49,
+          54
         ],
-        "prob_D_50_plus": 0.9319,
-        "prob_D_51_plus": 0.7578
+        "prob_D_50_plus": 0.764,
+        "prob_D_51_plus": 0.5504
       },
       "races": {
         "AK": {
@@ -16814,12 +16784,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "PA": {
-          "expected_margin_D": 9.99,
-          "pvi": -0.5,
-          "win_prob_D": 0.9685,
-          "basis": "national"
-        },
         "RI": {
           "expected_margin_D": 29.61,
           "pvi": 7.96,
@@ -16870,7 +16834,7 @@
         }
       },
       "house": {
-        "map_vintage": "mixed as of 2026-11-06: MO reverted to previous lines",
+        "map_vintage": "mixed as of 2026-11-07: MO reverted to previous lines",
         "n_districts": 435,
         "expected_D_seats": 242.84,
         "D_seats_80pct": [
@@ -19955,25 +19919,25 @@
       "publication": "individual",
       "margin_published_elsewhere": false,
       "seats_published_elsewhere": false,
-      "as_of": "2026-11-06"
+      "as_of": "2026-11-07"
     },
     "class_polling": {
       "tide_D": 8.868,
       "senate": {
-        "n_races": 36,
+        "n_races": 35,
         "n_race_polled": 23,
-        "expected_D_seats_up": 19.61,
+        "expected_D_seats_up": 18.69,
         "D_seats_up_80pct": [
-          15,
-          23
+          14,
+          22
         ],
-        "expected_D_total": 53.61,
+        "expected_D_total": 52.69,
         "D_total_80pct": [
-          49,
-          57
+          48,
+          56
         ],
-        "prob_D_50_plus": 0.8862,
-        "prob_D_51_plus": 0.8318
+        "prob_D_50_plus": 0.8379,
+        "prob_D_51_plus": 0.7646
       },
       "races": {
         "AK": {
@@ -20138,12 +20102,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "PA": {
-          "expected_margin_D": 8.04,
-          "pvi": -0.5,
-          "win_prob_D": 0.933,
-          "basis": "national"
-        },
         "RI": {
           "expected_margin_D": 29.17,
           "pvi": 7.96,
@@ -20194,7 +20152,7 @@
         }
       },
       "house": {
-        "map_vintage": "mixed as of 2026-11-06: MO reverted to previous lines",
+        "map_vintage": "mixed as of 2026-11-07: MO reverted to previous lines",
         "n_districts": 435,
         "expected_D_seats": 235.02,
         "D_seats_80pct": [
@@ -23279,25 +23237,25 @@
       "publication": "individual",
       "margin_published_elsewhere": true,
       "seats_published_elsewhere": false,
-      "as_of": "2026-11-06"
+      "as_of": "2026-11-07"
     },
     "fair": {
       "tide_D": 1.26,
       "senate": {
-        "n_races": 36,
+        "n_races": 35,
         "n_race_polled": 0,
-        "expected_D_seats_up": 13.64,
+        "expected_D_seats_up": 13.11,
         "D_seats_up_80pct": [
           9,
-          17
+          16
         ],
-        "expected_D_total": 47.64,
+        "expected_D_total": 47.11,
         "D_total_80pct": [
           43,
-          51
+          50
         ],
-        "prob_D_50_plus": 0.336,
-        "prob_D_51_plus": 0.1393
+        "prob_D_50_plus": 0.1421,
+        "prob_D_51_plus": 0.0685
       },
       "races": {
         "AK": {
@@ -23462,12 +23420,6 @@
           "win_prob_D": 0.9999,
           "basis": "national"
         },
-        "PA": {
-          "expected_margin_D": 0.44,
-          "pvi": -0.5,
-          "win_prob_D": 0.5324,
-          "basis": "national"
-        },
         "RI": {
           "expected_margin_D": 20.06,
           "pvi": 7.96,
@@ -23518,7 +23470,7 @@
         }
       },
       "house": {
-        "map_vintage": "mixed as of 2026-11-06: MO reverted to previous lines",
+        "map_vintage": "mixed as of 2026-11-07: MO reverted to previous lines",
         "n_districts": 435,
         "expected_D_seats": 207.8,
         "D_seats_80pct": [
@@ -26608,20 +26560,20 @@
     "polling_reconstructed": {
       "tide_D": 8.242,
       "senate": {
-        "n_races": 36,
+        "n_races": 35,
         "n_race_polled": 23,
-        "expected_D_seats_up": 19.6,
+        "expected_D_seats_up": 18.69,
         "D_seats_up_80pct": [
-          15,
-          23
+          14,
+          22
         ],
-        "expected_D_total": 53.6,
+        "expected_D_total": 52.69,
         "D_total_80pct": [
-          49,
-          57
+          48,
+          56
         ],
-        "prob_D_50_plus": 0.8844,
-        "prob_D_51_plus": 0.829
+        "prob_D_50_plus": 0.8379,
+        "prob_D_51_plus": 0.7646
       },
       "races": {
         "AK": {
@@ -26786,12 +26738,6 @@
           "win_prob_D": 1.0,
           "basis": "national"
         },
-        "PA": {
-          "expected_margin_D": 7.42,
-          "pvi": -0.5,
-          "win_prob_D": 0.9164,
-          "basis": "national"
-        },
         "RI": {
           "expected_margin_D": 29.17,
           "pvi": 7.96,
@@ -26842,7 +26788,7 @@
         }
       },
       "house": {
-        "map_vintage": "mixed as of 2026-11-06: MO reverted to previous lines",
+        "map_vintage": "mixed as of 2026-11-07: MO reverted to previous lines",
         "n_districts": 435,
         "expected_D_seats": 232.6,
         "D_seats_80pct": [
@@ -29927,7 +29873,7 @@
       "publication": "individual",
       "margin_published_elsewhere": false,
       "seats_published_elsewhere": true,
-      "as_of": "2026-11-06"
+      "as_of": "2026-11-07"
     }
   },
   "publication": "individual",

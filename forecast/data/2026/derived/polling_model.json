@@ -1,6 +1,6 @@
 {
-  "snapshot_date": "2026-11-06",
-  "days_to_election": -3,
+  "snapshot_date": "2026-11-07",
+  "days_to_election": -4,
   "generic_ballot": {
     "raw": 8.242,
     "adjusted": 8.868,
@@ -48,14 +48,14 @@
     "SEED": 20261103
   },
   "senate": {
-    "n_races": 36,
+    "n_races": 35,
     "sigma_total": 5.37,
     "sigma_national": 3.606,
     "sigma_state": 3.98,
-    "expected_D_seats_up": 17.09,
+    "expected_D_seats_up": 16.16,
     "D_seats_up_80pct": [
-      15,
-      19
+      14,
+      18
     ],
     "baseline_slope": 0.823,
     "baseline_slope_source": "senate-calibrated on 30 state-year(s) [2024], with_incumbency",
@@ -225,12 +225,6 @@
         "win_prob_D": 1.0,
         "basis": "national"
       },
-      "PA": {
-        "expected_margin_D": 8.04,
-        "pvi": -0.5,
-        "win_prob_D": 0.933,
-        "basis": "national"
-      },
       "RI": {
         "expected_margin_D": 27.67,
         "pvi": 7.96,
@@ -281,12 +275,12 @@
       }
     },
     "holdover_D_assumed": 34,
-    "prob_D_50_plus": 0.8471,
-    "prob_D_51_plus": 0.5984,
+    "prob_D_50_plus": 0.6086,
+    "prob_D_51_plus": 0.3668,
     "prob_D_50_plus_sensitivity": {
-      "33": 0.5984,
-      "34": 0.8471,
-      "35": 0.9436
+      "33": 0.3668,
+      "34": 0.6086,
+      "35": 0.8707
     },
     "NOTE_holdover": "prob_D_50_plus depends on holdover_D, which is an ASSUMPTION passed in, not something derived from the archive. 50+ is stated rather than 'majority' because control at 50 turns on the vice-presidency."
   },
