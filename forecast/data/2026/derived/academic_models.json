@@ -1,7 +1,7 @@
 {
   "cycle": 2026,
-  "snapshot_date": "2026-11-08",
-  "days_to_election": -5,
+  "snapshot_date": "2026-11-09",
+  "days_to_election": -6,
   "category": "academic",
   "publication": "individual",
   "models": {
@@ -16,14 +16,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 6.74,
-      "margin_D_80_low": 1.87,
-      "margin_D_80_high": 11.61,
+      "margin_D": 6.69,
+      "margin_D_80_low": 1.82,
+      "margin_D_80_high": 11.56,
       "inputs": {
-        "generic_ballot_D": 8.868,
-        "generic_ballot_share_deviation": 4.434,
+        "generic_ballot_D": 8.768,
+        "generic_ballot_share_deviation": 4.384,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
-        "days_to_election": -5,
+        "days_to_election": -6,
         "president_party": "R",
         "pres_party_coded": -1
       },
@@ -42,8 +42,8 @@
           "constant": 1.98,
           "root_mse": 4.04
         },
-        "bew_direct_D_seat_share": 57.77,
-        "bew_direct_D_seats": 251.3
+        "bew_direct_D_seat_share": 57.72,
+        "bew_direct_D_seats": 251.1
       },
       "notes": [
         "election day has passed; coefficients clamped to 1-30 days",
@@ -61,18 +61,18 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 12.85,
+      "margin_D": 12.79,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
-        "generic_ballot_D": 8.87,
+        "generic_ballot_D": 8.77,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
         "house_seats_defended_R": 220,
         "senate_seats_defended_R": 22
       },
       "diagnostics": {
-        "house_R_seat_change": -36.1,
-        "implied_D_seats": 251.1,
+        "house_R_seat_change": -35.8,
+        "implied_D_seats": 250.8,
         "senate_R_seat_change": -8.2,
         "senate_D_seats": 55.2,
         "coefficients": {
@@ -111,14 +111,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": true,
-      "margin_D": 7.05,
-      "margin_D_80_low": -1.1,
-      "margin_D_80_high": 15.2,
+      "margin_D": 7.02,
+      "margin_D_80_low": -1.13,
+      "margin_D_80_high": 15.17,
       "inputs": {
-        "approval": 34.66,
-        "approval_source": "mean of 5 adults-sample approval poll(s) in the 14 days to 2026-11-08. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
+        "approval": 35.33,
+        "approval_source": "mean of 4 adults-sample approval poll(s) in the 14 days to 2026-11-09. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
         "income_growth": 0.93,
-        "income_source": "FRED income_growth_ytd as of 2026-11-08, 9 month(s) of the year in hand"
+        "income_source": "FRED income_growth_ytd as of 2026-11-09, 9 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
@@ -129,7 +129,7 @@
         "r2": 0.273,
         "loeo_rmse": 3.18,
         "fitted_on": "20 midterms, 1946-2022",
-        "pres_party_two_party_vote": 46.47,
+        "pres_party_two_party_vote": 46.49,
         "benchmark": {
           "claim": "Republicans lose about 28 House seats and the House",
           "authors": "Charles Tien and Michael S. Lewis-Beck",
@@ -163,7 +163,7 @@
         "year_direction": -1,
         "year_direction_label": "a bad year for the president's party \u2014 the midterm rule",
         "seats_before": 220,
-        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-11-08 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
+        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-11-09 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
         "spec_date_reached": true,
         "outside_fitted_range": true
       },
@@ -260,7 +260,7 @@
         "dem_governors": 24,
         "strong_gop_senate_states": 14,
         "dem_senate_retirements": 4,
-        "structural_source": "4 Democratic Senate retirement(s) known by 2026-11-08 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
+        "structural_source": "4 Democratic Senate retirement(s) known by 2026-11-09 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
         "spec_date_reached": true
       },
       "diagnostics": {
