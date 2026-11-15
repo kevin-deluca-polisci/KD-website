@@ -1,7 +1,7 @@
 {
   "cycle": 2026,
-  "snapshot_date": "2026-11-14",
-  "days_to_election": -11,
+  "snapshot_date": "2026-11-15",
+  "days_to_election": -12,
   "category": "academic",
   "publication": "individual",
   "models": {
@@ -20,10 +20,10 @@
       "margin_D_80_low": 1.92,
       "margin_D_80_high": 11.66,
       "inputs": {
-        "generic_ballot_D": 8.968,
-        "generic_ballot_share_deviation": 4.484,
+        "generic_ballot_D": 8.96,
+        "generic_ballot_share_deviation": 4.48,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
-        "days_to_election": -11,
+        "days_to_election": -12,
         "president_party": "R",
         "pres_party_coded": -1
       },
@@ -65,7 +65,7 @@
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
-        "generic_ballot_D": 8.97,
+        "generic_ballot_D": 8.96,
         "generic_ballot_source": "margin_D_adjusted via polling_model.json",
         "house_seats_defended_R": 220,
         "senate_seats_defended_R": 22
@@ -111,14 +111,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": true,
-      "margin_D": 7.09,
-      "margin_D_80_low": -1.06,
-      "margin_D_80_high": 15.25,
+      "margin_D": 7.19,
+      "margin_D_80_low": -0.96,
+      "margin_D_80_high": 15.34,
       "inputs": {
-        "approval": 33.86,
-        "approval_source": "mean of 5 adults-sample approval poll(s) in the 14 days to 2026-11-14. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
+        "approval": 32.0,
+        "approval_source": "mean of 3 adults-sample approval poll(s) in the 14 days to 2026-11-15. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
         "income_growth": 0.93,
-        "income_source": "FRED income_growth_ytd as of 2026-11-14, 9 month(s) of the year in hand"
+        "income_source": "FRED income_growth_ytd as of 2026-11-15, 9 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
@@ -129,7 +129,7 @@
         "r2": 0.273,
         "loeo_rmse": 3.18,
         "fitted_on": "20 midterms, 1946-2022",
-        "pres_party_two_party_vote": 46.45,
+        "pres_party_two_party_vote": 46.4,
         "benchmark": {
           "claim": "Republicans lose about 28 House seats and the House",
           "authors": "Charles Tien and Michael S. Lewis-Beck",
@@ -163,7 +163,7 @@
         "year_direction": -1,
         "year_direction_label": "a bad year for the president's party \u2014 the midterm rule",
         "seats_before": 220,
-        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-11-14 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
+        "open_seats_source": "60 House incumbents had announced they were not seeking re-election by 2026-11-15 \u2014 Ballotpedia's dated list, entered by hand, read 2026-08-25",
         "spec_date_reached": true,
         "outside_fitted_range": true
       },
@@ -260,7 +260,7 @@
         "dem_governors": 24,
         "strong_gop_senate_states": 14,
         "dem_senate_retirements": 4,
-        "structural_source": "4 Democratic Senate retirement(s) known by 2026-11-14 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
+        "structural_source": "4 Democratic Senate retirement(s) known by 2026-11-15 \u2014 UNAUDITED automatic draft from Wikipedia revision history \u2014 not yet checked by a person; governors: 24 \u2014 steps at the November 2025 elections, when Virginia flipped R to D and New Jersey held",
         "spec_date_reached": true
       },
       "diagnostics": {
