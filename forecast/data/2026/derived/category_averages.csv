@@ -73754,7 +73754,7 @@ snapshot_date,facet,category,race_id,chamber,state,district,quantity,unit,n_sour
 2026-11-22,source,academic,SEN_WY_2026,senate,WY,,win_prob_D,prob,6,0,0,0,0,0.0,0.0,0.0,0.0,open,ok,,2026-10-29,1
 2026-11-22,source,market,GOV_KS_2026,governor,KS,,win_prob_D,prob,1,0,0,0,0,0.99,0.99,0.99,,open,single,predictit,2026-11-17,1
 2026-11-22,source,market,GOV_KS_2026,governor,KS,,win_prob_R,prob,1,0,0,0,0,0.01,0.01,0.01,,open,single,predictit,2026-11-17,1
-2026-11-22,source,market,NATL_HOUSE_2026,national,,,margin_D,pct,3,0,0,0,0,14.1762,12.934,14.8294,1.0762,open,ok,,2026-11-22,0
+2026-11-22,source,market,NATL_HOUSE_2026,national,,,margin_D,pct,3,0,0,0,0,14.1749,12.934,14.831,1.0753,open,ok,,2026-11-22,0
 2026-11-22,source,market,NATL_HOUSE_2026,national,,,seats_D,seats,1,0,0,0,0,251.37,251.37,251.37,,open,single,kalshi,2026-11-22,0
 2026-11-22,source,market,NATL_HOUSE_2026,national,,,win_prob_D,prob,1,0,0,0,0,0.9985,0.9985,0.9985,,open,single,kalshi,2026-11-22,0
 2026-11-22,source,market,NATL_SENATE_2026,national,,,seats_D,seats,1,0,0,0,0,52.98,52.98,52.98,,open,single,kalshi,2026-11-22,0
@@ -73779,8 +73779,8 @@ snapshot_date,facet,category,race_id,chamber,state,district,quantity,unit,n_sour
 2026-11-22,source,market,SEN_ID_2026,senate,ID,,win_prob_R,prob,1,0,0,0,0,0.5,0.5,0.5,,open,single,kalshi,2026-11-22,0
 2026-11-22,source,market,SEN_IL_2026,senate,IL,,win_prob_D,prob,1,0,0,0,0,0.5,0.5,0.5,,open,single,kalshi,2026-11-22,0
 2026-11-22,source,market,SEN_IL_2026,senate,IL,,win_prob_R,prob,1,0,0,0,0,0.5,0.5,0.5,,open,single,kalshi,2026-11-22,0
-2026-11-22,source,market,SEN_KS_2026,senate,KS,,win_prob_D,prob,2,0,0,0,0,0.4275,0.355,0.5,0.1025,open,thin,,2026-11-22,0
-2026-11-22,source,market,SEN_KS_2026,senate,KS,,win_prob_R,prob,2,0,0,0,0,0.5325,0.5,0.565,0.046,open,thin,,2026-11-22,0
+2026-11-22,source,market,SEN_KS_2026,senate,KS,,win_prob_D,prob,2,0,0,0,0,0.435,0.37,0.5,0.0919,open,thin,,2026-11-22,0
+2026-11-22,source,market,SEN_KS_2026,senate,KS,,win_prob_R,prob,2,0,0,0,0,0.5375,0.5,0.575,0.053,open,thin,,2026-11-22,0
 2026-11-22,source,market,SEN_KY_2026,senate,KY,,win_prob_D,prob,1,0,0,0,0,0.5,0.5,0.5,,open,single,kalshi,2026-11-22,0
 2026-11-22,source,market,SEN_KY_2026,senate,KY,,win_prob_R,prob,1,0,0,0,0,0.5,0.5,0.5,,open,single,kalshi,2026-11-22,0
 2026-11-22,source,market,SEN_LA_2026,senate,LA,,win_prob_D,prob,1,0,0,0,0,0.5,0.5,0.5,,open,single,kalshi,2026-11-22,0
