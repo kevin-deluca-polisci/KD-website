@@ -16,12 +16,12 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": -0.89,
-      "margin_D_80_low": -5.76,
-      "margin_D_80_high": 3.98,
+      "margin_D": 11.35,
+      "margin_D_80_low": 6.48,
+      "margin_D_80_high": 16.22,
       "inputs": {
-        "generic_ballot_D": -6.1,
-        "generic_ballot_share_deviation": -3.05,
+        "generic_ballot_D": 17.9,
+        "generic_ballot_share_deviation": 8.95,
         "generic_ballot_source": "margin_D via polling_model.json",
         "days_to_election": -21,
         "president_party": "R",
@@ -42,8 +42,8 @@
           "constant": 1.98,
           "root_mse": 4.04
         },
-        "bew_direct_D_seat_share": 49.84,
-        "bew_direct_D_seats": 216.8
+        "bew_direct_D_seat_share": 62.56,
+        "bew_direct_D_seats": 272.1
       },
       "notes": [
         "election day has passed; coefficients clamped to 1-30 days",
@@ -61,20 +61,20 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 2.5,
+      "margin_D": 18.58,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
-        "generic_ballot_D": -6.1,
+        "generic_ballot_D": 17.9,
         "generic_ballot_source": "margin_D via polling_model.json",
         "house_seats_defended_R": 220,
         "senate_seats_defended_R": 22
       },
       "diagnostics": {
-        "house_R_seat_change": 2.9,
-        "implied_D_seats": 212.1,
-        "senate_R_seat_change": -2.8,
-        "senate_D_seats": 49.8,
+        "house_R_seat_change": -59.5,
+        "implied_D_seats": 274.5,
+        "senate_R_seat_change": -11.4,
+        "senate_D_seats": 58.4,
         "coefficients": {
           "house_tied_R_change": -13.0,
           "house_per_point": 2.6,
@@ -91,12 +91,13 @@
           "senate_per_seat_defended": -0.83
         },
         "fit": "OLS, 20 midterms 1946-2022; House R-squared > 0.8, Senate about 0.67",
-        "inversion_extrapolated": false,
+        "inversion_extrapolated": true,
         "curve_points_used": 9
       },
       "notes": [
         "forecasts SEAT CHANGE directly from the generic ballot and the seats the president's party is defending. The margin shown is our seat curve run backwards from its House number, not his",
-        "his Senate equation gives 49.8 Democratic seats; the site's Senate figures for this model use our state-lean machinery"
+        "his Senate equation gives 58.4 Democratic seats; the site's Senate figures for this model use our state-lean machinery",
+        "the House number falls outside today's range of tides, so the inversion is extrapolated"
       ]
     },
     "academic_referendum": {
@@ -110,12 +111,12 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": true,
-      "margin_D": 7.2,
-      "margin_D_80_low": -0.95,
-      "margin_D_80_high": 15.35,
+      "margin_D": 7.18,
+      "margin_D_80_low": -0.98,
+      "margin_D_80_high": 15.33,
       "inputs": {
-        "approval": 31.8,
-        "approval_source": "mean of 5 adults-sample approval poll(s) in the 14 days to 2026-11-24. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
+        "approval": 32.29,
+        "approval_source": "mean of 7 adults-sample approval poll(s) in the 14 days to 2026-11-24. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
         "income_growth": 0.93,
         "income_source": "FRED income_growth_ytd as of 2026-11-24, 9 month(s) of the year in hand"
       },
@@ -128,7 +129,7 @@
         "r2": 0.273,
         "loeo_rmse": 3.18,
         "fitted_on": "20 midterms, 1946-2022",
-        "pres_party_two_party_vote": 46.4,
+        "pres_party_two_party_vote": 46.41,
         "benchmark": {
           "claim": "Republicans lose about 28 House seats and the House",
           "authors": "Charles Tien and Michael S. Lewis-Beck",
@@ -248,7 +249,7 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 2.97,
+      "margin_D": 2.87,
       "margin_D_80_low": null,
       "margin_D_80_high": null,
       "inputs": {
