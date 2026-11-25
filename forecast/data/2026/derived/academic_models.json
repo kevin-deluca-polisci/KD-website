@@ -110,14 +110,14 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": true,
-      "margin_D": 7.17,
-      "margin_D_80_low": -0.98,
-      "margin_D_80_high": 15.33,
+      "margin_D": 7.16,
+      "margin_D_80_low": -0.99,
+      "margin_D_80_high": 15.31,
       "inputs": {
         "approval": 32.33,
         "approval_source": "mean of 6 adults-sample approval poll(s) in the 14 days to 2026-11-25. Gallup interviewed adults, and so does this average; the residual house effect between Gallup and the rest of the adults field is under two points and cannot be re-measured now that Gallup has stopped polling, so it is left in the error bar rather than corrected for (Silver Bulletin poll list, aggregate only)",
-        "income_growth": 0.93,
-        "income_source": "FRED income_growth_ytd as of 2026-11-25, 9 month(s) of the year in hand"
+        "income_growth": 0.941,
+        "income_source": "FRED income_growth_ytd as of 2026-11-25, 10 month(s) of the year in hand"
       },
       "diagnostics": {
         "coefficients": {
@@ -128,7 +128,7 @@
         "r2": 0.273,
         "loeo_rmse": 3.18,
         "fitted_on": "20 midterms, 1946-2022",
-        "pres_party_two_party_vote": 46.41,
+        "pres_party_two_party_vote": 46.42,
         "benchmark": {
           "claim": "Republicans lose about 28 House seats and the House",
           "authors": "Charles Tien and Michael S. Lewis-Beck",
@@ -152,9 +152,9 @@
       "category": "academic",
       "publication": "individual",
       "refit_on_our_history": false,
-      "margin_D": 15.19,
+      "margin_D": 15.78,
       "margin_D_80_low": 9.13,
-      "margin_D_80_high": 20.94,
+      "margin_D_80_high": 22.42,
       "inputs": {
         "pct_expect_worse": 37.0,
         "pct_expect_worse_source": "University of Michigan Surveys of Consumers, Table 8, WORSE OFF row, monthly, 2026-06 (carried forward from 2026-06)",
@@ -178,7 +178,7 @@
         },
         "pres_party_seat_change": -48.1,
         "implied_D_seats": 263.1,
-        "inversion_extrapolated": false,
+        "inversion_extrapolated": true,
         "curve_points_used": 9,
         "sensitivity_month": [
           {
@@ -231,6 +231,7 @@
       },
       "notes": [
         "forecasts SEAT CHANGE directly \u2014 the margin shown is our own seat curve run backwards from that seat count, and is not a number Lockerbie publishes",
+        "that seat count falls outside the range of tides the other models produced today, so the inversion is extrapolated rather than interpolated",
         "OUTSIDE THE FITTED RANGE on pct_expect_worse = 37, above the sample maximum of 32 and open_seats = 60, above the sample maximum of 56. The model was fit on 1952-2022 and this is a linear extrapolation beyond anything in that sample, which is most of why it is the most Democratic forecast on this site.",
         "Lockerbie: 'Midterms are, by definition, a bad year for the incumbent party.' The -1 is his rule, not our assumption.",
         "published out-of-sample mean absolute error is 16.8 seats \u2014 the interval is his, not ours, and it is very wide"
